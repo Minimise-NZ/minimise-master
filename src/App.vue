@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
     <router-view></router-view>
   </div>
 </template>
@@ -16,8 +15,22 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
+
+.my-primary-bg {
+  background-color: #383838;
+}
+
+.my-secondary-bg {
+  background-color: #FFC80B
+}
+
+.my-primary-accent {
+  color:#FFC80B;
+}
+
+.my-secondary-accent {
+  color:#383838;
+}
+
 </style>
