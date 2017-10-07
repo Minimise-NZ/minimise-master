@@ -6,7 +6,7 @@
     <b-form @submit="signupCompany">
       <b-form-group id="company">
         <p class="my-primary-accent form-subtitle">Company Information</p>
-        <b-form-checkbox-group v-model="company.type" name="companyType" required>
+        <b-form-checkbox-group v-model="company.type" name="companyType">
           <label>Company Type: </label>
           <b-form-checkbox id="principal"
               value="principal">
@@ -166,6 +166,7 @@
     float: right;
   }
   
+ 
   .form-title {
     background-color: rgba(56, 56, 56, 0.5);
     border-radius: 5px;

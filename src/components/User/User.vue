@@ -45,7 +45,7 @@
     background: linear-gradient(to bottom, rgba(56, 56, 56, 1) 0%,rgba(125,126,125,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#383838', endColorstr='#7d7e7d',GradientType=0 ); /* IE6-9 */
     height: 100%;
-    min-height: 940px;
+    min-height: 910px;
     margin: 30px 50px;
   }
   
