@@ -1,45 +1,29 @@
 <template>
-  <div id="container">
-    <div class="container">
-    <!--corner branding-->
-      <div class="row brand">
-        <div class="logo">
-          <img src='../../assets/yellow-mini.png'>
-          <span class="my-primary-accent" style="margin-left: 10px">minimise</span>
-        </div>
-      </div>
-    
-    <!--form container-->
-      <div class="form-container">
-        <div class="form-title">
-          <h5 class="my-primary-accent">Log In</h5>
-        </div>
-        <b-form @submit="onSubmit">
-          <b-form-group id="login-form">
-            <b-form-input
-                id="login-email"
-                type="email"
-                v-model="form.email"
-                placeholder="Email Address">
-            </b-form-input>
-            <b-form-input
-                id="login-password"
-                type="password"
-                v-model="form.password"
-                placeholder="Password">
-            </b-form-input> 
-          </b-form-group>
-          <b-button class="btn-block" type="submit">Log me in</b-button>
-          <div class="row links">
-             <router-link to="signup">Sign Up</router-link>
-             <router-link to="password" class="ml-auto">Forgot Password</router-link>
-          </div>
-        </b-form>
-      </div>
-      
-   
-      
+  <div>
+    <div class="form-title">
+      <h5 class="my-primary-accent">Log In</h5>
     </div>
+    <b-form @submit="loginUser" id="login">
+      <b-form-group >
+        <b-form-input
+            id="login-email"
+            type="email"
+            v-model="entered.email"
+            placeholder="Email Address">
+        </b-form-input>
+        <b-form-input
+            id="login-password"
+            type="password"
+            v-model="entered.password"
+            placeholder="Password">
+        </b-form-input> 
+      </b-form-group>
+      <b-button class="btn-block" type="submit">Log me in</b-button>
+      <div class="row links">
+         <router-link to="signup">Sign Up</router-link>
+         <router-link to="password" class="ml-auto">Forgot Password</router-link>
+      </div>
+    </b-form>
   </div>
 </template>
 
@@ -47,14 +31,14 @@
   export default {
     data () {
       return {
-        form: {
+        entered: {
           email: '',
           password: ''
         }
       }
     },
     methods: {
-      onSubmit (evt) {
+      loginUser (evt) {
         evt.preventDefault()
         alert(JSON.stringify(this.form))
       }
@@ -64,26 +48,11 @@
 </script>
 
 <style scoped>
-  #container {
-    height: 95vh;
-    background-image: url(../../assets/grey-background.jpg);
-    background-size: 100% 100%;
-  }
-  
-  .brand {
-    padding-left: 6%;
-    padding-top: 80px;
-    font-size: 2rem;
-  }
-  
-  .form-container {
-    max-width: 400px;
-    margin: 60px auto;
-  }
   
   .form-title {
-    background-color: rgba(124, 124, 124,0.8);
+    background-color: rgba(56, 56, 56, 0.6);
     padding: 20px;
+    border-radius: 5px;
   }
   
   .form-control {
@@ -92,13 +61,14 @@
   }
   
   form {
-    background-color: rgba(124, 124, 124,0.8);
+    background-color: rgba(56, 56, 56, 0.6);
+    border-radius: 5px;
     margin: auto;
     margin-top: 20px;
     padding: 20px;
   }
   
-  #login-form {
+  #form {
     margin-bottom: 0;
   }
   
@@ -109,8 +79,7 @@
   }
   
   button {
-    font-family: 'trebuchet MS';
-    font-weight: 500;
+    font-weight: 600;
     color: #383838;
     background-color: #FFC80B;
   }
@@ -131,9 +100,4 @@
     font-size: .8rem;
   }
   
-  @media only screen and (min-width: 1000px) {
-    .brand {
-      padding-left: 25%;
-    }
-  }
 </style>

@@ -8,11 +8,13 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import router from './router'
 import Vuex from 'vuex'
 import VueFire from 'vuefire'
+import vSelect from 'vue-select'
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(Vuex)
 Vue.use(VueFire)
+Vue.component('v-select', vSelect)
 
 /* eslint-disable no-new */
 new Vue({
