@@ -20,10 +20,10 @@
   export default {
     methods: {
       registerCompany () {
-        this.$router.push({name: 'NewCompany'})
+        this.$router.push('/newCompany')
       },
       registerUser () {
-        this.$router.push({name: 'NewUser'})
+        this.$router.push('/newUser')
       }
     }
   }

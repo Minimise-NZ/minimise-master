@@ -109,6 +109,7 @@ export default {
   width: 100px;
   color: #FFC80B;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .login-btn:hover {

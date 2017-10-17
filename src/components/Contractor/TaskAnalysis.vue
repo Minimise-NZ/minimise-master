@@ -1,7 +1,6 @@
 <template>
   <div>
     <h5>Task Analysis</h5>
-    
   </div>
 </template>
 

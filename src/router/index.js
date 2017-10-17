@@ -105,7 +105,7 @@ export default new Router({
           component: Billing
         },
         {
-          path: 'users',
+          path: 'admin',
           component: AdminUsers
         },
         {
@@ -139,7 +139,7 @@ export default new Router({
           component: JobDetails
         },
         {
-          path: 'jobsInProgress',
+          path: 'jobs',
           component: JobsInProgress
         },
         {
@@ -159,7 +159,7 @@ export default new Router({
           component: Billing
         },
         {
-          path: 'users',
+          path: 'admin',
           component: AdminUsers
         },
         {
