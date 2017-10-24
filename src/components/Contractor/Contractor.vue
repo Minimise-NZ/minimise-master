@@ -1,5 +1,5 @@
 <template>
-  <div class="padding-side content-wrapper">
+  <div class="content-wrapper">
     <dashboard-header></dashboard-header>
     <b-row>
       <b-col cols="3" class="side-wrapper" >
@@ -13,7 +13,7 @@
           </router-link>
         </b-list-group>
       </b-col>
-      <b-col cols="9" class="content">
+      <b-col class="content">
         <router-view></router-view>
       </b-col>
     </b-row>
@@ -30,10 +30,9 @@ export default {
     return {
       sideNavItems: [
         {name: 'Home', link: '/contractor'},
-        {name: 'Action Items', link: '/contractor/actions'},
         {name: 'Worker Management', link: '/contractor/workers'},
         {name: 'Hazard Register', link: '/contractor/hazards'},
-        {name: 'Hazardous Substances', link: '/contractor/hazardousSubstances'},
+        // {name: 'Hazardous Substances', link: '/contractor/hazardousSubstances'},
         {name: 'Task Analysis', link: '/contractor/taskAnalysis'},
         {name: 'Incident Management', link: '/contractor/incidents'},
         {name: 'Administration', link: '/contractor/admin'},
@@ -44,21 +43,18 @@ export default {
 }
 </script>
 
-<style>
-  .content-wrapper {
-    min-width: 880px;
+<style scoped>
+   .content-wrapper {
+    min-width: 900px;
   }
-  .padding-side {
-    padding-left: 40px;
-    padding-right: 40px;
-  }
-
+  
   .list-group-item {
     border-radius: 0.25rem;
     background-color: rgba(221, 221, 221, 0.2);
     color: white;
     margin-bottom: 10px;
     cursor: pointer;
+    font-size: 1.2rem;
   }
   
   .router-link-exact-active {
@@ -67,19 +63,17 @@ export default {
   }
   
   
-  @media only screen and (min-width: 1600px) {
-    .padding-side {
-      padding-left: 10%;
-      padding-right: 10%;
-    }
-  }
   .row {
-    height: 900px;
+    min-height: 900px;
+    height: 100%;
     margin: 0;
+    min-width: 1050px;
+    border: 1px solid #383838;
   }
   .side-wrapper { 
-    max-width: 250px;
+    max-width: 300px;
     background-color: #383838;
+    padding: 0 20px;
   }
   
 

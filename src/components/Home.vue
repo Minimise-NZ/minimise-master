@@ -29,7 +29,7 @@
       <b-jumbotron class="padding-side">
         <b-row>
           <b-col class="first-col" cols="12" md="8">
-            <h1 class="display-4">Simple Health and Safety</h1>
+            <h1 class="display-4">Simple Safety on Construction Sites</h1>
             <p class="lead">Rum uno minima reipsa ipsius mea solius. Incrementi continuata pla affirmabam res. Meo sperare nam dei animali defectu. 
               Moralis se in aggredi sciamus indutum ingenio re ostendi. Laborio mox ubi aliarum nostras.</p>
             <hr class="my-4">
@@ -73,12 +73,6 @@ export default {
   padding-right: 40px;
 }
 
-@media only screen and (min-width: 1600px) {
-  .padding-side {
-    padding-left: 10%;
-    padding-right: 10%;
-  }
-}
 
 @media only screen and (max-width: 340px) {
     .navbar-brand {

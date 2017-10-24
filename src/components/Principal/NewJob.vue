@@ -132,9 +132,9 @@
             {text: 'No', value: 'no'}
           ],
           list: [
-            'Working at heights more than 5m',
+            'Working at heights > 5m',
             'Work in confined spaces',
-            'Work in an excavation more then 1.5m'
+            'Work in an excavation > 1.5m'
           ],
           selected: []
         },
@@ -157,8 +157,23 @@
 </script>
 
 <style scoped>
+  .container-fluid {
+    padding-top: 20px;
+    margin-bottom: 100px;;
+  }
+  
   .card {
     border: 1px solid grey;
+  }
+  
+  .card-header {
+    background-color: #335392;
+    font-size: 1.4rem;
+    color: white;
+  }
+  
+  .row {
+    padding-bottom: 10px;
   }
   
   .btn-secondary {
@@ -167,19 +182,6 @@
   }
   em {
     color: #757575;
-  }
-  .card-header {
-    background-color: #335392;
-    font-size: 1.4rem;
-    color: white;
-  }
-  .container-fluid {
-    padding-top: 20px;
-    margin-bottom: 100px;;
-  }
-  
-  .row {
-    padding-bottom: 10px;
   }
   
   .searchBar {

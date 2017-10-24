@@ -1,0 +1,95 @@
+<template>
+  <b-card 
+     header="Training Alerts" 
+     header-tag="header"
+     v-if="trainingAlerts != 0">
+    <b-row class="subheader">
+      <b-col>
+        <header>Name</header>
+      </b-col>
+      <b-col>
+        <header>Training Status</header>
+      </b-col>
+      <b-col>
+        <header>Training Description</header>
+      </b-col>
+      <b-col>
+        <header>Expiry Date</header>
+      </b-col>
+    </b-row>
+    <b-row 
+       class="content"
+       v-for="training in trainingAlerts"
+       key="trainingAlerts.name">
+      <b-col>
+        <p style="text-decoration: underline; color:#178ac3; cursor: pointer"
+          >{{training.name}}</p>
+      </b-col>
+      <b-col>
+        <p>{{training.status}}</p>
+      </b-col>
+      <b-col>
+        <p>{{training.description}}</p>
+      </b-col>
+      <b-col>
+       <p>{{training.expiry}}</p>
+      </b-col>
+    </b-row>
+  </b-card>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      trainingAlerts: [
+        {
+          name: 'Sam Stevens',
+          status: 'Expired',
+          description: 'First Aid Certificate',
+          expiry: '18/10/2017'
+        }
+      ]
+    }
+  }
+}
+</script>
+
+<style scoped>
+  .container-fluid {
+    padding-top: 20px;
+    margin-bottom: 100px;
+  }
+  
+  .card {
+    border: 1px solid rgba(40, 26, 101, 0.8);
+    margin-bottom: 30px;
+  }
+  
+  .card-header {
+    background-color: rgba(40, 26, 101, 0.8);
+    font-size: 1.2rem;
+    color: white;
+  }
+  
+  .card-body {
+    padding-top: 0;
+  }
+  
+  .subheader {
+    padding: 15px 0 15px 15px;
+    border-bottom: 1px solid lightgrey;
+    font-weight: bold;
+    color: #281a65d4;;
+  }
+  
+  .col {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .content {
+    margin-left: 0;
+    margin-top: 20px;
+  }
+</style>

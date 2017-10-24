@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <h5>Principal Home</h5>
-    <router-view></router-view>
-  </div>
+  <b-container fluid>
+    <b-card header="Principal Home" header-tag="header">
+    </b-card>
+  </b-container>
 </template>
 
 <script>
@@ -14,6 +14,19 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .container-fluid {
+    padding-top: 20px;
+    margin-bottom: 100px;;
+  }
+  
+  .card {
+    border: 1px solid grey;
+  }
+  
+  .card-header {
+    background-color: #f1f1f1;
+    font-size: 1.4rem;
+    color: black;
+  }
 </style>

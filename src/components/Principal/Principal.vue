@@ -1,5 +1,5 @@
 <template>
-  <div class="padding-side content-wrapper">
+  <div class="content-wrapper">
     <dashboard-header></dashboard-header>
     <b-row>
       <b-col cols="3" class="side-wrapper" >
@@ -31,11 +31,10 @@ export default {
       sideNavItems: [
         {name: 'Home', link: '/principal'},
         {name: 'New Job', link: '/principal/newJob'},
-        {name: 'Action Items', link: '/principal/actions'},
         {name: 'Jobs In Progress', link: '/principal/jobs'},
-        {name: 'Contractor Management', link: '/principal/contractors'},
+        // {name: 'Contractor Management', link: '/principal/contractors'},
         {name: 'Incident Management', link: '/principal/incidents'},
-        {name: 'Master Safety Plan', link: '/principal/master'},
+        // {name: 'Master Safety Plan', link: '/principal/master'},
         {name: 'Administration', link: '/principal/admin'},
         {name: 'Support/Feedback', link: '/principal/support'}
       ]
@@ -45,9 +44,8 @@ export default {
 </script>
 
 <style scoped>
-  .padding-side {
-    padding-left: 40px;
-    padding-right: 40px;
+  .content-wrapper {
+    min-width: 880px;
   }
   
   .list-group-item {
@@ -56,6 +54,7 @@ export default {
     color: white;
     margin-bottom: 10px;
     cursor: pointer;
+    font-size: 1.2rem;
   }
   
   .router-link-exact-active {
@@ -78,14 +77,16 @@ export default {
   }
   
   .row {
+    min-height: 900px;
     height: 100%;
     margin: 0;
-    min-width: 850px;
+     min-width: 1000px;
     border: 1px solid #383838;
   }
   .side-wrapper { 
-    max-width: 250px;
+    max-width: 300px;
     background-color: #383838;
+    padding: 0 20px;
   }
   
 
