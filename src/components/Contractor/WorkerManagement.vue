@@ -1,46 +1,46 @@
 <template>
   <b-container fluid>
     <b-card>
-      <header class="card-header">Worker Management
+      <div class="card-header">Worker Management
        <b-button class="addBtn">Add New Worker</b-button>
-      </header>
-        <b-card
-             v-for="worker in workers"
-             :key="worker.name"
-             class="workerCard mt-2 mb-4" 
-            >
-            <header class="card-header worker">{{worker.name}}
-               <b-button class="editBtn pt-1 pb-1">Edit Worker</b-button>
-            </header>
-              <b-row>
-                <b-col>
-                  <header class="subheader">Personal Information</header>
-                  <ul>
-                    <li>Role: {{worker.role}}</li>
-                    <li>Phone: {{worker.phone}}</li>
-                    <li>Email: {{worker.email}}</li>
-                  </ul>
-                </b-col>
-                <b-col>
-                  <header class="subheader">Training Description</header>
-                  <ul>
-                    <li v-for="training in worker.training">{{training.description}}</li>
-                  </ul>
-                </b-col>
-                <b-col> 
-                  <header class="subheader">Trained Date</header>
-                  <ul>
-                    <li v-for="training in worker.training">{{training.date}}</li>
-                  </ul>
-                </b-col>
-                <b-col>
-                  <header class="subheader">Expiry Date</header>
-                  <ul>
-                    <li v-for="training in worker.training">{{training.expiry}}</li>
-                  </ul>
-                </b-col>
-              </b-row>
-          </b-card>
+      </div>
+      <b-card
+         v-for="worker in workers"
+         :key="worker.name"
+         class="workerCard mt-2 mb-4" 
+        >
+        <header class="card-header worker">{{worker.name}}
+           <b-button class="editBtn pt-1 pb-1">Edit Worker</b-button>
+        </header>
+          <b-row>
+            <b-col>
+              <header class="subheader">Personal Information</header>
+              <ul>
+                <li>Role: {{worker.role}}</li>
+                <li>Phone: {{worker.phone}}</li>
+                <li>Email: {{worker.email}}</li>
+              </ul>
+            </b-col>
+            <b-col>
+              <header class="subheader">Training Description</header>
+              <ul>
+                <li v-for="training in worker.training">{{training.description}}</li>
+              </ul>
+            </b-col>
+            <b-col> 
+              <header class="subheader">Trained Date</header>
+              <ul>
+                <li v-for="training in worker.training">{{training.date}}</li>
+              </ul>
+            </b-col>
+            <b-col>
+              <header class="subheader">Expiry Date</header>
+              <ul>
+                <li v-for="training in worker.training">{{training.expiry}}</li>
+              </ul>
+            </b-col>
+          </b-row>
+      </b-card>
     </b-card>
   </b-container>
 </template>
@@ -113,7 +113,8 @@ export default {
   }
   
   .card-header {
-    background-color: rgba(40, 26, 101, 0.8);
+    margin: -20px -20px 20px -20px;
+    background-color: rgba(29, 92, 158, 0.98);
     font-size: 1.4rem;
     color: white;
   }
@@ -127,13 +128,13 @@ export default {
   
   .editBtn {
     float: right;
-    background-color:rgba(255, 255, 255, 0.74);
+    background-color:rgba(223, 233, 255, 0.83);
     color: black;
-   
   }
   
   .card-header.worker{
-    background-color: rgba(69, 59, 111, 0.83);
+    background-color: rgba(111, 50, 130, 0.86);
+    margin: 0;
     color: white;
     font-size: 1.2rem;
     padding-left: 15px;
