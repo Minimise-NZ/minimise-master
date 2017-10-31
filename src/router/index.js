@@ -14,7 +14,6 @@ import Contractor from '@/components/Contractor/Contractor.vue'
 import ContractorHome from '@/components/Contractor/Home.vue'
 import JobForm from '@/components/Contractor/JobForm.vue'
 import Hazards from '@/components/Contractor/HazardRegister.vue'
-import HazardDatabase from '@/components/Contractor/HazardDatabase.vue'
 import HazardousSubstances from '@/components/Contractor/HazardousSubstances.vue'
 import TaskAnalysis from '@/components/Contractor/TaskAnalysis.vue'
 import Workers from '@/components/Contractor/WorkerManagement.vue'
@@ -78,15 +77,12 @@ export default new Router({
         },
         {
           path: 'job',
+          name: 'job',
           component: JobForm
         },
         {
           path: 'hazards',
           component: Hazards
-        },
-        {
-          path: 'hazardDatabase',
-          component: HazardDatabase
         },
         {
           path: 'hazardousSubstances',

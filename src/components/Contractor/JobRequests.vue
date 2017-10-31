@@ -22,11 +22,13 @@
        v-for="job in jobRequests"
        key="job.address">
       <b-col>
+      <router-link to='contractor/job'>
         <p 
           v-for="line in job.address" 
           class="mb-0 mr-3"
           style="text-decoration: underline; color:#178ac3; cursor: pointer"
           >{{line}}</p>
+        </router-link>
       </b-col>
       <b-col>
         <p>{{job.principal}}</p>
@@ -71,12 +73,12 @@ export default {
   }
   
   .card {
-    border: 1px solid #1376ad;
+    border: 1px solid rgba(29, 92, 158, 0.89);
     margin-bottom: 30px;
   }
   
   .card-header {
-    background-color: #1376ad;
+    background-color: rgba(29, 92, 158, 0.89);
     font-size: 1.2rem;
     color: white;
   }

@@ -31,12 +31,8 @@ export default {
     margin-bottom: 100px;
   }
   
-  .card {
-    border: 1px solid grey;
-  }
-  
   .card-header {
-    background-color: #484747;
+    background-color: rgba(56, 56, 56, 0.88);
     font-size: 1.4rem;
     color: white;
   }

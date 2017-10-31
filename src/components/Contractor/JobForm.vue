@@ -1,10 +1,10 @@
 <template>
   <b-container fluid>
-    <b-card header="Health and Safety Agreement" header-tag="header">
+    <b-card header="Health and Safety Agreement"  header-tag="header">
      <b-form @submit="onSubmit">
       <b-card class="item mb-3" header="Site Information">
         <b-row>
-          Site Address: {{address}}
+          <strong>Site Address: {{address}}</strong>
         </b-row>
         <b-row>
           Principal Contractor: {{job.principal}}
@@ -175,7 +175,7 @@ export default {
   },
   computed: {
     address () {
-      return this.job.address.toString()
+      return this.job.address.join(', ')
     }
   },
   methods: {
@@ -195,19 +195,16 @@ export default {
     padding-top: 20px;
     margin-bottom: 100px;;
   }
-  
-  .card {
-    border: 1px solid grey;
-  }
-  
+ 
   .card-header {
-    background-color: #02254c;
+    background-color: rgba(155, 35, 53, 0.88);
     font-size: 1.4rem;
     color: white;
   }
   
   .item.card > .card-header {
-    background-color: #2666ab;
+    background-color:rgba(29, 92, 158, 0.89);
+    font-size: 1.2rem;
   }
   
   .item.card > .card-body {

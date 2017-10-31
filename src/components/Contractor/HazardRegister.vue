@@ -1,18 +1,18 @@
 <template>
   <b-container fluid>
     <b-card>
-      <div class="card-header">Hazard Register
-       <b-button 
-         class="addBtn"
-         @click="goDatabase">Add Hazard</b-button>
+      <div class="card-header" :class="{ inverted: inverted }" >{{headerTitle}}
+        <b-button v-if="register" class="headerBtn" @click="register = !register, inverted = !inverted">{{headerButton}}</b-button>
+        <b-button v-else class="headerBtn" @click="register = !register, inverted = !inverted">{{headerButton}}</b-button>
       </div>
       <b-card
        v-for="hazard in hazards"
        :key="hazard.name"
        class="hazardCard mt-2 mb-4">
-        <header class="card-header hazard">{{hazard.name}}
-          <b-button class="editBtn pt-1 pb-1">Remove Hazard</b-button>
-          <b-button class="editBtn pt-1 pb-1">Edit Hazard</b-button>
+        <header class="card-header hazard" :class="{ inverted: inverted }">{{hazard.name}}
+          <b-button v-if="register" class="editBtn pt-1 pb-1">Remove Hazard</b-button>
+          <b-button v-if="register" class="editBtn pt-1 pb-1">Edit Hazard</b-button>
+          <b-button v-if="!register" class="editBtn pt-1 pb-1">Add Hazard</b-button>
         </header>
         <b-row>
           <b-col>
@@ -41,7 +41,9 @@
 export default {
   data () {
     return {
-      hazards: [
+      register: true,
+      inverted: false,
+      myHazards: [
         {
           name: 'Slips, Trips, Falls',
           image: '../../../../static/slips.png',
@@ -68,13 +70,48 @@ export default {
             'Safe access'
           ]
         }
+      ],
+      allHazards: [
+        {
+          name: 'Hazardous Substances',
+          image: '../../../../static/Haz-sub.jpg',
+          riskBeforeControls: 'High',
+          controlMethod: 'Minimise',
+          riskAfterControls: 'Low',
+          controls: [
+            'Wear appropriate PPE',
+            'Store safely and securely',
+            'Safety data sheets are on site',
+            'Keep away from ignition sources'
+          ]
+        }
       ]
     }
   },
-  methods: {
-    goDatabase () {
-      this.$router.push('/contractor/hazardDatabase')
+  computed: {
+    headerTitle () {
+      if (this.register) {
+        return 'Hazard Register'
+      } else {
+        return 'Hazard Database'
+      }
+    },
+    headerButton () {
+      if (this.register) {
+        return 'Add New Hazard'
+      } else {
+        return 'Back to Hazard Register'
+      }
+    },
+    hazards () {
+      if (this.register) {
+        return this.myHazards
+      } else {
+        return this.allHazards
+      }
     }
+  },
+  methods: {
   }
 }
 </script>
@@ -85,15 +122,15 @@ export default {
     margin-bottom: 100px;;
   }
   
-  .card {
-    border: 1px solid grey;
-  }
-  
    .card-header {
     margin: -20px -20px 20px -20px;
-    background-color: rgb(18, 128, 122);
+    background-color: #12807a;
     font-size: 1.4rem;
     color: white;
+  }
+  
+  .card-header.inverted {
+    background-color: rgba(111, 50, 130, 0.86);
   }
   
   .btn {
@@ -101,7 +138,7 @@ export default {
     margin-left: 10px;
     cursor:pointer;
   }
-  .addBtn {
+  .headerBtn {
     float: right;
     background-color: #ffc80b;
     color: black;
@@ -114,11 +151,15 @@ export default {
   }
   
   .card-header.hazard{
-    background-color: rgba(67, 50, 138, 0.83);
+    background-color: rgba(111, 50, 130, 0.86);
     margin: 0;
     color: white;
     font-size: 1.2rem;
     padding-left: 15px;
+  }
+  
+  .card-header.hazard.inverted {
+    background-color: #12807a;
   }
   
   .subheader {

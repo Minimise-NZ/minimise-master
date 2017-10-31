@@ -1,7 +1,12 @@
 <template>
   <b-container fluid>
-    <b-card header="Admin- Manage Users" header-tag="header">
-    </b-card>
+     <b-card>
+      <div class="card-header">Administration
+      </div>
+      <b-card class="itemCard mt-2 mb-4">
+        <header class="card-header item">Subtitle</header>
+      </b-card>
+  </b-card>
   </b-container>
 </template>
 
@@ -19,14 +24,24 @@ export default {
     padding-top: 20px;
     margin-bottom: 100px;;
   }
-  
-  .card {
-    border: 1px solid grey;
-  }
-  
+
   .card-header {
-    background-color: #616161;
+    margin: -20px -20px 20px -20px;
+    background-color: #12807a;
     font-size: 1.4rem;
     color: white;
   }
+  
+   .card-header.item{
+    background-color: rgba(29, 92, 158, 0.89);
+    margin: 0;
+    color: white;
+    font-size: 1.2rem;
+    padding-left: 15px;
+  }
+  
+    .itemCard > .card-body {
+    padding: 0;
+  }
+  
 </style>

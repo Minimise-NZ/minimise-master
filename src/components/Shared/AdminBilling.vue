@@ -20,10 +20,6 @@ export default {
     margin-bottom: 100px;;
   }
   
-  .card {
-    border: 1px solid grey;
-  }
-  
   .card-header {
     background-color: #616161;
     font-size: 1.4rem;

@@ -2,7 +2,7 @@
   <b-container fluid>
     <b-card>
       <div class="card-header">Worker Management
-       <b-button class="addBtn">Add New Worker</b-button>
+       <b-button class="addBtn" @click="newWorker">Add New Worker</b-button>
       </div>
       <b-card
          v-for="worker in workers"
@@ -98,6 +98,11 @@ export default {
         }
       ]
     }
+  },
+  methods: {
+    newWorker () {
+      this.workers.unshift({name: 'New Worker'})
+    }
   }
 }
 </script>
@@ -108,13 +113,9 @@ export default {
     margin-bottom: 100px;;
   }
   
-  .card {
-    border: 1px solid grey;
-  }
-  
   .card-header {
     margin: -20px -20px 20px -20px;
-    background-color: rgba(29, 92, 158, 0.98);
+    background-color: rgba(29, 92, 158, 0.89);
     font-size: 1.4rem;
     color: white;
   }

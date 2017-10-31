@@ -62,7 +62,6 @@ export default {
     color: black;
   }
   
-  
   .row {
     min-height: 900px;
     height: 100%;
