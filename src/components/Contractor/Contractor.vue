@@ -1,9 +1,10 @@
 <template>
   <div class="content-wrapper">
     <dashboard-header></dashboard-header>
+    
     <b-row>
-      <b-col cols="3" class="side-wrapper" >
-         <b-list-group>
+      <b-col cols="3" class="side-wrapper">
+       <b-list-group>
           <router-link v-for="item in sideNavItems"
            :to='item.link' 
            tag="li"
@@ -12,10 +13,14 @@
             {{item.name}}
           </router-link>
         </b-list-group>
+
       </b-col>
+       
+
       <b-col class="content">
         <router-view></router-view>
       </b-col>
+
     </b-row>
   </div>
 </template>

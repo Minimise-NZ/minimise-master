@@ -18,7 +18,7 @@
               <ul>
                 <li>Role: {{worker.role}}</li>
                 <li>Phone: {{worker.phone}}</li>
-                <li>Email: {{worker.email}}</li>
+                <li>{{worker.email}}</li>
               </ul>
             </b-col>
             <b-col>

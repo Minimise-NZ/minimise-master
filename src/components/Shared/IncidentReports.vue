@@ -62,12 +62,12 @@ export default {
   }
   
   .card {
-    border: 1px solid rgba(155, 35, 53, 0.88);
+    border: 1px solid #12807a;
     margin-bottom: 30px;
   }
   
   .card-header {
-    background-color: rgba(155, 35, 53, 0.88);
+    background-color: #12807a;
     font-size: 1.2rem;
     color: white;
   }

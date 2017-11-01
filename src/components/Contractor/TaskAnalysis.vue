@@ -199,6 +199,7 @@ export default {
   }
   
   .itemBtn {
+    font-size: 1rem;
     margin-right: 15px;
     cursor: pointer;
     font-size: 1.2rem;

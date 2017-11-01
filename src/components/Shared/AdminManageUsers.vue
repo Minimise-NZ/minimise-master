@@ -27,13 +27,13 @@ export default {
 
   .card-header {
     margin: -20px -20px 20px -20px;
-    background-color: #12807a;
+    background-color: rgba(155, 35, 53, 0.88);
     font-size: 1.4rem;
     color: white;
   }
   
    .card-header.item{
-    background-color: rgba(29, 92, 158, 0.89);
+    background-color: #12807a;
     margin: 0;
     color: white;
     font-size: 1.2rem;

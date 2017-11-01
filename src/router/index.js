@@ -21,7 +21,6 @@ import Workers from '@/components/Contractor/WorkerManagement.vue'
 import Billing from '@/components/Shared/AdminBilling.vue'
 import AdminUsers from '@/components/Shared/AdminManageUsers.vue'
 import Incidents from '@/components/Shared/IncidentManagement.vue'
-import NewIncident from '@/components/Shared/NewIncident.vue'
 import Support from '@/components/Shared/SupportFeedback.vue'
 
 import Principal from '@/components/Principal/Principal.vue'
@@ -109,10 +108,6 @@ export default new Router({
           component: Incidents
         },
         {
-          path: 'newIncident',
-          component: NewIncident
-        },
-        {
           path: 'support',
           component: Support
         }
@@ -157,10 +152,6 @@ export default new Router({
         {
           path: 'incidents',
           component: Incidents
-        },
-        {
-          path: 'newIncident',
-          component: NewIncident
         },
         {
           path: 'support',

@@ -1,12 +1,17 @@
 <template>
   <b-container fluid>
-    <b-card header="New Incident" header-tag="header">
+    <b-card header="Incident View" header-tag="header">
+    <incidentForm></incidentForm>
     </b-card>
   </b-container>
 </template>
 
 <script>
+import IncidentForm from '@/components/Shared/IncidentForm.vue'
 export default {
+  components: {
+    'incidentForm': IncidentForm
+  },
   data () {
     return {
     }
