@@ -6,10 +6,10 @@
     <b-form>
       <b-row>
         <b-col cols="6">
-          <b-button class="register" @click="registerCompany">Register a Company</b-button>
+          <b-button class="register" @click="newContractor">Register a Company</b-button>
         </b-col>
         <b-col cols="6">
-          <b-button class="register" @click="registerUser">Register a <br>User</b-button>
+          <b-button class="register" @click="newUser">Register a <br>User</b-button>
         </b-col>
       </b-row>
     </b-form>
@@ -19,10 +19,10 @@
 <script>
   export default {
     methods: {
-      registerCompany () {
-        this.$router.push('/newCompany')
+      newCompany () {
+        this.$router.push('/newContractor')
       },
-      registerUser () {
+      newUser () {
         this.$router.push('/newUser')
       }
     }

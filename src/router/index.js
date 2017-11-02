@@ -2,12 +2,12 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import Home from '@/components/Home.vue'
-import User from '@/components/User/User.vue'
-import Login from '@/components/User/Login.vue'
 
+import Login from '@/components/User/Login.vue'
 import SignUp from '@/components/User/SignUp.vue'
-import Password from '@/components/User/Password.vue'
-import NewCompany from '@/components/User/NewCompany.vue'
+import Password from '@/components/User/ForgotPassword.vue'
+import NewContractor from '@/components/User/NewContractor.vue'
+import NewPrincipal from '@/components/User/NewPrincipal.vue'
 import NewUser from '@/components/User/NewUser.vue'
 
 import Contractor from '@/components/Contractor/Contractor.vue'
@@ -41,30 +41,28 @@ export default new Router({
       component: Home
     },
     {
-      path: '/user',
-      component: User,
-      children: [
-        {
-          path: '/login',
-          component: Login
-        },
-        {
-          path: '/signup',
-          component: SignUp
-        },
-        {
-          path: '/password',
-          component: Password
-        },
-        {
-          path: '/newUser',
-          component: NewUser
-        },
-        {
-          path: '/newCompany',
-          component: NewCompany
-        }
-      ]
+      path: '/login',
+      component: Login
+    },
+    {
+      path: '/password',
+      component: Password
+    },
+    {
+      path: '/signup',
+      component: SignUp
+    },
+    {
+      path: '/newUser',
+      component: NewUser
+    },
+    {
+      path: '/newContractor',
+      component: NewContractor
+    },
+    {
+      path: '/newPrincipal',
+      component: NewPrincipal
     },
     {
       path: '/contractor',

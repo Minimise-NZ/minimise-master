@@ -9,12 +9,15 @@ import router from './router'
 import Vuex from 'vuex'
 import VueFire from 'vuefire'
 import vSelect from 'vue-select'
+import AnimatedVue from 'animated-vue'
+import 'animate.css/animate.css'
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(Vuex)
 Vue.use(VueFire)
 Vue.component('v-select', vSelect)
+Vue.use(AnimatedVue)
 
 /* eslint-disable no-new */
 new Vue({

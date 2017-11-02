@@ -1,8 +1,8 @@
 <template>
  <animated-slide-in-right>
   <b-container class="login-container">
-    <h2>Log In</h2>
-    <b-form @submit="loginUser" id="login">
+    <h2>Reset Password</h2>
+    <b-form @submit="resetPassword" id="pwdreset">
        <b-input-group>
          <b-input-group-addon>
            <i class="fa fa-envelope" aria-hidden="true"></i>
@@ -27,18 +27,18 @@
         </b-form-input> 
       </b-input-group>
       
-      <b-button class="login-btn btn-block " type="submit">LOGIN</b-button>
+      <b-button class="btn-block login-btn" type="submit">LOGIN</b-button>
       <b-row class="links">
         <b-col class="leftcol">
           <router-link to="signup">SIGN UP</router-link>
         </b-col>
         <b-col>
-          <router-link to="password">PASSWORD</router-link>
+          <router-link to="#">PASSWORD</router-link>
         </b-col>
       </b-row>
     </b-form>
   </b-container>
- </animated-slide-in-right>
+  </animated-slide-in-right>
 </template>
 
 <script>
@@ -52,7 +52,7 @@
       }
     },
     methods: {
-      loginUser (evt) {
+      resetPassword (evt) {
         evt.preventDefault()
         alert(JSON.stringify(this.form))
       }
@@ -101,5 +101,15 @@
     font-size: 0.9rem;
   }
   
-  
+  .login-btn {
+  background-color: #616161;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.login-btn:hover {
+  background-color: #FFC80B;
+  color: #383838;
+}
 </style>

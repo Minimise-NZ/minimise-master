@@ -66,7 +66,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 .padding-side {
   padding-left: 40px;

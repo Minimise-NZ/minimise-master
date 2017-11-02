@@ -1,23 +1,21 @@
 <template>
-  <div class="content-wrapper">
+  <div>
     <dashboard-header></dashboard-header>
     
     <b-row>
-      <b-col cols="3" class="side-wrapper">
+      <b-col sm="2" class="side-wrapper">
        <b-list-group>
           <router-link v-for="item in sideNavItems"
            :to='item.link' 
            tag="li"
            class="list-group-item"
            :key = "item.name">
-            {{item.name}}
+            <p>{{item.name}}</p>
           </router-link>
         </b-list-group>
-
       </b-col>
-       
-
-      <b-col class="content">
+      
+      <b-col>
         <router-view></router-view>
       </b-col>
 
@@ -41,7 +39,7 @@ export default {
         {name: 'Task Analysis', link: '/contractor/taskAnalysis'},
         {name: 'Incident Management', link: '/contractor/incidents'},
         {name: 'Administration', link: '/contractor/admin'},
-        {name: 'Support/Feeback', link: '/contractor/support'}
+        {name: 'Support / Feedback', link: '/contractor/support'}
       ]
     }
   }
@@ -49,17 +47,17 @@ export default {
 </script>
 
 <style scoped>
-   .content-wrapper {
-    min-width: 900px;
-  }
-  
   .list-group-item {
     border-radius: 0.25rem;
     background-color: rgba(221, 221, 221, 0.2);
     color: white;
     margin-bottom: 10px;
     cursor: pointer;
-    font-size: 1.2rem;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    margin: 0;
   }
   
   .router-link-exact-active {
@@ -71,14 +69,17 @@ export default {
     min-height: 900px;
     height: 100%;
     margin: 0;
-    min-width: 1050px;
     border: 1px solid #383838;
   }
-  .side-wrapper { 
-    max-width: 300px;
+  
+ .side-wrapper { 
     background-color: #383838;
     padding: 0 20px;
   }
   
-
+  @media (max-width: 1040px) {
+    .side-wrapper {
+        display: none;
+    }
+  }
 </style>

@@ -1,21 +1,23 @@
 <template>
-  <div class="content-wrapper">
+  <div>
     <dashboard-header></dashboard-header>
     <b-row>
-      <b-col cols="3" class="side-wrapper" >
+      <b-col sm="2" class="side-wrapper" >
          <b-list-group>
           <router-link v-for="item in sideNavItems"
            :to='item.link' 
            tag="li"
            class="list-group-item"
            :key = "item.name">
-            {{item.name}}
+            <p>{{item.name}}</p>
           </router-link>
         </b-list-group>
       </b-col>
-      <b-col class="content">
+      
+      <b-col>
         <router-view></router-view>
       </b-col>
+      
     </b-row>
   </div>
 </template>
@@ -36,7 +38,7 @@ export default {
         {name: 'Incident Management', link: '/principal/incidents'},
         // {name: 'Master Safety Plan', link: '/principal/master'},
         {name: 'Administration', link: '/principal/admin'},
-        {name: 'Support/Feedback', link: '/principal/support'}
+        {name: 'Support / Feedback', link: '/principal/support'}
       ]
     }
   }
@@ -44,10 +46,6 @@ export default {
 </script>
 
 <style scoped>
-  .content-wrapper {
-    min-width: 880px;
-  }
-  
   .list-group-item {
     border-radius: 0.25rem;
     background-color: rgba(221, 221, 221, 0.2);
@@ -57,37 +55,33 @@ export default {
     font-size: 1.2rem;
   }
   
+   p {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+  
   .router-link-exact-active {
     background-color: #FFC80B;
     color: black;
-  }
-  
-  @media only screen and (min-width: 1600px) {
-    .padding-side {
-      padding-left: 10%;
-      padding-right: 10%;
-    }
-  }
-  
-  @media only screen and (max-width: 1200px) {
-    .padding-side {
-      padding-left: 0;
-      padding-right: 0;
-    }
   }
   
   .row {
     min-height: 900px;
     height: 100%;
     margin: 0;
-     min-width: 1000px;
     border: 1px solid #383838;
   }
+  
   .side-wrapper { 
-    max-width: 300px;
     background-color: #383838;
     padding: 0 20px;
   }
   
+   
+  @media (max-width: 1040px) {
+    .side-wrapper {
+        display: none;
+    }
+  }
 
 </style>

@@ -1,6 +1,5 @@
 <template>
   <b-card
-   v-if="jobsInProgress != 0"
    header="Recent Activity" 
    header-tag="header">
     <b-row class="subheader">

@@ -54,9 +54,15 @@ export default {
     color: #383838;
   }
 
-  @media only screen and (max-width: 340px) {
+  @media only screen and (max-width: 440px) {
       .navbar-brand {
         display: none;
+      }
+  }
+  
+  @media only screen and (max-width: 768px) {
+      .btn{
+        margin-top: 10px;
       }
   }
 
