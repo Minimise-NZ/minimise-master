@@ -11,29 +11,18 @@
             id="login-email"
             type="email"
             v-model="entered.email"
-            placeholder="Email Address">
+            placeholder="Email Address"
+            required>
         </b-form-input>
        </b-input-group>
-       
-       <b-input-group>
-         <b-input-group-addon>
-           <i class="fa fa-lock fa-lg" aria-hidden="true"></i>
-         </b-input-group-addon>
-        <b-form-input
-            id="login-password"
-            type="password"
-            v-model="entered.password"
-            placeholder="Password">
-        </b-form-input> 
-      </b-input-group>
       
-      <b-button class="btn-block login-btn" type="submit">LOGIN</b-button>
+      <b-button class="btn-block login-btn" type="submit">SUBMIT</b-button>
       <b-row class="links">
         <b-col class="leftcol">
           <router-link to="signup">SIGN UP</router-link>
         </b-col>
         <b-col>
-          <router-link to="#">PASSWORD</router-link>
+          <router-link to="login">LOGIN</router-link>
         </b-col>
       </b-row>
     </b-form>
@@ -54,7 +43,7 @@
     methods: {
       resetPassword (evt) {
         evt.preventDefault()
-        alert(JSON.stringify(this.form))
+        alert('A password reset has been emailed to you')
       }
     }
   }

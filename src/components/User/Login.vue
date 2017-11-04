@@ -11,7 +11,8 @@
             id="login-email"
             type="email"
             v-model="entered.email"
-            placeholder="Email Address">
+            placeholder="Email Address"
+            required>
         </b-form-input>
        </b-input-group>
        
@@ -23,11 +24,12 @@
             id="login-password"
             type="password"
             v-model="entered.password"
-            placeholder="Password">
+            placeholder="Password"
+            required>
         </b-form-input> 
       </b-input-group>
       
-      <b-button class="login-btn btn-block " type="submit">LOGIN</b-button>
+      <b-button class="login-btn btn-block" type="submit">LOGIN</b-button>
       <b-row class="links">
         <b-col class="leftcol">
           <router-link to="signup">SIGN UP</router-link>
@@ -85,8 +87,16 @@
   }
   
   .btn-block {
+    background-color: #616161;
     height: 50px;
   }
+  
+  .btn:hover {
+  background-color: #FFC80B;
+  color: #383838;
+  cursor: pointer;
+}
+
   
   .row.links {
     margin-top: 20px;
