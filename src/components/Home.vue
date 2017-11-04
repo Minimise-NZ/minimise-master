@@ -1,10 +1,10 @@
 <template>
+ <animated-slide-in-down>
   <div>
     <!--navbar-->
     <b-navbar sticky toggleable="lg" type="dark" class="my-primary-bg padding-side">
       <b-nav-toggle target="nav_collapse"></b-nav-toggle>
       <b-navbar-brand>
-        <img src='../assets/yellow-mini.png'>
         <span class="my-primary-accent brand-name" style="margin-left: 10px">minimise</span>
       </b-navbar-brand>
       <b-collapse is-nav id="nav_collapse">
@@ -33,9 +33,9 @@
             <p class="lead">Rum uno minima reipsa ipsius mea solius. Incrementi continuata pla affirmabam res. Meo sperare nam dei animali defectu. 
               Moralis se in aggredi sciamus indutum ingenio re ostendi. Laborio mox ubi aliarum nostras.</p>
             <hr class="my-4">
-            <p class="lead">
-              <a class="btn signup-btn btn-lg" href="#" role="button">Get Started</a>
-            </p>
+               <router-link to='signup' tag="button" size="lg" class="btn signup-btn btn-lg">
+                Get Started
+              </router-link>
           </b-col>
           <b-col class="second-col">
             <img src="../assets/hero_img.png" class="hero-img">
@@ -51,10 +51,9 @@
         </b-nav>
         
       </b-navbar>
-
     </div>
-
   </div>
+  </animated-slide-in-down>
 </template>
 
 <script>
@@ -86,8 +85,6 @@ export default {
       padding-bottom: 50px;
     }   
 }
-  
-
 
 @media only screen and (max-width: 1050px ) {
   .second-col {
@@ -115,6 +112,7 @@ export default {
 
 .signup-btn {
   background-color: #FFC80B;
+  cursor: pointer;
   color: #383838;
   font-weight: bold;
   margin-top: 15px;
@@ -159,5 +157,5 @@ export default {
 .social-icon:hover {
   color: #fc8700;
 }
-
+  
 </style>

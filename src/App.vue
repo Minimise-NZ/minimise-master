@@ -30,5 +30,10 @@ export default {
 .my-secondary-accent {
   color:#383838;
 }
+  
+.animated.fade-in.enter {
+  transition-property: opacity;
+  transition-duration: .25s;
+}
 
 </style>

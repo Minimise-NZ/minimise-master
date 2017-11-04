@@ -1,8 +1,10 @@
 <template>
-  <animated-slide-in-right>
-    <b-container>
+  <animated-fade-in>
+   <b-container fluid>
+    <miniHeader></miniHeader>
+    <b-container class="form-container">
        <div class="principal-header">
-         <h3>Register Company</h3>
+         <h3>Sign Up: New Company</h3>
        </div>
        <b-form @submit.prevent="onSubmit" id="form">
         <h5>Company Information</h5>
@@ -127,50 +129,58 @@
         <button class="btn btn-block mt-4" type="submit">Submit</button>
         <router-link to="/">Cancel</router-link>
       </b-form>
-      
+      </b-container>
     </b-container>
-  </animated-slide-in-right>
+  </animated-fade-in>
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        company: {
-          type: 'principal',
-          name: '',
-          address: '',
-          city: '',
-          postcode: '',
+import MiniHeader from '@/components/MiniHeader.vue'
+export default {
+  components: {
+    miniHeader: MiniHeader
+  },
+  data () {
+    return {
+      company: {
+        type: 'principal',
+        name: '',
+        address: '',
+        city: '',
+        postcode: '',
+        phone: '',
+        admin: {
+          firstName: '',
+          lastName: '',
           phone: '',
-          admin: {
-            firstName: '',
-            lastName: '',
-            phone: '',
-            email: '',
-            password: '',
-            safetyManager: 'true'
-          },
-          rep: {
-            firstName: '',
-            lastName: '',
-            email: ''
-          }
+          email: '',
+          password: '',
+          safetyManager: 'true'
+        },
+        rep: {
+          firstName: '',
+          lastName: '',
+          email: ''
         }
       }
-    },
-    methods: {
-      onSubmit (evt) {
-        console.log(this.company)
-      }
+    }
+  },
+  methods: {
+    onSubmit (evt) {
+      console.log(this.company)
     }
   }
-  
+}
 </script>
 
 
 <style scoped>
- .container {
+  
+  .container-fluid {
+    padding: 0;
+  }
+  
+ .form-container {
     padding: 0;
     margin-top: 30px;
     margin-bottom: 100px;
@@ -178,8 +188,8 @@
   
   .principal-header {
     max-width: 658px;
-    border-radius: 10px;
-    padding: 30px 0 15px 0;
+    border-radius: 5px;
+    padding: 15px 0 10px 0;
     margin: auto;
     text-align: center;
     background-color: rgba(18, 128, 122, 0.85);
@@ -188,7 +198,7 @@
   }
   
   h5 {
-    margin-top: 30px;
+    margin-top: 20px;
     text-align: center;
     font-family: 'Montserrat', sans-serif;
     color: rgba(18, 128, 122, 1);
@@ -203,7 +213,8 @@
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
   }
-   .form-control {
+  
+  .form-control {
     margin-top: 15px;
   }
   

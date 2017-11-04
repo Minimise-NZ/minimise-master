@@ -1,5 +1,5 @@
 <template>
- <animated-slide-in-right>
+ <animated-roll-in>
   <b-container class="login-container">
     <h2>Log In</h2>
     <b-form @submit="loginUser" id="login">
@@ -40,7 +40,7 @@
       </b-row>
     </b-form>
   </b-container>
- </animated-slide-in-right>
+  </animated-roll-in>
 </template>
 
 <script>
@@ -96,7 +96,6 @@
     color: #383838;
     cursor: pointer;
   }
-
   
   .row.links {
     margin-top: 20px;
