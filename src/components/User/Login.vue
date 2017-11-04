@@ -29,7 +29,7 @@
         </b-form-input> 
       </b-input-group>
       
-      <b-button class="login-btn btn-block" type="submit">LOGIN</b-button>
+      <b-button class="btn-block" type="submit">LOGIN</b-button>
       <b-row class="links">
         <b-col class="leftcol">
           <router-link to="signup">SIGN UP</router-link>
@@ -92,10 +92,10 @@
   }
   
   .btn:hover {
-  background-color: #FFC80B;
-  color: #383838;
-  cursor: pointer;
-}
+    background-color: #FFC80B;
+    color: #383838;
+    cursor: pointer;
+  }
 
   
   .row.links {

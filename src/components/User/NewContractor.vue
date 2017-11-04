@@ -1,125 +1,134 @@
 <template>
- <div>
-    <div class="form-title">
-      <h5 class="my-primary-accent">Sign Up: New Company</h5>
-    </div>
-    <b-form @submit="signupCompany">
-      <b-form-group id="company">
-        <p class="my-primary-accent form-subtitle">Company Information</p>
-        <b-form-checkbox-group v-model="company.type" name="companyType">
-          <label>Company Type: </label>
-          <b-form-checkbox id="principal"
-              value="principal">
-             Principal
-          </b-form-checkbox>
-          <b-form-checkbox id="contractor"
-              value="contractor">
-             Contractor
-          </b-form-checkbox>
-        </b-form-checkbox-group>
+  <animated-slide-in-right>
+    <b-container>
+       <div class="contractor-header">
+         <h3>Register Company</h3>
+       </div>
+       <b-form @submit.prevent="onSubmit" id="form">
+        <h5>Company Information</h5>
         <b-form-input
-            id="companyName"
-            type="text"
-            v-model="company.name"
-            placeholder="Company Name"
-            required>
+          id="companyName"
+          type="text"
+          v-model="company.name"
+          placeholder="Name of Company"
+          required>
         </b-form-input>
         <b-form-input
-            id="address1"
-            type="text"
-            v-model="company.address1"
-            placeholder="Address"
-            required>
+          id="companyAddress"
+          type="text"
+          v-model="company.address"
+          placeholder="Company Address"
+          required
+          >
         </b-form-input>
         <b-form-input
-            id="address2"
-            type="text"
-            v-model="company.address2"
-            placeholder="Address Line 2">
+          id="companyCity"
+          type="text"
+          v-model="company.city"
+          placeholder="City"
+          required
+          >
         </b-form-input>
         <b-form-input
-            id="city"
-            type="text"
-            v-model="company.city"
-            placeholder="City"
-            required>
+          id="companyPostcode"
+          type="number"
+          class="no-spinners"
+          v-model="company.postcode"
+          placeholder="Postcode"
+          required
+          >
         </b-form-input>
         <b-form-input
-            id="postcode"
-            type="number"
-            v-model="company.postcode"
-            placeholder="Postcode"
-            class="no-spinners"
-            required>
+          id="companyPhone"
+          type="number"
+          class="no-spinners"
+          v-model="company.phone"
+          placeholder="Phone Number"
+          required
+         >
+        </b-form-input>
+        
+        <h5>Account Administrator</h5>
+        <b-form-input
+          id="firstName"
+          type="text"
+          v-model="company.admin.firstName"
+          placeholder="First Name"
+          required
+         >
         </b-form-input>
         <b-form-input
-            id="phone"
-            type="number"
-            v-model="company.phone"
-            placeholder="Phone"
-            class="no-spinners"
-            required>
-        </b-form-input>
-      </b-form-group>
-      
-      <b-form-group id="admin">
-        <p class="my-primary-accent form-subtitle">Account Administrator</p>
-        <b-form-input
-            id="adminFirstName"
-            type="text"
-            v-model="company.admin.firstName"
-            placeholder="First Name"
-            required>
+          id="lastName"
+          type="text"
+          v-model.lazy="company.admin.lastName"
+          placeholder="Last Name"
+          required
+          >
         </b-form-input>
         <b-form-input
-            id="adminLastName"
-            type="text"
-            v-model="company.admin.lastName"
-            placeholder="Last Name"
-            required>
+          id="adminPhone"
+          type="number"
+          class="no-spinners"
+          v-model="company.admin.phone"
+          placeholder="Phone Number"
+          required
+          >
         </b-form-input>
         <b-form-input
-            id="adminPhone"
-            type="number"
-            v-model="company.admin.phone"
-            placeholder="Phone"
-            class="no-spinner"
-            required>
+          id="email"
+          type="email"
+          v-model="company.admin.email"
+          placeholder="Email Address"
+          required
+          >
         </b-form-input>
         <b-form-input
-            id="adminEmail"
-            type="email"
-            v-model="company.admin.email"
-            placeholder="Email"
-            required>
+          id="password"
+          type="password"
+          v-model="company.admin.password"
+          placeholder="Password"
+          required
+         >
         </b-form-input>
-        <b-form-checkbox-group v-model="company.admin.safetyManager" name="safety Manager" required>
-          <label>Are you the Health and Safety Manager?</label>
-          <b-form-checkbox id="yes"
-              value="true" class="safetyManager">
-             Yes
-          </b-form-checkbox>
-          <b-form-checkbox id="no"
-              value="false"
-              class="safetyManager">
-             No
-          </b-form-checkbox>
-        </b-form-checkbox-group>
-      </b-form-group>
-      
-      <b-form-group id="billing">
-        <p class="my-primary-accent form-subtitle">Billing Information</p>
-        <b-button class="btn-block" type="submit">Sign Me Up</b-button>
-      <div class="row links">
-         <router-link to="login">Existing User Login</router-link>
-      </div>
-      </b-form-group>
-      
-    </b-form>
-    
-   
-      
-  </div>
+        <b-form-checkbox
+          class="mt-4"
+          v-model="company.admin.safetyManager"
+          value='true'
+          description="here is a description">
+          <span>I am the Health and Safety Representative for this Company</span>
+        </b-form-checkbox>
+        <p class="small ml-4"><em>Uncheck if you wish to register another person as Health and Safety Representative</em></p>
+        
+        <div v-if="company.admin.safetyManager != 'true'">
+          <h5 class="mt-5">Health and Safety Representative</h5>
+            <b-form-input
+              id="firstName"
+              type="text"
+              v-model="company.rep.firstName"
+              placeholder="First Name"
+              required>
+            </b-form-input>
+            <b-form-input
+              id="lastName"
+              type="text"
+              v-model="company.rep.lastName"
+              placeholder="Last Name"
+              required>
+            </b-form-input>
+            <b-form-input
+              id="adminPhone"
+              type="email"
+              v-model="company.rep.email"
+              placeholder="Email Address"
+              required>
+            </b-form-input>
+            <p class="small mt-3 ml-1">Health and Safety responsibilities will be transferred when this user completes the user registration process</p>
+        </div>
+        <button class="btn btn-block mt-4" type="submit">Submit</button>
+        <router-link to="/">Cancel</router-link>
+      </b-form>
+    </b-container>
+  </animated-slide-in-right>
 </template>
 
 <script>
@@ -127,10 +136,9 @@
     data () {
       return {
         company: {
-          type: '',
+          type: 'contractor',
           name: '',
           address: '',
-          address2: '',
           city: '',
           postcode: '',
           phone: '',
@@ -139,17 +147,20 @@
             lastName: '',
             phone: '',
             email: '',
-            safetyManager: ''
+            password: '',
+            safetyManager: 'true'
+          },
+          rep: {
+            firstName: '',
+            lastName: '',
+            email: ''
           }
-        },
-        companies: ['Bob the Builder', 'Leaky Pipes']
+        }
       }
     },
     methods: {
-      signupCompany (evt) {
-        evt.preventDefault()
-        alert(JSON.stringify(this.form))
-        // validate, create user in database and log the user in
+      onSubmit (evt) {
+        console.log(this.company)
       }
     }
   }
@@ -158,77 +169,61 @@
 
 
 <style scoped>
-  label {
-    margin-left: 3px;
-    color: white;
-  }
-  .custom-checkbox {
-    float: right;
+ .container {
+    padding: 0;
+    margin-top: 30px;
+    margin-bottom: 100px;
   }
   
- 
-  .form-title {
-    background-color: rgba(56, 56, 56, 0.5);
-    border-radius: 5px;
-    padding: 20px;
-  }
-  
-  .form-subtitle {
-    font-weight: 600;
-    margin-left: 3px;
-  }
-  .form-group {
-    background-color: rgba(56, 56, 56, 0.6);
-    border-radius: 5px;
+  .contractor-header {
+    max-width: 658px;
+    border-radius: 10px;
+    padding: 30px 0 15px 0;
     margin: auto;
-    margin-top: 20px;
-    padding: 20px;
-  }
-  
-  .form-control {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    text-align: center;
+    background-color: rgba(29, 92, 158, 0.75);
+    color: white;
+    font-family: 'Montserrat', sans-serif;
   }
   
   h5 {
-    font-family: 'trebuchet MS';
-    margin-bottom: 0;
-    font-weight: bold;
+    margin-top: 30px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    color: rgba(18, 128, 122, 1);
   }
   
-  .register {
-    height: 80px;
-    border-radius: 5px;
-    width: 100%;
-    font-weight: 500;
-    white-space:normal;
+  form {
+    max-width: 658px;
+    margin: auto;
   }
   
-  button {
-    font-weight: 500;
-    color: #383838;
-    background-color: #FFC80B;
-    font-weight: 600;
+  span {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
   }
   
-  button:hover {
-    background-color: #383838;
+  .form-control {
+    margin-top: 15px;
+  }
+  
+  .btn {
+    background-color: rgba(111, 50, 130, 0.75);
     cursor: pointer;
-  }
-  
-  .links {
-    margin-top: 12px;
-    padding: 0 20px;  
-  }
-  
-  a {
+    height: 50px;
     color: white;
-    text-decoration-line: underline;
-    font-size: .8rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.2rem;
   }
-
-  .safetyManager {
-    float: left;
+  
+  .btn:hover {
+    background-color: rgba(18, 128, 122, 0.85);
+  }
+  
+   a {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
   }
   
   .no-spinners {

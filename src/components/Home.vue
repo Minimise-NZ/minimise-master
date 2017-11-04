@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--navbar-->
-    <b-navbar sticky toggleable="md" type="dark" class="my-primary-bg padding-side">
+    <b-navbar sticky toggleable="lg" type="dark" class="my-primary-bg padding-side">
       <b-nav-toggle target="nav_collapse"></b-nav-toggle>
       <b-navbar-brand>
         <img src='../assets/yellow-mini.png'>
@@ -86,6 +86,8 @@ export default {
       padding-bottom: 50px;
     }   
 }
+  
+
 
 @media only screen and (max-width: 1050px ) {
   .second-col {

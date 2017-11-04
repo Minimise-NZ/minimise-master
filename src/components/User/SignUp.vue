@@ -68,13 +68,13 @@
         const userType = type
         switch (userType) {
           case 'principal':
-            this.$router.push('/newPrincipal')
+            this.$router.push('newPrincipal')
             break
           case 'contractor':
-            this.$router.push('/newContractor')
+            this.$router.push('newContractor')
             break
           case 'user':
-            this.$router.push('/newUser')
+            this.$router.push('newUser')
             break
         }
       }
