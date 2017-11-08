@@ -50,11 +50,18 @@
          >
         </b-form-input>
         
-        <h5>Account Administrator</h5>
+        <h5>User Information</h5>
+        <v-select 
+            v-model="user.role" 
+            :options="userRoles"
+            placeholder="Job Role"
+            class="mt-3"          
+            required
+            id="selectBox"></v-select> 
         <b-form-input
           id="firstName"
+          v-model="user.firstName"
           type="text"
-          v-model="company.admin.firstName"
           placeholder="First Name"
           required
          >
@@ -62,7 +69,7 @@
         <b-form-input
           id="lastName"
           type="text"
-          v-model.lazy="company.admin.lastName"
+          v-model="user.lastName"
           placeholder="Last Name"
           required
           >
@@ -70,8 +77,8 @@
         <b-form-input
           id="adminPhone"
           type="number"
+          v-model="user.phone"
           class="no-spinners"
-          v-model="company.admin.phone"
           placeholder="Phone Number"
           required
           >
@@ -79,7 +86,7 @@
         <b-form-input
           id="email"
           type="email"
-          v-model="company.admin.email"
+          v-model="user.email"
           placeholder="Email Address"
           required
           >
@@ -87,46 +94,20 @@
         <b-form-input
           id="password"
           type="password"
-          v-model="company.admin.password"
+          v-model="user.password"
           placeholder="Password"
           required
          >
         </b-form-input>
-        <b-form-checkbox
-          class="mt-4"
-          v-model="company.admin.safetyManager"
-          value='true'
-          description="here is a description">
-          <span>I am the Health and Safety Representative for this Company</span>
-        </b-form-checkbox>
-        <p class="small ml-4"><em>Uncheck if you wish to register another person as Health and Safety Representative</em></p>
-        
-        <div v-if="company.admin.safetyManager != 'true'">
-          <h5 class="mt-5">Health and Safety Representative</h5>
-            <b-form-input
-              id="firstName"
-              type="text"
-              v-model="company.rep.firstName"
-              placeholder="First Name"
-              required>
-            </b-form-input>
-            <b-form-input
-              id="lastName"
-              type="text"
-              v-model="company.rep.lastName"
-              placeholder="Last Name"
-              required>
-            </b-form-input>
-            <b-form-input
-              id="adminPhone"
-              type="email"
-              v-model="company.rep.email"
-              placeholder="Email Address"
-              required>
-            </b-form-input>
-            <p class="small mt-3 ml-1">Health and Safety responsibilities will be transferred when this user completes the user registration process</p>
-        </div>
-        <button class="btn btn-block mt-4" type="submit">Submit</button>
+        <!--<b-form-input
+          id="repeatPassword"
+          type="password"
+          v-model="user.confirmPassword"
+          placeholder="Confirm Password"
+          required
+         >
+        </b-form-input> -->
+        <button class="btn btn-block mt-4" type="submit">Sign up</button>
         <router-link to="/">Cancel</router-link>
       </b-form>
       </b-container>
@@ -142,6 +123,7 @@ export default {
   },
   data () {
     return {
+      userRoles: ['Health and Safety Manager', 'Health and Safety Administrator', 'Business Administrator', 'Project Manager'],
       company: {
         type: 'principal',
         name: '',
@@ -149,25 +131,46 @@ export default {
         city: '',
         postcode: '',
         phone: '',
-        admin: {
-          firstName: '',
-          lastName: '',
-          phone: '',
-          email: '',
-          password: '',
-          safetyManager: 'true'
-        },
-        rep: {
-          firstName: '',
-          lastName: '',
-          email: ''
-        }
+        users: [
+        ]
+      },
+      user: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        // confirmPassword: '',
+        phone: '',
+        admin: true,
+        webUser: true,
+        role: ''
       }
     }
   },
+  computed: {
+    userKey () {
+      return this.$store.getters.user.key
+    },
+    companyKey () {
+      return this.$store.getters.company.key
+    }
+  },
   methods: {
-    onSubmit (evt) {
-      console.log(this.company)
+    onSubmit () {
+      // validate the form
+      // validate the passwords match
+      // Sign Up Newuser
+      this.$store.dispatch('userSignUp',
+        {email: this.user.email, password: this.user.password})
+      // Create a company
+      this.$store.dispatch('newCompany', {
+        type: this.company.type,
+        name: this.company.name,
+        address: this.company.address,
+        city: this.company.city,
+        postcode: this.company.postcode,
+        phone: this.company.phone
+      })
     }
   }
 }
@@ -189,7 +192,7 @@ export default {
   .principal-header {
     max-width: 658px;
     border-radius: 5px;
-    padding: 15px 0 10px 0;
+    padding: 10px 0 10px 0;
     margin: auto;
     text-align: center;
     background-color: rgba(18, 128, 122, 0.85);

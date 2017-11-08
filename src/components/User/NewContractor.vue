@@ -1,6 +1,6 @@
 <template>
   <animated-fade-in>
-    <b-container fluid>
+    <b-container fluid> 
       <miniHeader></miniHeader>
       <b-container class="form-container">
          <div class="contractor-header">

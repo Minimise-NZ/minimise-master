@@ -28,18 +28,18 @@
               required>
           </b-form-input>
           <b-form-input
-              id="email"
-              type="email"
-              v-model="user.email"
-              placeholder="Email Address"
-              required>
-          </b-form-input>
-          <b-form-input
               id="phone"
               type="number"
               class="no-spinners"
               v-model="user.phone"
               placeholder="Phone Number">
+          </b-form-input>
+          <b-form-input
+              id="email"
+              type="email"
+              v-model="user.email"
+              placeholder="Email Address"
+              required>
           </b-form-input>
           <b-form-input
               id="password"
