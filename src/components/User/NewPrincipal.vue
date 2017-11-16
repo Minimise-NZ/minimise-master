@@ -8,105 +8,91 @@
        </div>
        <b-form @submit.prevent="onSubmit" id="form">
         <h5>Company Information</h5>
-        <b-form-input
-          id="companyName"
-          type="text"
-          v-model="company.name"
-          placeholder="Name of Company"
-          required>
-        </b-form-input>
-        <b-form-input
-          id="companyAddress"
-          type="text"
-          v-model="company.address"
-          placeholder="Company Address"
-          required
-          >
-        </b-form-input>
-        <b-form-input
-          id="companyCity"
-          type="text"
-          v-model="company.city"
-          placeholder="City"
-          required
-          >
-        </b-form-input>
-        <b-form-input
-          id="companyPostcode"
-          type="number"
-          class="no-spinners"
-          v-model="company.postcode"
-          placeholder="Postcode"
-          required
-          >
-        </b-form-input>
-        <b-form-input
-          id="companyPhone"
-          type="number"
-          class="no-spinners"
-          v-model="company.phone"
-          placeholder="Phone Number"
-          required
-         >
-        </b-form-input>
+          <b-form-input
+              id="companyName"
+              type="text"
+              autofocus="autofocus"
+              v-model="companyName"
+              placeholder="Name of Company"
+              >
+          </b-form-input>
+          <p>Please enter the name of your Company</p>
+          <b-form-input
+              id="address"
+              type="text"
+              v-model="address"
+              placeholder="Company Address"
+              >
+          </b-form-input>
+          <p>Please enter a valid address</p>
+          <b-form-input
+              id="city"
+              type="text"
+              v-model="city"
+              placeholder="City"
+              >
+          </b-form-input>
+          <p>Please enter a valid city</p>
+          <b-form-input
+              id="postcode"
+              type="number"
+              class="no-spinners"
+              v-model="postcode"
+              placeholder="Postcode"
+              >
+          </b-form-input>
+          <p>Please enter a valid postcode</p>
+          <b-form-input
+              id="companyPhone"
+              type="number"
+              class="no-spinners"
+              v-model="companyPhone"
+              placeholder="Phone Number"
+              >
+          </b-form-input>
+          <p>Please enter a valid phone number</p>
         
         <h5>User Information</h5>
         <v-select 
-            v-model="user.role" 
+            v-model="userRole" 
             :options="userRoles"
             placeholder="Job Role"
             class="mt-3"          
-            required
-            id="selectBox"></v-select> 
+            id="selectBox"
+            >
+        </v-select>
+         <p >Please select your Job Role</p>
         <b-form-input
-          id="firstName"
-          v-model="user.firstName"
-          type="text"
-          placeholder="First Name"
-          required
-         >
+            id="name"
+            v-model="userName"
+            type="text"
+            placeholder="Name">
         </b-form-input>
         <b-form-input
-          id="lastName"
-          type="text"
-          v-model="user.lastName"
-          placeholder="Last Name"
-          required
-          >
+            id="userPhone"
+            type="number"
+            v-model="userPhone"
+            class="no-spinners"
+            placeholder="Phone Number">
         </b-form-input>
         <b-form-input
-          id="adminPhone"
-          type="number"
-          v-model="user.phone"
-          class="no-spinners"
-          placeholder="Phone Number"
-          required
-          >
+            id="email"
+            type="email"
+            v-model="userEmail"
+            placeholder="Email Address">
         </b-form-input>
         <b-form-input
-          id="email"
-          type="email"
-          v-model="user.email"
-          placeholder="Email Address"
-          required
-          >
+            id="password"
+            type="password"
+            v-model="password"
+            placeholder="Password">
         </b-form-input>
         <b-form-input
-          id="password"
+          id="confirmPassword"
           type="password"
-          v-model="user.password"
-          placeholder="Password"
-          required
-         >
+          v-model="confirmPassword"
+          placeholder="Confirm Password">
         </b-form-input>
-        <!--<b-form-input
-          id="repeatPassword"
-          type="password"
-          v-model="user.confirmPassword"
-          placeholder="Confirm Password"
-          required
-         >
-        </b-form-input> -->
         <button class="btn btn-block mt-4" type="submit">Sign up</button>
         <router-link to="/">Cancel</router-link>
       </b-form>
@@ -123,28 +109,22 @@ export default {
   },
   data () {
     return {
-      userRoles: ['Health and Safety Manager', 'Health and Safety Administrator', 'Business Administrator', 'Project Manager'],
-      company: {
-        type: 'principal',
-        name: '',
-        address: '',
-        city: '',
-        postcode: '',
-        phone: '',
-        users: [
-        ]
-      },
-      user: {
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        // confirmPassword: '',
-        phone: '',
-        admin: true,
-        webUser: true,
-        role: ''
-      }
+      userRoles: ['Health and Safety Manager', 'Health and Safety Administrator', 'Business Administrator', 'Project Manager', 'Supervisor'],
+      principal: true,
+      companyName: '',
+      address: '',
+      city: '',
+      postcode: '',
+      companyPhone: '',
+      users: [],
+      userName: '',
+      userEmail: '',
+      password: '',
+      confirmPassword: '',
+      userPhone: '',
+      admin: true,
+      webUser: true,
+      userRole: ''
     }
   },
   computed: {
@@ -157,28 +137,19 @@ export default {
   },
   methods: {
     onSubmit () {
-      // validate the form
-      // validate the passwords match
       // Sign Up Newuser
       this.$store.dispatch('userSignUp',
-        {email: this.user.email, password: this.user.password})
+        {
+        })
       // Create a company
       this.$store.dispatch('newCompany', {
-        type: this.company.type,
-        name: this.company.name,
-        address: this.company.address,
-        city: this.company.city,
-        postcode: this.company.postcode,
-        phone: this.company.phone
       })
     }
   }
 }
 </script>
 
-
 <style scoped>
-  
   .container-fluid {
     padding: 0;
   }
@@ -233,6 +204,10 @@ export default {
   .btn:hover {
     background-color: rgba(111, 50, 130, 0.75);
   }
+
+  .btn:hover:disabled {
+    cursor: not-allowed;
+  }
   
   a {
     display: block;
@@ -249,5 +224,5 @@ export default {
     -webkit-appearance: none;
     margin: 0;
   }
-  
+
 </style>

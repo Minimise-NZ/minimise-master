@@ -1,12 +1,13 @@
-import { initializeApp } from 'firebase'
+import Firebase from 'firebase'
+import 'firebase/firestore'
 
-const app = initializeApp({
-  apiKey: 'AIzaSyC_ronpzRJkeHj85l1O179b33UuLqjYoKk',
-  authDomain: 'minimisedb.firebaseapp.com',
-  databaseURL: 'https://minimisedb.firebaseio.com',
-  projectId: 'minimisedb',
-  storageBucket: 'minimisedb.appspot.com',
-  messagingSenderId: '914768004690'
+const firebaseApp = Firebase.initializeApp({
+  apiKey: 'AIzaSyAjyjXMLbCu6aCMgtZYnBKTftYBf00POlQ',
+  authDomain: 'minimise-firestore.firebaseapp.com',
+  databaseURL: 'https://minimise-firestore.firebaseio.com',
+  projectId: 'minimise-firestore',
+  storageBucket: 'minimise-firestore.appspot.com',
+  messagingSenderId: '1095768903292'
 })
 
-export const db = app.database()
+export const firestore = firebaseApp.firestore()

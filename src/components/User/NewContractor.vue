@@ -137,6 +137,8 @@
 <script>
 import MiniHeader from '@/components/MiniHeader.vue'
 export default {
+  validations: {
+  },
   components: {
     miniHeader: MiniHeader
   },

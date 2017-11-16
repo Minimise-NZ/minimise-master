@@ -10,7 +10,7 @@
         Home Page
       </router-link>
       <router-link to='signup' size="lg" class="mr-3 nav-link">
-        Go Back
+        Sign Up
       </router-link>
       <router-link to='login' size="lg" class="mr-3 nav-link">
         Log In
@@ -36,7 +36,6 @@ export default {
     height: 50px;
     padding: 10px 40px;
     background-color: #383838;
-    
   }
   
   .navbar-brand > a {
@@ -47,6 +46,10 @@ export default {
   
   .nav-link {
     color: #e0e0e0;
+  }
+  
+  .nav-link:hover {
+    color: #FFC80B;
   }
   
   @media only screen and (max-width: 570px) {

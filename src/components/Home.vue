@@ -14,10 +14,10 @@
           <b-nav-item href="#">Features</b-nav-item>
           <b-nav-item href="#">FAQ</b-nav-item>
           <b-nav-item href="#">Contact</b-nav-item>
-          <router-link to='signup' tag="button" size="sm" class="my-2 my-sm-0 login-btn mr-3">
+          <router-link to='signup' tag="button" size="sm" class="login-btn mr-3">
             Sign Up
           </router-link>
-          <router-link to='login' tag="button" size="sm" class="my-2 my-sm-0 login-btn mr-3">
+          <router-link to='login' tag="button" size="sm" class="login-btn mr-3">
             Log In
           </router-link>
         </b-nav>
@@ -71,37 +71,21 @@ export default {
   padding-left: 40px;
   padding-right: 40px;
 }
-
-
-@media only screen and (max-width: 340px) {
-    .navbar-brand {
-      display: none;
-    }
-}
-
-@media only screen and (min-width: 710px) {
-    .first-col {
-      padding-top: 60px;
-      padding-bottom: 50px;
-    }   
-}
-
-@media only screen and (max-width: 1050px ) {
-  .second-col {
-    display: none;
-  }
-}
-
+  
 .brand-name {
   font-size: 1.6rem;
 }
+  
+  button {
+    cursor: pointer;
+  }
 
 .login-btn {
+  margin-top: 0;
   background-color: #383838;
   border: 0.5px solid #FFC80B;
   width: 100px;
   color: #FFC80B;
-  cursor: pointer;
   border-radius: 5px;
 }
 
@@ -112,7 +96,6 @@ export default {
 
 .signup-btn {
   background-color: #FFC80B;
-  cursor: pointer;
   color: #383838;
   font-weight: bold;
   margin-top: 15px;
@@ -157,5 +140,27 @@ export default {
 .social-icon:hover {
   color: #fc8700;
 }
-  
+
+@media only screen and (max-width: 340px) {
+  .navbar-brand {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 710px) {
+  .first-col {
+    padding-top: 60px;
+    padding-bottom: 50px;
+  }   
+}
+
+@media only screen and (max-width: 990px ) {
+  .second-col {
+    display: none;
+  }
+  .login-btn {
+    margin-top: 10px;
+  }
+}
+
 </style>

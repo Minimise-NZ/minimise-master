@@ -1,50 +1,57 @@
 <template>
  <animated-roll-in>
-  <b-container class="login-container">
-    <h2>Log In</h2>
-    <b-form @submit="loginUser" id="login">
-       <b-input-group>
-         <b-input-group-addon>
-           <i class="fa fa-envelope" aria-hidden="true"></i>
-         </b-input-group-addon>
-         <b-form-input
-            id="login-email"
-            type="email"
-            v-model="entered.email"
-            placeholder="Email Address"
-            required>
-        </b-form-input>
-       </b-input-group>
-       
-       <b-input-group>
-         <b-input-group-addon>
-           <i class="fa fa-lock fa-lg" aria-hidden="true"></i>
-         </b-input-group-addon>
-        <b-form-input
-            id="login-password"
-            type="password"
-            v-model="entered.password"
-            placeholder="Password"
-            required>
-        </b-form-input> 
-      </b-input-group>
-      
-      <b-button class="btn-block" type="submit">LOGIN</b-button>
-      <b-row class="links">
-        <b-col class="leftcol">
-          <router-link to="signup">SIGN UP</router-link>
-        </b-col>
-        <b-col>
-          <router-link to="password">PASSWORD</router-link>
-        </b-col>
-      </b-row>
-    </b-form>
+  <b-container fluid>
+    <miniHeader></miniHeader>
+    <b-container class="login-container">
+      <h2>Log In</h2>
+      <b-form @submit="loginUser" id="login">
+         <b-input-group>
+           <b-input-group-addon>
+             <i class="fa fa-envelope" aria-hidden="true"></i>
+           </b-input-group-addon>
+           <b-form-input
+              id="login-email"
+              type="email"
+              v-model="entered.email"
+              placeholder="Email Address"
+              required>
+          </b-form-input>
+         </b-input-group>
+
+         <b-input-group>
+           <b-input-group-addon>
+             <i class="fa fa-lock fa-lg" aria-hidden="true"></i>
+           </b-input-group-addon>
+          <b-form-input
+              id="login-password"
+              type="password"
+              v-model="entered.password"
+              placeholder="Password"
+              required>
+          </b-form-input> 
+        </b-input-group>
+
+        <b-button class="btn-block" type="submit">LOGIN</b-button>
+        <b-row class="links">
+          <b-col class="leftcol">
+            <router-link to="signup">SIGN UP</router-link>
+          </b-col>
+          <b-col>
+            <router-link to="password">PASSWORD</router-link>
+          </b-col>
+        </b-row>
+      </b-form>
+    </b-container>
   </b-container>
   </animated-roll-in>
 </template>
 
 <script>
+  import MiniHeader from '@/components/MiniHeader.vue'
   export default {
+    components: {
+      miniHeader: MiniHeader
+    },
     data () {
       return {
         entered: {
@@ -64,6 +71,11 @@
 </script>
 
 <style scoped>
+  
+  .container-fluid {
+    padding: 0;
+  }
+  
   .login-container {
     padding: 50px 80px;
     margin-top: 150px;
