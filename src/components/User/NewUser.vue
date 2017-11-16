@@ -7,54 +7,73 @@
           <h3>Sign Up: New User</h3>
         </div>
         <b-form @submit.prevent="onSubmit" id="form">
-          <v-select 
-            v-model="user.company" 
-            :options="companies"
-            placeholder="Company Name"
-            required
-            id="selectBox"></v-select> 
-          <b-form-input
-              id="firstName"
-              type="text"
-              v-model="user.firstName"
-              placeholder="First Name"
-              required>
+          <v-select name="company"
+              v-validate="'required'"
+              v-model="company" 
+              :options="companies"
+              placeholder="Company Name"
+              id="selectBox"
+              :class="{'alert-border': errors.has('company')}">
+          </v-select>
+          <div class="alert alert-danger" v-show="errors.has('company')">Please select your job role</div>
+
+          <v-select name="userRole"
+              v-validate="'required'"
+              v-model="userRole" 
+              :options="userRoles"
+              placeholder="Job Role"
+              class="mt-3"          
+              id="selectBox"
+              :class="{'alert-border': errors.has('userRole')}">
+          </v-select>
+          <div class="alert alert-danger" v-show="errors.has('userRole')">Please select your job role</div>
+
+          <b-form-input name="name"
+                v-validate="'required|alpha_spaces'"
+                v-model="name"
+                placeholder="Name"
+                :class="{'alert-border': errors.has('name')}">
           </b-form-input>
-          <b-form-input
-              id="lastName"
-              type="text"
-              v-model="user.lastName"
-              placeholder="Last Name"
-              required>
+          <div class="alert alert-danger" v-show="errors.has('name')">Please enter your name</div>
+
+          <b-form-input name="phone"
+                v-validate="'required|numeric'"
+                v-model="phone"
+                class="no-spinners"
+                placeholder="Phone Number"
+                :class="{'alert-border': errors.has('phone')}">
           </b-form-input>
-          <b-form-input
-              id="phone"
-              type="number"
-              class="no-spinners"
-              v-model="user.phone"
-              placeholder="Phone Number">
+          <div class="alert alert-danger" v-show="errors.has('phone')">Please enter your phone number</div>
+          
+          <b-form-input name="email"
+                v-validate="'required|email'"
+                v-model="email"
+                placeholder="Email Address"
+                :class="{'alert-border': errors.has('email')}">
           </b-form-input>
-          <b-form-input
-              id="email"
-              type="email"
-              v-model="user.email"
-              placeholder="Email Address"
-              required>
-          </b-form-input>
-          <b-form-input
-              id="password"
+          <div class="alert alert-danger" v-show="errors.has('email')">Please enter a valid email address</div>
+
+          <b-form-input name="password"
+              v-validate="'required|min:6'"
               type="password"
-              v-model="user.password"
+              v-model="password"
+              data-vv-delay="1000"
               placeholder="Password"
-              required>
+              :class="{'alert-border': errors.has('password')}">
           </b-form-input>
-          <b-form-input
-              id="confirmPassword"
-              type="password"
-              v-model="user.confirmPassword"
-              placeholder="Confirm Password"
-              required>
+          <div class="alert alert-danger" v-show="errors.has('password')">{{ errors.first('password') }}</div>
+
+          <b-form-input name="confirmPassword"
+            v-validate="'confirmed:password'"
+            type="password"
+            v-model="confirmPassword"
+            data-vv-delay="1000"
+            placeholder="Confirm Password"
+            data-vv-as="password"
+            :class="{'alert-border': errors.has('name')}">
           </b-form-input>
+          <div class="alert alert-danger" v-show="errors.has('confirmPassword')">{{ errors.first('confirmPassword') }}</div>
+
           <b-button class="btn btn-block mt-4" type="submit">Sign Me Up</b-button>
           <b-row class="links">
             <b-col class="leftcol">
@@ -78,22 +97,38 @@
     },
     data () {
       return {
-        user: {
-          company: '',
-          firstName: '',
-          lastName: '',
-          email: '',
-          phone: '',
-          password: '',
-          confirmPassword: ''
-        },
+        userRoles: ['Health and Safety Manager', 'Health and Safety Administrator', 'Business Administrator', 'Project Manager', 'Supervisor'],
+        company: '',
+        name: '',
+        email: '',
+        phone: '',
+        password: '',
+        confirmPassword: '',
+        admin: '',
+        webUser: true,
+        userRole: '',
         companies: ['Bob the Builder', 'Leaky Pipes']
       }
     },
+    computed: {
+      userKey () {
+        return this.$store.getters.user.key
+      },
+      companyKey () {
+        return this.$store.getters.company.key
+      }
+    },
     methods: {
-      signupUser (evt) {
-        evt.preventDefault()
-        // validate, create user in database and log the user in
+      onSubmit () {
+        this.$validator.validateAll().then((valid) => {
+          if (valid) {
+            // create a user
+            // create a company
+            alert('Form Submitted!')
+          } else {
+            alert('Correct them errors!')
+          }
+        })
       }
     }
   }
@@ -162,6 +197,16 @@
   
   a {
     font-size: 0.9rem;
+  }
+
+  .alert-danger {
+    margin-top:10px;
+    padding: 5px;
+    font-size: 0.9rem;
+  }
+
+  .alert-border {
+    border: 1px solid salmon;
   }
   
   .no-spinners {

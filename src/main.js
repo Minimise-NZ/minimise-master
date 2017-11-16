@@ -10,11 +10,13 @@ import { store } from './store/store'
 import vSelect from 'vue-select'
 import AnimatedVue from 'animated-vue'
 import 'animate.css/animate.css'
+import VeeValidate from 'vee-validate'
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.component('v-select', vSelect)
 Vue.use(AnimatedVue)
+Vue.use(VeeValidate)
 
 /* eslint-disable no-new */
 new Vue({

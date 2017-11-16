@@ -7,124 +7,101 @@
            <h3>Sign Up: New Company</h3>
          </div>
          <b-form @submit.prevent="onSubmit" id="form">
+
+          <div class="company">
           <h5>Company Information</h5>
-          <b-form-input
-            id="companyName"
-            type="text"
-            v-model="company.name"
-            placeholder="Name of Company"
-            required>
-          </b-form-input>
-          <b-form-input
-            id="companyAddress"
-            type="text"
-            v-model="company.address"
-            placeholder="Company Address"
-            required
-            >
-          </b-form-input>
-          <b-form-input
-            id="companyCity"
-            type="text"
-            v-model="company.city"
-            placeholder="City"
-            required
-            >
-          </b-form-input>
-          <b-form-input
-            id="companyPostcode"
-            type="number"
-            class="no-spinners"
-            v-model="company.postcode"
-            placeholder="Postcode"
-            required
-            >
-          </b-form-input>
-          <b-form-input
-            id="companyPhone"
-            type="number"
-            class="no-spinners"
-            v-model="company.phone"
-            placeholder="Phone Number"
-            required
-           >
-          </b-form-input>
+            <b-form-input name="companyName"
+                v-validate="'required|alpha_spaces'"
+                autofocus="autofocus"
+                v-model="companyName"
+                placeholder="Name of Company"
+                :class="{'alert-border': errors.has('address')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('companyName')">Please enter company name</div>
 
-          <h5>Account Administrator</h5>
-          <b-form-input
-            id="firstName"
-            type="text"
-            v-model="company.admin.firstName"
-            placeholder="First Name"
-            required
-           >
-          </b-form-input>
-          <b-form-input
-            id="lastName"
-            type="text"
-            v-model.lazy="company.admin.lastName"
-            placeholder="Last Name"
-            required
-            >
-          </b-form-input>
-          <b-form-input
-            id="adminPhone"
-            type="number"
-            class="no-spinners"
-            v-model="company.admin.phone"
-            placeholder="Phone Number"
-            required
-            >
-          </b-form-input>
-          <b-form-input
-            id="email"
-            type="email"
-            v-model="company.admin.email"
-            placeholder="Email Address"
-            required
-            >
-          </b-form-input>
-          <b-form-input
-            id="password"
-            type="password"
-            v-model="company.admin.password"
-            placeholder="Password"
-            required
-           >
-          </b-form-input>
-          <b-form-checkbox
-            class="mt-4"
-            v-model="company.admin.safetyManager"
-            value='true'
-            description="here is a description">
-            <span>I am the Health and Safety Representative for this Company</span>
-          </b-form-checkbox>
-          <p class="small ml-4"><em>Uncheck if you wish to register another person as Health and Safety Representative</em></p>
+            <b-form-input name="address"
+                v-validate="'required'"
+                v-model="address"
+                placeholder="Company Address"
+                :class="{'alert-border': errors.has('address')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('address')">Please enter address</div>
 
-          <div v-if="company.admin.safetyManager != 'true'">
-            <h5 class="mt-5">Health and Safety Representative</h5>
-              <b-form-input
-                id="firstName"
-                type="text"
-                v-model="company.rep.firstName"
-                placeholder="First Name"
-                required>
-              </b-form-input>
-              <b-form-input
-                id="lastName"
-                type="text"
-                v-model="company.rep.lastName"
-                placeholder="Last Name"
-                required>
-              </b-form-input>
-              <b-form-input
-                id="adminPhone"
-                type="email"
-                v-model="company.rep.email"
+            <b-form-input name="city"
+                v-validate="'required|alpha_spaces'"
+                v-model="city"
+                placeholder="City"
+                :class="{'alert-border': errors.has('city')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('city')">Please enter city</div>
+
+            <b-form-input name="postcode"
+                v-validate="'required|numeric'"
+                type="number"
+                class="no-spinners"
+                v-model="postcode"
+                placeholder="Postcode"
+                :class="{'alert-border': errors.has('postcode')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('postcode')">Please enter postcode</div>
+
+            <b-form-input name="Company Phone"
+                v-validate="'required|numeric'"
+                class="no-spinners"
+                v-model="companyPhone"
+                placeholder="Phone Number"
+                :class="{'alert-border': errors.has('Company Phone')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('Company Phone')">Please enter company phone number</div>
+          </div>
+
+          <div class="user">
+          <h5>User Information</h5>
+            <b-form-input name="name"
+                v-validate="'required|alpha_spaces'"
+                v-model="userName"
+                placeholder="Name"
+                :class="{'alert-border': errors.has('name')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('name')">Please enter your name</div>
+
+            <b-form-input name="userPhone"
+                v-validate="'required|numeric'"
+                v-model="userPhone"
+                class="no-spinners"
+                placeholder="Phone Number"
+                :class="{'alert-border': errors.has('userPhone')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('name')">Please enter your phone number</div>
+
+            <b-form-input name="email"
+                v-validate="'required|email'"
+                v-model="userEmail"
                 placeholder="Email Address"
-                required>
-              </b-form-input>
-              <p class="small mt-3 ml-1">Health and Safety responsibilities will be transferred when this user completes the user registration process</p>
+                :class="{'alert-border': errors.has('email')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('email')">Please enter a valid email address</div>
+
+            <b-form-input name="password"
+                v-validate="'required|min:6'"
+                type="password"
+                v-model="password"
+                data-vv-delay="1000"
+                placeholder="Password"
+                :class="{'alert-border': errors.has('password')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('password')">{{ errors.first('password') }}</div>
+
+            <b-form-input name="confirmPassword"
+              v-validate="'confirmed:password'"
+              type="password"
+              v-model="confirmPassword"
+              data-vv-delay="1000"
+              placeholder="Confirm Password"
+              data-vv-as="password"
+              :class="{'alert-border': errors.has('name')}">
+            </b-form-input>
+             <div class="alert alert-danger" v-show="errors.has('confirmPassword')">{{ errors.first('confirmPassword') }}</div>
           </div>
           <button class="btn btn-block mt-4 mb-3" type="submit">Submit</button>
           <router-link to="/">Cancel</router-link>
@@ -137,39 +114,46 @@
 <script>
 import MiniHeader from '@/components/MiniHeader.vue'
 export default {
-  validations: {
-  },
   components: {
     miniHeader: MiniHeader
   },
   data () {
     return {
-      company: {
-        type: 'contractor',
-        name: '',
-        address: '',
-        city: '',
-        postcode: '',
-        phone: '',
-        admin: {
-          firstName: '',
-          lastName: '',
-          phone: '',
-          email: '',
-          password: '',
-          safetyManager: 'true'
-        },
-        rep: {
-          firstName: '',
-          lastName: '',
-          email: ''
-        }
-      }
+      principal: true,
+      companyName: '',
+      address: '',
+      city: '',
+      postcode: '',
+      companyPhone: '',
+      users: [],
+      userName: '',
+      userEmail: '',
+      password: '',
+      confirmPassword: '',
+      userPhone: '',
+      admin: true,
+      webUser: true
+    }
+  },
+  computed: {
+    userKey () {
+      return this.$store.getters.user.key
+    },
+    companyKey () {
+      return this.$store.getters.company.key
     }
   },
   methods: {
-    onSubmit (evt) {
-      console.log(this.company)
+    onSubmit () {
+      this.$validator.validateAll().then((valid) => {
+        if (valid) {
+          // create a user
+          // create a company
+          alert('Form Submitted!')
+        } else {
+          alert('Correct them errors!')
+        }
+      })
     }
   }
 }
@@ -236,6 +220,16 @@ export default {
     display: block;
     text-align: center;
     text-decoration: none;
+  }
+
+  .alert-danger {
+    margin-top:10px;
+    padding: 5px;
+    font-size: 0.9rem;
+  }
+
+  .alert-border {
+    border: 1px solid salmon;
   }
   
   .no-spinners {

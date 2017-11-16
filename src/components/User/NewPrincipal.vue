@@ -1,101 +1,123 @@
 <template>
   <animated-fade-in>
-   <b-container fluid>
-    <miniHeader></miniHeader>
-    <b-container class="form-container">
-       <div class="principal-header">
-         <h3>Sign Up: New Company</h3>
-       </div>
-       <b-form @submit.prevent="onSubmit" id="form">
-        <h5>Company Information</h5>
-          <b-form-input
-              id="companyName"
-              type="text"
-              autofocus="autofocus"
-              v-model="companyName"
-              placeholder="Name of Company"
-              >
-          </b-form-input>
-          <p>Please enter the name of your Company</p>
-          <b-form-input
-              id="address"
-              type="text"
-              v-model="address"
-              placeholder="Company Address"
-              >
-          </b-form-input>
-          <p>Please enter a valid address</p>
-          <b-form-input
-              id="city"
-              type="text"
-              v-model="city"
-              placeholder="City"
-              >
-          </b-form-input>
-          <p>Please enter a valid city</p>
-          <b-form-input
-              id="postcode"
-              type="number"
-              class="no-spinners"
-              v-model="postcode"
-              placeholder="Postcode"
-              >
-          </b-form-input>
-          <p>Please enter a valid postcode</p>
-          <b-form-input
-              id="companyPhone"
-              type="number"
-              class="no-spinners"
-              v-model="companyPhone"
-              placeholder="Phone Number"
-              >
-          </b-form-input>
-          <p>Please enter a valid phone number</p>
-        
-        <h5>User Information</h5>
-        <v-select 
-            v-model="userRole" 
-            :options="userRoles"
-            placeholder="Job Role"
-            class="mt-3"          
-            id="selectBox"
-            >
-        </v-select>
-         <p >Please select your Job Role</p>
-        <b-form-input
-            id="name"
-            v-model="userName"
-            type="text"
-            placeholder="Name">
-        </b-form-input>
-        <b-form-input
-            id="userPhone"
-            type="number"
-            v-model="userPhone"
-            class="no-spinners"
-            placeholder="Phone Number">
-        </b-form-input>
-        <b-form-input
-            id="email"
-            type="email"
-            v-model="userEmail"
-            placeholder="Email Address">
-        </b-form-input>
-        <b-form-input
-            id="password"
-            type="password"
-            v-model="password"
-            placeholder="Password">
-        </b-form-input>
-        <b-form-input
-          id="confirmPassword"
-          type="password"
-          v-model="confirmPassword"
-          placeholder="Confirm Password">
-        </b-form-input>
-        <button class="btn btn-block mt-4" type="submit">Sign up</button>
-        <router-link to="/">Cancel</router-link>
-      </b-form>
+    <b-container fluid>
+      <miniHeader></miniHeader>
+      <b-container class="form-container">
+        <div class="principal-header">
+          <h3>Sign Up: New Company</h3>
+        </div>
+        <b-form @submit.prevent="onSubmit" id="form">
+
+          <div class="company">
+          <h5>Company Information</h5>
+            <b-form-input name="companyName"
+                v-validate="'required|alpha_spaces'"
+                autofocus="autofocus"
+                v-model="companyName"
+                placeholder="Name of Company"
+                :class="{'alert-border': errors.has('companyName')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('companyName')">Please enter company name</div>
+
+            <b-form-input name="address"
+                v-validate="'required'"
+                v-model="address"
+                placeholder="Company Address"
+                :class="{'alert-border': errors.has('address')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('address')">Please enter address</div>
+
+            <b-form-input name="city"
+                v-validate="'required|alpha_spaces'"
+                v-model="city"
+                placeholder="City"
+                :class="{'alert-border': errors.has('city')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('city')">Please enter city</div>
+
+            <b-form-input name="postcode"
+                v-validate="'required|numeric'"
+                type="number"
+                class="no-spinners"
+                v-model="postcode"
+                placeholder="Postcode"
+                :class="{'alert-border': errors.has('postcode')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('postcode')">Please enter postcode</div>
+
+            <b-form-input name="Company Phone"
+                v-validate="'required|numeric'"
+                class="no-spinners"
+                v-model="companyPhone"
+                placeholder="Phone Number"
+                :class="{'alert-border': errors.has('Company Phone')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('Company Phone')">Please enter company phone number</div>
+          </div>
+          
+          <div class="user">
+          <h5>User Information</h5>
+            <v-select name="userRole"
+                v-validate="'required'"
+                v-model="userRole" 
+                :options="userRoles"
+                placeholder="Job Role"
+                class="mt-3"          
+                id="selectBox"
+                :class="{'alert-border': errors.has('userRole')}">
+            </v-select>
+            <div class="alert alert-danger" v-show="errors.has('userRole')">Please select your job role</div>
+
+            <b-form-input name="name"
+                v-validate="'required|alpha_spaces'"
+                v-model="userName"
+                placeholder="Name"
+                :class="{'alert-border': errors.has('name')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('name')">Please enter your name</div>
+
+            <b-form-input name="userPhone"
+                v-validate="'required|numeric'"
+                v-model="userPhone"
+                class="no-spinners"
+                placeholder="Phone Number"
+                :class="{'alert-border': errors.has('userPhone')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('userPhone')">Please enter your phone number</div>
+
+            <b-form-input name="email"
+                v-validate="'required|email'"
+                v-model="userEmail"
+                placeholder="Email Address"
+                :class="{'alert-border': errors.has('email')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('email')">Please enter a valid email address</div>
+
+            <b-form-input name="password"
+                v-validate="'required|min:6'"
+                type="password"
+                v-model="password"
+                data-vv-delay="1000"
+                placeholder="Password"
+                :class="{'alert-border': errors.has('password')}">
+            </b-form-input>
+            <div class="alert alert-danger" v-show="errors.has('password')">{{ errors.first('password') }}</div>
+
+            <b-form-input name="confirmPassword"
+              v-validate="'confirmed:password'"
+              type="password"
+              v-model="confirmPassword"
+              data-vv-delay="1000"
+              placeholder="Confirm Password"
+              data-vv-as="password"
+              :class="{'alert-border': errors.has('name')}">
+            </b-form-input>
+             <div class="alert alert-danger" v-show="errors.has('confirmPassword')">{{ errors.first('confirmPassword') }}</div>
+          </div>
+
+          <button class="btn btn-block mt-4" type="submit">Sign up</button>
+          <router-link to="/">Cancel</router-link>
+        </b-form>
       </b-container>
     </b-container>
   </animated-fade-in>
@@ -137,12 +159,14 @@ export default {
   },
   methods: {
     onSubmit () {
-      // Sign Up Newuser
-      this.$store.dispatch('userSignUp',
-        {
-        })
-      // Create a company
-      this.$store.dispatch('newCompany', {
+      this.$validator.validateAll().then((valid) => {
+        if (valid) {
+          // create a user
+          // create a company
+          alert('Form Submitted!')
+        } else {
+          alert('Correct them errors!')
+        }
       })
     }
   }
@@ -214,7 +238,17 @@ export default {
     text-align: center;
     margin-top: 15px;
   }
-  
+
+  .alert-danger {
+    margin-top:10px;
+    padding: 5px;
+    font-size: 0.9rem;
+  }
+
+  .alert-border {
+    border: 1px solid salmon;
+  }
+
   .no-spinners {
     -moz-appearance:textfield;
   }
