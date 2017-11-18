@@ -86,7 +86,7 @@
                 v-validate="'required|min:6'"
                 type="password"
                 v-model="password"
-                data-vv-delay="1000"
+                data-vv-delay="2000"
                 placeholder="Password"
                 :class="{'alert-border': errors.has('password')}">
             </b-form-input>
@@ -96,7 +96,7 @@
               v-validate="'confirmed:password'"
               type="password"
               v-model="confirmPassword"
-              data-vv-delay="1000"
+              data-vv-delay="3000"
               placeholder="Confirm Password"
               data-vv-as="password"
               :class="{'alert-border': errors.has('name')}">
@@ -119,40 +119,48 @@ export default {
   },
   data () {
     return {
-      principal: true,
+      contractor: true,
+      principal: false,
       companyName: '',
       address: '',
       city: '',
       postcode: '',
       companyPhone: '',
-      users: [],
       userName: '',
       userEmail: '',
       password: '',
       confirmPassword: '',
       userPhone: '',
       admin: true,
-      webUser: true
-    }
-  },
-  computed: {
-    userKey () {
-      return this.$store.getters.user.key
-    },
-    companyKey () {
-      return this.$store.getters.company.key
+      webUser: true,
+      userRole: ''
     }
   },
   methods: {
     onSubmit () {
       this.$validator.validateAll().then((valid) => {
-        if (valid) {
-          // create a user
-          // create a company
-          alert('Form Submitted!')
-        } else {
-          alert('Correct them errors!')
-        }
+        if (!valid) { return }
+        this.$store.dispatch('newUser', {
+          email: this.userEmail,
+          password: this.password,
+          name: this.userName,
+          phone: this.userPhone,
+          admin: this.admin,
+          webUser: this.webUser,
+          role: this.userRole
+        })
+        this.$store.dispatch('newCompany', {
+          address: this.address,
+          city: this.city,
+          name: this.companyName,
+          phone: this.companyPhone,
+          postcode: this.postcode,
+          contractor: this.contractor,
+          principal: this.principal
+        })
+      })
+      .catch((error) => {
+        console.log('Error: ' + error.message)
       })
     }
   }

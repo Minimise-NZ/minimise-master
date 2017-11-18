@@ -97,7 +97,7 @@
                 v-validate="'required|min:6'"
                 type="password"
                 v-model="password"
-                data-vv-delay="1000"
+                data-vv-delay="2000"
                 placeholder="Password"
                 :class="{'alert-border': errors.has('password')}">
             </b-form-input>
@@ -107,8 +107,8 @@
               v-validate="'confirmed:password'"
               type="password"
               v-model="confirmPassword"
-              data-vv-delay="1000"
               placeholder="Confirm Password"
+              data-vv-delay="3000"
               data-vv-as="password"
               :class="{'alert-border': errors.has('name')}">
             </b-form-input>
@@ -132,40 +132,50 @@ export default {
   data () {
     return {
       userRoles: ['Health and Safety Manager', 'Health and Safety Administrator', 'Business Administrator', 'Project Manager', 'Supervisor'],
-      principal: true,
       companyName: '',
       address: '',
       city: '',
       postcode: '',
       companyPhone: '',
-      users: [],
       userName: '',
       userEmail: '',
       password: '',
       confirmPassword: '',
       userPhone: '',
-      admin: true,
-      webUser: true,
       userRole: ''
-    }
-  },
-  computed: {
-    userKey () {
-      return this.$store.getters.user.key
-    },
-    companyKey () {
-      return this.$store.getters.company.key
     }
   },
   methods: {
     onSubmit () {
-      this.$validator.validateAll().then((valid) => {
-        if (valid) {
-          // create a user
-          // create a company
-          alert('Form Submitted!')
-        } else {
-          alert('Correct them errors!')
+      this.$validator.validateAll().then(async(valid) => {
+        if (!valid) { return }
+        try {
+          const userId = await this.$store.dispatch('newUser', {email: this.userEmail, password: this.password})
+          console.log('User registered')
+          const company = await this.$store.dispatch('newCompany', {
+            name: this.companyName,
+            address: this.address,
+            city: this.city,
+            phone: this.companyPhone,
+            postcode: this.postcode,
+            principal: true,
+            contractor: false,
+            user: userId  
+          })
+          console.log('Company created')
+          await this.$store.dispatch('updateUser', {
+            name: this.userName,
+            email: this.userEmail,
+            phone: this.userPhone,
+            role: this.userRole,
+            admin: true,
+            webUser: true,
+            company: company
+          })
+          alert('Congrats! A new company and a new user have been created')
+          this.$router.push('/principal')
+        } catch (err) {
+          console.log(err)
         }
       })
     }

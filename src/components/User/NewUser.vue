@@ -57,7 +57,7 @@
               v-validate="'required|min:6'"
               type="password"
               v-model="password"
-              data-vv-delay="1000"
+              data-vv-delay="2000"
               placeholder="Password"
               :class="{'alert-border': errors.has('password')}">
           </b-form-input>
@@ -67,7 +67,7 @@
             v-validate="'confirmed:password'"
             type="password"
             v-model="confirmPassword"
-            data-vv-delay="1000"
+            data-vv-delay="3000"
             placeholder="Confirm Password"
             data-vv-as="password"
             :class="{'alert-border': errors.has('name')}">
@@ -112,10 +112,10 @@
     },
     computed: {
       userKey () {
-        return this.$store.getters.user.key
+        return this.$store.getters.userKey
       },
       companyKey () {
-        return this.$store.getters.company.key
+        return this.$store.getters.companyKey
       }
     },
     methods: {
@@ -123,7 +123,6 @@
         this.$validator.validateAll().then((valid) => {
           if (valid) {
             // create a user
-            // create a company
             alert('Form Submitted!')
           } else {
             alert('Correct them errors!')
