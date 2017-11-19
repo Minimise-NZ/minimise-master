@@ -15,7 +15,7 @@
               id="selectBox"
               :class="{'alert-border': errors.has('company')}">
           </v-select>
-          <div class="alert alert-danger" v-show="errors.has('company')">Please select your job role</div>
+          <div class="alert alert-danger" v-show="errors.has('company')">Please select your Company</div>
 
           <v-select name="userRole"
               v-validate="'required'"
@@ -104,28 +104,45 @@
         phone: '',
         password: '',
         confirmPassword: '',
-        admin: '',
-        webUser: true,
-        userRole: '',
-        companies: ['Bob the Builder', 'Leaky Pipes']
+        userRole: ''
       }
     },
     computed: {
-      userKey () {
-        return this.$store.getters.userKey
+      admin () {
+        if (this.userRole === 'Health and Safety Manager' | this.userRole === 'Health and Safety Administrator' | this.userRole === 'Business Administrator') {
+          return true
+        }
       },
-      companyKey () {
-        return this.$store.getters.companyKey
+      companies () {
       }
+    },
+    created () {
+      this.$store.dispatch('getCompanyIndex')
     },
     methods: {
       onSubmit () {
-        this.$validator.validateAll().then((valid) => {
-          if (valid) {
-            // create a user
-            alert('Form Submitted!')
-          } else {
-            alert('Correct them errors!')
+        this.$validator.validateAll().then(async(valid) => {
+          if (!valid) { return }
+          try {
+            /*
+            await this.$store.dispatch('newUser', {email: this.userEmail, password: this.password})
+            console.log('User registered')
+            await this.$store.dispatch('updateUser', {
+              name: this.userName,
+              email: this.userEmail,
+              phone: this.userPhone,
+              role: this.userRole,
+              admin: this.admin,
+              webUser: true
+            })
+            */
+            // get company
+            // update company with userID
+            // go to companyType home page
+            alert('Congrats! A new user has been created')
+            this.$router.push('')
+          } catch (err) {
+            console.log(err)
           }
         })
       }

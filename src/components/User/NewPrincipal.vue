@@ -160,7 +160,7 @@ export default {
             postcode: this.postcode,
             principal: true,
             contractor: false,
-            user: userId  
+            user: userId
           })
           console.log('Company created')
           await this.$store.dispatch('updateUser', {

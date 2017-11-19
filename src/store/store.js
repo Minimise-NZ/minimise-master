@@ -8,14 +8,18 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
   state: {
     userKey: null,
-    company: null
+    companyKey: null,
+    companyIndex: null
   },
   mutations: {
     setUserKey (state, payload) {
       state.userKey = payload
     },
-    setCompany (state, payload) {
-      state.company = payload
+    setCompanyKey (state, payload) {
+      state.companyKey = payload
+    },
+    setCompanyIndex (state, payload) {
+      state.companyIndex = payload
     }
   },
   actions: {
@@ -45,9 +49,10 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    newCompany ({commit}, payload) {
+    newCompany ({commit, getters}, payload) {
       // create new company in firebase, add user to users and then return companyKey
       let promise = new Promise((resolve, reject) => {
+        const companyName = payload.name
         firestore.collection('companies').add({
           name: payload.name,
           address: payload.address,
@@ -59,7 +64,10 @@ export const store = new Vuex.Store({
           users: [payload.user]
         })
         .then((doc) => {
-          commit('setCompany', doc.id)
+          commit('setCompanyKey', doc.id)
+          firestore.collection('companyIndex').doc(doc.id).set({
+            name: companyName
+          })
           resolve({company: doc.id})
         })
         .catch((error) => {
@@ -92,6 +100,7 @@ export const store = new Vuex.Store({
       return promise
     },
     getCompany ({commit, state}, payload) {
+      // must already have key in state
       firestore.collection('companies').doc(state.companyKey)
       .get()
       .then((doc) => {
@@ -99,10 +108,24 @@ export const store = new Vuex.Store({
         commit('setCompany', company)
         return (company)
       })
+    },
+    getCompanyIndex ({commit}) {
+      // must already have key in state
+      let companies = []
+      firestore.collection('companyIndex')
+      .get()
+      .then((dataSnapshot) => {
+        dataSnapshot.forEach((doc) => {
+          companies.push({id: doc.id, name: doc.data().name})
+        })
+        commit('setCompanyIndex', companies)
+        console.log('Company Index created ' + companies)
+      })
     }
   },
   getters: {
     userKey: (state) => state.userKey,
-    company: (state) => state.company
+    companyKey: (state) => state.companyKey,
+    companyIndex: (state) => state.companyIndex
   }
 })

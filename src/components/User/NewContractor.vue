@@ -119,8 +119,6 @@ export default {
   },
   data () {
     return {
-      contractor: true,
-      principal: false,
       companyName: '',
       address: '',
       city: '',
@@ -131,36 +129,41 @@ export default {
       password: '',
       confirmPassword: '',
       userPhone: '',
-      admin: true,
-      webUser: true,
       userRole: ''
     }
   },
   methods: {
     onSubmit () {
-      this.$validator.validateAll().then((valid) => {
+      this.$validator.validateAll().then(async(valid) => {
         if (!valid) { return }
-        this.$store.dispatch('newUser', {
-          email: this.userEmail,
-          password: this.password,
-          name: this.userName,
-          phone: this.userPhone,
-          admin: this.admin,
-          webUser: this.webUser,
-          role: this.userRole
-        })
-        this.$store.dispatch('newCompany', {
-          address: this.address,
-          city: this.city,
-          name: this.companyName,
-          phone: this.companyPhone,
-          postcode: this.postcode,
-          contractor: this.contractor,
-          principal: this.principal
-        })
-      })
-      .catch((error) => {
-        console.log('Error: ' + error.message)
+        try {
+          const userId = await this.$store.dispatch('newUser', {email: this.userEmail, password: this.password})
+          console.log('User registered')
+          const company = await this.$store.dispatch('newCompany', {
+            name: this.companyName,
+            address: this.address,
+            city: this.city,
+            phone: this.companyPhone,
+            postcode: this.postcode,
+            principal: false,
+            contractor: true,
+            user: userId
+          })
+          console.log('Company created')
+          await this.$store.dispatch('updateUser', {
+            name: this.userName,
+            email: this.userEmail,
+            phone: this.userPhone,
+            role: this.userRole,
+            admin: true,
+            webUser: true,
+            company: company
+          })
+          alert('Congrats! A new company and a new user have been created')
+          this.$router.push('/contractor')
+        } catch (err) {
+          console.log(err)
+        }
       })
     }
   }
