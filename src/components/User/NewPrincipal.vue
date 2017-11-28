@@ -88,6 +88,7 @@
             <b-form-input name="email"
                 v-validate="'required|email'"
                 v-model="userEmail"
+                data-vv-delay="2000"
                 placeholder="Email Address"
                 :class="{'alert-border': errors.has('email')}">
             </b-form-input>
@@ -150,7 +151,7 @@ export default {
       this.$validator.validateAll().then(async(valid) => {
         if (!valid) { return }
         try {
-          const userId = await this.$store.dispatch('newUser', {email: this.userEmail, password: this.password})
+          await this.$store.dispatch('newUser', {email: this.userEmail, password: this.password})
           console.log('User registered')
           const company = await this.$store.dispatch('newCompany', {
             name: this.companyName,
@@ -159,10 +160,10 @@ export default {
             phone: this.companyPhone,
             postcode: this.postcode,
             principal: true,
-            contractor: false,
-            user: userId
+            contractor: false
           })
           console.log('Company created')
+          await this.$store.dispatch('updateCompany', {name: this.userName})
           await this.$store.dispatch('updateUser', {
             name: this.userName,
             email: this.userEmail,
@@ -172,7 +173,6 @@ export default {
             webUser: true,
             company: company
           })
-          alert('Congrats! A new company and a new user have been created')
           this.$router.push('/principal')
         } catch (err) {
           console.log(err)

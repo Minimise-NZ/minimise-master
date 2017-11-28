@@ -7,13 +7,21 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
-    userKey: null,
-    companyKey: null,
-    companyIndex: null
+    userKey: '',
+    user: {},
+    company: {},
+    companyKey: '',
+    companyIndex: []
   },
   mutations: {
     setUserKey (state, payload) {
       state.userKey = payload
+    },
+    setUser (state, payload) {
+      state.user = payload
+    },
+    setCompany (state, payload) {
+      state.company = payload
     },
     setCompanyKey (state, payload) {
       state.companyKey = payload
@@ -26,9 +34,10 @@ export const store = new Vuex.Store({
     newUser ({commit}, payload) {
       // create a new user in firebase and set the userkey
       let promise = new Promise((resolve, reject) => {
-        firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
+        firebase.auth().createUserWithEmailAndPassword(payload)
         .then((user) => {
           commit('setUserKey', user.uid)
+          console.log('User registered')
           resolve({userId: user.uid})
         })
         .catch((error) => {
@@ -53,22 +62,14 @@ export const store = new Vuex.Store({
       // create new company in firebase, add user to users and then return companyKey
       let promise = new Promise((resolve, reject) => {
         const companyName = payload.name
-        firestore.collection('companies').add({
-          name: payload.name,
-          address: payload.address,
-          city: payload.city,
-          phone: payload.phone,
-          postcode: payload.postcode,
-          principal: payload.principal,
-          contractor: payload.contractor,
-          users: [payload.user]
-        })
+        commit('setCompany', payload)
+        firestore.collection('companies').add(payload)
         .then((doc) => {
           commit('setCompanyKey', doc.id)
           firestore.collection('companyIndex').doc(doc.id).set({
             name: companyName
           })
-          resolve({company: doc.id})
+          resolve(doc.id)
         })
         .catch((error) => {
           console.log('Error creating Company' + error.message)
@@ -79,17 +80,28 @@ export const store = new Vuex.Store({
     },
     updateUser ({commit, getters}, payload) {
       // add user info to firestore
+      commit('setUser', payload)
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('users').doc(getters.userKey).set({
-          name: payload.name,
-          email: payload.email,
-          phone: payload.phone,
-          role: payload.role,
-          admin: payload.admin,
-          webUser: payload.webUser,
-          company: payload.company
+        firestore.collection('users').doc(getters.userKey).set(payload)
+        .then(() => {
+          commit('setCompanyKey', payload.company)
+          console.log('User updated')
+          resolve()
         })
-        .then((doc) => {
+        .catch((error) => {
+          console.log('Error updating User ' + error.message)
+          reject()
+        })
+      })
+      return promise
+    },
+    updateCompany ({commit, getters}, payload) {
+      // add new user to company user collection
+      let promise = new Promise((resolve, reject) => {
+        firestore.collection('companies').doc(getters.companyKey)
+        .collection('users').doc(getters.userKey).set({payload})
+        .then(() => {
+          console.log('Company updated')
           resolve()
         })
         .catch((error) => {
@@ -101,13 +113,20 @@ export const store = new Vuex.Store({
     },
     getCompany ({commit, state}, payload) {
       // must already have key in state
-      firestore.collection('companies').doc(state.companyKey)
-      .get()
-      .then((doc) => {
-        let company = doc.data()
-        commit('setCompany', company)
-        return (company)
+      let promise = new Promise((resolve, reject) => {
+        firestore.collection('companies').doc(state.companyKey)
+        .get()
+        .then((doc) => {
+          let company = doc.data()
+          commit('setCompany', company)
+          resolve(company)
+        })
+        .catch((error) => {
+          console.log('Error getting company' + error.message)
+          reject()
+        })
       })
+      return promise
     },
     getCompanyIndex ({commit}) {
       // must already have key in state
@@ -116,16 +135,17 @@ export const store = new Vuex.Store({
       .get()
       .then((dataSnapshot) => {
         dataSnapshot.forEach((doc) => {
-          companies.push({id: doc.id, name: doc.data().name})
+          companies.push({value: doc.id, label: doc.data().name})
         })
         commit('setCompanyIndex', companies)
-        console.log('Company Index created ' + companies)
+        return companies
       })
     }
   },
   getters: {
     userKey: (state) => state.userKey,
     companyKey: (state) => state.companyKey,
-    companyIndex: (state) => state.companyIndex
+    companyIndex: (state) => state.companyIndex,
+    company: (state) => state.company
   }
 })

@@ -77,6 +77,7 @@
             <b-form-input name="email"
                 v-validate="'required|email'"
                 v-model="userEmail"
+                data-vv-delay="2000"
                 placeholder="Email Address"
                 :class="{'alert-border': errors.has('email')}">
             </b-form-input>
@@ -96,7 +97,7 @@
               v-validate="'confirmed:password'"
               type="password"
               v-model="confirmPassword"
-              data-vv-delay="3000"
+              data-vv-delay="2000"
               placeholder="Confirm Password"
               data-vv-as="password"
               :class="{'alert-border': errors.has('name')}">
@@ -150,6 +151,8 @@ export default {
             user: userId
           })
           console.log('Company created')
+          // add user to company user collection
+          await this.$store.dispatch('updateCompany', this.userName)
           await this.$store.dispatch('updateUser', {
             name: this.userName,
             email: this.userEmail,
@@ -157,9 +160,8 @@ export default {
             role: this.userRole,
             admin: true,
             webUser: true,
-            company: company
+            company
           })
-          alert('Congrats! A new company and a new user have been created')
           this.$router.push('/contractor')
         } catch (err) {
           console.log(err)

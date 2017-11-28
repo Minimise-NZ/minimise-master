@@ -48,6 +48,7 @@
           <b-form-input name="email"
                 v-validate="'required|email'"
                 v-model="email"
+                data-vv-delay="2000"
                 placeholder="Email Address"
                 :class="{'alert-border': errors.has('email')}">
           </b-form-input>
@@ -113,7 +114,11 @@
           return true
         }
       },
+      companykey () {
+        return this.company.value
+      },
       companies () {
+        return this.$store.getters.companyIndex
       }
     },
     created () {
@@ -124,23 +129,25 @@
         this.$validator.validateAll().then(async(valid) => {
           if (!valid) { return }
           try {
-            /*
-            await this.$store.dispatch('newUser', {email: this.userEmail, password: this.password})
-            console.log('User registered')
+            // create new user in firebase
+            await this.$store.dispatch('newUser', {email: this.email, password: this.password})
+            // add user information to firestore
             await this.$store.dispatch('updateUser', {
-              name: this.userName,
-              email: this.userEmail,
-              phone: this.userPhone,
+              name: this.name,
+              email: this.email,
+              phone: this.phone,
               role: this.userRole,
-              admin: this.admin,
-              webUser: true
+              company: this.companykey
             })
-            */
-            // get company
-            // update company with userID
+            // update company with userID.
+            await this.$store.dispatch('updateCompany', {name: this.name})
+            let company = await this.$store.dispatch('getCompany')
             // go to companyType home page
-            alert('Congrats! A new user has been created')
-            this.$router.push('')
+            if (company.principal === true) {
+              this.$router.push('/principal')
+            } else {
+              this.$router.push('/contractor')
+            }
           } catch (err) {
             console.log(err)
           }
