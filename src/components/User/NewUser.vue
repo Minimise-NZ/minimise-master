@@ -112,6 +112,8 @@
       admin () {
         if (this.userRole === 'Health and Safety Manager' | this.userRole === 'Health and Safety Administrator' | this.userRole === 'Business Administrator') {
           return true
+        } else {
+          return false
         }
       },
       companykey () {
@@ -119,6 +121,9 @@
       },
       companies () {
         return this.$store.getters.companyIndex
+      },
+      loading () {
+        return this.$store.getters.loading
       }
     },
     created () {
@@ -131,23 +136,26 @@
           try {
             // create new user in firebase
             await this.$store.dispatch('newUser', {email: this.email, password: this.password})
+            // update company with userID.
+            let company = await this.$store.dispatch('getCompany', {key: this.companykey})
+            await this.$store.dispatch('updateCompany', {name: this.name})
             // add user information to firestore
+            let companyType = 'contractor'
+            if (company.principal === true) {
+              companyType = 'principal'
+            }
             await this.$store.dispatch('updateUser', {
               name: this.name,
               email: this.email,
               phone: this.phone,
               role: this.userRole,
-              company: this.companykey
+              admin: this.admin,
+              webUser: true,
+              company: this.companykey,
+              companyType
             })
-            // update company with userID.
-            await this.$store.dispatch('updateCompany', {name: this.name})
-            let company = await this.$store.dispatch('getCompany')
             // go to companyType home page
-            if (company.principal === true) {
-              this.$router.push('/principal')
-            } else {
-              this.$router.push('/contractor')
-            }
+            this.$router.push('/' + companyType)
           } catch (err) {
             console.log(err)
           }

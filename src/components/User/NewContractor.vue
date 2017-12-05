@@ -138,8 +138,7 @@ export default {
       this.$validator.validateAll().then(async(valid) => {
         if (!valid) { return }
         try {
-          const userId = await this.$store.dispatch('newUser', {email: this.userEmail, password: this.password})
-          console.log('User registered')
+          await this.$store.dispatch('newUser', {email: this.userEmail, password: this.password})
           const company = await this.$store.dispatch('newCompany', {
             name: this.companyName,
             address: this.address,
@@ -147,12 +146,10 @@ export default {
             phone: this.companyPhone,
             postcode: this.postcode,
             principal: false,
-            contractor: true,
-            user: userId
+            contractor: true
           })
-          console.log('Company created')
           // add user to company user collection
-          await this.$store.dispatch('updateCompany', this.userName)
+          await this.$store.dispatch('updateCompany', {name: this.userName})
           await this.$store.dispatch('updateUser', {
             name: this.userName,
             email: this.userEmail,
@@ -160,7 +157,8 @@ export default {
             role: this.userRole,
             admin: true,
             webUser: true,
-            company
+            company,
+            companyType: 'contractor'
           })
           this.$router.push('/contractor')
         } catch (err) {

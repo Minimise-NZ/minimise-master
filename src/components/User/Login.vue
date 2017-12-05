@@ -4,7 +4,7 @@
     <miniHeader></miniHeader>
     <b-container class="login-container">
       <h2>Log In</h2>
-      <b-form @submit="loginUser" id="login">
+      <b-form @submit.prevent="loginUser" id="login">
          <b-input-group>
            <b-input-group-addon>
              <i class="fa fa-envelope" aria-hidden="true"></i>
@@ -12,7 +12,7 @@
            <b-form-input
               id="login-email"
               type="email"
-              v-model="entered.email"
+              v-model="email"
               placeholder="Email Address"
               required>
           </b-form-input>
@@ -25,7 +25,7 @@
           <b-form-input
               id="login-password"
               type="password"
-              v-model="entered.password"
+              v-model="password"
               placeholder="Password"
               required>
           </b-form-input> 
@@ -54,16 +54,23 @@
     },
     data () {
       return {
-        entered: {
-          email: '',
-          password: ''
-        }
+        email: '',
+        password: ''
       }
     },
     methods: {
-      loginUser (evt) {
-        evt.preventDefault()
-        alert(JSON.stringify(this.form))
+      loginUser () {
+        this.$store.dispatch('signUserIn', {email: this.email, password: this.password})
+        .then(async() => {
+          let user = await this.$store.dispatch('getUser')
+          let companyType = user.companyType
+          this.$router.push('/' + companyType)
+        })
+        .catch(
+          err => { 
+            alert(err.message) 
+          }
+        )
       }
     }
   }

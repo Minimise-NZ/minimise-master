@@ -152,7 +152,6 @@ export default {
         if (!valid) { return }
         try {
           await this.$store.dispatch('newUser', {email: this.userEmail, password: this.password})
-          console.log('User registered')
           const company = await this.$store.dispatch('newCompany', {
             name: this.companyName,
             address: this.address,
@@ -162,7 +161,6 @@ export default {
             principal: true,
             contractor: false
           })
-          console.log('Company created')
           await this.$store.dispatch('updateCompany', {name: this.userName})
           await this.$store.dispatch('updateUser', {
             name: this.userName,
@@ -171,7 +169,8 @@ export default {
             role: this.userRole,
             admin: true,
             webUser: true,
-            company: company
+            company: company,
+            companyType: 'principal'
           })
           this.$router.push('/principal')
         } catch (err) {
