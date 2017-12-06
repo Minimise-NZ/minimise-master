@@ -71,7 +71,7 @@
             data-vv-delay="3000"
             placeholder="Confirm Password"
             data-vv-as="password"
-            :class="{'alert-border': errors.has('name')}">
+            :class="{'alert-border': errors.has('confirmPassword')}">
           </b-form-input>
           <div class="alert alert-danger" v-show="errors.has('confirmPassword')">{{ errors.first('confirmPassword') }}</div>
 

@@ -10,7 +10,7 @@
         <b-nav is-nav-bar class="ml-auto">
           <b-button class="username mr-3" @click="userDetails">
             <i class="fa fa-user" aria-hidden="true"></i>
-            {{username}}</b-button>
+            {{user.name}}</b-button>
           <b-button class="logout mr-3" @click="logout">
           <i class="fa fa-lock" aria-hidden="true"></i>
           Logout</b-button>
@@ -21,15 +21,15 @@
 
 <script>
 export default {
-  data () {
-    return {
-      username: 'Shilo Kherington'
-    }
-  },
   methods: {
     logout () {
     },
     userDetails () {
+    }
+  },
+  computed: {
+    user () {
+      return this.$store.getters.user
     }
   }
 }

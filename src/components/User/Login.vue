@@ -67,8 +67,8 @@
           this.$router.push('/' + companyType)
         })
         .catch(
-          err => { 
-            alert(err.message) 
+          err => {
+            alert(err.message)
           }
         )
       }

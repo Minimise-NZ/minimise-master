@@ -1,25 +1,27 @@
 <template>
-  <div>
-    <dashboard-header></dashboard-header>
-    <b-row>
-      <b-col sm="2" class="side-wrapper" >
-         <b-list-group>
-          <router-link v-for="item in sideNavItems"
-           :to='item.link' 
-           tag="li"
-           class="list-group-item"
-           :key = "item.name">
-            <p>{{item.name}}</p>
-          </router-link>
-        </b-list-group>
-      </b-col>
-      
-      <b-col>
-        <router-view></router-view>
-      </b-col>
-      
-    </b-row>
-  </div>
+  <animated-fade-in>
+    <b-container fluid>
+      <dashboard-header></dashboard-header>
+      <b-row>
+        <b-col sm="2" class="side-wrapper" >
+          <b-list-group>
+            <router-link v-for="item in sideNavItems"
+            :to='item.link' 
+            tag="li"
+            class="list-group-item"
+            :key = "item.name">
+              <p>{{item.name}}</p>
+            </router-link>
+          </b-list-group>
+        </b-col>
+        
+        <b-col>
+          <router-view></router-view>
+        </b-col>
+        
+      </b-row>
+    </b-container>
+  </animated-fade-in>
 </template>
 
 <script>
@@ -41,6 +43,13 @@ export default {
         {name: 'Support / Feedback', link: '/principal/support'}
       ]
     }
+  },
+  beforeCreate () {
+    let user = this.$store.getters.user
+    this.$store.dispatch('getCompany', {key: user.company})
+  },
+  mounted () {
+    this.$store.dispatch('getCompanyIndex')
   }
 }
 </script>
@@ -55,7 +64,7 @@ export default {
     font-size: 1.2rem;
   }
   
-   p {
+  p {
     font-size: 1.1rem;
     margin: 0;
   }

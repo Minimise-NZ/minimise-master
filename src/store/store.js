@@ -89,6 +89,27 @@ export const store = new Vuex.Store({
       })
       return promise
     },
+    newJob ({commit}, payload) {
+      // create new job in firestore
+      commit('setLoading', true)
+      commit('clearError')
+      let promise = new Promise((resolve, reject) => {
+        const job = payload
+        firestore.collection('jobSites').add(job)
+        .then((doc) => {
+          commit('setLoading', false)
+          console.log('Job created' + doc.id)
+          resolve()
+        })
+        .catch((error) => {
+          commit('setLoading', false)
+          commit('setError', error)
+          console.log(error)
+          reject()
+        })
+      })
+      return promise
+    },
     updateUser ({commit, getters}, payload) {
       // add user info to firestore
       commit('setLoading', true)

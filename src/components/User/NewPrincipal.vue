@@ -159,7 +159,9 @@ export default {
             phone: this.companyPhone,
             postcode: this.postcode,
             principal: true,
-            contractor: false
+            contractor: false,
+            hseManager: this.userName,
+            hsePhone: this.userPhone
           })
           await this.$store.dispatch('updateCompany', {name: this.userName})
           await this.$store.dispatch('updateUser', {
