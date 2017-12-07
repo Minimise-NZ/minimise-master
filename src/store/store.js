@@ -271,6 +271,11 @@ export const store = new Vuex.Store({
         )
       })
       return promise
+    },
+    logout ({commit}) {
+      firebase.auth().signOut()
+      commit('setUserKey', '')
+      localStorage.clear()
     }
   },
   getters: {

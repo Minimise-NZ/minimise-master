@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import AuthGuard from './auth-guard'
 
 import Home from '@/components/Home.vue'
 
@@ -67,6 +68,7 @@ export default new Router({
     {
       path: '/contractor',
       component: Contractor,
+      beforeEnter: AuthGuard,
       children: [
         {
           path: '',
@@ -114,6 +116,7 @@ export default new Router({
     {
       path: '/principal',
       component: Principal,
+      beforeEnter: AuthGuard,
       children: [
         {
           path: '',
