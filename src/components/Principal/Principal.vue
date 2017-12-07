@@ -16,7 +16,9 @@
         </b-col>
         
         <b-col>
-          <router-view></router-view>
+          <animated-fade-in>
+            <router-view></router-view>
+          </animated-fade-in>
         </b-col>
         
       </b-row>
@@ -56,6 +58,10 @@ export default {
 </script>
 
 <style scoped>
+  .container-fluid {
+    padding: 0
+  }
+
   .list-group-item {
     border-radius: 0.25rem;
     background-color: rgba(221, 221, 221, 0.2);
@@ -87,7 +93,6 @@ export default {
     padding: 0 20px;
   }
   
-   
   @media (max-width: 1040px) {
     .side-wrapper {
         display: none;

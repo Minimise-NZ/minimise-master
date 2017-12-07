@@ -152,6 +152,7 @@
         })
         .then(() => {
           alert('New job has been created')
+          this.$store.dispatch('getJobs')
           this.$router.push('/principal/jobs')
         })
       }
