@@ -2,16 +2,19 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import * as firebase from 'firebase'
 import {firestore} from '../firebase'
+import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
+  plugins: [createPersistedState()],
   state: {
     userKey: '',
     user: {},
     company: {},
     companyKey: '',
     companyIndex: [],
+    jobsInProgress: [],
     loading: false,
     error: null
   },
@@ -39,6 +42,9 @@ export const store = new Vuex.Store({
     },
     clearError (state) {
       state.error = null
+    },
+    setJobs (state, payload) {
+      state.jobsInProgress = payload
     }
   },
   actions: {
@@ -187,6 +193,62 @@ export const store = new Vuex.Store({
         return companies
       })
     },
+    getUser ({commit, state}, payload) {
+      commit('setLoading', true)
+      commit('clearError')
+      let promise = new Promise((resolve, reject) => {
+        firestore.collection('users').doc(state.userKey)
+        .get()
+        .then((doc) => {
+          commit('setLoading', false)
+          let user = doc.data()
+          commit('setUser', user)
+          console.log('User profile set')
+          resolve(user)
+        })
+        .catch((error) => {
+          commit('setLoading', false)
+          commit('setError', error)
+          console.log(error)
+          reject()
+        })
+      })
+      return promise
+    },
+    getJobs ({commit, state}, payload) {
+      // get all jobs in progress that are assigned to this company as principal
+      commit('setLoading', true)
+      firestore.collection('jobSites').where('principalKey', '==', state.companyKey).where('status', '==', 'open')
+      .get()
+      .then((snapshot) => {
+        const jobSites = []
+        snapshot.forEach((doc) => {
+          let job = doc.data()
+          let approved = []
+          let pending = []
+          job.subcontractors.forEach((contractor) => {
+            if (contractor.status === 'approved') {
+              approved.push(contractor.name)
+            } else {
+              pending.push(contractor.name)
+            }
+          })
+          jobSites.push({
+            id: doc.id,
+            address: job.address,
+            pending,
+            approved
+          })
+          console.log(doc.data())
+        })
+        commit('setJobs', jobSites)
+        commit('setLoading', false)
+      })
+      .catch((error) => {
+        console.log('Error getting documents: ', error)
+        commit('setLoading', false)
+      })
+    },
     signUserIn ({commit}, payload) {
       commit('setLoading', true)
       commit('clearError')
@@ -209,28 +271,6 @@ export const store = new Vuex.Store({
         )
       })
       return promise
-    },
-    getUser ({commit, state}, payload) {
-      commit('setLoading', true)
-      commit('clearError')
-      let promise = new Promise((resolve, reject) => {
-        firestore.collection('users').doc(state.userKey)
-        .get()
-        .then((doc) => {
-          commit('setLoading', false)
-          let user = doc.data()
-          commit('setUser', user)
-          console.log('User profile set')
-          resolve(user)
-        })
-        .catch((error) => {
-          commit('setLoading', false)
-          commit('setError', error)
-          console.log(error)
-          reject()
-        })
-      })
-      return promise
     }
   },
   getters: {
@@ -239,6 +279,7 @@ export const store = new Vuex.Store({
     companyKey: (state) => state.companyKey,
     companyIndex: (state) => state.companyIndex,
     company: (state) => state.company,
-    loading: (state) => state.loading
+    loading: (state) => state.loading,
+    jobsInProgress: (state) => state.jobsInProgress
   }
 })

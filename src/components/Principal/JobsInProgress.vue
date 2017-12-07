@@ -67,6 +67,11 @@ export default {
         }
       ]
     }
+  },
+  computed: {
+    jobSites () {
+      return this.$store.getters.jobsInProgress
+    }
   }
 }
 </script>

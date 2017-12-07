@@ -24,7 +24,8 @@
     "vue-select": "github:sagalbot/vue-select",
     "vuefire": "^1.4.3",
     "vuelidate": "^0.6.1",
-    "vuex": "^2.4.0"
+    "vuex": "^2.4.0",
+    "vuex-persistedstate": "^2.4.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
