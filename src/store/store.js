@@ -7,7 +7,6 @@ import createPersistedState from 'vuex-persistedstate'
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
-  plugins: [createPersistedState()],
   state: {
     userKey: '',
     user: {},
@@ -15,10 +14,26 @@ export const store = new Vuex.Store({
     companyKey: '',
     companyIndex: [],
     jobsInProgress: [],
+    myIncidents: [],
+    allHazards: [],
+    allRisks: [],
     loading: false,
     error: null
   },
   mutations: {
+    clearStore (state) {
+      state.userKey = ''
+      state.user = {}
+      state.company = {}
+      state.companyKey = ''
+      state.companyIndex = []
+      state.jobsInProgress = []
+      state.myIncidents = []
+      state.allHazards = []
+      state.allRisks = []
+      state.loading = false
+      state.error = null
+    },
     setUserKey (state, payload) {
       state.userKey = payload
     },
@@ -45,6 +60,15 @@ export const store = new Vuex.Store({
     },
     setJobs (state, payload) {
       state.jobsInProgress = payload
+    },
+    setAllHazards (state, payload) {
+      state.allHazards = payload
+    },
+    setAllRisks (state, payload) {
+      state.allRisks = payload
+    },
+    setMyHazards (state, payload) {
+      state.myHazards = payload
     }
   },
   actions: {
@@ -105,6 +129,27 @@ export const store = new Vuex.Store({
         .then((doc) => {
           commit('setLoading', false)
           console.log('Job created' + doc.id)
+          resolve()
+        })
+        .catch((error) => {
+          commit('setLoading', false)
+          commit('setError', error)
+          console.log(error)
+          reject()
+        })
+      })
+      return promise
+    },
+    newIncident ({commit}, payload) {
+      // create new incident in firestore
+      commit('setLoading', true)
+      commit('clearError')
+      let promise = new Promise((resolve, reject) => {
+        const incident = payload
+        firestore.collection('incidents').add(incident)
+        .then((doc) => {
+          commit('setLoading', false)
+          console.log('Incident created' + doc.id)
           resolve()
         })
         .catch((error) => {
@@ -249,6 +294,71 @@ export const store = new Vuex.Store({
         commit('setLoading', false)
       })
     },
+    getAllHazards ({commit, state}, payload) {
+      commit('setLoading', true)
+      const allHazards = []
+      let promise = new Promise((resolve, reject) => {
+        firestore.collection('hazards')
+        .get()
+        .then((snapshot) => {
+          commit('setLoading', false)
+          snapshot.forEach((doc) => {
+            let data = doc.data()
+            let hazard = {
+              name: data.name,
+              image: data.imageURL,
+              riskIds: data.risks,
+              risks: []
+            }
+            allHazards.push(hazard)
+          })
+          commit('setAllHazards', allHazards)
+          resolve()
+        })
+        .catch((error) => {
+          commit('setLoading', false)
+          commit('setError', error)
+          console.log(error)
+          reject(console.log('All Hazard Error'))
+        })
+      })
+      return promise
+    },
+    getAllRisks ({commit, state}, payload) {
+      commit('setLoading', true)
+      const allRisks = []
+      let promise = new Promise((resolve, reject) => {
+        firestore.collection('risks')
+        .get()
+        .then((snapshot) => {
+          commit('setLoading', false)
+          snapshot.forEach((doc) => {
+            let data = doc.data()
+            let risk = {
+              id: doc.id,
+              controls: [],
+              IRA: data.IRA,
+              RRA: data.RRA,
+              name: data.name
+            }
+            for (let index in data.Controls) {
+              risk.controls.push(data.Controls[index])
+            }
+            console.log(risk)
+            allRisks.push(risk)
+          })
+          commit('setAllRisks', allRisks)
+          resolve()
+        })
+        .catch((error) => {
+          commit('setLoading', false)
+          commit('setError', error)
+          console.log(error)
+          reject(console.log('All risks error'))
+        })
+      })
+      return promise
+    },
     signUserIn ({commit}, payload) {
       commit('setLoading', true)
       commit('clearError')
@@ -274,7 +384,7 @@ export const store = new Vuex.Store({
     },
     logout ({commit}) {
       firebase.auth().signOut()
-      commit('setUserKey', '')
+      commit('clearStore')
       localStorage.clear()
     }
   },
@@ -285,6 +395,9 @@ export const store = new Vuex.Store({
     companyIndex: (state) => state.companyIndex,
     company: (state) => state.company,
     loading: (state) => state.loading,
-    jobsInProgress: (state) => state.jobsInProgress
-  }
+    jobsInProgress: (state) => state.jobsInProgress,
+    allHazards: (state) => state.allHazards,
+    allRisks: (state) => state.allRisks
+  },
+  plugins: [createPersistedState()]
 })

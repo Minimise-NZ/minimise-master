@@ -21,7 +21,9 @@ import Workers from '@/components/Contractor/WorkerManagement.vue'
 
 import Billing from '@/components/Shared/AdminBilling.vue'
 import AdminUsers from '@/components/Shared/AdminManageUsers.vue'
-import Incidents from '@/components/Shared/IncidentManagement.vue'
+import IncidentReports from '@/components/Shared/IncidentReports.vue'
+import NewIncident from '@/components/Shared/IncidentForm.vue'
+import IncidentView from '@/components/Shared/IncidentView.vue'
 import Support from '@/components/Shared/SupportFeedback.vue'
 
 import Principal from '@/components/Principal/Principal.vue'
@@ -105,7 +107,15 @@ export default new Router({
         },
         {
           path: 'incidents',
-          component: Incidents
+          component: IncidentReports
+        },
+        {
+          path: 'newIncident',
+          component: NewIncident
+        },
+        {
+          path: 'incidentView',
+          component: IncidentView
         },
         {
           path: 'support',
@@ -152,7 +162,15 @@ export default new Router({
         },
         {
           path: 'incidents',
-          component: Incidents
+          component: IncidentReports
+        },
+        {
+          path: 'newIncident',
+          component: NewIncident
+        },
+        {
+          path: 'incidentView',
+          component: IncidentView
         },
         {
           path: 'support',

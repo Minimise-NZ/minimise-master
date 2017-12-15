@@ -39,7 +39,8 @@ export default {
         {name: 'New Job', link: '/principal/newJob'},
         {name: 'Jobs In Progress', link: '/principal/jobs'},
         // {name: 'Contractor Management', link: '/principal/contractors'},
-        {name: 'Incident Management', link: '/principal/incidents'},
+        {name: 'Incident Reports', link: '/principal/incidents'},
+        {name: 'New Incident', link: '/principal/newIncident'},
         // {name: 'Master Safety Plan', link: '/principal/master'},
         {name: 'Administration', link: '/principal/admin'},
         {name: 'Support / Feedback', link: '/principal/support'}
@@ -59,7 +60,11 @@ export default {
 
 <style scoped>
   .container-fluid {
-    padding: 0
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 0;
+    overflow: hidden;
   }
 
   .list-group-item {

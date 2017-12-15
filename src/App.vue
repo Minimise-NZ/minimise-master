@@ -31,9 +31,10 @@ export default {
   color:#383838;
 }
   
-.animated.fade-in.enter {
-  transition-property: opacity;
-  transition-duration: .25s;
+.scroll-container {
+  overflow: auto;
+  height: 800px;
+  padding-right: 15px;
 }
 
 </style>

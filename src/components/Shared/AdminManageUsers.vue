@@ -22,7 +22,8 @@ export default {
 <style scoped>
   .container-fluid {
     padding-top: 20px;
-    margin-bottom: 100px;;
+    margin-bottom: 100px;
+    padding-right: 30px;
   }
 
   .card-header {

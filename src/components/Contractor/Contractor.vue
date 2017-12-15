@@ -41,11 +41,22 @@ export default {
         {name: 'Hazard Register', link: '/contractor/hazards'},
         // {name: 'Hazardous Substances', link: '/contractor/hazardousSubstances'},
         {name: 'Task Analysis', link: '/contractor/taskAnalysis'},
-        {name: 'Incident Management', link: '/contractor/incidents'},
+        {name: 'Incident Reports', link: '/principal/incidents'},
+        {name: 'New Incident', link: '/principal/newIncident'},
         {name: 'Administration', link: '/contractor/admin'},
         {name: 'Support / Feedback', link: '/contractor/support'}
       ]
     }
+  },
+  beforeCreate () {
+    let user = this.$store.getters.user
+    this.$store.dispatch('getCompany', {key: user.company})
+  },
+  beforeMount () {
+    this.$store.dispatch('getAllHazards')
+  },
+  mounted () {
+    this.$store.dispatch('getAllRisks')
   }
 }
 </script>

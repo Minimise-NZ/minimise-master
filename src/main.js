@@ -11,7 +11,9 @@ import vSelect from 'vue-select'
 import AnimatedVue from 'animated-vue'
 import 'animate.css/animate.css'
 import VeeValidate from 'vee-validate'
+import Vuebar from 'vuebar'
 
+Vue.use(Vuebar)
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.component('v-select', vSelect)

@@ -1,10 +1,10 @@
 <template>
-  <animated-fade-in>
-    <b-container fluid>
-      <b-card header="New Job Site" header-tag="header">
-        <b-form @submit.prevent="onSubmit" id="newJobForm">
+  <b-container fluid>
+    <b-card header="New Job Site" header-tag="header">
+      <div class="scroll-container">
+        <b-form @submit.prevent="onSubmit" id="newJobForm" class="pb-5">
           <b-row>
-            <b-col sm="12" lg="7" class="manager-details">
+            <b-col sm="12" lg="6" class="manager-details">
               <h5><strong>{{company.name}}</strong></h5><br>
               <p>
                 <span class="label">Project Manager: </span>{{user.name}}<br> 
@@ -44,8 +44,9 @@
           </b-row>
           
           <br>
-          <p>Do you have subcontractors?</p>     
-          <b-form-radio-group 
+          <p class="ml-2">Do you have subcontractors?</p>     
+          <b-form-radio-group
+            class="ml-2"
             id="radiocontractor" 
             v-model="contractors.radioValue"
             :options="contractors.radioOptions"
@@ -53,7 +54,7 @@
           </b-form-radio-group>
           
           <v-select
-            class="mt-3"
+            class="mt-3 ml-2"
             v-if="showList"
             searchable
             placeholder="Please select your contractors"
@@ -63,15 +64,16 @@
           </v-select>
           <div class="alert alert-danger" v-if="selectError">Please select your contractors</div>
           
-          <p class="mt-5">Is there notifiable works associated with this project?</p>     
+          <p class="mt-5 ml-2">Is there notifiable works associated with this project?</p>     
           <b-form-radio-group
-            class="mb-2"
+            class="mb-2 ml-2"
             id="radioNotifiable" 
             v-model="notifiable.radioValue"
             :options="notifiable.radioOptions"
             >
           </b-form-radio-group>
           <b-form-checkbox-group
+            class="ml-2"
             v-if="showNotifiable"
             stacked 
             v-model="notifiable.selected" 
@@ -80,13 +82,14 @@
           </b-form-checkbox-group>
           
           <b-form-checkbox
-            class="mt-5"
+            class="mt-5 ml-2"
             id="addinfo"
             v-model="addinfo"
             value="add">
           Additional information required?
           </b-form-checkbox>
           <b-form-textarea 
+              class="ml-2"
               v-if="addinfo"
               required
               id="info"
@@ -94,11 +97,16 @@
               placeholder="Additional information"
               :rows="6">
           </b-form-textarea><br>
-          <b-button class="mt-3 submit" block  variant="success" type="submit">Submit</b-button>
+          <div class="text-center">
+            <b-button-group class="pt-4 pb-4">
+              <b-button class="buttons" variant="success" type="submit">Submit</b-button>
+              <b-button class="buttons" variant="danger" @click="cancel">Cancel</b-button>
+            </b-button-group>
+          </div>
         </b-form>
-      </b-card>
-    </b-container>
-  </animated-fade-in>
+      </div>
+    </b-card>
+  </b-container>
 </template>
 
 <script>
@@ -134,6 +142,9 @@
     },
     methods: {
       searchAddress () {
+      },
+      cancel () {
+        this.$router.push('/principal')
       },
       onSubmit () {
         this.$store.dispatch('newJob', {
@@ -186,11 +197,8 @@
 <style scoped>
   .container-fluid {
     padding-top: 20px;
-    margin-bottom: 100px;;
-  }
-  
-  .card {
-    border: 1px solid grey;
+    margin-bottom: 100px;
+    padding-right: 30px;
   }
   
   .card-header {
@@ -200,6 +208,7 @@
   }
   
   .row {
+    margin: 0;
     padding-bottom: 10px;
   }
   
@@ -217,6 +226,7 @@
   
   .map {
     height: 300px;
+    width: 100%;
     padding: 10px;
     margin-top: 10px;
   }
@@ -235,10 +245,17 @@
     border: 1px solid salmon;
   }
   
-  .submit {
-    max-width: 300px;
-    cursor: pointer;
+   .btn-group {
+    align-items: center;
+    width: 40%;
   }
+
+  .buttons {
+    cursor: pointer;
+    margin: 20px;
+    width: 50%;
+  }
+  
 </style>
 
 

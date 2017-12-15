@@ -42,50 +42,7 @@ export default {
   data () {
     return {
       register: true,
-      inverted: false,
-      myHazards: [
-        {
-          name: 'Slips, Trips, Falls',
-          image: '../../../../static/slips.png',
-          riskBeforeControls: 'High',
-          controlMethod: 'Minimise',
-          riskAfterControls: 'Low',
-          controls: [
-            'Accessways are clear',
-            'Edge protection in place',
-            'Clearly mark any holes',
-            'Maintain good housekeeping'
-          ]
-        },
-        {
-          name: 'Scaffold',
-          image: '../../../../static/scaffold.png',
-          riskBeforeControls: 'High',
-          controlMethod: 'Minimise',
-          riskAfterControls: 'Medium',
-          controls: [
-            'Guard Rails are in place',
-            'Safety tag is current',
-            'Toe boards are secure',
-            'Safe access'
-          ]
-        }
-      ],
-      allHazards: [
-        {
-          name: 'Hazardous Substances',
-          image: '../../../../static/Haz-sub.jpg',
-          riskBeforeControls: 'High',
-          controlMethod: 'Minimise',
-          riskAfterControls: 'Low',
-          controls: [
-            'Wear appropriate PPE',
-            'Store safely and securely',
-            'Safety data sheets are on site',
-            'Keep away from ignition sources'
-          ]
-        }
-      ]
+      inverted: false
     }
   },
   computed: {
@@ -109,6 +66,11 @@ export default {
       } else {
         return this.allHazards
       }
+    },
+    allHazards () {
+      return this.$store.getters.allHazards
+    },
+    myHazards () {
     }
   },
   methods: {

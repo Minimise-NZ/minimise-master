@@ -1,41 +1,44 @@
 <template>
-  <b-card 
-   v-if="incidents != 0"
-   header="Incident Reports" 
-   header-tag="header">
-    <b-row class="subheader">
-        <b-col>
-          <header>Site Address</header>
-        </b-col>
-         <b-col>
-          <header>Incident Type</header>
-        </b-col>
-        <b-col>
-          <header>Reported By</header>
-        </b-col>
-        <b-col>
-          <header>Date</header>
-        </b-col>
-      </b-row>
-      <b-row 
-         class="content"
-         v-for="incident in incidents"
-         key="incident.address">
-         <b-col>
-          <p
-             style="text-decoration: underline; color: #178ac3; cursor: pointer">{{incident.address}}</p>
-        </b-col>
-        <b-col>
-          <p>{{incident.type}}</p>
-        </b-col>
-        <b-col>
-          <p>{{incident.reported}}</p>
-        </b-col>
-        <b-col>
-         <p>{{incident.date}}</p>
-        </b-col>
-      </b-row>
-  </b-card>
+  <b-container fluid>
+    <b-card header="Incident Reports" header-tag="header">
+      <b-row class="subheader">
+          <b-col>
+            <header>Site Address</header>
+          </b-col>
+          <b-col>
+            <header>Incident Type</header>
+          </b-col>
+          <b-col>
+            <header>Reported By</header>
+          </b-col>
+          <b-col>
+            <header>Date</header>
+          </b-col>
+          <b-col>
+            <header>Status</header>
+          </b-col>
+        </b-row>
+        <div class="scroll-container">
+          <b-row class="content" v-for="incident in incidents" :key="incident.address">
+            <b-col>
+              <p style="text-decoration: underline; color: #178ac3; cursor: pointer">{{incident.address}}</p>
+            </b-col>
+            <b-col>
+              <p>{{incident.type}}</p>
+            </b-col>
+            <b-col>
+              <p>{{incident.reported}}</p>
+            </b-col>
+            <b-col>
+              <p>{{incident.date}}</p>
+            </b-col>
+             <b-col>
+              <p>{{incident.status}}</p>
+            </b-col>
+        </b-row>
+      </div>
+    </b-card>
+  </b-container>
 </template>
 
 <script>
@@ -47,7 +50,8 @@ export default {
           type: 'First Aid',
           address: '44 Matipo Street, Papanui',
           reported: 'Sam Stevens',
-          date: '27/10/2017'
+          date: '27/10/2017',
+          status: 'open'
         }
       ]
     }
@@ -59,11 +63,7 @@ export default {
   .container-fluid {
     padding-top: 20px;
     margin-bottom: 100px;
-  }
-  
-  .card {
-    border: 1px solid #12807a;
-    margin-bottom: 30px;
+    padding-right: 30px;
   }
   
   .card-header {

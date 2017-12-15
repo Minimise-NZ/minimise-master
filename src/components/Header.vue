@@ -40,8 +40,8 @@ export default {
 <style scoped>
   .navbar {
     padding-left: 30px;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
   .btn {
     background-color: #383838;

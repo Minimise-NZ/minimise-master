@@ -5,10 +5,12 @@
         <b-button v-if="currentView === 'home'" class="addBtn" @click="newIncident">New Incident</b-button>
         <b-button v-else class="addBtn" @click="home">Go Back</b-button>
       </div>
-      <incidentReports v-if="currentView === 'home'"></incidentReports>
-      <incidentView v-if="currentView === 'view'"></incidentView>
-      <incidentForm v-if="currentView === 'new'"></incidentForm>
-  </b-card>
+      <div class="scroll-container">
+        <incidentReports v-if="currentView === 'home'"></incidentReports>
+        <incidentView v-if="currentView === 'view'"></incidentView>
+        <incidentForm v-if="currentView === 'new'"></incidentForm>
+      </div>
+    </b-card>
   </b-container>
 </template>
 
@@ -44,7 +46,8 @@ export default {
 <style scoped>
   .container-fluid {
     padding-top: 20px;
-    margin-bottom: 100px;;
+    margin-bottom: 100px;
+    padding-right: 30px;
   }
 
   .card-header {
