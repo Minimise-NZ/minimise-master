@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import AuthGuard from './auth-guard'
 
 import Home from '@/components/Home.vue'
+import Temp from '@/components/Temp.vue'
 
 import Login from '@/components/User/Login.vue'
 import SignUp from '@/components/User/SignUp.vue'
@@ -40,6 +41,11 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'Coming Soon',
+      component: Temp
+    },
+    {
+      path: '/home',
       name: 'Home',
       component: Home
     },
