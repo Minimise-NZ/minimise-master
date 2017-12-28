@@ -16,7 +16,8 @@ export const store = new Vuex.Store({
     jobsInProgress: [],
     myIncidents: [],
     allHazards: [],
-    allRisks: [],
+    myHazards: [],
+    notMyHazards: [],
     loading: false,
     error: null
   },
@@ -30,7 +31,6 @@ export const store = new Vuex.Store({
       state.jobsInProgress = []
       state.myIncidents = []
       state.allHazards = []
-      state.allRisks = []
       state.loading = false
       state.error = null
     },
@@ -64,11 +64,11 @@ export const store = new Vuex.Store({
     setAllHazards (state, payload) {
       state.allHazards = payload
     },
-    setAllRisks (state, payload) {
-      state.allRisks = payload
-    },
     setMyHazards (state, payload) {
       state.myHazards = payload
+    },
+    setNotMyHazards (state, payload) {
+      state.notMyHazards = payload
     }
   },
   actions: {
@@ -305,10 +305,15 @@ export const store = new Vuex.Store({
           snapshot.forEach((doc) => {
             let data = doc.data()
             let hazard = {
+              id: doc.id,
               name: data.name,
               image: data.imageURL,
-              riskIds: data.risks,
-              risks: []
+              IRA: data.IRA,
+              RRA: data.RRA,
+              controls: data.controls,
+              risks: data.risks,
+              taskAnalysis: data.taskAnalysis,
+              worksafe: data.worksafeNotification
             }
             allHazards.push(hazard)
           })
@@ -324,40 +329,31 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    getAllRisks ({commit, state}, payload) {
-      commit('setLoading', true)
-      const allRisks = []
-      let promise = new Promise((resolve, reject) => {
-        firestore.collection('risks')
-        .get()
-        .then((snapshot) => {
-          commit('setLoading', false)
-          snapshot.forEach((doc) => {
-            let data = doc.data()
-            let risk = {
-              id: doc.id,
-              controls: [],
-              IRA: data.IRA,
-              RRA: data.RRA,
-              name: data.name
-            }
-            for (let index in data.Controls) {
-              risk.controls.push(data.Controls[index])
-            }
-            console.log(risk)
-            allRisks.push(risk)
-          })
-          commit('setAllRisks', allRisks)
-          resolve()
-        })
-        .catch((error) => {
-          commit('setLoading', false)
-          commit('setError', error)
-          console.log(error)
-          reject(console.log('All risks error'))
-        })
-      })
-      return promise
+    getMyHazards ({commit, state}) {
+      let hazards = state.company.hazards
+      console.log(hazards)
+      if (hazards <= 0 || hazards === undefined || hazards === null) {
+        console.log('this company has no hazards')
+        return
+      } else {
+        commit('setMyHazards', hazards)
+      }
+    },
+    getNotMyHazards ({commit, state}) {
+      let all = new Set(state.allHazards)
+      let my = new Set(state.myHazards)
+      console.log('this is my hazards', my)
+      let difference = new Set(
+        [...all].filter(x => !my.has(x)))
+      let hazards = [...difference]
+      commit('setNotMyHazards', hazards)
+    },
+    saveHazards ({commit, state}, payload) {
+      let hazardUpdates = state.myHazards.concat(payload)
+      firestore.collection('companies').doc(state.companyKey)
+      .update({hazards: payload})
+      commit('setMyHazards', hazardUpdates)
+      console.log('My Hazards updates', state.myHazards)
     },
     signUserIn ({commit}, payload) {
       commit('setLoading', true)
@@ -397,7 +393,8 @@ export const store = new Vuex.Store({
     loading: (state) => state.loading,
     jobsInProgress: (state) => state.jobsInProgress,
     allHazards: (state) => state.allHazards,
-    allRisks: (state) => state.allRisks
+    myHazards: (state) => state.myHazards,
+    notMyHazards: (state) => state.notMyHazards
   },
   plugins: [createPersistedState()]
 })

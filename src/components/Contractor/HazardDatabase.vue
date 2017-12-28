@@ -42,11 +42,18 @@
 export default {
   data () {
     return {
+      companyHazards: []
     }
   },
   computed: {
     hazards () {
-      // let myHazards = this.$store.getters.company.hazards
+      let companyHazards = this.$store.getters.company.hazards
+      if (companyHazards <= 0) {
+        console.log('this company has no hazards')
+        this.companyHazards = null
+      } else {
+        // do dome other stuff
+      }
       // let allHazards = this.$store.getters.allHazards
       // let hazards = new Set ([...allHazards]).filter(x => !myHazards.has(x))
       // return hazards

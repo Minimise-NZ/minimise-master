@@ -2,37 +2,44 @@
   <b-container fluid>
     <b-card>
       <div class="card-header" :class="{ inverted: inverted }" >{{headerTitle}}
-        <b-button v-if="register" class="headerBtn" @click="register = !register, inverted = !inverted">{{headerButton}}</b-button>
-        <b-button v-else class="headerBtn" @click="register = !register, inverted = !inverted">{{headerButton}}</b-button>
+        <b-button v-if="register" class="headerBtn" @click="register = !register, inverted = !inverted">Add New Hazard</b-button>
+        <b-button v-else class="headerBtn" @click="register = !register, inverted = !inverted, saveHazards()">Back to Hazard Register</b-button>
       </div>
-      <b-card
-       v-for="hazard in hazards"
-       :key="hazard.name"
-       class="hazardCard mt-2 mb-4">
-        <header class="card-header hazard" :class="{ inverted: inverted }">{{hazard.name}}
-          <b-button v-if="register" class="editBtn pt-1 pb-1">Remove Hazard</b-button>
-          <b-button v-if="register" class="editBtn pt-1 pb-1">Edit Hazard</b-button>
-          <b-button v-if="!register" class="editBtn pt-1 pb-1">Add Hazard</b-button>
-        </header>
-        <b-row>
-          <b-col>
-            <b-img
-              :src='hazard.image'
-              fluid>
-            </b-img>
-          </b-col>
-          <b-col>
-            <p><strong>Controls</strong></p>
-            <p v-for="control in hazard.controls">{{control}}</p>
-          </b-col>
-          <b-col>
-           <br>
-            <p>Risk before controls: {{hazard.riskBeforeControls}}</p>
-            <p>Method of control: {{hazard.controlMethod}}</p>
-            <p>Risk after controls: {{hazard.riskAfterControls}}</p>
-          </b-col>
-        </b-row>
-      </b-card>
+      <div class="scroll-container">
+        <b-card
+          v-for="(hazard, index) in hazards"
+          :key="index"
+          class="hazardCard mt-2 mb-4">
+          <header class="card-header hazard" :class="{ inverted: inverted }">{{hazard.name}}
+            <b-button v-if="register" class="editBtn pt-1 pb-1">Remove Hazard</b-button>
+            <b-button v-if="!register" class="addBtn pt-1 pb-1"  @click="addHazard(hazard, index)">Add to my Hazard Register</b-button>
+          </header>
+          <b-row>
+            <b-col>
+              <b-img
+                :src='hazard.image'
+                class="ml-3 mb-2"
+                fluid>
+              </b-img>
+            </b-col>
+            <b-col>
+              <h5 class="mb-3"><strong>Risks</strong></h5>
+              <p v-for="(risk, index) in hazard.risks" :key="index">{{risk}}</p>
+            </b-col>
+            <b-col>
+              <h5 class="mb-3"><strong>Controls</strong></h5>
+              <p v-for="(control, index) in hazard.controls" :key="index">{{control}}</p>
+            </b-col>
+             <b-col>
+              <br>
+              <p><strong>Risk before controls: </strong>{{hazard.IRA}}</p>
+              <p><strong>Risk after controls: </strong>{{hazard.RRA}}</p>
+              <p v-if="hazard.taskAnalysis === true" class="alert-text"><strong>Task Analysis Required</strong></p>
+              <p v-if="hazard.worksafe === true" class="alert-text"><strong>Worksafe Notification Required</strong></p>
+            </b-col>
+          </b-row>
+        </b-card>
+      </div>
     </b-card>
   </b-container>
 </template>
@@ -42,7 +49,8 @@ export default {
   data () {
     return {
       register: true,
-      inverted: false
+      inverted: false,
+      newHazards: []
     }
   },
   computed: {
@@ -53,27 +61,25 @@ export default {
         return 'Hazard Database'
       }
     },
-    headerButton () {
-      if (this.register) {
-        return 'Add New Hazard'
-      } else {
-        return 'Back to Hazard Register'
-      }
-    },
     hazards () {
       if (this.register) {
-        return this.myHazards
+        return this.$store.getters.myHazards
       } else {
-        return this.allHazards
+        return this.$store.getters.notMyHazards
       }
-    },
-    allHazards () {
-      return this.$store.getters.allHazards
-    },
-    myHazards () {
     }
   },
   methods: {
+    addHazard (hazard, index) {
+      // add selected hazard to company hazard register
+      this.newHazards.push(hazard)
+      // remove selected hazard from hazard list
+      this.hazards.splice(index, 1)
+    },
+    saveHazards () {
+      this.$store.dispatch('saveHazards', this.newHazards)
+      this.newHazards = []
+    }
   }
 }
 </script>
@@ -81,10 +87,9 @@ export default {
 <style scoped>
   .container-fluid {
     padding-top: 20px;
-    margin-bottom: 100px;;
   }
   
-   .card-header {
+  .card-header {
     margin: -20px -20px 20px -20px;
     background-color: #12807a;
     font-size: 1.4rem;
@@ -100,6 +105,7 @@ export default {
     margin-left: 10px;
     cursor:pointer;
   }
+
   .headerBtn {
     float: right;
     background-color: #ffc80b;
@@ -109,6 +115,16 @@ export default {
   
   .editBtn {
     background-color:rgba(223, 233, 255, 0.83);
+    color: black;
+  }
+
+  .addBtn {
+    background-color:rgba(223, 233, 255, 0.83);
+    color: black;
+  }
+
+  .addBtn:hover {
+    background-color: #ffc80b;
     color: black;
   }
   
@@ -140,8 +156,7 @@ export default {
   }
   
   .col {
-    padding: 20px;
-    max-width: 300px;
+    padding-top: 20px;
     min-width: 240px;
   }
   

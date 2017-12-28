@@ -56,7 +56,8 @@ export default {
     this.$store.dispatch('getAllHazards')
   },
   mounted () {
-    this.$store.dispatch('getAllRisks')
+    this.$store.dispatch('getMyHazards')
+    this.$store.dispatch('getNotMyHazards')
   }
 }
 </script>

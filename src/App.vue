@@ -27,6 +27,10 @@ export default {
   color:#FFC80B;
 }
 
+.alert-text {
+  color: red;
+}
+
 .my-secondary-accent {
   color:#383838;
 }
