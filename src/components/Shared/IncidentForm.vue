@@ -25,7 +25,7 @@
             <b-col sm="9" lg="10">
               <v-select
                 placeholder="Please select incident type"
-                :value.sync="incident.types"
+                v-model="incident.type"
                 :options="incidentTypes"
                 required>
               </v-select>
@@ -173,13 +173,13 @@ export default {
         type: '',
         description: '',
         injury: '',
-        injuryDescription: 'n/a',
+        injuryDescription: '',
         plant: '',
         plantDamage: '',
         cause: '',
         corrective: '',
         escalate: false,
-        status: open,
+        status: 'open',
         loggedBy: ''
       },
       incidentTypes: [
@@ -187,9 +187,22 @@ export default {
       ]
     }
   },
+  computed: {
+    actionOwner () {
+      if (this.incident.status === 'closed') {
+        return null
+      } else if (this.incident.escalate === 'true') {
+        return this.$store.getters.company.hseManager
+      } else {
+        return this.incident.loggedBy
+      }
+    }
+  },
   methods: {
     onSubmit () {
       this.incident.loggedBy = this.$store.getters.user.name
+      this.incident.actionOwner = this.actionOwner
+      this.incident.company = this.$store.getters.companyKey
       this.$store.dispatch('newIncident', {
         incident: this.incident
       })

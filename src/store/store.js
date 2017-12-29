@@ -69,6 +69,9 @@ export const store = new Vuex.Store({
     },
     setNotMyHazards (state, payload) {
       state.notMyHazards = payload
+    },
+    setIncidents (state, payload) {
+      state.myIncidents = payload
     }
   },
   actions: {
@@ -284,7 +287,6 @@ export const store = new Vuex.Store({
             pending,
             approved
           })
-          console.log(doc.data())
         })
         commit('setJobs', jobSites)
         commit('setLoading', false)
@@ -293,6 +295,68 @@ export const store = new Vuex.Store({
         console.log('Error getting documents: ', error)
         commit('setLoading', false)
       })
+    },
+    getIncidents ({commit, state}) {
+      commit('setLoading', true)
+      if (state.user.admin) {
+        firestore.collection('incidents').where('company', '==', state.companyKey)
+        .get()
+        .then((snapshot) => {
+          const incidents = []
+          snapshot.forEach((doc) => {
+            let incident = doc.data().incident
+            console.log(incident)
+            incidents.push({
+              id: doc.id,
+              address: incident.address,
+              date: incident.date,
+              reportedBy: incident.reportedBy,
+              type: incident.type,
+              description: incident.description,
+              injury: incident.injury,
+              injuryDescription: incident.injuryDescription,
+              plant: incident.plant,
+              plantDamage: incident.plantDamage,
+              cause: incident.cause,
+              corrective: incident.corrective,
+              escalate: incident.escalate,
+              status: incident.status,
+              loggedBy: incident.loggedBy,
+              actionOwner: incident.actionOwner
+            })
+            commit('setIncidents', incidents)
+          })
+        })
+      } else {
+        firestore.collection('incidents').where('actionOwner', '==', state.userKey)
+        .get()
+        .then((snapshot) => {
+          const incidents = []
+          snapshot.forEach((doc) => {
+            let incident = doc.data().incident
+            console.log(incident)
+            incidents.push({
+              id: doc.id,
+              address: incident.address,
+              date: incident.date,
+              reportedBy: incident.reportedBy,
+              type: incident.type,
+              description: incident.description,
+              injury: incident.injury,
+              injuryDescription: incident.injuryDescription,
+              plant: incident.plant,
+              plantDamage: incident.plantDamage,
+              cause: incident.cause,
+              corrective: incident.corrective,
+              escalate: incident.escalate,
+              status: incident.status,
+              loggedBy: incident.loggedBy,
+              actionOwner: incident.actionOwner
+            })
+            commit('setIncidents', incidents)
+          })
+        })
+      }
     },
     getAllHazards ({commit, state}, payload) {
       commit('setLoading', true)

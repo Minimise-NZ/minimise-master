@@ -54,6 +54,7 @@ export default {
   mounted () {
     this.$store.dispatch('getCompanyIndex')
     this.$store.dispatch('getJobs')
+    this.$store.dispatch('getIncidents')
   }
 }
 </script>

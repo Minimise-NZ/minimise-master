@@ -19,7 +19,7 @@
       <b-row 
          class="content"
          v-for="incident in incidents"
-         key="incident.address">
+         :key="incident.address">
          <b-col>
           <p
              style="text-decoration: underline; color: #178ac3; cursor: pointer">{{incident.address}}</p>

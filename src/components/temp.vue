@@ -2,6 +2,7 @@
   <b-container fluid>
     <b-container class="login-container">
       <h1 class="my-primary-accent brand-name">minimise</h1>
+      <br><br>
       <h3>Simple Safety on Construction Sites</h3>
       <h4>Coming Soon</h4>
     </b-container>
@@ -17,14 +18,9 @@
 <style scoped>
   
   .container-fluid {
-    padding: 0;
-  }
-  
-  .login-container {
-    padding: 50px 80px;
-    margin-top: 150px;
-    width: 500px;
-    border-radius: 10px;
+    background-color: rgba(56,56,56,0.9);
+    padding-top: 200px;
+    height: 990px;
   }
 
   h1 {
@@ -37,5 +33,8 @@
     margin-bottom: 40px;
   }
 
+  h3, h4 {
+    color: antiquewhite;
+  }
   
 </style>

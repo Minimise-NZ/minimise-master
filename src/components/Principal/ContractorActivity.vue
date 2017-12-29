@@ -1,6 +1,6 @@
 <template>
   <b-card
-   header="Recent Activity" 
+   header="Contractor Activity" 
    header-tag="header">
     <b-row class="subheader">
       <b-col sm="3">
