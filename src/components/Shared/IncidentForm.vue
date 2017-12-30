@@ -5,11 +5,14 @@
         <b-form @submit.prevent="onSubmit">
           <b-row>
             <b-col sm="3" lg="2">Date of Incident:</b-col>
-            <b-col sm="9" lg="10"><b-form-input v-model="incident.date" type="date" required></b-form-input></b-col>
-          </b-row>
-          <b-row>
-            <b-col sm="3" lg="2">Time of Incident:</b-col>
-            <b-col sm="9" lg="10"><b-form-input v-model="incident.time" type="time" required></b-form-input></b-col>
+            <b-col sm="9" lg="10" >
+              <datetime 
+                v-model="incident.date"
+                type="date"
+                placeholder=" Select date"
+                required
+                ></datetime>
+            </b-col>
           </b-row>
           <b-row>
             <b-col sm="3" lg="2"><label>Reported By:</label></b-col>
@@ -29,6 +32,7 @@
                 :options="incidentTypes"
                 required>
               </v-select>
+              <div class="alert alert-danger" v-show="this.error !== ''">{{this.error}}</div>
             </b-col>
           </b-row>
           <b-row>
@@ -184,7 +188,8 @@ export default {
       },
       incidentTypes: [
         'Serious Harm', 'Minor Harm', 'Plant Damage', 'Near Miss'
-      ]
+      ],
+      error: ''
     }
   },
   computed: {
@@ -200,15 +205,22 @@ export default {
   },
   methods: {
     onSubmit () {
-      this.incident.loggedBy = this.$store.getters.user.name
-      this.incident.actionOwner = this.actionOwner
-      this.incident.company = this.$store.getters.companyKey
-      this.$store.dispatch('newIncident', {
-        incident: this.incident
-      })
-      .then(() => {
-        this.$router.push('/principal/incidents')
-      })
+      if (this.incident.type === '') {
+        this.error = 'Please select incident type'
+        return this.error
+      } else {
+        this.error = ''
+        this.incident.date = this.incident.date.slice(0, 10)
+        this.incident.loggedBy = this.$store.getters.user.name
+        this.incident.actionOwner = this.actionOwner
+        this.incident.company = this.$store.getters.companyKey
+        this.$store.dispatch('newIncident', {
+          incident: this.incident
+        })
+        .then(() => {
+          this.$router.push('/principal/incidents')
+        })
+      }
     },
     cancel () {
       this.$router.push('/principal')
@@ -260,5 +272,6 @@ export default {
     margin: 20px;
     width: 50%;
   }
+
   
 </style>

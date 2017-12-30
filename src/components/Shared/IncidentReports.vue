@@ -27,7 +27,7 @@
               <p>{{incident.type}}</p>
             </b-col>
             <b-col>
-              <p>{{incident.reported}}</p>
+              <p>{{incident.reportedBy}}</p>
             </b-col>
             <b-col>
               <p>{{incident.date}}</p>
