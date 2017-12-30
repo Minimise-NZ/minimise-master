@@ -120,8 +120,9 @@ export default new Router({
           component: NewIncident
         },
         {
-          path: 'incidentView',
-          component: IncidentView
+          path: 'incident/:id',
+          component: IncidentView,
+          props: true
         },
         {
           path: 'support',
@@ -175,8 +176,9 @@ export default new Router({
           component: NewIncident
         },
         {
-          path: 'incidentView',
-          component: IncidentView
+          path: 'incident/:id',
+          component: IncidentView,
+          props: true
         },
         {
           path: 'support',

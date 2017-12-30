@@ -306,10 +306,10 @@ export const store = new Vuex.Store({
         let incident = payload.incident
         let incidents = state.myIncidents
         incidents.push(incident)
-        commit('setIncidents', incidents)
         firestore.collection('incidents').add({incident})
         .then(() => {
           commit('setLoading', false)
+          commit('setIncidents', incidents)
           resolve()
         })
         .catch((error) => {
@@ -345,7 +345,7 @@ export const store = new Vuex.Store({
               cause: obj.incident.cause,
               corrective: obj.incident.corrective,
               escalate: obj.incident.escalate,
-              status: obj.incident.status,
+              open: obj.incident.open,
               loggedBy: obj.incident.loggedBy,
               actionOwner: obj.incident.actionOwner
             })
@@ -461,7 +461,14 @@ export const store = new Vuex.Store({
     allHazards: (state) => state.allHazards,
     myHazards: (state) => state.myHazards,
     notMyHazards: (state) => state.notMyHazards,
-    incidents: (state) => state.myIncidents
+    incidents: (state) => state.myIncidents,
+    incident (state) {
+      return (id) => {
+        return state.myIncidents.find((incident) => {
+          return incident.id === id
+        })
+      }
+    }
   },
   plugins: [createPersistedState()]
 })

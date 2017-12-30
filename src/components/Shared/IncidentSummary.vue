@@ -19,10 +19,10 @@
       <b-row 
          class="content"
          v-for="incident in incidents"
-         v-if="incident.status === 'open'"
+         v-if="incident.open"
          :key="incident.id">
         <b-col>
-          <p style="text-decoration: underline; color: #178ac3; cursor: pointer">{{incident.address}}</p>
+          <p style="text-decoration: underline; color: #178ac3; cursor: pointer" @click="viewIncident(incident.id)">{{incident.address}}</p>
         </b-col>
         <b-col>
           <p>{{incident.type}}</p>
@@ -46,6 +46,11 @@ export default {
   computed: {
     incidents () {
       return this.$store.getters.incidents
+    }
+  },
+  methods: {
+    viewIncident (id) {
+      this.$router.push('/principal/incident/' + id)
     }
   }
 }

@@ -11,7 +11,8 @@
                 type="date"
                 placeholder=" Select date"
                 required
-                ></datetime>
+                >
+              </datetime>
             </b-col>
           </b-row>
           <b-row>
@@ -46,17 +47,7 @@
               </b-form-textarea>
             </b-col>
           </b-row>
-          <b-row>
-          <b-col sm="3" lg="2"></b-col>
-            <b-col sm="9" lg="10">
-              <b-form-checkbox
-                v-model="incident.injury"
-                value='true'>
-              Was anybody injured?
-              </b-form-checkbox>
-            </b-col>
-          </b-row>
-          <b-row v-if="incident.injury">
+          <b-row v-if="incident.type === 'Serious Harm' || incident.type === 'Minor Harm'">
             <b-col sm="3" lg="2"><label>Injury Description:</label></b-col>
             <b-col sm="9" lg="10">
               <b-form-textarea
@@ -67,17 +58,7 @@
               </b-form-textarea>
             </b-col>
           </b-row>
-          <b-row>
-          <b-col sm="3" lg="2"></b-col>
-            <b-col sm="9" lg="10">
-              <b-form-checkbox
-                v-model="incident.plant"
-                value='true'>
-              Was plant or equipment damaged?
-              </b-form-checkbox>
-            </b-col>
-          </b-row>
-          <b-row v-if="incident.plant">
+          <b-row v-if="incident.type === 'Plant Damage'">
             <b-col sm="3" lg="2"><label>Description of damage:</label></b-col>
             <b-col sm="9" lg="10">
               <b-form-textarea
@@ -149,14 +130,14 @@
           <b-row class="pt-1">
             <b-col sm="3" lg="2"></b-col>
             <b-col sm="9" lg="10">
-              <b-form-checkbox v-model="incident.status" value='closed' v-if="incident.escalate === false">
+              <b-form-checkbox v-model="incident.open" value="false" v-if="incident.escalate === false">
                 Close this incident <em>(Close only if no further action is required)</em>
               </b-form-checkbox>
             </b-col>
           </b-row>
           <div class="text-center">
             <b-button-group class="pt-4 pb-4">
-              <b-button class="buttons" variant="success" type="submit">Submit</b-button>
+              <b-button class="buttons" variant="success" type="submit">Save</b-button>
               <b-button class="buttons" variant="danger" @click="cancel">Cancel</b-button>
             </b-button-group>
           </div>
@@ -183,7 +164,7 @@ export default {
         cause: '',
         corrective: '',
         escalate: false,
-        status: 'open',
+        open: true,
         loggedBy: ''
       },
       incidentTypes: [
@@ -236,7 +217,7 @@ export default {
     padding-right: 30px;
   }
   
-   .card-header {
+  .card-header {
     background-color: rgba(155, 35, 53, 0.88);
     font-size: 1.2rem;
     color: white;

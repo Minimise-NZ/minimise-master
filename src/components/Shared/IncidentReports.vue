@@ -33,7 +33,7 @@
               <p>{{incident.date}}</p>
             </b-col>
              <b-col>
-              <p>{{incident.status}}</p>
+              <p>{{status(incident)}}</p>
             </b-col>
         </b-row>
       </div>
@@ -50,6 +50,15 @@ export default {
   computed: {
     incidents () {
       return this.$store.getters.incidents
+    }
+  },
+  methods: {
+    status (incident) {
+      if (incident.open === true) {
+        return 'open'
+      } else {
+        return 'closed'
+      }
     }
   }
 }
