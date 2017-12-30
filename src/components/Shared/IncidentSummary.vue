@@ -10,25 +10,25 @@
           <header>Incident Type</header>
         </b-col>
         <b-col>
-          <header>Reported By</header>
+          <header>Action Owner</header>
         </b-col>
         <b-col>
-          <header>Date</header>
+          <header>Reported Date</header>
         </b-col>
       </b-row>
       <b-row 
          class="content"
          v-for="incident in incidents"
-         :key="incident.address">
-         <b-col>
-          <p
-             style="text-decoration: underline; color: #178ac3; cursor: pointer">{{incident.address}}</p>
+         v-if="incident.status === 'open'"
+         :key="incident.id">
+        <b-col>
+          <p style="text-decoration: underline; color: #178ac3; cursor: pointer">{{incident.address}}</p>
         </b-col>
         <b-col>
           <p>{{incident.type}}</p>
         </b-col>
         <b-col>
-          <p>{{incident.reported}}</p>
+          <p>{{incident.actionOwner}}</p>
         </b-col>
         <b-col>
          <p>{{incident.date}}</p>
@@ -41,14 +41,11 @@
 export default {
   data () {
     return {
-      incidents: [
-        {
-          type: 'First Aid',
-          address: '44 Matipo Street, Papanui',
-          reported: 'Sam Stevens',
-          date: '27/10/2017'
-        }
-      ]
+    }
+  },
+  computed: {
+    incidents () {
+      return this.$store.getters.incidents
     }
   }
 }

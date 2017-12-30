@@ -96,6 +96,85 @@ export const store = new Vuex.Store({
       })
       return promise
     },
+    signUserIn ({commit}, payload) {
+      commit('setLoading', true)
+      commit('clearError')
+      let promise = new Promise((resolve, reject) => {
+        firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
+        .then(
+          user => {
+            commit('setLoading', false)
+            commit('setUserKey', user.uid)
+            console.log('User key is set')
+            resolve()
+          }
+        )
+        .catch(
+          error => {
+            commit('setLoading', false)
+            commit('setError', error)
+            reject(error)
+          }
+        )
+      })
+      return promise
+    },
+    updateUser ({commit, getters}, payload) {
+      // add user info to firestore
+      commit('setLoading', true)
+      commit('clearError')
+      commit('setUser', payload)
+      let promise = new Promise((resolve, reject) => {
+        firestore.collection('users').doc(getters.userKey).set(payload)
+        .then(() => {
+          commit('setLoading', false)
+          console.log('User updated')
+          resolve()
+        })
+        .catch((error) => {
+          commit('setLoading', false)
+          commit('setError', error)
+          console.log(error)
+          reject()
+        })
+      })
+      return promise
+    },
+    getUser ({commit, state}, payload) {
+      commit('setLoading', true)
+      commit('clearError')
+      let promise = new Promise((resolve, reject) => {
+        firestore.collection('users').doc(state.userKey)
+        .get()
+        .then((doc) => {
+          commit('setLoading', false)
+          let user = doc.data()
+          commit('setUser', user)
+          console.log('User profile set')
+          resolve(user)
+        })
+        .catch((error) => {
+          commit('setLoading', false)
+          commit('setError', error)
+          console.log(error)
+          reject()
+        })
+      })
+      return promise
+    },
+    getCompanyIndex ({commit}) {
+      // must already have key in state
+      let companies = []
+      firestore.collection('companyIndex')
+      .get()
+      .then((dataSnapshot) => {
+        dataSnapshot.forEach((doc) => {
+          companies.push({value: doc.id, label: doc.data().name})
+        })
+        commit('setCompanyIndex', companies)
+        return companies
+      })
+    },
     newCompany ({commit, getters}, payload) {
       // create new company in firebase, add user to users and then return companyKey
       commit('setLoading', true)
@@ -112,69 +191,6 @@ export const store = new Vuex.Store({
           commit('setLoading', false)
           console.log('company created')
           resolve(doc.id)
-        })
-        .catch((error) => {
-          commit('setLoading', false)
-          commit('setError', error)
-          console.log(error)
-          reject()
-        })
-      })
-      return promise
-    },
-    newJob ({commit}, payload) {
-      // create new job in firestore
-      commit('setLoading', true)
-      commit('clearError')
-      let promise = new Promise((resolve, reject) => {
-        const job = payload
-        firestore.collection('jobSites').add(job)
-        .then((doc) => {
-          commit('setLoading', false)
-          console.log('Job created' + doc.id)
-          resolve()
-        })
-        .catch((error) => {
-          commit('setLoading', false)
-          commit('setError', error)
-          console.log(error)
-          reject()
-        })
-      })
-      return promise
-    },
-    newIncident ({commit}, payload) {
-      // create new incident in firestore
-      commit('setLoading', true)
-      commit('clearError')
-      let promise = new Promise((resolve, reject) => {
-        const incident = payload
-        firestore.collection('incidents').add(incident)
-        .then((doc) => {
-          commit('setLoading', false)
-          console.log('Incident created' + doc.id)
-          resolve()
-        })
-        .catch((error) => {
-          commit('setLoading', false)
-          commit('setError', error)
-          console.log(error)
-          reject()
-        })
-      })
-      return promise
-    },
-    updateUser ({commit, getters}, payload) {
-      // add user info to firestore
-      commit('setLoading', true)
-      commit('clearError')
-      commit('setUser', payload)
-      let promise = new Promise((resolve, reject) => {
-        firestore.collection('users').doc(getters.userKey).set(payload)
-        .then(() => {
-          commit('setLoading', false)
-          console.log('User updated')
-          resolve()
         })
         .catch((error) => {
           commit('setLoading', false)
@@ -228,31 +244,17 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    getCompanyIndex ({commit}) {
-      // must already have key in state
-      let companies = []
-      firestore.collection('companyIndex')
-      .get()
-      .then((dataSnapshot) => {
-        dataSnapshot.forEach((doc) => {
-          companies.push({value: doc.id, label: doc.data().name})
-        })
-        commit('setCompanyIndex', companies)
-        return companies
-      })
-    },
-    getUser ({commit, state}, payload) {
+    newJob ({commit}, payload) {
+      // create new job in firestore
       commit('setLoading', true)
       commit('clearError')
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('users').doc(state.userKey)
-        .get()
+        const job = payload
+        firestore.collection('jobSites').add(job)
         .then((doc) => {
           commit('setLoading', false)
-          let user = doc.data()
-          commit('setUser', user)
-          console.log('User profile set')
-          resolve(user)
+          console.log('Job created' + doc.id)
+          resolve()
         })
         .catch((error) => {
           commit('setLoading', false)
@@ -296,33 +298,56 @@ export const store = new Vuex.Store({
         commit('setLoading', false)
       })
     },
+    newIncident ({commit, state}, payload) {
+      // create new incident in firestore
+      commit('setLoading', true)
+      commit('clearError')
+      let promise = new Promise((resolve, reject) => {
+        let incident = payload.incident
+        let incidents = state.myIncidents
+        incidents.push(incident)
+        commit('setIncidents', incidents)
+        firestore.collection('incidents').add({incident})
+        .then(() => {
+          commit('setLoading', false)
+          resolve()
+        })
+        .catch((error) => {
+          commit('setLoading', false)
+          commit('setError', error)
+          console.log(error)
+          reject()
+        })
+      })
+      return promise
+    },
     getIncidents ({commit, state}) {
       commit('setLoading', true)
       if (state.user.admin) {
-        firestore.collection('incidents').where('company', '==', state.companyKey)
+        firestore.collection('incidents').where('incident.company', '==', state.companyKey)
         .get()
         .then((snapshot) => {
           const incidents = []
           snapshot.forEach((doc) => {
-            let incident = doc.data().incident
-            console.log(incident)
+            let obj = doc.data()
+            console.log(obj)
             incidents.push({
               id: doc.id,
-              address: incident.address,
-              date: incident.date,
-              reportedBy: incident.reportedBy,
-              type: incident.type,
-              description: incident.description,
-              injury: incident.injury,
-              injuryDescription: incident.injuryDescription,
-              plant: incident.plant,
-              plantDamage: incident.plantDamage,
-              cause: incident.cause,
-              corrective: incident.corrective,
-              escalate: incident.escalate,
-              status: incident.status,
-              loggedBy: incident.loggedBy,
-              actionOwner: incident.actionOwner
+              address: obj.incident.address,
+              date: obj.incident.date,
+              reportedBy: obj.incident.reportedBy,
+              type: obj.incident.type,
+              description: obj.incident.description,
+              injury: obj.incident.injury,
+              injuryDescription: obj.incident.injuryDescription,
+              plant: obj.incident.plant,
+              plantDamage: obj.incident.plantDamage,
+              cause: obj.incident.cause,
+              corrective: obj.incident.corrective,
+              escalate: obj.incident.escalate,
+              status: obj.incident.status,
+              loggedBy: obj.incident.loggedBy,
+              actionOwner: obj.incident.actionOwner
             })
             commit('setIncidents', incidents)
           })
@@ -333,7 +358,7 @@ export const store = new Vuex.Store({
         .then((snapshot) => {
           const incidents = []
           snapshot.forEach((doc) => {
-            let incident = doc.data().incident
+            let incident = doc.data()
             console.log(incident)
             incidents.push({
               id: doc.id,
@@ -419,29 +444,6 @@ export const store = new Vuex.Store({
       commit('setMyHazards', hazardUpdates)
       console.log('My Hazards updates', state.myHazards)
     },
-    signUserIn ({commit}, payload) {
-      commit('setLoading', true)
-      commit('clearError')
-      let promise = new Promise((resolve, reject) => {
-        firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
-        .then(
-          user => {
-            commit('setLoading', false)
-            commit('setUserKey', user.uid)
-            console.log('User key is set')
-            resolve()
-          }
-        )
-        .catch(
-          error => {
-            commit('setLoading', false)
-            commit('setError', error)
-            reject(error)
-          }
-        )
-      })
-      return promise
-    },
     logout ({commit}) {
       firebase.auth().signOut()
       commit('clearStore')
@@ -458,7 +460,8 @@ export const store = new Vuex.Store({
     jobsInProgress: (state) => state.jobsInProgress,
     allHazards: (state) => state.allHazards,
     myHazards: (state) => state.myHazards,
-    notMyHazards: (state) => state.notMyHazards
+    notMyHazards: (state) => state.notMyHazards,
+    incidents: (state) => state.myIncidents
   },
   plugins: [createPersistedState()]
 })

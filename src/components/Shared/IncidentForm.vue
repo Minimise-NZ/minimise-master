@@ -207,8 +207,6 @@ export default {
         incident: this.incident
       })
       .then(() => {
-        alert('New incident has been created')
-        this.$store.dispatch('getIncidents')
         this.$router.push('/principal/incidents')
       })
     },

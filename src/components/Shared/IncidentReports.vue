@@ -45,15 +45,11 @@
 export default {
   data () {
     return {
-      incidents: [
-        {
-          type: 'First Aid',
-          address: '44 Matipo Street, Papanui',
-          reported: 'Sam Stevens',
-          date: '27/10/2017',
-          status: 'open'
-        }
-      ]
+    }
+  },
+  computed: {
+    incidents () {
+      return this.$store.getters.incidents
     }
   }
 }
