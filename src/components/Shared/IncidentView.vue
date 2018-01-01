@@ -8,24 +8,17 @@
         <b-form @submit.prevent="onSubmit">
           <b-row>
             <b-col sm="3" lg="2">Date of Incident:</b-col>
-            <b-col sm="9" lg="10" v-if="readonly">
-              <b-form-input v-model="incident.date" type="text" readonly></b-form-input>
+            <b-col sm="9" lg="10">
+              <b-form-input type="text" v-model="formattedDate" readonly></b-form-input>
             </b-col>
-            <b-col sm="9" lg="10" v-if="!readonly">
-              <datetime 
-                v-model="incident.date"
-                type="date"
-                >
-              </datetime>
-            </b-col>   
           </b-row>
           <b-row>
             <b-col sm="3" lg="2"><label>Reported By:</label></b-col>
-            <b-col sm="9" lg="10"><b-form-input v-model="incident.reportedBy" type="text" :readonly="readonly"></b-form-input></b-col>
+            <b-col sm="9" lg="10"><b-form-input v-model="incident.reportedBy" type="text" readonly></b-form-input></b-col>
           </b-row>
           <b-row>
             <b-col sm="3" lg="2"><label>Location:</label></b-col>
-            <b-col sm="9" lg="10"><b-form-input v-model="incident.address" :readonly="readonly"></b-form-input></b-col>
+            <b-col sm="9" lg="10"><b-form-input v-model="incident.address" readonly></b-form-input></b-col>
           </b-row>
           <hr>
           <b-row>
@@ -99,18 +92,16 @@
           <b-row class="pt-3" v-if="!readonly">
             <b-col sm="3" lg="2"></b-col>
             <b-col sm="9" lg="10">
-              <b-form-checkbox v-model="incident.escalate" value='true'>
-                <p v-if="!incident.escalate">Is further investigation required? <em>(Escalate to Health and Safety Manager)</em></p>
-                <p v-if="incident.escalate">Further investigation is required <em>(To be escalated to Health and Safety Manager)</em></p>
+              <b-form-checkbox v-model="incident.escalate" :value='true'>
+                <p>Further investigation is required <em>(To be escalated to Health and Safety Manager)</em></p>
               </b-form-checkbox>
             </b-col>
           </b-row>
           <b-row class="pt-1" v-if="!readonly">
             <b-col sm="3" lg="2"></b-col>
-            <b-col sm="9" lg="10">
-              <b-form-checkbox v-model="incident.open" value="false" v-if="incident.escalate === false">
-                <p v-if="incident.open === 'true'">Close this incident <em>(Close only if no further action is required)</em></p>
-                <p v-if="incident.open === 'false'">This incident is closed<em>(No further action is required)</em></p>
+            <b-col sm="9" lg="10" v-if="incident.escalate === false">
+              <b-form-checkbox v-model="incident.open" :value='false'>
+                <p>Close this incident <em>(Close only if no further action is required)</em></p>
               </b-form-checkbox>
             </b-col>
           </b-row>
@@ -147,8 +138,16 @@ export default {
       return this.$store.getters.incident(this.id)
     },
     headerText () {
-      let text = 'Incident: ' + this.incident.address + ' ' + this.incident.date
+      let text = this.incident.address + ' - ' + this.formattedDate
       return text
+    },
+    formattedDate () {
+      return this.incident.date.toString().slice(0, 15)
+    },
+    status () {
+      if (this.incident.open === false) {
+        this.disabled === true
+      }
     }
   },
   methods: {

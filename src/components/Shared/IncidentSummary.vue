@@ -1,6 +1,6 @@
 <template>
   <b-card 
-   header="Incident Reports" 
+   header="Incidents Summary" 
    header-tag="header">
     <b-row class="subheader">
         <b-col>
@@ -31,7 +31,7 @@
           <p>{{incident.actionOwner}}</p>
         </b-col>
         <b-col>
-         <p>{{incident.date}}</p>
+         <p>{{formattedDate(incident.date)}}</p>
         </b-col>
       </b-row>
   </b-card>
@@ -51,6 +51,10 @@ export default {
   methods: {
     viewIncident (id) {
       this.$router.push('/principal/incident/' + id)
+    },
+    formattedDate (incidentDate) {
+      let newdate = incidentDate.toString().slice(0, 15)
+      return newdate
     }
   }
 }
@@ -81,7 +85,7 @@ export default {
     padding: 15px 0 15px 15px;
     border-bottom: 1px solid lightgrey;
     font-weight: bold;
-    color: #901010db;
+    color: #12807a;
   }
   
   .col {

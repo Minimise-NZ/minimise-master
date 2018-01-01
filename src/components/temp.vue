@@ -18,9 +18,7 @@
 <style scoped>
   
   .container-fluid {
-    background-color: rgba(56,56,56,0.9);
     padding-top: 200px;
-    height: 990px;
   }
 
   h1 {
@@ -34,7 +32,7 @@
   }
 
   h3, h4 {
-    color: antiquewhite;
+    color: 383838;
   }
   
 </style>

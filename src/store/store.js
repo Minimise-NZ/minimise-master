@@ -298,7 +298,7 @@ export const store = new Vuex.Store({
         commit('setLoading', false)
       })
     },
-    newIncident ({commit, state}, payload) {
+    newIncident ({commit, dispatch, state}, payload) {
       // create new incident in firestore
       commit('setLoading', true)
       commit('clearError')
@@ -309,7 +309,7 @@ export const store = new Vuex.Store({
         firestore.collection('incidents').add({incident})
         .then(() => {
           commit('setLoading', false)
-          commit('setIncidents', incidents)
+          dispatch('getIncidents')
           resolve()
         })
         .catch((error) => {

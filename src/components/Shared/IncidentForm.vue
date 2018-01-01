@@ -182,6 +182,9 @@ export default {
       } else {
         return this.incident.loggedBy
       }
+    },
+    companyType () {
+      return this.$store.getters.user.companyType
     }
   },
   methods: {
@@ -191,7 +194,7 @@ export default {
         return this.error
       } else {
         this.error = ''
-        this.incident.date = this.incident.date.slice(0, 10)
+        this.incident.date = new Date(this.incident.date)
         this.incident.loggedBy = this.$store.getters.user.name
         this.incident.actionOwner = this.actionOwner
         this.incident.company = this.$store.getters.companyKey
@@ -199,12 +202,12 @@ export default {
           incident: this.incident
         })
         .then(() => {
-          this.$router.push('/principal/incidents')
+          this.$router.push('/' + this.companyType + '/incidents')
         })
       }
     },
     cancel () {
-      this.$router.push('/principal')
+      this.$router.push('/' + this.companyType)
     }
   }
 }
@@ -219,7 +222,7 @@ export default {
   
   .card-header {
     background-color: rgba(155, 35, 53, 0.88);
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: white;
   }
   

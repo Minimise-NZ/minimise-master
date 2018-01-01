@@ -14,8 +14,11 @@ import VeeValidate from 'vee-validate'
 import Vuebar from 'vuebar'
 import Datetime from 'vue-datetime'
 import 'vue-datetime/dist/vue-datetime.css'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 
 Vue.use(Datetime)
+Vue.use(AOS)
 Vue.use(Vuebar)
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
@@ -28,5 +31,8 @@ new Vue({
   el: '#app',
   router,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  created () {
+    AOS.init()
+  }
 })

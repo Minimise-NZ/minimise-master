@@ -44,13 +44,15 @@
       </b-jumbotron>
 
       <b-navbar class="my-primary-bg padding-side section-nav">
-        <h4 class="my-primary-accent section-title">About Us</h4>
+        <h4 class="my-primary-accent section-title">About minimise</h4>
         <b-nav>
           <b-nav-item href="#"><i class="fa fa-facebook-square fa-3x social-icon" aria-hidden="true"></i></b-nav-item>
           <b-nav-item href="#"><i class="fa fa-twitter-square fa-3x social-icon" aria-hidden="true"></i></b-nav-item>
         </b-nav>
-        
       </b-navbar>
+        <b-container data-aos="zoom-in-down" fluid class="flex-grid">
+          Here is a container
+        </b-container>
     </div>
   </div>
   </animated-slide-in-down>
@@ -60,6 +62,7 @@
 export default {
   data () {
     return {
+      flexItems: ['Simple', 'Practical', 'Relevant', 'Engaging', 'Collaborative', 'Dynamic']
     }
   }
 }
@@ -76,9 +79,22 @@ export default {
   font-size: 1.6rem;
 }
   
-  button {
-    cursor: pointer;
-  }
+button {
+  cursor: pointer;
+}
+
+.flex-grid {
+  border: 1px solid grey;
+  background-color: #FFC80B;
+  margin-top: 300px;
+  height: 500px;
+  width: 300px;
+}
+
+h2 {
+  text-align: center;
+  padding-top: 20px;
+}
 
 .login-btn {
   margin-top: 0;

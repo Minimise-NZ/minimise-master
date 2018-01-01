@@ -76,7 +76,7 @@ export default new Router({
     {
       path: '/contractor',
       component: Contractor,
-      beforeEnter: AuthGuard,
+      beforeEach: AuthGuard,
       children: [
         {
           path: '',
@@ -133,7 +133,7 @@ export default new Router({
     {
       path: '/principal',
       component: Principal,
-      beforeEnter: AuthGuard,
+      beforeEach: AuthGuard,
       children: [
         {
           path: '',

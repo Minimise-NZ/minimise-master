@@ -21,7 +21,7 @@
         <div class="scroll-container">
           <b-row class="content" v-for="incident in incidents" :key="incident.address">
             <b-col>
-              <p style="text-decoration: underline; color: #178ac3; cursor: pointer">{{incident.address}}</p>
+              <p style="text-decoration: underline; color: #178ac3; cursor: pointer"  @click="viewIncident(incident.id)">{{incident.address}}</p>
             </b-col>
             <b-col>
               <p>{{incident.type}}</p>
@@ -30,10 +30,10 @@
               <p>{{incident.reportedBy}}</p>
             </b-col>
             <b-col>
-              <p>{{incident.date}}</p>
+              <p>{{formattedDate(incident.date)}}</p>
             </b-col>
              <b-col>
-              <p>{{status(incident)}}</p>
+              <p>{{status(incident.open)}}</p>
             </b-col>
         </b-row>
       </div>
@@ -53,12 +53,20 @@ export default {
     }
   },
   methods: {
-    status (incident) {
-      if (incident.open === true) {
+    viewIncident (id) {
+      let companyType = this.$store.getters.user.companyType
+      this.$router.push('/' + companyType + '/incident/' + id)
+    },
+    status (open) {
+      if (open === true) {
         return 'open'
       } else {
         return 'closed'
       }
+    },
+    formattedDate (incidentDate) {
+      let newdate = incidentDate.toString().slice(0, 15)
+      return newdate
     }
   }
 }
@@ -73,7 +81,7 @@ export default {
   
   .card-header {
     background-color: #12807a;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: white;
   }
   
@@ -85,7 +93,7 @@ export default {
     padding: 15px 0 15px 15px;
     border-bottom: 1px solid lightgrey;
     font-weight: bold;
-    color: #901010db;
+    color: #12807a;
   }
   
   .col {
