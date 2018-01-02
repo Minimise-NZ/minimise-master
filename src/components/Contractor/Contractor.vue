@@ -37,7 +37,7 @@ export default {
     return {
       sideNavItems: [
         {name: 'Home', link: '/contractor'},
-        {name: 'Worker Management', link: '/contractor/workers'},
+        {name: 'User Management', link: '/contractor/users'},
         {name: 'Hazard Register', link: '/contractor/hazards'},
         // {name: 'Hazardous Substances', link: '/contractor/hazardousSubstances'},
         {name: 'Task Analysis', link: '/contractor/taskAnalysis'},

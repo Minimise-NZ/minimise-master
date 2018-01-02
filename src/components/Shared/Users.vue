@@ -1,7 +1,7 @@
 <template>
   <b-container fluid>
     <b-card>
-      <div class="card-header">Worker Management
+      <div class="card-header">User Management
        <b-button class="addBtn" @click="newWorker">Add New Worker</b-button>
       </div>
       <b-card

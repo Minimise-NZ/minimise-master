@@ -43,6 +43,7 @@ export default {
         {name: 'New Incident', link: '/principal/newIncident'},
         // {name: 'Master Safety Plan', link: '/principal/master'},
         {name: 'Administration', link: '/principal/admin'},
+        {name: 'User Management', link: '/principal/users'},
         {name: 'Support / Feedback', link: '/principal/support'}
       ]
     }

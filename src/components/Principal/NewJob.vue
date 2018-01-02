@@ -2,7 +2,7 @@
   <b-container fluid>
     <b-card header="New Job Site" header-tag="header">
       <div class="scroll-container">
-        <b-form @submit.prevent="onSubmit" id="newJobForm" class="pb-5">
+        <b-form @submit.prevent="onSubmit(e)" id="newJobForm" class="pb-5">
           <b-row>
             <b-col sm="12" lg="6" class="manager-details">
               <h5><strong>{{company.name}}</strong></h5><br>
@@ -16,20 +16,15 @@
               </p>
               <br>
               <div class="input-group searchBar">
-                <b-form-input
-                  required
-                  v-model="siteAddress"
-                  type="text"
-                  class="form-control" 
-                  placeholder="Site Address">
-                  <span class="input-group-btn">
-                  <button 
-                    class="btn btn-secondary" 
-                    type="button" 
-                    @click="searchAddress"
-                    >Search</button>
-                  </span>
-                </b-form-input>
+                <vue-google-autocomplete
+                  id="map"
+                  classname="form-control"
+                  placeholder="Please enter address"
+                  v-on:placechanged="setAddress"
+                  enable-geolocation
+                  country="nz"
+                  >
+                </vue-google-autocomplete>
               </div>
             </b-col>
             
@@ -38,7 +33,8 @@
               width="100%"
               height="350px"
               frameborder="0" style="border:0"
-              src="https://www.google.com/maps/embed/v1/place?key=AIzaSyD7W7NiKKy0qZfRUsslzHOe-Hnkp-IncyU&q=187+marine+parade, new+brighton" allowfullscreen>
+              :src="mapRoot"  
+              allowfullscreen>
               </iframe>
             </b-col>
           </b-row>
@@ -99,7 +95,7 @@
           </b-form-textarea><br>
           <div class="text-center">
             <b-button-group class="pt-4 pb-4">
-              <b-button class="buttons" variant="success" type="submit">Submit</b-button>
+              <b-button class="buttons" variant="success" @click="submit">Submit</b-button>
               <b-button class="buttons" variant="danger" @click="cancel">Cancel</b-button>
             </b-button-group>
           </div>
@@ -110,43 +106,84 @@
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        siteAddress: '',
-        contractors: {
-          radioValue: 'yes',
-          radioOptions: [
-            {text: 'Yes', value: 'yes'},
-            {text: 'No', value: 'no'}
-          ],
-          selected: []
-        },
-        notifiable: {
-          radioValue: 'no',
-          radioOptions: [
-            {text: 'Yes', value: 'yes'},
-            {text: 'No', value: 'no'}
-          ],
-          list: [
-            'Working at heights > 5m',
-            'Work in confined spaces',
-            'Work in an excavation > 1.5m'
-          ],
-          selected: []
-        },
-        addinfo: false,
-        infotext: '',
-        selectError: false
+
+import VueGoogleAutocomplete from 'vue-google-autocomplete'
+export default {
+  components: {
+    VueGoogleAutocomplete
+  },
+  data () {
+    return {
+      contractors: {
+        radioValue: 'yes',
+        radioOptions: [
+          {text: 'Yes', value: 'yes'},
+          {text: 'No', value: 'no'}
+        ],
+        selected: []
+      },
+      notifiable: {
+        radioValue: 'no',
+        radioOptions: [
+          {text: 'Yes', value: 'yes'},
+          {text: 'No', value: 'no'}
+        ],
+        list: [
+          'Working at heights > 5m',
+          'Work in confined spaces',
+          'Work in an excavation > 1.5m'
+        ],
+        selected: []
+      },
+      addinfo: false,
+      infotext: '',
+      selectError: false,
+      mapRoot: 'https://www.google.com/maps/embed/v1/place?key=AIzaSyD7W7NiKKy0qZfRUsslzHOe-Hnkp-IncyU&q=Christchurch City',
+      siteAddress: ''
+    }
+  },
+  computed: {
+    showList () {
+      return (this.contractors.radioValue === 'yes')
+    },
+    showNotifiable () {
+      return (this.notifiable.radioValue === 'yes')
+    },
+    user () {
+      return this.$store.getters.user
+    },
+    contractorList () {
+      return this.$store.getters.companyIndex
+    },
+    company () {
+      return this.$store.getters.company
+    },
+    subcontractors () {
+      var subcontractors = this.contractors.selected.map(contractor => ({
+        status: 'pending', name: contractor.label, key: contractor.value
+      }))
+      return subcontractors
+    }
+  },
+  methods: {
+    setAddress: function (addressData, placeResultData, id) {
+      this.siteAddress = placeResultData.formatted_address
+      this.mapRoot = 'https://www.google.com/maps/embed/v1/place?key=AIzaSyD7W7NiKKy0qZfRUsslzHOe-Hnkp-IncyU&q=' + this.siteAddress
+    },
+    cancel () {
+      this.$router.push('/principal')
+    },
+    onSubmit (e) {
+      if (e.keyCode === 13) {
+        return
+      } else {
+        this.submit()
       }
     },
-    methods: {
-      searchAddress () {
-      },
-      cancel () {
-        this.$router.push('/principal')
-      },
-      onSubmit () {
+    submit () {
+      if (this.siteAddress === '' || (this.contractors.radioValue === 'yes' && this.contractors.selected) === [] || (this.notifiable.radioValue === 'yes' && this.notifiable.list === [])) {
+        return
+      } else {
         this.$store.dispatch('newJob', {
           principalKey: this.user.company,
           principalName: this.company.name,
@@ -159,7 +196,7 @@
           info: this.infotext,
           status: 'open',
           subcontractors: this.subcontractors,
-          date: +new Date()
+          date: new Date()
         })
         .then(() => {
           alert('New job has been created')
@@ -167,31 +204,9 @@
           this.$router.push('/principal/jobs')
         })
       }
-    },
-    computed: {
-      showList () {
-        return (this.contractors.radioValue === 'yes')
-      },
-      showNotifiable () {
-        return (this.notifiable.radioValue === 'yes')
-      },
-      user () {
-        return this.$store.getters.user
-      },
-      contractorList () {
-        return this.$store.getters.companyIndex
-      },
-      company () {
-        return this.$store.getters.company
-      },
-      subcontractors () {
-        var subcontractors = this.contractors.selected.map(contractor => ({
-          status: 'pending', name: contractor.label, key: contractor.value
-        }))
-        return subcontractors
-      }
     }
   }
+}
 </script>
 
 <style scoped>

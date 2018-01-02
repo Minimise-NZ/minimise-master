@@ -18,13 +18,13 @@ import JobForm from '@/components/Contractor/JobForm.vue'
 import Hazards from '@/components/Contractor/HazardRegister.vue'
 import HazardousSubstances from '@/components/Contractor/HazardousSubstances.vue'
 import TaskAnalysis from '@/components/Contractor/TaskAnalysis.vue'
-import Workers from '@/components/Contractor/WorkerManagement.vue'
 
 import Billing from '@/components/Shared/AdminBilling.vue'
 import AdminUsers from '@/components/Shared/AdminManageUsers.vue'
 import IncidentReports from '@/components/Shared/IncidentReports.vue'
 import NewIncident from '@/components/Shared/IncidentForm.vue'
 import IncidentView from '@/components/Shared/IncidentView.vue'
+import Users from '@/components/Shared/Users.vue'
 import Support from '@/components/Shared/SupportFeedback.vue'
 
 import Principal from '@/components/Principal/Principal.vue'
@@ -100,16 +100,16 @@ export default new Router({
           component: TaskAnalysis
         },
         {
-          path: 'workers',
-          component: Workers
-        },
-        {
           path: 'billing',
           component: Billing
         },
         {
           path: 'admin',
           component: AdminUsers
+        },
+        {
+          path: 'users',
+          component: Users
         },
         {
           path: 'incidents',
@@ -166,6 +166,10 @@ export default new Router({
         {
           path: 'admin',
           component: AdminUsers
+        },
+        {
+          path: 'users',
+          component: Users
         },
         {
           path: 'incidents',
