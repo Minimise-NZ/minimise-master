@@ -2,7 +2,7 @@
   <b-container fluid>
     <b-card header="New Job Site" header-tag="header">
       <div class="scroll-container">
-        <b-form @submit.prevent="onSubmit(e)" id="newJobForm" class="pb-5">
+        <b-form @submit.prevent="onSubmit" id="newJobForm" class="pb-5">
           <b-row>
             <b-col sm="12" lg="6" class="manager-details">
               <h5><strong>{{company.name}}</strong></h5><br>
@@ -16,15 +16,12 @@
               </p>
               <br>
               <div class="input-group searchBar">
-                <vue-google-autocomplete
-                  id="map"
-                  classname="form-control"
-                  placeholder="Please enter address"
-                  v-on:placechanged="setAddress"
-                  enable-geolocation
-                  country="nz"
-                  >
-                </vue-google-autocomplete>
+                <b-input-group>
+                  <b-form-input type="text" placeholder="Site Address" v-model="siteAddress" required/>
+                    <b-input-group-button>
+                      <b-button @click="searchAddress">View on map</b-button>
+                    </b-input-group-button>
+                </b-input-group>
               </div>
             </b-col>
             
@@ -54,7 +51,8 @@
             v-if="showList"
             searchable
             placeholder="Please select your contractors"
-            multiple 
+            multiple
+            required
             :value.sync="contractors.selected"
             :options="contractorList">
           </v-select>
@@ -106,12 +104,7 @@
 </template>
 
 <script>
-
-import VueGoogleAutocomplete from 'vue-google-autocomplete'
 export default {
-  components: {
-    VueGoogleAutocomplete
-  },
   data () {
     return {
       contractors: {
@@ -166,8 +159,7 @@ export default {
     }
   },
   methods: {
-    setAddress: function (addressData, placeResultData, id) {
-      this.siteAddress = placeResultData.formatted_address
+    searchAddress () {
       this.mapRoot = 'https://www.google.com/maps/embed/v1/place?key=AIzaSyD7W7NiKKy0qZfRUsslzHOe-Hnkp-IncyU&q=' + this.siteAddress
     },
     cancel () {
@@ -181,7 +173,16 @@ export default {
       }
     },
     submit () {
-      if (this.siteAddress === '' || (this.contractors.radioValue === 'yes' && this.contractors.selected) === [] || (this.notifiable.radioValue === 'yes' && this.notifiable.list === [])) {
+      if (this.siteAddress === '') {
+        console.log('Site address required')
+        return
+      }
+      if (this.contractors.radioValue === 'yes' && this.contractors.selected <= 0) {
+        console.log('Contractors required')
+        return
+      }
+      if (this.notifiable.radioValue === 'yes' && this.notifiable.list <= 0) {
+        console.log('Notifiable required')
         return
       } else {
         this.$store.dispatch('newJob', {
@@ -263,6 +264,11 @@ export default {
    .btn-group {
     align-items: center;
     width: 40%;
+  }
+
+  .btn-secondary {
+    background-color: #3366cc;
+    cursor:pointer;
   }
 
   .buttons {
