@@ -1,6 +1,5 @@
 <template>
   <b-card
-   v-if="jobRequests != 0"
    header="Job Requests" 
    header-tag="header">
     <b-row class="subheader">
@@ -20,14 +19,12 @@
     <b-row 
        class="content"
        v-for="job in jobRequests"
-       key="job.address">
+       :key="job.id">
       <b-col>
-      <router-link to='contractor/job'>
-        <p 
-          v-for="line in job.address" 
-          class="mb-0 mr-3"
+      <router-link :to='joblink(job.id)'>
+        <p class="mb-0 mr-3"
           style="text-decoration: underline; color:#178ac3; cursor: pointer"
-          >{{line}}</p>
+          >{{job.address}}</p>
         </router-link>
       </b-col>
       <b-col>
@@ -37,7 +34,7 @@
         <p>{{job.projectManager}}</p>
       </b-col>
       <b-col>
-       <p>{{job.date}}</p>
+       <p>{{date(job.date)}}</p>
       </b-col>
     </b-row>
   </b-card>
@@ -47,20 +44,20 @@
 export default {
   data () {
     return {
-      jobRequests: [
-        {
-          address: ['187 Marine Parade', 'New Brighton Christchurch'],
-          principal: 'Stonewood Homes',
-          projectManager: 'John Smith',
-          date: '25/10/2017'
-        },
-        {
-          address: ['47 Sunset Avenue', 'Harewood, Christchurch'],
-          principal: 'Stonewood Homes',
-          projectManager: 'Robert Frost',
-          date: '27/10/2017'
-        }
-      ]
+    }
+  },
+  computed: {
+    jobRequests () {
+      return this.$store.getters.jobRequests
+    }
+  },
+  methods: {
+    joblink (id) {
+      return '/contractor/job/' + id
+    },
+    date (longDate) {
+      let newdate = longDate.toString().slice(0, 15)
+      return newdate
     }
   }
 }

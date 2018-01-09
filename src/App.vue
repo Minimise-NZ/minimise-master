@@ -14,6 +14,21 @@ export default {
 #app {
   font-family: 'Raleway', Helvetica, Arial, sans-serif;
 }
+.btn {
+  cursor: pointer;
+}
+.outside-container {
+  padding-top: 20px;
+}
+
+.scroll-container {
+  height: 765px;
+  overflow: scroll;
+  padding-bottom: 20px;
+  padding-right: 10px;
+  margin-top: 20px;
+  overflow-x: hidden;
+}
 
 .my-primary-bg {
   background-color: #383838;
@@ -33,12 +48,6 @@ export default {
 
 .my-secondary-accent {
   color:#383838;
-}
-  
-.scroll-container {
-  overflow: auto;
-  height: 800px;
-  padding-right: 15px;
 }
 
 </style>

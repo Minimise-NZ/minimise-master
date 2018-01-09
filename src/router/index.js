@@ -83,9 +83,9 @@ export default new Router({
           component: ContractorHome
         },
         {
-          path: 'job',
-          name: 'job',
-          component: JobForm
+          path: 'job/:id',
+          component: JobForm,
+          props: true
         },
         {
           path: 'hazards',
@@ -144,8 +144,9 @@ export default new Router({
           component: Contractors
         },
         {
-          path: 'jobDetails',
-          component: JobDetails
+          path: 'job/:id',
+          component: JobDetails,
+          props: true
         },
         {
           path: 'jobs',

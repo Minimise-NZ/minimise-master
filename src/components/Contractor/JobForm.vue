@@ -1,154 +1,194 @@
 <template>
-  <b-container fluid>
-    <b-card header="Health and Safety Agreement"  header-tag="header">
-     <b-form @submit="onSubmit">
-      <b-card class="item mb-3" header="Site Information">
-        <b-row>
-          <strong>Site Address: {{address}}</strong>
-        </b-row>
-        <b-row>
-          Principal Contractor: {{job.principal}}
-        </b-row>
-        <b-row>
-           <b-col>
-             Project Manager: {{job.projectManager}}<br>
-             Contact Number: {{job.PMcontact}}
-           </b-col>
-           <b-col>
-             HSE Manager: {{job.HSEManager}}<br>
-             Contact Number: {{job.HSEcontact}}
-           </b-col>
-        </b-row>
-      </b-card>
-      
-      <b-card class="item mb-3" header="Contractor Details">
-        <b-row>
-          Contractor/PCBU: 
-        </b-row>
-        <b-row>
-          Supervisor:<br>
-          Contact Number: 
-        </b-row>
-      </b-card>
-      
-      <b-card class="item mb-3" header="Description of Work">
-        <b-row>
-           <b-form-textarea
-             id="workDescription"
-             v-model="workDescription"
-             placeholder="Please describe the work you will be undertaking on this job site"
-             :rows="4"
-             required>
-          </b-form-textarea>
-        </b-row>
-        <b-row>
-          <b-form-checkbox
-            id="notifiable"
-            v-model="notifiable"
-            value=true>
-            There is notifiable works associated with this project
-          </b-form-checkbox>
-        </b-row>
-        <b-row>
-          <b-form-checkbox-group
-            v-if="notifiable"
-            stacked 
-            v-model="notifiables.selected" 
-            name="notifiables" 
-            :options="notifiables.list"
-            class="ml-3">
-          </b-form-checkbox-group>
-        </b-row>
-        <b-row>
-          <b-form-checkbox
-           v-if="notifiable"
-            id="notified"
-            v-model="notified"
-            value=true
-            required>
-            We have notified Worksafe and have a copy of the notification
-          </b-form-checkbox>
-        </b-row>
-        <b-row>
-          <b-form-checkbox
-            v-if="notifiable"
-            id="taskAnalysis"
-            v-model="taskAnalysis"
-            value=true
-            required>
-            A task analysis has been prepared and our workers have been trained in the process
-          </b-form-checkbox>
-        </b-row>
-      </b-card>
-      
-      <b-card class="item mb-3" header="Safety Planning and Reporting">
-        <b-row>
-           <b-form-checkbox
-            required>
-            We agree to report all incidents to the Principal Contractor within the specified timeframe
-          </b-form-checkbox>
-        </b-row>
-        <b-table small bordered
-          striped hover
-          :items="tableItems">
-        </b-table>
-         <b-row>
-           <b-form-checkbox
-            class="mt-3"
-            required>
-            We agree that our workers will conduct safety checks before undertaking any work on site
-          </b-form-checkbox>
-        </b-row>
-        <b-row>
-           <b-form-checkbox
-            required>
-            Our training register is complete and up to date
-          </b-form-checkbox>
-        </b-row>
-        <b-row>
-           <b-form-checkbox
-            required>
-            Our hazard register is complete and up to date
-          </b-form-checkbox>
-        </b-row>
-        <b-row>
-          <b-form-checkbox
-            required>
-            Our hazardous Substance Register is complete and up to date.<br> We have MSDS sheets for all hazardous substances. <br> Our workers have appropriate PPE for handling hazardous Substances
-          </b-form-checkbox>
-        </b-row>
-        <b-row>
-          <b-form-checkbox
-            required>
-            Our workers have been provided a first aid kit and fire extinguisher. 
-          </b-form-checkbox>
-        </b-row>
-      </b-card>
-      <b-button type="submit " variant="success">Submit</b-button>
-      <b-button @click="cancel" variant="warning">Cancel</b-button>
-    </b-form>
+  <b-container fluid class="outside-container">
+    <b-card>
+      <div class="card-header">Health and Safety Agreement - {{job.address}}</div>
+        <div class="scroll-container">
+        <b-form @submit.prevent="onSubmit">
+
+          <b-card>
+            <div class="item card-header">Site Information</div>
+             <b-row>
+              <b-col cols="2">
+               <p><strong>Principal Contractor:</strong></p>
+              </b-col>
+              <b-col cols="8">
+                <b-form-input type="text" v-model="job.principal" readonly/>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col cols="2">
+                <p>Project Manager:</p>
+              </b-col>
+              <b-col cols="3">
+                <b-form-input type="text" v-model="job.projectManager" readonly/>
+              </b-col>
+              <b-col cols="2" class="pl-3">
+                <p>Project Manager Phone:</p>
+              </b-col>
+              <b-col cols="3">
+                <b-form-input type="text" v-model="job.PMcontact" readonly/>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col cols="2">
+                <p>HSE Manager:</p>
+              </b-col>
+              <b-col cols="3">
+                <b-form-input type="text" v-model="job.HSEManager" readonly/>
+              </b-col>
+              <b-col cols="2" class="pl-3">
+                <p>HSE Manager Phone:</p>
+              </b-col>
+              <b-col cols="3">
+                <b-form-input type="text" v-model="job.HSEcontact" readonly=""/>
+              </b-col>
+            </b-row>
+          </b-card>
+          
+          <b-card>
+            <div class="item card-header">Contractor Details</div>
+             <b-row>
+              <b-col cols="2">
+               <p><strong>Contractor/PCBU:</strong></p>
+              </b-col>
+              <b-col cols="8">
+                <b-form-input type="text" v-model="company.name" readonly/>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col cols="2">
+                <p>Supervisor:</p>
+              </b-col>
+              <b-col cols="8">
+                <b-form-input type="text" placeholder="Supervisor Name" v-model="supervisor" ref="focus" required/>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col cols="2">
+                <p>Contact Number:</p>
+              </b-col>
+              <b-col cols="8">
+                <b-form-input type="text" placeholder="Supervisor Phone Number" v-model="supervisorPhone" required/>
+              </b-col>
+            </b-row>
+          </b-card>
+          
+          <b-card>
+            <div class="item card-header">Description of Work</div>
+            <b-row>
+              <b-form-textarea
+                id="workDescription"
+                v-model="workDescription"
+                placeholder="Please describe the work you will be undertaking on this job site"
+                :rows="5"
+                required>
+              </b-form-textarea>
+            </b-row>
+            <b-row>
+              <b-form-checkbox
+                id="notifiable"
+                class="mt-3"
+                v-model="notifiable"
+                value=true>
+                There is notifiable works associated with this project
+              </b-form-checkbox>
+            </b-row>
+            <b-row>
+              <b-form-checkbox-group
+                v-if="notifiable"
+                stacked 
+                v-model="notifiables.selected" 
+                name="notifiables" 
+                :options="notifiables.list"
+                class="ml-3">
+              </b-form-checkbox-group>
+            </b-row>
+            <b-row>
+              <b-form-checkbox
+                v-if="notifiable"
+                id="notified"
+                v-model="notified"
+                value=true
+                required>
+                We have notified Worksafe and have a copy of the notification
+              </b-form-checkbox>
+            </b-row>
+            <b-row>
+              <b-form-checkbox
+                v-if="notifiable"
+                id="taskAnalysis"
+                v-model="taskAnalysis"
+                value=true
+                required>
+                A task analysis has been prepared and our workers have been trained in the process
+              </b-form-checkbox>
+            </b-row>
+          </b-card>
+          
+          <b-card>
+            <div class="item card-header">Safety Planning and Reporting</div>
+            <b-row>
+              <b-form-checkbox
+                required>
+                We agree to report all incidents to the Principal Contractor within the specified timeframe
+              </b-form-checkbox>
+            </b-row>
+            <b-table small bordered
+              striped hover
+              :items="tableItems">
+            </b-table>
+            <b-row>
+              <b-form-checkbox
+                class="mt-3"
+                required>
+                We agree that our workers will conduct safety checks before undertaking any work on site
+              </b-form-checkbox>
+            </b-row>
+            <b-row>
+              <b-form-checkbox
+                required>
+                Our training register is complete and up to date
+              </b-form-checkbox>
+            </b-row>
+            <b-row>
+              <b-form-checkbox
+                required>
+                Our hazard register is complete and up to date
+              </b-form-checkbox>
+            </b-row>
+            <b-row>
+              <b-form-checkbox
+                required>
+                Our hazardous Substance Register is complete and up to date.<br> We have MSDS sheets for all hazardous substances. <br> Our workers have appropriate PPE for handling hazardous Substances
+              </b-form-checkbox>
+            </b-row>
+            <b-row>
+              <b-form-checkbox
+                required>
+                Our workers have been provided a first aid kit and fire extinguisher. 
+              </b-form-checkbox>
+            </b-row>
+            <div class="text-center">
+            <b-button-group class="pt-4">
+              <b-button class="buttons" variant="success" type="submit">Submit</b-button>
+              <b-button class="buttons" variant="danger" @click="cancel">Cancel</b-button>
+            </b-button-group>
+          </div>
+          </b-card>
+        </b-form>
+      </div>
     </b-card>
   </b-container>
 </template>
 
 <script>
 export default {
+  props: ['id'],
   data () {
     return {
-      job:
-      {
-        address: ['187 Marine Parade', 'New Brighton Christchurch'],
-        principal: 'Stonewood Homes',
-        projectManager: 'John Smith',
-        PMcontact: '021 123 456',
-        HSEManager: 'Ann Swan',
-        HSEcontact: '021 456 789',
-        date: '25/10/2017'
-      },
-      contractor: {
-        name: 'Leaky Pipes'
-      },
       workDescription: '',
+      supervisor: '',
+      supervisorPhone: '',
       notifiable: false,
       notifiables: {
         list: [
@@ -174,53 +214,85 @@ export default {
     }
   },
   computed: {
-    address () {
-      return this.job.address.join(', ')
+    job () {
+      return this.$store.getters.job(this.id)
+    },
+    user () {
+      return this.$store.getters.user
+    },
+    company () {
+      return this.$store.getters.company
     }
   },
   methods: {
-    onSubmit (evt) {
-      evt.preventDefault()
-      alert(JSON.stringify(this.form))
+    onSubmit () {
+      // validate
     },
     cancel () {
-      this.$router.push('/contractor')
+      // reset fields and return focus to first input field
+      this.workDescription = ''
+      this.supervisor = ''
+      this.supervisorPhone = ''
+      this.notifiable = false
+      this.notifiables = {
+        list: [
+          'Working at heights > 5m',
+          'Work in confined spaces',
+          'Work in an excavation > 1.5m'
+        ],
+        selected: []
+      }
+      this.notified = false
+      this.taskAnalysis = false
+      this.reporting = false
+      this.safetyChecks = false
+      this.trainingRegister = false
+      this.hazardRegister = false
+      this.firstAidKit = false
+      this.$refs.focus.$el.focus()
     }
   }
 }
 </script>
 
 <style scoped>
-  .container-fluid {
-    padding-top: 20px;
-    margin-bottom: 100px;;
+  .card {
+    margin-bottom: 10px;
   }
- 
+
   .card-header {
+    margin: -20px -20px 0px -20px;
     background-color: rgba(155, 35, 53, 0.88);
     font-size: 1.4rem;
     color: white;
   }
   
-  .item.card > .card-header {
+  .item.card-header {
+    margin: -20px -20px 20px -20px;
     background-color:rgba(29, 92, 158, 0.89);
     font-size: 1.2rem;
   }
-  
-  .item.card > .card-body {
-    padding: 0;
-  }
-  
+
   .row {
-    margin: 15px;
+    padding: 0 0 10px 15px;
   }
-  
-  .col {
+
+  .col, .col-2, .col-3, .col-8 {
     padding: 0;
   }
-  
-  .table {
-    width: 500px;
-    margin-left: 40px;
+
+  .btn-group {
+    align-items: center;
+    width: 40%;
+  }
+
+  .buttons {
+    cursor: pointer;
+    margin: 20px;
+    width: 50%;
+  }
+
+  p {
+    margin-top: 5px;
   }
 </style>

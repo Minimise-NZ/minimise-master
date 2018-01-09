@@ -37,12 +37,12 @@ export default {
     return {
       sideNavItems: [
         {name: 'Home', link: '/contractor'},
-        {name: 'User Management', link: '/contractor/users'},
         {name: 'Hazard Register', link: '/contractor/hazards'},
         // {name: 'Hazardous Substances', link: '/contractor/hazardousSubstances'},
         {name: 'Task Analysis', link: '/contractor/taskAnalysis'},
-        {name: 'Incident Reports', link: '/principal/incidents'},
-        {name: 'New Incident', link: '/principal/newIncident'},
+        {name: 'Incident Reports', link: '/contractor/incidents'},
+        {name: 'New Incident', link: '/contractor/newIncident'},
+        {name: 'User Management', link: '/contractor/users'},
         {name: 'Administration', link: '/contractor/admin'},
         {name: 'Support / Feedback', link: '/contractor/support'}
       ]
@@ -54,6 +54,7 @@ export default {
   },
   beforeMount () {
     this.$store.dispatch('getAllHazards')
+    this.$store.dispatch('getJobRequests')
   },
   mounted () {
     this.$store.dispatch('getMyHazards')
@@ -63,12 +64,14 @@ export default {
 </script>
 
 <style scoped>
+
   .list-group-item {
     border-radius: 0.25rem;
     background-color: rgba(221, 221, 221, 0.2);
     color: white;
     margin-bottom: 10px;
     cursor: pointer;
+    font-size: 1.2rem;
   }
   
   p {
@@ -87,8 +90,12 @@ export default {
     margin: 0;
     border: 1px solid #383838;
   }
+
+  .col {
+    height: 880px;
+  }
   
- .side-wrapper { 
+ .side-wrapper {
     background-color: #383838;
     padding: 0 20px;
   }

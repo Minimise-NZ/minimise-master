@@ -116,9 +116,6 @@
           return false
         }
       },
-      companykey () {
-        return this.company.value
-      },
       companies () {
         return this.$store.getters.companyIndex
       },
@@ -137,8 +134,8 @@
             // create new user in firebase
             await this.$store.dispatch('newUser', {email: this.email, password: this.password})
             // update company with userID.
-            let company = await this.$store.dispatch('getCompany', {key: this.companykey})
-            await this.$store.dispatch('updateCompany', {name: this.name})
+            let company = await this.$store.dispatch('getCompany', {key: this.company.value})
+            await this.$store.dispatch('updateCompany')
             // add user information to firestore
             let companyType = 'contractor'
             if (company.principal === true) {
@@ -151,7 +148,8 @@
               role: this.userRole,
               admin: this.admin,
               webUser: true,
-              company: this.companykey,
+              company: this.company.value,
+              companyName: this.company.label,
               companyType
             })
             // go to companyType home page

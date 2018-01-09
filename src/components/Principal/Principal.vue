@@ -1,6 +1,6 @@
 <template>
   <animated-fade-in>
-    <b-container fluid>
+    <div>
       <dashboard-header></dashboard-header>
       <b-row>
         <b-col sm="2" class="side-wrapper" >
@@ -22,7 +22,7 @@
         </b-col>
         
       </b-row>
-    </b-container>
+    </div>
   </animated-fade-in>
 </template>
 
@@ -49,11 +49,11 @@ export default {
     }
   },
   beforeCreate () {
-    let user = this.$store.getters.user
-    this.$store.dispatch('getCompany', {key: user.company})
+    this.$store.dispatch('getCompany', {key: this.$store.getters.companyKey})
   },
   mounted () {
     this.$store.dispatch('getCompanyIndex')
+    // this.$store.dispatch('getProjectManagers') *will add this functionallity later. Need to check if change ofproject managers is required
     this.$store.dispatch('getJobs')
     this.$store.dispatch('getIncidents')
   }
@@ -61,13 +61,6 @@ export default {
 </script>
 
 <style scoped>
-  .container-fluid {
-    padding: 0;
-    margin: 0;
-    position: absolute;
-    top: 0;
-    overflow: hidden;
-  }
 
   .list-group-item {
     border-radius: 0.25rem;

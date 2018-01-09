@@ -20,7 +20,7 @@
     <b-row 
        class="content"
        v-for="training in trainingAlerts"
-       key="trainingAlerts.name">
+       :key="training.name">
       <b-col>
         <p style="text-decoration: underline; color:#178ac3; cursor: pointer"
           >{{training.name}}</p>

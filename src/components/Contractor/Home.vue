@@ -2,7 +2,7 @@
   <b-container fluid>
     <b-card header="Contractor Home" header-tag="header">
       <jobRequests></jobRequests>
-      <incidentReports></incidentReports>
+      <incidentSummary></incidentSummary>
       <trainingAlerts></trainingAlerts>
     </b-card>
   </b-container>
@@ -10,12 +10,12 @@
 
 <script>
 import JobRequests from '@/components/Contractor/JobRequests.vue'
-import IncidentReports from '@/components/Shared/IncidentReports.vue'
+import IncidentSummary from '@/components/Shared/IncidentSummary.vue'
 import TrainingAlerts from '@/components/Shared/TrainingAlerts.vue'
 export default {
   components: {
     'jobRequests': JobRequests,
-    'incidentReports': IncidentReports,
+    'incidentSummary': IncidentSummary,
     'trainingAlerts': TrainingAlerts
   },
   data () {
@@ -28,7 +28,7 @@ export default {
 <style scoped>
   .container-fluid {
     padding-top: 20px;
-    margin-bottom: 100px;
+    padding-right: 30px;
   }
   
   .card-header {

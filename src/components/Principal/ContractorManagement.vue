@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid>
+  <b-container fluid class="outside-container">
     <b-card header="Contractor Management" header-tag="header">
     </b-card>
   </b-container>
@@ -15,11 +15,7 @@ export default {
 </script>
 
 <style scoped>
-  .container-fluid {
-    padding-top: 20px;
-    margin-bottom: 100px;;
-  }
-  
+ 
   .card {
     border: 1px solid grey;
   }

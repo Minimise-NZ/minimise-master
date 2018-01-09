@@ -1,12 +1,10 @@
 <template>
   <b-container fluid>
-    <div class="scroll-container">
       <b-card header="Principal Home" header-tag="header">
         <contractorActivity></contractorActivity>
         <incidentSummary></incidentSummary>
         <trainingAlerts></trainingAlerts>
       </b-card>
-    </div>
   </b-container>
 </template>
 
@@ -30,9 +28,9 @@ export default {
 <style scoped>
   .container-fluid {
     padding-top: 20px;
-    margin-bottom: 100px;
     padding-right: 30px;
   }
+
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
     font-size: 1.4rem;
