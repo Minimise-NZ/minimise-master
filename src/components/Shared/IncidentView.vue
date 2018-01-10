@@ -1,7 +1,35 @@
 <template>
-  <b-container fluid>
+  <b-container fluid class="outside-container">
+     <b-modal 
+      v-model="confirmAction" 
+      v-if="confirmAction" 
+      @ok="onConfirm" 
+      centered 
+      header-bg-variant="danger"
+      headerTextVariant= 'light'
+      title="Confirm Action">
+      <div class="d-block text-center">
+        <h4 class="mt-2">Are you sure you want to close <br>this incident?</h4>
+        <br>
+        <p>This will prevent any further updates</p>
+        <p>This action cannot be undone</p>
+      </div>
+    </b-modal>
+    <b-modal 
+        v-model="success" 
+        v-if="success"
+        ok-only
+        @ok="route" 
+        centered 
+        header-bg-variant="success"
+        headerTextVariant= 'light'
+        title="Success">
+        <div class="d-block text-center">
+          <h4 class="mt-2">This incident has been updated</h4>
+        </div>
+    </b-modal>
     <b-card>
-      <div class="card-header">{{headerText}}
+      <div class=" incident card-header">{{headerText}}
         <b-button class="editBtn" @click="edit" :disabled="disabled">Edit/Update Incident</b-button>
       </div>
       <div class="scroll-container">
@@ -126,6 +154,8 @@ export default {
   },
   data () {
     return {
+      confirmAction: false,
+      success: false,
       readonly: true,
       disabled: false,
       incidentTypes: [
@@ -134,6 +164,9 @@ export default {
     }
   },
   computed: {
+    companyType () {
+      return this.$store.getters.user.companyType
+    },
     incident () {
       return this.$store.getters.incident(this.id)
     },
@@ -142,11 +175,21 @@ export default {
       return text
     },
     formattedDate () {
-      return this.incident.date.toString().slice(0, 15)
+      var d = new Date(this.incident.date)
+      return [d.getDate(), d.getMonth() + 1, d.getFullYear()].join('/')
     },
     status () {
       if (this.incident.open === false) {
         this.disabled === true
+      }
+    },
+    actionOwner () {
+      if (this.incident.status === 'closed') {
+        return null
+      } else if (this.incident.escalate === 'true') {
+        return {name: this.$store.getters.company.hseManager, key: this.$store.getters.companyKey}
+      } else {
+        return this.incident.loggedBy
       }
     }
   },
@@ -156,25 +199,41 @@ export default {
       this.disabled = true
     },
     onSubmit () {
-      // update incident in firebase
+      if (this.incident.type === '') {
+        this.error = 'Please select incident type'
+        return this.error
+      } else {
+        if (this.open === false) {
+          this.confirmAction = true
+        } else {
+          this.onConfirm()
+        }
+      }
+    },
+    onConfirm () {
+      this.error = ''
+      this.incident.actionOwner = this.actionOwner
+      this.$store.dispatch('updateIncident', {
+        incident: this.incident
+      })
+      .then(() => {
+        this.success = true
+      })
+    },
+    route () {
+      this.$router.push('/' + this.companyType + '/incidents')
     },
     cancel () {
       this.readonly = true
       this.disabled = false
-      this.$router.go(-1)
     }
   }
 }
 </script>
 
 <style scoped>
-  .container-fluid {
-    padding-top: 20px;
-    margin-bottom: 100px;
-    padding-right: 30px;
-  }
-  
-  .card-header {
+
+  .card-header.incident {
     margin: -20px -20px 20px -20px;
     background-color: #027588;
     font-size: 1.4rem;

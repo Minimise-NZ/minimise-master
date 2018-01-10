@@ -1,6 +1,21 @@
 <template>
   <b-container fluid>
     <b-modal 
+      v-model="confirmAction" 
+      v-if="confirmAction" 
+      @ok="onConfirm" 
+      centered 
+      header-bg-variant="danger"
+      headerTextVariant= 'light'
+      title="Confirm Action">
+      <div class="d-block text-center">
+        <h4 class="mt-2">Are you sure you want to close <br>this incident?</h4>
+        <br>
+        <p>This will prevent any further updates</p>
+        <p>This action cannot be undone</p>
+      </div>
+    </b-modal>
+    <b-modal 
         v-model="success" 
         v-if="success"
         ok-only
@@ -12,7 +27,7 @@
         <div class="d-block text-center">
           <h4 class="mt-2">This incident has been submitted</h4>
         </div>
-      </b-modal>
+    </b-modal>
     <b-card header="New Incident" header-tag="header">
       <div class="scroll-container">
         <b-form @submit.prevent="onSubmit">
@@ -164,6 +179,8 @@
 export default {
   data () {
     return {
+      confirmAction: false,
+      success: false,
       incident: {
         address: '',
         date: '',
@@ -183,8 +200,7 @@ export default {
       incidentTypes: [
         'Serious Harm', 'Minor Harm', 'Plant Damage', 'Near Miss'
       ],
-      error: '',
-      success: false
+      error: ''
     }
   },
   computed: {
@@ -216,17 +232,24 @@ export default {
         this.error = 'Please select incident type'
         return this.error
       } else {
-        this.error = ''
-        this.incident.loggedBy = this.loggedBy
-        this.incident.actionOwner = this.actionOwner
-        this.incident.company = this.$store.getters.companyKey
-        this.$store.dispatch('newIncident', {
-          incident: this.incident
-        })
-        .then(() => {
-          this.success = true
-        })
+        if (this.open === false) {
+          this.confirmAction = true
+        } else {
+          this.onConfirm()
+        }
       }
+    },
+    onConfirm () {
+      this.error = ''
+      this.incident.loggedBy = this.loggedBy
+      this.incident.actionOwner = this.actionOwner
+      this.incident.company = this.$store.getters.companyKey
+      this.$store.dispatch('newIncident', {
+        incident: this.incident
+      })
+      .then(() => {
+        this.success = true
+      })
     },
     route () {
       this.$router.push('/' + this.companyType + '/incidents')
