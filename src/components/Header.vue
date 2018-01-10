@@ -56,6 +56,16 @@ export default {
     color: #383838;
   }
 
+  .username {
+    cursor: default
+  }
+
+  .username:hover {
+    background-color: #383838;
+    border: 0.5px solid #FFC80B;
+    color: #FFC80B;
+  }
+
   @media only screen and (max-width: 440px) {
       .navbar-brand {
         display: none;

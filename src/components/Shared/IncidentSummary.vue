@@ -28,7 +28,7 @@
           <p>{{incident.type}}</p>
         </b-col>
         <b-col>
-          <p>{{incident.actionOwner}}</p>
+          <p>{{incident.actionOwner.name}}</p>
         </b-col>
         <b-col>
          <p>{{formattedDate(incident.date)}}</p>

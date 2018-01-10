@@ -301,7 +301,7 @@ export const store = new Vuex.Store({
           notifiable: payload.notifiable,
           info: payload.info,
           approved: approved,
-          status: 'open',
+          open: true,
           date: new Date()
         })
         commit('setLoading', false)
@@ -309,9 +309,23 @@ export const store = new Vuex.Store({
       })
       return promise
     },
+    updateJob ({dispatch}, payload) {
+      // update contractor information
+      let approved = {}
+      for (let index in payload.contractors) {
+        let key = payload.contractors[index].key
+        approved[key] = false
+      }
+      console.log('approved', approved)
+      firestore.collection('jobSites').doc(payload.id)
+      .set({'approved': approved}, {merge: true})
+      .then(() => {
+        dispatch('getJobs')
+      })
+    },
     closeJob ({dispatch}, payload) {
       firestore.collection('jobSites').doc(payload)
-      .update({'status': closed, 'closedDate': new Date()})
+      .update({'open': false, 'closedDate': new Date()})
       .then(() => {
         dispatch('getJobs')
       })
@@ -319,13 +333,14 @@ export const store = new Vuex.Store({
     getJobs ({commit, state}) {
       // get all jobs in progress that are assigned to this company as principal
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('jobSites').where('principalKey', '==', state.companyKey).where('status', '==', 'open')
+        firestore.collection('jobSites').where('principalKey', '==', state.companyKey).where('open', '==', true)
         .get()
         .then((snapshot) => {
           var jobSites = []
           snapshot.forEach((doc) => {
             let list = []
             let contractors = doc.data().approved
+            console.log(contractors)
             // get the contractor name from companyIndex
             for (let key in contractors) {
               console.log(key)
@@ -337,7 +352,6 @@ export const store = new Vuex.Store({
                     key: id.value
                   })
                 }
-                return list
               })
             }
             jobSites.push({
@@ -424,17 +438,16 @@ export const store = new Vuex.Store({
       return promise
     },
     getIncidents ({commit, state}) {
-      commit('setLoading', true)
       if (state.user.admin) {
         firestore.collection('incidents').where('incident.company', '==', state.companyKey)
         .get()
         .then((snapshot) => {
-          const incidents = []
+          let incidents = []
           snapshot.forEach((doc) => {
             let obj = doc.data()
-            console.log(obj)
+            let key = doc.id
             incidents.push({
-              id: doc.id,
+              id: key,
               address: obj.incident.address,
               date: obj.incident.date,
               reportedBy: obj.incident.reportedBy,
@@ -455,30 +468,30 @@ export const store = new Vuex.Store({
           })
         })
       } else {
-        firestore.collection('incidents').where('actionOwner', '==', state.userKey)
+        firestore.collection('incidents').where('incident.actionOwner.key', '==', state.userKey)
         .get()
         .then((snapshot) => {
-          const incidents = []
+          let incidents = []
           snapshot.forEach((doc) => {
-            let incident = doc.data()
-            console.log(incident)
+            let obj = doc.data()
+            let key = doc.id
             incidents.push({
-              id: doc.id,
-              address: incident.address,
-              date: incident.date,
-              reportedBy: incident.reportedBy,
-              type: incident.type,
-              description: incident.description,
-              injury: incident.injury,
-              injuryDescription: incident.injuryDescription,
-              plant: incident.plant,
-              plantDamage: incident.plantDamage,
-              cause: incident.cause,
-              corrective: incident.corrective,
-              escalate: incident.escalate,
-              status: incident.status,
-              loggedBy: incident.loggedBy,
-              actionOwner: incident.actionOwner
+              id: key,
+              address: obj.incident.address,
+              date: obj.incident.date,
+              reportedBy: obj.incident.reportedBy,
+              type: obj.incident.type,
+              description: obj.incident.description,
+              injury: obj.incident.injury,
+              injuryDescription: obj.incident.injuryDescription,
+              plant: obj.incident.plant,
+              plantDamage: obj.incident.plantDamage,
+              cause: obj.incident.cause,
+              corrective: obj.incident.corrective,
+              escalate: obj.incident.escalate,
+              open: obj.incident.open,
+              loggedBy: obj.incident.loggedBy,
+              actionOwner: obj.incident.actionOwner
             })
             commit('setIncidents', incidents)
           })

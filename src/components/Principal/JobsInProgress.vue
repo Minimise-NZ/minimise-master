@@ -92,11 +92,16 @@ export default {
     padding-left: 15px;
   }
    .editBtn {
-    cursor: pointer;
     float: right;
     background-color:rgba(223, 233, 255, 0.83);
     color: black;
   }
+
+  .editBtn:hover {
+    background-color:#ffc80b;
+    color: black;
+  }
+
   .subheader {
     padding: 10px 0 10px 15px;
     border-bottom: 1px solid lightgrey;

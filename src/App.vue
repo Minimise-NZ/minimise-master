@@ -21,6 +21,10 @@ export default {
   padding-top: 20px;
 }
 
+body.modal-open {
+  padding-right: 0;
+}
+
 .scroll-container {
   height: 765px;
   overflow: scroll;

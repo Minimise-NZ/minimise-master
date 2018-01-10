@@ -1,5 +1,18 @@
 <template>
   <b-container fluid>
+    <b-modal 
+        v-model="success" 
+        v-if="success"
+        ok-only
+        @ok="route" 
+        centered 
+        header-bg-variant="success"
+        headerTextVariant= 'light'
+        title="Success">
+        <div class="d-block text-center">
+          <h4 class="mt-2">This incident has been submitted</h4>
+        </div>
+      </b-modal>
     <b-card header="New Incident" header-tag="header">
       <div class="scroll-container">
         <b-form @submit.prevent="onSubmit">
@@ -165,26 +178,36 @@ export default {
         corrective: '',
         escalate: false,
         open: true,
-        loggedBy: ''
+        loggedBy: {}
       },
       incidentTypes: [
         'Serious Harm', 'Minor Harm', 'Plant Damage', 'Near Miss'
       ],
-      error: ''
+      error: '',
+      success: false
     }
   },
   computed: {
+    user () {
+      return this.$store.getters.user
+    },
+    userKey () {
+      return this.$store.getters.userKey
+    },
+    loggedBy () {
+      return {name: this.user.name, key: this.userKey}
+    },
     actionOwner () {
       if (this.incident.status === 'closed') {
         return null
       } else if (this.incident.escalate === 'true') {
-        return this.$store.getters.company.hseManager
+        return {name: this.$store.getters.company.hseManager, key: this.$store.getters.companyKey}
       } else {
         return this.incident.loggedBy
       }
     },
     companyType () {
-      return this.$store.getters.user.companyType
+      return this.user.companyType
     }
   },
   methods: {
@@ -194,17 +217,19 @@ export default {
         return this.error
       } else {
         this.error = ''
-        this.incident.date = new Date(this.incident.date)
-        this.incident.loggedBy = this.$store.getters.user.name
+        this.incident.loggedBy = this.loggedBy
         this.incident.actionOwner = this.actionOwner
         this.incident.company = this.$store.getters.companyKey
         this.$store.dispatch('newIncident', {
           incident: this.incident
         })
         .then(() => {
-          this.$router.push('/' + this.companyType + '/incidents')
+          this.success = true
         })
       }
+    },
+    route () {
+      this.$router.push('/' + this.companyType + '/incidents')
     },
     cancel () {
       this.$router.push('/' + this.companyType)

@@ -1,19 +1,33 @@
 <template>
   <b-container fluid class="outside-container">
      <b-modal 
-        v-model="showModal" 
-        v-if="showModal" 
+        v-model="confirmAction" 
+        v-if="confirmAction" 
         @ok="route" 
         centered 
         header-bg-variant="danger"
         headerTextVariant= 'light'
-        title="Confirm Action">
+        title="JConfirm Action">
         <div class="d-block text-center">
           <h4 class="mt-2">Are you sure you want to close <br>this job site?</h4>
           <br>
           <p>This will prevent any further activity on this job site</p>
           <p>This action cannot be undone</p>
-       </div>
+        </div>
+      </b-modal>
+      <b-modal 
+        v-model="success" 
+        v-if="success"
+        ok-only
+        @ok="route" 
+        centered 
+        header-bg-variant="primary"
+        headerTextVariant= 'light'
+        title="Success">
+        <div class="d-block text-center">
+          <h4 class="mt-2">{{job.address}}</h4>
+          <p>This job has been updated</p>
+        </div>
       </b-modal>
     <b-card>
       <div class="card-header jobDetails">{{headerText}}</div>
@@ -83,24 +97,24 @@
           </b-row>
           
           <div class="card-header contractors">Site Contractors</div>
-          <b-row class="inner-row" v-for="contractor in this.job.contractors" :key="contractor.key">
-            <b-col lg="6" md="6">
+          <b-row class="inner-row" v-for="contractor in this.job.contractors" :key="contractor.id">
+            <b-col lg="7" md="6">
               <b-input-group>
                 <b-form-input type="text" :value="contractor.name" readonly/>
-                  <b-input-group-button>
-                    <b-button @click="remove" class="fa fa-times" v-b-tooltip.hover title="Remove Contractor"></b-button>
+                  <b-input-group-button slot="right">
+                    <b-btn :class="{approved: approved}" class="miniBtn">{{status(contractor)}}</b-btn>
                   </b-input-group-button>
               </b-input-group>
             </b-col>
           </b-row>
           <b-row class="inner-row">
-            <b-col lg="6" md="12">
+            <b-col lg="7" md="12">
               <v-select
                 class="mt-2"
                 searchable
                 placeholder="Add new contractor"
                 multiple
-                value.sync="new"  
+                :value.sync="selected"  
                 :options="contractorList">
               </v-select>
             </b-col>
@@ -132,6 +146,7 @@
               <b-col md="6" lg="5" class="mt-3">
                 <b-form-textarea 
                   :value="job.infotext"
+                  readonly
                   placeholder="No Additional information"
                   :rows="6">
                 </b-form-textarea>
@@ -155,9 +170,11 @@ export default {
   props: ['id'],
   data () {
     return {
-      showModal: false,
-      new: [],
-      job: {}
+      confirmAction: false,
+      success: false,
+      selected: [],
+      job: {},
+      approved: false
     }
   },
   computed: {
@@ -186,14 +203,33 @@ export default {
     }
   },
   methods: {
-    remove () {
-
+    status (contractor) {
+      if (contractor.approved === true) {
+        this.approved = true
+        return 'Approved'
+      } else {
+        return 'Pending'
+      }
     },
     saveJob () {
-      // save the job
+      // add contractors and save the job
+      if ((this.selected !== 0) || (this.remove !== 0)) {
+        let newItems = []
+        for (let index in this.selected) {
+          let newItem = {
+            approved: false,
+            key: this.selected[index].value
+          }
+          newItems.push(newItem)
+        }
+        this.$store.dispatch('updateJob', {id: this.id, contractors: newItems})
+        this.success = true
+      } else {
+        this.$router.go(-1)
+      }
     },
     closeJob () {
-      this.showModal = true
+      this.confirmAction = true
     },
     route () {
       // update job info and go back to home
@@ -263,6 +299,17 @@ export default {
     background-color: rgba(155, 35, 53, 0.88);
   }
 
+  .miniBtn {
+    cursor: text; 
+  }
+
+  .miniBtn:hover {
+    background-color: rgba(155, 35, 53, 0.88);
+  }
+
+  .approved {
+    background-color: green;
+  }
 
 @media screen and (max-width : 992px) {
     .map {
