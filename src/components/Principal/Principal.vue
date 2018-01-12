@@ -43,7 +43,7 @@ export default {
         {name: 'New Incident', link: '/principal/newIncident'},
         // {name: 'Master Safety Plan', link: '/principal/master'},
         {name: 'Administration', link: '/principal/admin'},
-        {name: 'User Management', link: '/principal/users'},
+        {name: 'Worker Management', link: '/principal/workers'},
         {name: 'Support / Feedback', link: '/principal/support'}
       ]
     }
@@ -56,6 +56,7 @@ export default {
     // this.$store.dispatch('getProjectManagers') *will add this functionallity later. Need to check if change ofproject managers is required
     this.$store.dispatch('getJobs')
     this.$store.dispatch('getIncidents')
+    this.$store.dispatch('getWorkers')
   }
 }
 </script>

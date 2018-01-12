@@ -33,14 +33,8 @@
         <b-form @submit.prevent="onSubmit">
           <b-row>
             <b-col sm="3" lg="2">Date of Incident:</b-col>
-            <b-col sm="9" lg="10" >
-              <datetime 
-                v-model="incident.date"
-                type="date"
-                placeholder=" Select date"
-                required
-                >
-              </datetime>
+            <b-col sm="5" lg="3">
+              <b-form-input class="no-spinners" type="date" placeholder="Incident Date" v-model="incident.date"/>
             </b-col>
           </b-row>
           <b-row>
@@ -197,9 +191,7 @@ export default {
         open: true,
         loggedBy: {}
       },
-      incidentTypes: [
-        'Serious Harm', 'Minor Harm', 'Plant Damage', 'Near Miss'
-      ],
+      incidentTypes: ['Near Miss', 'Minor Harm', 'Serious Harm', 'Plant Damage'],
       error: ''
     }
   },
@@ -304,5 +296,14 @@ export default {
     width: 50%;
   }
 
+  .no-spinners {
+    -moz-appearance:textfield;
+  }
+
+  .no-spinners::-webkit-outer-spin-button,
+  .no-spinners::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
   
 </style>

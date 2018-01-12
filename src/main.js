@@ -12,12 +12,9 @@ import AnimatedVue from 'animated-vue'
 import 'animate.css/animate.css'
 import VeeValidate from 'vee-validate'
 import Vuebar from 'vuebar'
-import Datetime from 'vue-datetime'
-import 'vue-datetime/dist/vue-datetime.css'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 
-Vue.use(Datetime)
 Vue.use(AOS)
 Vue.use(Vuebar)
 Vue.config.productionTip = false

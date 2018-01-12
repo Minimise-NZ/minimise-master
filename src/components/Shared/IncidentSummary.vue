@@ -52,9 +52,9 @@ export default {
     viewIncident (id) {
       this.$router.push('/principal/incident/' + id)
     },
-    formattedDate (incidentDate) {
-      let newdate = incidentDate.toString().slice(0, 15)
-      return newdate
+    formattedDate (date) {
+      var d = new Date(date)
+      return [d.getDate(), d.getMonth() + 1, d.getFullYear()].join('/')
     }
   }
 }

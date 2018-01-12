@@ -132,7 +132,7 @@
           if (!valid) { return }
           try {
             // create new user in firebase
-            await this.$store.dispatch('newUser', {email: this.email, password: this.password})
+            await this.$store.dispatch('signUp', {email: this.email, password: this.password})
             // update company with userID.
             let company = await this.$store.dispatch('getCompany', {key: this.company.value})
             await this.$store.dispatch('updateCompany')
@@ -141,7 +141,8 @@
             if (company.principal === true) {
               companyType = 'principal'
             }
-            await this.$store.dispatch('updateUser', {
+            await this.$store.dispatch('newUser', {
+              id: this.$store.getters.userKey,
               name: this.name,
               email: this.email,
               phone: this.phone,
@@ -150,7 +151,8 @@
               webUser: true,
               company: this.company.value,
               companyName: this.company.label,
-              companyType
+              companyType,
+              training: []
             })
             // go to companyType home page
             this.$router.push('/' + companyType)

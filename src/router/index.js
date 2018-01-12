@@ -24,7 +24,7 @@ import AdminUsers from '@/components/Shared/AdminManageUsers.vue'
 import IncidentReports from '@/components/Shared/IncidentReports.vue'
 import NewIncident from '@/components/Shared/IncidentForm.vue'
 import IncidentView from '@/components/Shared/IncidentView.vue'
-import Users from '@/components/Shared/Users.vue'
+import Workers from '@/components/Shared/Workers.vue'
 import Support from '@/components/Shared/SupportFeedback.vue'
 
 import Principal from '@/components/Principal/Principal.vue'
@@ -108,8 +108,8 @@ export default new Router({
           component: AdminUsers
         },
         {
-          path: 'users',
-          component: Users
+          path: 'workers',
+          component: Workers
         },
         {
           path: 'incidents',
@@ -169,8 +169,8 @@ export default new Router({
           component: AdminUsers
         },
         {
-          path: 'users',
-          component: Users
+          path: 'workers',
+          component: Workers
         },
         {
           path: 'incidents',

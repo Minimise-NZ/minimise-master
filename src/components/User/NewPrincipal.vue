@@ -151,7 +151,7 @@ export default {
       this.$validator.validateAll().then(async(valid) => {
         if (!valid) { return }
         try {
-          await this.$store.dispatch('newUser', {email: this.userEmail, password: this.password})
+          await this.$store.dispatch('signUp', {email: this.userEmail, password: this.password})
           const company = await this.$store.dispatch('newCompany', {
             name: this.companyName,
             address: this.address,
@@ -163,16 +163,19 @@ export default {
             hseManager: this.userName,
             hsePhone: this.userPhone
           })
-          await this.$store.dispatch('updateCompany', {name: this.userName})
-          await this.$store.dispatch('updateUser', {
+          await this.$store.dispatch('updateCompany')
+          await this.$store.dispatch('newUser', {
             name: this.userName,
+            id: this.$store.getters.userKey,
             email: this.userEmail,
             phone: this.userPhone,
             role: this.userRole,
             admin: true,
             webUser: true,
             company: company,
-            companyType: 'principal'
+            companyType: 'principal',
+            companyName: this.companyName,
+            training: []
           })
           this.$router.push('/principal')
         } catch (err) {

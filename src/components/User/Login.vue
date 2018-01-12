@@ -60,7 +60,7 @@
     },
     methods: {
       loginUser () {
-        this.$store.dispatch('signUserIn', {email: this.email, password: this.password})
+        this.$store.dispatch('signIn', {email: this.email, password: this.password})
         .then(async() => {
           let user = await this.$store.dispatch('getUser')
           let companyType = user.companyType
