@@ -3,7 +3,8 @@
      <b-modal 
       v-model="confirmAction" 
       v-if="confirmAction" 
-      @ok="onConfirm" 
+      @ok="onConfirm"
+      @cancel="incident.open = true"
       centered 
       header-bg-variant="danger"
       headerTextVariant= 'light'
@@ -203,7 +204,7 @@ export default {
         this.error = 'Please select incident type'
         return this.error
       } else {
-        if (this.open === false) {
+        if (this.incident.open === false) {
           this.confirmAction = true
         } else {
           this.onConfirm()
@@ -213,9 +214,7 @@ export default {
     onConfirm () {
       this.error = ''
       this.incident.actionOwner = this.actionOwner
-      this.$store.dispatch('updateIncident', {
-        incident: this.incident
-      })
+      this.$store.dispatch('updateIncident', this.incident)
       .then(() => {
         this.success = true
       })

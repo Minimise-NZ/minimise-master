@@ -157,6 +157,8 @@ export const store = new Vuex.Store({
       return promise
     },
     updateUser ({commit, getters}, payload) {
+      console.log('updating firebase')
+      /*
       let promise = new Promise((resolve, reject) => {
         firestore.collection('users').doc(payload.id).set(payload, {merge: true})
         .then(() => {
@@ -169,6 +171,7 @@ export const store = new Vuex.Store({
         })
       })
       return promise
+      */
     },
     getWorkers ({commit, state}) {
       // get all workers with company = this companyKey
@@ -208,25 +211,6 @@ export const store = new Vuex.Store({
           })
           console.log('company created')
           resolve(doc.id)
-        })
-        .catch((error) => {
-          console.log(error)
-          reject()
-        })
-      })
-      return promise
-    },
-    updateCompany ({commit, getters}) {
-      // add new user to company users
-      let promise = new Promise((resolve, reject) => {
-        let user = {}
-        let key = getters.userKey
-        user[key] = true
-        firestore.collection('companies').doc(getters.companyKey)
-        .set({'users': user}, {merge: true})
-        .then(() => {
-          console.log('Company updated with user', user)
-          resolve()
         })
         .catch((error) => {
           console.log(error)
@@ -397,7 +381,7 @@ export const store = new Vuex.Store({
     newIncident ({commit, dispatch, state}, payload) {
       // create new incident in firestore
       let promise = new Promise((resolve, reject) => {
-        let incident = payload.incident
+        let incident = payload
         firestore.collection('incidents').add({incident})
         .then(() => {
           dispatch('getIncidents')
@@ -438,7 +422,6 @@ export const store = new Vuex.Store({
         firestore.collection('incidents').where('incident.company', '==', state.companyKey)
         .get()
         .then((snapshot) => {
-          console.log('admin incidents', snapshot)
           snapshot.forEach((doc) => {
             let obj = doc.data().incident
             let key = doc.id

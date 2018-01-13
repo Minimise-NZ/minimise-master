@@ -1,9 +1,9 @@
 <template>
   <b-card
-    class="workerCard mt-2 mb-4">
+    class="workerCard mt-2 mb-4" v-if="active">
     <header class="card-header worker">{{worker.name}}
       <b-button class="editBtn pt-1 pb-1 ml-2" @click="edit" v-if="editMode === false">Update Training</b-button>
-      <b-button class="editBtn pt-1 pb-1 ml-2" @click="remove" v-if="editMode === false">Delete Worker</b-button>
+      <b-button class="editBtn pt-1 pb-1 ml-2" @click="confirm" v-if="editMode === false">Delete Worker</b-button>
       <b-button class="editBtn pt-1 pb-1 ml-2" @click="cancel" v-if="editMode === true">Cancel</b-button>
       <b-button class="editBtn pt-1 pb-1 ml-2" @click="save" v-if="editMode === true">Save Updates</b-button>
     </header>
@@ -17,6 +17,20 @@
       title="Success">
       <div class="d-block text-center">
         <h4 class="mt-2">{{worker.name}} has been updated</h4>
+      </div>
+    </b-modal>
+    <b-modal
+      v-model="confirmAction"
+      v-if="confirmAction" 
+      @ok="remove" 
+      centered 
+      header-bg-variant="danger"
+      headerTextVariant= 'light'
+      title="Confirm Action">
+      <div class="d-block text-center">
+        <h4 class="mt-2">Are you sure you want to remove <br>this worker?</h4>
+        <br>
+        <p>This action cannot be undone</p>
       </div>
     </b-modal>
     <b-row class="outer-row m-0">
@@ -105,7 +119,9 @@ export default {
   props: ['worker'],
   data () {
     return {
+      active: true,
       success: false,
+      confirmAction: false,
       readonly: true,
       editMode: false,
       disabled: true,
@@ -159,8 +175,16 @@ export default {
       this.editMode = false
       this.disabled = true
     },
-    remove () {
-      // remove worker from this company
+    confirm () {
+      this.confirmAction = true
+    },
+    remove (vm) {
+      // remove company details from this worker
+      this.worker.company = ''
+      this.worker.companyName = ''
+      this.worker.companyType = ''
+      this.$store.dispatch('updateUser', this.worker)
+      this.active = false
     },
     addTraining () {
       this.error.description = false

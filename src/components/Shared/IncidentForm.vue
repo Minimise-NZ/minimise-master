@@ -1,9 +1,10 @@
 <template>
   <b-container fluid>
-    <b-modal 
-      v-model="confirmAction" 
+    <b-modal
+      v-model="confirmAction"
       v-if="confirmAction" 
       @ok="onConfirm" 
+      @cancel="incident.open = true"
       centered 
       header-bg-variant="danger"
       headerTextVariant= 'light'
@@ -144,7 +145,7 @@
           <b-row class="pt-3">
             <b-col sm="3" lg="2"></b-col>
             <b-col sm="9" lg="10">
-              <b-form-checkbox v-model="incident.escalate" value='true'>
+              <b-form-checkbox v-model="incident.escalate" :value='true'>
                 Is further investigation required? <em>(Escalate to Health and Safety Manager)</em>
               </b-form-checkbox>
             </b-col>
@@ -152,7 +153,7 @@
           <b-row class="pt-1">
             <b-col sm="3" lg="2"></b-col>
             <b-col sm="9" lg="10">
-              <b-form-checkbox v-model="incident.open" value="false" v-if="incident.escalate === false">
+              <b-form-checkbox v-model="incident.open" :value='false' v-if="incident.escalate === false">
                 Close this incident <em>(Close only if no further action is required)</em>
               </b-form-checkbox>
             </b-col>
@@ -206,9 +207,9 @@ export default {
       return {name: this.user.name, key: this.userKey}
     },
     actionOwner () {
-      if (this.incident.status === 'closed') {
-        return null
-      } else if (this.incident.escalate === 'true') {
+      if (this.incident.open === false) {
+        return ''
+      } else if (this.incident.escalate === true) {
         return {name: this.$store.getters.company.hseManager, key: this.$store.getters.companyKey}
       } else {
         return this.incident.loggedBy
@@ -224,7 +225,7 @@ export default {
         this.error = 'Please select incident type'
         return this.error
       } else {
-        if (this.open === false) {
+        if (this.incident.open === false) {
           this.confirmAction = true
         } else {
           this.onConfirm()
@@ -236,9 +237,7 @@ export default {
       this.incident.loggedBy = this.loggedBy
       this.incident.actionOwner = this.actionOwner
       this.incident.company = this.$store.getters.companyKey
-      this.$store.dispatch('newIncident', {
-        incident: this.incident
-      })
+      this.$store.dispatch('newIncident', this.incident)
       .then(() => {
         this.success = true
       })

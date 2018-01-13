@@ -149,7 +149,6 @@ export default {
             contractor: true
           })
           // add user to company user collection
-          await this.$store.dispatch('updateCompany', {name: this.userName})
           await this.$store.dispatch('newUser', {
             name: this.userName,
             email: this.userEmail,

@@ -163,7 +163,6 @@ export default {
             hseManager: this.userName,
             hsePhone: this.userPhone
           })
-          await this.$store.dispatch('updateCompany')
           await this.$store.dispatch('newUser', {
             name: this.userName,
             id: this.$store.getters.userKey,

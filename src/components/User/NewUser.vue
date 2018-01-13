@@ -133,9 +133,7 @@
           try {
             // create new user in firebase
             await this.$store.dispatch('signUp', {email: this.email, password: this.password})
-            // update company with userID.
             let company = await this.$store.dispatch('getCompany', {key: this.company.value})
-            await this.$store.dispatch('updateCompany')
             // add user information to firestore
             let companyType = 'contractor'
             if (company.principal === true) {
