@@ -42,8 +42,8 @@ export default {
         {name: 'Task Analysis', link: '/contractor/taskAnalysis'},
         {name: 'Incident Reports', link: '/contractor/incidents'},
         {name: 'New Incident', link: '/contractor/newIncident'},
-        {name: 'User Management', link: '/contractor/users'},
-        {name: 'Administration', link: '/contractor/admin'},
+        {name: 'Worker Management', link: '/contractor/workers'},
+        // {name: 'Administration', link: '/contractor/admin'},
         {name: 'Support / Feedback', link: '/contractor/support'}
       ]
     }
@@ -51,14 +51,10 @@ export default {
   beforeCreate () {
     let user = this.$store.getters.user
     this.$store.dispatch('getCompany', {key: user.company})
+    this.$store.dispatch('getAllHazards')
   },
   beforeMount () {
-    this.$store.dispatch('getAllHazards')
     this.$store.dispatch('getJobRequests')
-  },
-  mounted () {
-    this.$store.dispatch('getMyHazards')
-    this.$store.dispatch('getNotMyHazards')
   }
 }
 </script>

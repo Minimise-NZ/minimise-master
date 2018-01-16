@@ -137,8 +137,6 @@ export default {
       }
     }
   },
-  computed: {
-  },
   methods: {
     formattedDate (trainingDate) {
       var d = new Date(trainingDate)
@@ -178,7 +176,7 @@ export default {
     confirm () {
       this.confirmAction = true
     },
-    remove (vm) {
+    remove () {
       // remove company details from this worker
       this.worker.company = ''
       this.worker.companyName = ''

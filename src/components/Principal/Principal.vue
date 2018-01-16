@@ -42,7 +42,7 @@ export default {
         {name: 'Incident Reports', link: '/principal/incidents'},
         {name: 'New Incident', link: '/principal/newIncident'},
         // {name: 'Master Safety Plan', link: '/principal/master'},
-        {name: 'Administration', link: '/principal/admin'},
+        // {name: 'Administration', link: '/principal/admin'},
         {name: 'Worker Management', link: '/principal/workers'},
         {name: 'Support / Feedback', link: '/principal/support'}
       ]

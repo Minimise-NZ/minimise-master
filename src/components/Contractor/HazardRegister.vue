@@ -1,5 +1,18 @@
 <template>
   <b-container fluid>
+    <b-modal 
+        v-model="confirmAction" 
+        v-if="confirmAction" 
+        @ok="removeHazard"
+        @cancel="clear"
+        centered 
+        header-bg-variant="danger"
+        headerTextVariant= 'light'
+        title="Confirm Action">
+        <div class="d-block text-center">
+          <h4 class="mt-2">Remove this hazard<br>from your hazard register?</h4>
+        </div>
+      </b-modal>
     <b-card>
       <div class="card-header" :class="{ inverted: inverted }" >{{headerTitle}}
         <b-button v-if="register" class="headerBtn" @click="register = !register, inverted = !inverted">Add New Hazard</b-button>
@@ -11,7 +24,7 @@
           :key="index"
           class="hazardCard mt-2 mb-4">
           <header class="card-header hazard" :class="{ inverted: inverted }">{{hazard.name}}
-            <b-button v-if="register" class="editBtn pt-1 pb-1">Remove Hazard</b-button>
+            <b-button v-if="register" class="editBtn pt-1 pb-1"  @click="confirm(hazard, index)">Remove Hazard</b-button>
             <b-button v-if="!register" class="addBtn pt-1 pb-1"  @click="addHazard(hazard, index)">Add to my Hazard Register</b-button>
           </header>
           <b-row>
@@ -50,7 +63,10 @@ export default {
     return {
       register: true,
       inverted: false,
-      newHazards: []
+      confirmAction: false,
+      success: false,
+      newHazards: [],
+      remove: {}
     }
   },
   computed: {
@@ -76,10 +92,34 @@ export default {
       // remove selected hazard from hazard list
       this.hazards.splice(index, 1)
     },
+    confirm (hazard, index) {
+      // confirm that user wants the hazard removed (modal popup)
+      this.remove = {hazard, index}
+      this.confirmAction = true
+    },
+    removeHazard () {
+      let hazard = this.remove
+      this.hazards.splice(hazard.index, 1)
+      this.$store.dispatch('removeHazard', this.hazards)
+      this.clear()
+    },
     saveHazards () {
-      this.$store.dispatch('saveHazards', this.newHazards)
+      if (this.newHazards.length !== 0) {
+        this.$store.dispatch('addNewHazards', this.newHazards)
+        this.clear()
+      }
+    },
+    clear () {
+      this.remove = {}
       this.newHazards = []
     }
+  },
+  beforeMount () {
+    this.$store.dispatch('getMyHazards')
+    .then((hazards) => {
+      console.log('getMyHazards', hazards)
+      this.$store.dispatch('getNotMyHazards', hazards)
+    })
   }
 }
 </script>

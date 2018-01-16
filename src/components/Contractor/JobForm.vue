@@ -86,39 +86,37 @@
             </b-row>
             <b-row>
               <b-form-checkbox
-                id="notifiable"
                 class="mt-3"
                 v-model="notifiable"
-                value=true>
+                value='true'>
                 There is notifiable works associated with this project
               </b-form-checkbox>
             </b-row>
             <b-row>
               <b-form-checkbox-group
-                v-if="notifiable"
+                v-if="notifiable === 'true'"
+                id="notifiable"
                 stacked 
-                v-model="notifiables.selected" 
-                name="notifiables" 
+                v-model="notifiables.selected"  
                 :options="notifiables.list"
                 class="ml-3">
               </b-form-checkbox-group>
             </b-row>
+            <div class="alert alert-danger" v-show="error">Please select an option</div>
             <b-row>
               <b-form-checkbox
-                v-if="notifiable"
-                id="notified"
+                v-if="notifiable === 'true'"
                 v-model="notified"
-                value=true
+                value='true'
                 required>
                 We have notified Worksafe and have a copy of the notification
               </b-form-checkbox>
             </b-row>
             <b-row>
               <b-form-checkbox
-                v-if="notifiable"
-                id="taskAnalysis"
+                v-if="notifiable === 'true'"
                 v-model="taskAnalysis"
-                value=true
+                value='true'
                 required>
                 A task analysis has been prepared and our workers have been trained in the process
               </b-form-checkbox>
@@ -129,6 +127,8 @@
             <div class="item card-header">Safety Planning and Reporting</div>
             <b-row>
               <b-form-checkbox
+                value='true'
+                v-model="reporting"
                 required>
                 We agree to report all incidents to the Principal Contractor within the specified timeframe
               </b-form-checkbox>
@@ -140,30 +140,40 @@
             <b-row>
               <b-form-checkbox
                 class="mt-3"
+                v-model="safetyChecks"
+                value='true'
                 required>
                 We agree that our workers will conduct safety checks before undertaking any work on site
               </b-form-checkbox>
             </b-row>
             <b-row>
               <b-form-checkbox
+                v-model="trainingRegister"
+                value='true'
                 required>
                 Our training register is complete and up to date
               </b-form-checkbox>
             </b-row>
             <b-row>
               <b-form-checkbox
+                v-model="hazardRegister"
+                value='true'
                 required>
                 Our hazard register is complete and up to date
               </b-form-checkbox>
             </b-row>
             <b-row>
               <b-form-checkbox
+                v-model="hazSubstances"
+                value='true'
                 required>
                 Our hazardous Substance Register is complete and up to date.<br> We have MSDS sheets for all hazardous substances. <br> Our workers have appropriate PPE for handling hazardous Substances
               </b-form-checkbox>
             </b-row>
             <b-row>
               <b-form-checkbox
+                v-model="firstAidKit"
+                value='true'
                 required>
                 Our workers have been provided a first aid kit and fire extinguisher. 
               </b-form-checkbox>
@@ -186,25 +196,27 @@ export default {
   props: ['id'],
   data () {
     return {
+      error: false,
       workDescription: '',
       supervisor: '',
       supervisorPhone: '',
-      notifiable: false,
+      notifiable: 'false',
       notifiables: {
         list: [
-          'Working at heights > 5m',
-          'Work in confined spaces',
-          'Work in an excavation > 1.5m'
+          {text: 'Working at heights > 5m', value: 'Working at heights > 5m'},
+          {text: 'Work in confined spaces', value: 'Work in confined spaces'},
+          {text: 'Work in an excavation > 1.5m', value: 'Work in an excavation > 1.5m'}
         ],
         selected: []
       },
-      notified: false,
-      taskAnalysis: false,
-      reporting: false,
-      safetyChecks: false,
-      trainingRegister: false,
-      hazardRegister: false,
-      firstAidKit: false,
+      notified: 'false',
+      taskAnalysis: 'false',
+      reporting: 'false',
+      safetyChecks: 'false',
+      trainingRegister: 'false',
+      hazardRegister: 'false',
+      hazSubstances: 'false',
+      firstAidKit: 'false',
       tableItems: [
         {incident_type: 'Serious Injury', timeframe: 'Immediately'},
         {incident_type: 'Injury Requiring First Aid', timeframe: 'Immediately'},
@@ -226,14 +238,41 @@ export default {
   },
   methods: {
     onSubmit () {
-      // validate
+      // add agreement to job sites agreement collection
+      // update job site contractorKey approved to true
+      // update companies jobSites approved to true
+      this.error = false
+      if (this.notifiable === 'true' && this.notifiables.selected.length <= 0) {
+        this.error = true
+        document.getElementById('notifiable').focus()
+        return
+      } else {
+        let form = {
+          workDescription: this.workDescription,
+          supervisor: this.supervisor,
+          supervisorPhone: this.supervisorPhone,
+          reporting: this.reporting,
+          safetyChecks: this.safetyChecks,
+          trainingRegister: this.trainingRegister,
+          hazardRegister: this.hazardRegister,
+          firstAidKit: this.firstAidKit,
+          date: new Date(),
+          companyName: this.company.name
+        }
+        if (this.notifiable === 'true') {
+          form.notifiable = this.notifiables.selected
+          form.notified = this.notified
+          form.taskAnalysis = this.taskAnalysis
+        }
+        this.$store.dispatch('approveContractor', {job: this.job, form})
+      }
     },
     cancel () {
       // reset fields and return focus to first input field
       this.workDescription = ''
       this.supervisor = ''
       this.supervisorPhone = ''
-      this.notifiable = false
+      this.notifiable = 'false'
       this.notifiables = {
         list: [
           'Working at heights > 5m',

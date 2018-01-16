@@ -80,7 +80,7 @@ export const store = new Vuex.Store({
       state.myHazards = payload
     },
     setNotMyHazards (state, payload) {
-      console.log('Mot my hazards set')
+      console.log('Not my hazards set')
       state.notMyHazards = payload
     },
     setIncidents (state, payload) {
@@ -157,8 +157,6 @@ export const store = new Vuex.Store({
       return promise
     },
     updateUser ({commit, getters}, payload) {
-      console.log('updating firebase')
-      /*
       let promise = new Promise((resolve, reject) => {
         firestore.collection('users').doc(payload.id).set(payload, {merge: true})
         .then(() => {
@@ -171,7 +169,6 @@ export const store = new Vuex.Store({
         })
       })
       return promise
-      */
     },
     getWorkers ({commit, state}) {
       // get all workers with company = this companyKey
@@ -271,7 +268,15 @@ export const store = new Vuex.Store({
           open: true,
           date: new Date()
         })
-        .then(() => {
+        .then((doc) => {
+          let jobId = doc.id
+          subcontractors.forEach((val) => {
+            firestore.collection('companies').doc(val.key).collection('jobSites').doc(jobId)
+            .set({
+              approved: false,
+              open: true
+            })
+          })
           resolve()
         })
         .catch((error) => {
@@ -281,7 +286,7 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    updateJob ({dispatch}, payload) {
+    addSiteContractor ({dispatch}, payload) {
       // update contractor information
       let approved = {}
       for (let index in payload.contractors) {
@@ -294,10 +299,30 @@ export const store = new Vuex.Store({
         dispatch('getJobs')
       })
     },
+    approveContractor ({state}, payload) {
+      // add agreement to job sites agreement collection
+      let approved = {}
+      let key = state.companyKey
+      approved[key] = true
+      firestore.collection('jobSites').doc(payload.job.id)
+      .collection('agreements').doc(key).set(payload.form)
+      // update job site contractorKey approved to true
+      firestore.collection('jobSites').doc(payload.job.id).set({'approved': approved}, {merge: true})
+      // update companies jobSites approved to true
+      firestore.collection('companies').doc(key)
+      .collection('jobSites').doc(payload.job.id).update({'approved': true})
+    },
     closeJob ({dispatch}, payload) {
-      firestore.collection('jobSites').doc(payload)
+      // close job in jobSites collection and close job in each comapnies jobSite list
+      let contractors = payload.contractors
+      let jobId = payload.id
+      firestore.collection('jobSites').doc(jobId)
       .update({'open': false, 'closedDate': new Date()})
       .then(() => {
+        contractors.forEach((val) => {
+          firestore.collection('companies').doc(val.key).collection('jobSites').doc(jobId)
+          .set({open: false}, {merge: true})
+        })
         dispatch('getJobs')
       })
     },
@@ -347,13 +372,13 @@ export const store = new Vuex.Store({
       return promise
     },
     getJobRequests ({commit, state}, payload) {
-      // get all jobs in progress that are assigned to this company as principal
-      firestore.collection('companies').doc(state.companyKey)
-      .collection('jobSites').where('status', '==', 'pending')
+      // get all jobs in progress that are assigned to this company
+      firestore.collection('companies').doc(state.companyKey).collection('jobSites').where('approved', '==', false).where('open', '==', true)
       .get()
       .then((snapshot) => {
         let jobRequests = []
         snapshot.forEach((doc) => {
+          console.log(doc.data())
           firestore.collection('jobSites').doc(doc.id).get()
           .then((doc) => {
             let job = doc.data()
@@ -418,6 +443,7 @@ export const store = new Vuex.Store({
     },
     getIncidents ({commit, state}) {
       let incidents = []
+      // if user is admin, get all incidents that are assigned to this company
       if (state.user.admin) {
         firestore.collection('incidents').where('incident.company', '==', state.companyKey)
         .get()
@@ -446,6 +472,7 @@ export const store = new Vuex.Store({
           })
         })
       } else {
+        // get all incidents that are assigned to user as action owner
         firestore.collection('incidents').where('actionOwner.key', '==', state.userKey)
         .get()
         .then((snapshot) => {
@@ -511,26 +538,44 @@ export const store = new Vuex.Store({
       console.log(hazards)
       if (hazards <= 0 || hazards === undefined || hazards === null) {
         console.log('this company has no hazards')
-        return
+        hazards = []
+        return hazards
       } else {
         commit('setMyHazards', hazards)
+        return hazards
       }
     },
-    getNotMyHazards ({commit, state}) {
-      let all = new Set(state.allHazards)
-      let my = new Set(state.myHazards)
-      console.log('this is my hazards', my)
-      let difference = new Set(
-        [...all].filter(x => !my.has(x)))
-      let hazards = [...difference]
-      commit('setNotMyHazards', hazards)
+    getNotMyHazards ({commit, state}, payload) {
+      let myHazards = payload
+      console.log('My Hazards', myHazards)
+      let allHazards = state.allHazards.slice(0)
+      if (myHazards.length !== 0) {
+        for (var i = 0; i < allHazards.length; i++) {
+          for (var j = 0; j < myHazards.length; j++) {
+            if (allHazards[i].id === myHazards[j].id) {
+              allHazards.splice(i, 1)
+            }
+          }
+        }
+      }
+      commit('setNotMyHazards', allHazards)
+      return
     },
-    saveHazards ({commit, state}, payload) {
+    addNewHazards ({commit, state}, payload) {
       let hazardUpdates = state.myHazards.concat(payload)
+      console.log('hazardUpdates', hazardUpdates)
       firestore.collection('companies').doc(state.companyKey)
-      .update({hazards: payload})
+      .set({hazards: hazardUpdates}, {merge: true})
       commit('setMyHazards', hazardUpdates)
       console.log('My Hazards updates', state.myHazards)
+    },
+    removeHazard ({commit, dispatch, state}, payload) {
+      let myHazards = payload
+      dispatch('getNotMyHazards', myHazards)
+      firestore.collection('companies').doc(state.companyKey)
+      .set({hazards: payload}, {merge: true})
+      commit('setMyHazards', myHazards)
+      return
     },
     logout ({commit}) {
       firebase.auth().signOut()

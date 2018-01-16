@@ -7,7 +7,7 @@
         centered 
         header-bg-variant="danger"
         headerTextVariant= 'light'
-        title="JConfirm Action">
+        title="Confirm Action">
         <div class="d-block text-center">
           <h4 class="mt-2">Are you sure you want to close <br>this job site?</h4>
           <br>
@@ -222,7 +222,7 @@ export default {
           }
           newItems.push(newItem)
         }
-        this.$store.dispatch('updateJob', {id: this.id, contractors: newItems})
+        this.$store.dispatch('addSiteContractor', {id: this.id, contractors: newItems})
         this.success = true
       } else {
         this.$router.go(-1)
@@ -233,7 +233,7 @@ export default {
     },
     route () {
       // update job info and go back to home
-      this.$store.dispatch('closeJob', this.id)
+      this.$store.dispatch('closeJob', this.job)
     }
   },
   beforeMount () {
