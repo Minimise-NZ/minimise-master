@@ -17,7 +17,7 @@ import ContractorHome from '@/components/Contractor/Home.vue'
 import JobForm from '@/components/Contractor/JobForm.vue'
 import Hazards from '@/components/Contractor/HazardRegister.vue'
 import HazardousSubstances from '@/components/Contractor/HazardousSubstances.vue'
-import TaskAnalysis from '@/components/Contractor/TaskAnalysis.vue'
+import Tasks from '@/components/Contractor/Tasks.vue'
 
 import Billing from '@/components/Shared/AdminBilling.vue'
 import AdminUsers from '@/components/Shared/AdminManageUsers.vue'
@@ -97,7 +97,7 @@ export default new Router({
         },
         {
           path: 'taskAnalysis',
-          component: TaskAnalysis
+          component: Tasks
         },
         {
           path: 'billing',

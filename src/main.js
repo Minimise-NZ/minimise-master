@@ -13,7 +13,10 @@ import 'animate.css/animate.css'
 import Vuebar from 'vuebar'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import lodash from 'lodash'
+import VueLodash from 'vue-lodash'
 
+Vue.use(VueLodash, lodash)
 Vue.use(AOS)
 Vue.use(Vuebar)
 Vue.config.productionTip = false

@@ -52,9 +52,11 @@ export default {
     let user = this.$store.getters.user
     this.$store.dispatch('getCompany', {key: user.company})
     this.$store.dispatch('getAllHazards')
+    this.$store.dispatch('getTaskAnalysis')
   },
   beforeMount () {
     this.$store.dispatch('getJobRequests')
+    this.$store.dispatch('getWorkers')
   }
 }
 </script>

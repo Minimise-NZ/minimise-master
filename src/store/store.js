@@ -20,7 +20,8 @@ export const store = new Vuex.Store({
     myIncidents: [],
     allHazards: [],
     myHazards: [],
-    notMyHazards: []
+    notMyHazards: [],
+    taskAnalysis: []
   },
   mutations: {
     clearStore (state) {
@@ -74,6 +75,10 @@ export const store = new Vuex.Store({
     setAllHazards (state, payload) {
       state.allHazards = payload
       console.log('All hazards set')
+    },
+    setTaskAnalysis (state, payload) {
+      state.taskAnalysis = payload
+      console.log('Task Analysis set')
     },
     setMyHazards (state, payload) {
       console.log('My hazards set')
@@ -577,6 +582,32 @@ export const store = new Vuex.Store({
       commit('setMyHazards', myHazards)
       return
     },
+    getTaskAnalysis ({commit, state}) {
+      // get taskAnalysis from company
+      firestore.collection('companies').doc(state.companyKey)
+      .collection('taskAnalysis')
+      .get()
+      .then((snapshot) => {
+        let tasks = []
+        snapshot.forEach((doc) => {
+          tasks.push(doc.data())
+        })
+        commit('setTaskAnalysis', tasks)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    },
+    updateTaskAnalysis ({commit, dispatch, state}, payload) {
+      // update existing task Analysis in firestore
+      let taskKey = payload.key
+      firestore.collection('companies').doc(state.companyKey)
+      .collection('taskAnalysis').doc(taskKey).set(payload.task)
+      .then(() => {
+        dispatch(' getTaskAnalysis')
+        console.log('Task has been updated')
+      })
+    },
     logout ({commit}) {
       firebase.auth().signOut()
       commit('clearStore')
@@ -617,6 +648,7 @@ export const store = new Vuex.Store({
         })
       }
     },
+    taskAnalysis: (state) => state.taskAnalysis,
     projectManagers: (state) => state.projectManagers
   },
   plugins: [createPersistedState()]
