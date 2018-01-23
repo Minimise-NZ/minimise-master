@@ -80,6 +80,9 @@ export const store = new Vuex.Store({
       state.taskAnalysis = payload
       console.log('Task Analysis set')
     },
+    addNewTask (state, payload) {
+      state.taskAnalysis.push(payload)
+    },
     setMyHazards (state, payload) {
       console.log('My hazards set')
       state.myHazards = payload
@@ -598,13 +601,57 @@ export const store = new Vuex.Store({
         console.log(error)
       })
     },
+    newTaskAnalysis ({commit, dispatch, state}, payload) {
+      // create new Task Analysis in firestore
+      let promise = new Promise((resolve, reject) => {
+        let title = payload
+        let newTask = firestore.collection('companies').doc(state.companyKey)
+        .collection('taskAnalysis').doc()
+        console.log('task Id is', newTask.id)
+        newTask.set({
+          title: title,
+          worksafe: false,
+          signage: false,
+          ppeRequired: false,
+          ppe: '',
+          plantRequired: false,
+          plant: '',
+          steps: [{
+            description: '',
+            hazards: '',
+            controls: ''
+          }],
+          id: newTask.id
+        })
+        .then(() => {
+          dispatch('getTaskAnalysis')
+          resolve()
+        })
+        .catch((error) => {
+          console.log(error)
+          reject(console.log('New task analysis error'))
+        })
+      })
+      return promise
+    },
     updateTaskAnalysis ({commit, dispatch, state}, payload) {
-      // update existing task Analysis in firestore
-      let taskKey = payload.key
+      let taskKey = payload.task.id
+      let task = payload.task
+      console.log(payload.steps)
       firestore.collection('companies').doc(state.companyKey)
-      .collection('taskAnalysis').doc(taskKey).set(payload.task)
+      .collection('taskAnalysis').doc(taskKey).set({
+        title: task.title,
+        worksafe: task.worksafe,
+        signage: task.signage,
+        ppeRequired: task.ppeRequired,
+        ppe: task.ppe,
+        plantRequired: task.plantRequired,
+        plant: task.plant,
+        steps: task.steps,
+        id: taskKey
+      })
       .then(() => {
-        dispatch(' getTaskAnalysis')
+        dispatch('getTaskAnalysis')
         console.log('Task has been updated')
       })
     },

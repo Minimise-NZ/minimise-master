@@ -1,120 +1,110 @@
 <template>
+  <b-container fluid>
+    <b-card class="taskAnalysis">
+      <b-row>
+        <b-col class="ml-0 pl-0">
+          <b-form-checkbox
+            id="notification"
+            v-model="task.worksafe"
+            value=true
+            class="mb-4">
+            Worksafe notification required
+          </b-form-checkbox><br>
+          <b-form-checkbox
+            id="signage"
+            v-model="task.signage"
+            value=true
+            class="mb-4">
+            Signage required
+          </b-form-checkbox><br>
+          <b-form-checkbox
+            v-model="task.ppeRequired"
+            value=true
+            class="mb-4">
+            PPE required
+          </b-form-checkbox><br>
+          <b-form-input
+            class="mb-4"
+            style = "border: 1px solid rgba(0, 123, 255, 0.37)"
+            v-if="task.ppeRequired"
+            v-model="task.ppe">
+          </b-form-input>
+          <b-form-checkbox
+            v-model="task.plantRequired"
+            value=true
+            class="mb-4">
+            Plant required
+          </b-form-checkbox><br>
+          <b-form-input
+            class="mb-4"
+            style = "border: 1px solid rgba(0, 123, 255, 0.37)"
+            v-if="task.plantRequired"
+            v-model="task.plant">
+          </b-form-input>
+        </b-col>
+        <b-col position: relative>
+          <b-row class="right-btns">
+            <b-button
+              @click="addStep"
+              class="editBtn mb-2"
+              variant="primary">
+              Add Step
+            </b-button>
+            <b-button
+              @click="save"
+              class="editBtn mb-2 ml-2"
+              style="background-color: #12807a">
+              Save updates
+            </b-button>
+          </b-row>
+        </b-col>
+      </b-row>
 
-  <b-card class="taskAnalysis">
-    <b-row>
-      <b-col>
-        <b-form-checkbox
-          id="notification"
-          v-model="task.worksafe"
-          value=true
-          class="mb-4">
-          Worksafe notification required
-        </b-form-checkbox><br>
-        <b-form-checkbox
-          id="signage"
-          v-model="task.signage"
-          value=true
-          class="mb-4">
-          Signage required
-        </b-form-checkbox><br>
-        <b-form-checkbox
-          v-model="task.ppeRequired"
-          value=true
-          class="mb-4">
-          PPE required
-        </b-form-checkbox><br>
-        <b-form-input
-          class="mb-4"        
-          v-if="task.ppeRequired"
-          v-model="task.ppe">
-        </b-form-input>
-        <b-form-checkbox
-          v-model="task.plantRequired"
-          value=true
-          class="mb-4">
-          Plant required
-        </b-form-checkbox><br>
-        <b-form-input
-          class="mb-4"        
-          v-if="task.plantRequired"
-          v-model="task.plant">
-        </b-form-input>
-      </b-col>
-      <b-col position: relative>
-        <b-row class="right-btns">
-          <b-button
-            class="editBtn mb-2"
-            variant="primary">
-            Add Step
-          </b-button>
-          <b-button
-            @click="save"
-            class="editBtn mb-2 ml-2"
-            style="background-color: #12807a">
-            Save updates
-          </b-button>
-        </b-row>
-      </b-col>
-    </b-row>
-
-    <b-row class="mt-5">
-      <b-col cols="1">
-        <header class="subheader">Step</header>
-      </b-col>
-      <b-col cols="3">
-        <header class="subheader">Task Description</header>
-      </b-col>
-      <b-col cols="4"> 
-        <header class="subheader">Potential Hazards</header>  
-      </b-col>
-      <b-col cols="4">
-        <header class="subheader">Hazard Controls</header>
-      </b-col>
-    </b-row>
-      
-    <b-row v-for="(step, index) in task.steps" :key="index">
-      <b-col cols="1">
-        <ul>
-          <li>
-            {{index + 1}}
-          </li>
-        </ul>
-      </b-col>
-      <b-col cols="3">
-        <ul>
-          <li>
-            {{step.description}}
-          </li>
-        </ul>
-      </b-col>
-      <b-col cols="4"> 
+      <b-row class="mt-5">
+        <b-col lg="1" md="2">
+          <header class="subheader">Step</header>
+        </b-col>
+        <b-col>
+          <header class="subheader">Task Description</header>
+        </b-col>
+        <b-col> 
+          <header class="subheader">Potential Hazards</header>  
+        </b-col>
+        <b-col>
+          <header class="subheader">Hazard Controls</header>
+        </b-col>
+      </b-row>
         
-        <ul>
-          <li>
-            {{step.hazards}}
-          </li>
-        </ul>
-      </b-col>
-      <b-col cols="4">
-        <ul>
-          <li>
-            {{step.controls}}
-          </li>
-        </ul>
-      </b-col>
-    </b-row>
-  </b-card>
+      <b-row v-for="(step, index) in task.steps" :key="index">
+        <b-col cols="1">
+          <h4>{{index + 1}}</h4>
+        </b-col>
+        <b-col>
+          <textarea class="form-control step" rows="3" v-model="step.description" placeholder="Please enter description of step"></textarea>
+        </b-col>
+        <b-col>
+          <textarea class="form-control step" rows="3" v-model="step.hazards" placeholder="Please enter hazards"></textarea>
+        </b-col>
+        <b-col>
+          <textarea class="form-control step" rows="3" v-model="step.controls" placeholder="Please enter controls"></textarea>
+        </b-col>
+      </b-row>
+    </b-card>
+  </b-container>
 </template>
 
 <script>
 export default {
-  props: ['taskKey', 'task'],
+  props: ['task'],
   data () {
     return {
       originalTask: {}
     }
   },
   computed: {
+    stepCount () {
+      return this.task.steps.length
+    }
   },
   methods: {
     save () {
@@ -123,9 +113,15 @@ export default {
         return
       } else {
         // save new taskAnalysis
-        let key = this.taskKey.toString()
-        this.$store.dispatch('updateTaskAnalysis', {task: this.task, key})
+        this.$store.dispatch('updateTaskAnalysis', {task: this.task})
       }
+    },
+    addStep () {
+      this.task.steps.push({
+        description: '',
+        hazards: '',
+        controls: ''
+      })
     }
   },
   beforeMount () {
@@ -160,14 +156,28 @@ export default {
     border-bottom: 2px solid rgba(155, 35, 53, 0.88);
   }
 
-  ul {
+  h4 {
+    padding-top: 20px;
     text-align: center;
-    padding-left: 0;
-    list-style: none;
+    color: rgba(155, 35, 53, 0.88);
+    font-weight: bold;
+  }
+
+  .form-control {
+    color: black;
+  }
+
+  .form-control.step {
+    text-align: center;
+    border: 1px solid #7979792e;
   }
   
   .row {
     padding: 5px;
+  }
+
+  [class*="col-"] {
+    padding: 2px;
   }
 
 </style>

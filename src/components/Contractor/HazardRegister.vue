@@ -1,18 +1,18 @@
 <template>
   <b-container fluid>
     <b-modal 
-        v-model="confirmAction" 
-        v-if="confirmAction" 
-        @ok="removeHazard"
-        @cancel="clear"
-        centered 
-        header-bg-variant="danger"
-        headerTextVariant= 'light'
-        title="Confirm Action">
-        <div class="d-block text-center">
-          <h4 class="mt-2">Remove this hazard<br>from your hazard register?</h4>
-        </div>
-      </b-modal>
+      v-model="confirmAction" 
+      v-if="confirmAction" 
+      @ok="removeHazard"
+      @cancel="clear"
+      centered 
+      header-bg-variant="danger"
+      headerTextVariant= 'light'
+      title="Confirm Action">
+      <div class="d-block text-center">
+        <h4 class="mt-2">Remove this hazard<br>from your hazard register?</h4>
+      </div>
+    </b-modal>
     <b-card>
       <div class="card-header" :class="{ inverted: inverted }" >{{headerTitle}}
         <b-button v-if="register" class="headerBtn" @click="register = !register, inverted = !inverted">Add New Hazard</b-button>

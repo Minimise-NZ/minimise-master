@@ -6,7 +6,15 @@
       <b-row>
         <b-col sm="2" class="side-wrapper">
         <b-list-group>
-            <router-link v-for="item in sideNavItems"
+            <router-link 
+              to='/contractor'
+              tag="li"
+              class="list-group-item"
+              exact>
+              <p>Home</p>
+            </router-link>
+            <router-link 
+            v-for="item in sideNavItems"
             :to='item.link' 
             tag="li"
             class="list-group-item"
@@ -36,7 +44,6 @@ export default {
   data () {
     return {
       sideNavItems: [
-        {name: 'Home', link: '/contractor'},
         {name: 'Hazard Register', link: '/contractor/hazards'},
         // {name: 'Hazardous Substances', link: '/contractor/hazardousSubstances'},
         {name: 'Task Analysis', link: '/contractor/taskAnalysis'},
@@ -77,7 +84,7 @@ export default {
     margin: 0;
   }
   
-  .router-link-exact-active {
+  .router-link-active {
     background-color: #FFC80B;
     color: black;
   }

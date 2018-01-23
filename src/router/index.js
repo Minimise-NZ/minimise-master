@@ -18,6 +18,7 @@ import JobForm from '@/components/Contractor/JobForm.vue'
 import Hazards from '@/components/Contractor/HazardRegister.vue'
 import HazardousSubstances from '@/components/Contractor/HazardousSubstances.vue'
 import Tasks from '@/components/Contractor/Tasks.vue'
+import Task from '@/components/Contractor/Task.vue'
 
 import Billing from '@/components/Shared/AdminBilling.vue'
 import AdminUsers from '@/components/Shared/AdminManageUsers.vue'
@@ -97,7 +98,14 @@ export default new Router({
         },
         {
           path: 'taskAnalysis',
-          component: Tasks
+          component: Tasks,
+          children: [
+            {
+              path: 'task/:id',
+              component: Task,
+              props: true
+            }
+          ]
         },
         {
           path: 'billing',

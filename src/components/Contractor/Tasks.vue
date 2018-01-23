@@ -1,5 +1,20 @@
 <template>
   <b-container fluid>
+     <b-modal 
+      v-model="newPopUp" 
+      v-if="newPopUp"
+      @cancel="title = ''"
+      @ok="createNew"
+      centered
+      header-bg-variant="info"
+      headerTextVariant= 'light'
+      title="Create new task analysis">
+      <div class="d-block text-center mt-4">
+        <h4>Please enter a title for your <br> new task analysis</h4>
+        <br>
+        <b-form-input type="text" v-model="title" required/>
+      </div>
+    </b-modal>
     <b-card>
      <div class="card-header">Task Analysis
      </div>
@@ -8,33 +23,33 @@
         <b-row>
           <b-col>
             <b-button
-              class="itemBtn mb-2" 
-              v-for="(item,index) in taskAnalysis" 
-              :key="index"
-              :class="{active: selectedIndex === index}"
-              @click="changeTask(index)">
+              class="taskBtn mb-2"
+              :class="{activeTaskBtn: selectedIndex === id}"
+              v-for="(item, id) in taskAnalysis" 
+              :key="id"
+              @click="changeTask(id)">
                 {{item.title}}
             </b-button>
-            <b-button class="itemBtn mb-2" variant="primary" @click="newTA" v-b-tooltip.hover title="Add New Task Analysis"><i class="fa fa-plus"></i></b-button> 
+            <b-button class="mb-2" variant="primary" @click="newPopUp = true" v-b-tooltip.hover title="Add New Task Analysis"><i class="fa fa-plus"></i></b-button> 
           </b-col>
         </b-row>
 
-        <taskView :task="task" :taskKey="selectedIndex"></taskView>
-
+        <b-row>
+          <router-view :task="task"></router-view>
+        </b-row>
+       
       </div>
     </b-card>
   </b-container>
 </template>
 
 <script>
-import Task from '@/components/Contractor/Task.vue'
 export default {
-  components: {
-    'taskView': Task
-  },
   data () {
     return {
-      selectedIndex: 0
+      selectedIndex: 0,
+      newPopUp: false,
+      title: ''
     }
   },
   computed: {
@@ -46,12 +61,24 @@ export default {
     }
   },
   methods: {
-    newTA () {
+    createNew () {
+      console.log(this.title)
+      this.$store.dispatch('newTaskAnalysis', this.title)
+      .then(() => {
+        this.title = ''
+      })
+      .catch((error) => {
+        console.log(error)
+      })
     },
     changeTask (index) {
       // check there is nothing to be saved
       this.selectedIndex = index
+      this.$router.push('/contractor/taskAnalysis/task/' + this.selectedIndex)
     }
+  },
+  beforeMount () {
+    this.$router.push('/contractor/taskAnalysis/task/0')
   }
 }
 </script>
@@ -62,6 +89,10 @@ export default {
     padding-right: 30px;
   }
   
+  .row {
+    padding: 5px;
+  }
+
   .card-header {
     margin: -20px -20px 20px -20px;
     background-color: rgba(155, 35, 53, 0.88);
@@ -69,20 +100,19 @@ export default {
     color: white;
   }
 
-  .itemBtn {
-    font-size: 1rem;
+  .taskBtn {
+    border-radius: 5px;
+    color: white;
     margin-right: 15px;
     cursor: pointer;
     font-size: 1.2rem;
+    padding: 5px 10px;
+    background-color: grey;
+    border: none;
   }
   
-  .active {
+  .activeTaskBtn {
     background-color: #12807a;
-  }
-  
-
-  .row {
-    padding: 5px;
   }
 
 </style>
