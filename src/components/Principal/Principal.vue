@@ -5,12 +5,17 @@
       <b-row>
         <b-col sm="2" class="side-wrapper" >
           <b-list-group>
-            <router-link v-for="item in sideNavItems"
-            :to='item.link' 
-            tag="li"
-            class="list-group-item"
-            :key = "item.name">
+            <router-link to='/principal' tag="li" class="list-group-item" exact>
+              <p>Home</p>
+            </router-link>
+            <router-link v-for="item in sideNavItems" :to='item.link' tag="li" class="list-group-item" :key = "item.name">
               <p>{{item.name}}</p>
+            </router-link>
+            <router-link v-if="user.admin" v-for="item in adminNav" :to='item.link' tag="li" class="list-group-item" :key = "item.name">
+              <p>{{item.name}}</p>
+            </router-link>
+            <router-link to='/principal/support' tag="li" class="list-group-item" exact>
+              <p>Support / Feedback</p>
             </router-link>
           </b-list-group>
         </b-col>
@@ -35,21 +40,26 @@ export default {
   data () {
     return {
       sideNavItems: [
-        {name: 'Home', link: '/principal'},
         {name: 'New Job', link: '/principal/newJob'},
         {name: 'Jobs In Progress', link: '/principal/jobs'},
-        // {name: 'Contractor Management', link: '/principal/contractors'},
         {name: 'Incident Reports', link: '/principal/incidents'},
-        {name: 'New Incident', link: '/principal/newIncident'},
+        {name: 'New Incident', link: '/principal/newIncident'}
+      ],
+      adminNav: [
+        // {name: 'Contractor Management', link: '/principal/contractors'},
         // {name: 'Master Safety Plan', link: '/principal/master'},
         // {name: 'Administration', link: '/principal/admin'},
-        {name: 'Worker Management', link: '/principal/workers'},
-        {name: 'Support / Feedback', link: '/principal/support'}
+        {name: 'Worker Management', link: '/principal/workers'}
       ]
     }
   },
+  computed: {
+    user () {
+      return this.$store.getters.user
+    }
+  },
   beforeCreate () {
-    this.$store.dispatch('getCompany', {key: this.$store.getters.companyKey})
+    this.$store.dispatch('getCompany')
   },
   mounted () {
     this.$store.dispatch('getCompanyIndex')
@@ -77,7 +87,7 @@ export default {
     margin: 0;
   }
   
-  .router-link-exact-active {
+  .router-link-active {
     background-color: #FFC80B;
     color: black;
   }

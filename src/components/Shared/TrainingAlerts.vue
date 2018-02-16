@@ -1,9 +1,11 @@
 <template>
-  <b-card 
-     header="Training Alerts" 
-     header-tag="header"
-     v-if="trainingAlerts != 0">
-    <b-row class="subheader">
+  <b-card header="Training Alerts" header-tag="header">
+     <b-row v-if="trainingAlerts.length === 0">
+      <b-col>
+        <header class="subheader">You currently have no open itrainng alerts</header>
+      </b-col>
+    </b-row>
+    <b-row class="subheader" v-if="trainingAlerts.length !== 0">
       <b-col>
         <header>Name</header>
       </b-col>

@@ -5,7 +5,7 @@
       
       <b-row>
         <b-col sm="2" class="side-wrapper">
-        <b-list-group>
+          <b-list-group>
             <router-link 
               to='/contractor'
               tag="li"
@@ -56,8 +56,7 @@ export default {
     }
   },
   beforeCreate () {
-    let user = this.$store.getters.user
-    this.$store.dispatch('getCompany', {key: user.company})
+    this.$store.dispatch('getCompany')
     this.$store.dispatch('getAllHazards')
     this.$store.dispatch('getTaskAnalysis')
   },

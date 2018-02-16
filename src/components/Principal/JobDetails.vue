@@ -3,7 +3,7 @@
      <b-modal 
         v-model="confirmAction" 
         v-if="confirmAction" 
-        @ok="route" 
+        @ok="closeJob()" 
         centered 
         header-bg-variant="danger"
         headerTextVariant= 'light'
@@ -98,14 +98,7 @@
           
           <div class="card-header contractors">Site Contractors</div>
           <b-row class="inner-row" v-for="contractor in this.job.contractors" :key="contractor.id">
-            <b-col lg="7" md="6">
-              <b-input-group>
-                <b-form-input type="text" :value="contractor.name" readonly/>
-                  <b-input-group-button slot="right">
-                    <b-btn :class="{approved: approved}" class="miniBtn">{{status(contractor)}}</b-btn>
-                  </b-input-group-button>
-              </b-input-group>
-            </b-col>
+            <contractor-status :contractor="contractor"></contractor-status>
           </b-row>
           <b-row class="inner-row">
             <b-col lg="7" md="12">
@@ -155,8 +148,8 @@
 
           <div class="text-center">
             <b-button-group class="pt-4 pb-4">
-              <b-button class="button" variant="success" @click="saveJob">Update Job Site</b-button>
-              <b-button class="button" variant="danger" @click="closeJob">Close this job site</b-button>
+              <b-button class="button" variant="success" @click="saveJob" :disabled="disabled">Update Job Site</b-button>
+              <b-button class="button" variant="danger" @click="confirmAction = true">Close this job site</b-button>
             </b-button-group>
           </div>
         </b-form>
@@ -166,15 +159,19 @@
 </template>
 
 <script>
+import ContractorStatus from '@/components/Principal/ContractorStatus.vue'
 export default {
   props: ['id'],
+  components: {
+    'contractorStatus': ContractorStatus
+  },
   data () {
     return {
       confirmAction: false,
+      confirmed: false,
       success: false,
       selected: [],
-      job: {},
-      approved: false
+      job: {}
     }
   },
   computed: {
@@ -187,6 +184,13 @@ export default {
         }
       })
       return list
+    },
+    disabled () {
+      if (this.selected.length === 0) {
+        return true
+      } else {
+        return false
+      }
     },
     headerText () {
       let text = 'Job Site: ' + this.job.address
@@ -213,27 +217,25 @@ export default {
     },
     saveJob () {
       // add contractors and save the job
-      if ((this.selected !== 0) || (this.remove !== 0)) {
-        let newItems = []
-        for (let index in this.selected) {
-          let newItem = {
-            approved: false,
-            key: this.selected[index].value
-          }
-          newItems.push(newItem)
+      let newItems = []
+      for (let index in this.selected) {
+        let newItem = {
+          approved: false,
+          key: this.selected[index].value
         }
-        this.$store.dispatch('addSiteContractor', {id: this.id, contractors: newItems})
-        this.success = true
-      } else {
-        this.$router.go(-1)
+        newItems.push(newItem)
       }
+      this.$store.dispatch('addSiteContractor', {id: this.id, contractors: newItems})
+      this.success = true
     },
     closeJob () {
-      this.confirmAction = true
+      this.$store.dispatch('closeJob', this.job)
+      .then(() => {
+        this.$router.go(-1)
+      })
     },
     route () {
-      // update job info and go back to home
-      this.$store.dispatch('closeJob', this.job)
+      this.$router.go(-1)
     }
   },
   beforeMount () {
@@ -295,21 +297,6 @@ export default {
     width: 50%;
   }
 
-  .btn-secondary {
-    background-color: rgba(155, 35, 53, 0.88);
-  }
-
-  .miniBtn {
-    cursor: text; 
-  }
-
-  .miniBtn:hover {
-    background-color: rgba(155, 35, 53, 0.88);
-  }
-
-  .approved {
-    background-color: green;
-  }
 
 @media screen and (max-width : 992px) {
     .map {

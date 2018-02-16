@@ -1,8 +1,11 @@
 <template>
-  <b-card
-   header="Contractor Activity" 
-   header-tag="header">
-    <b-row class="subheader">
+  <b-card header="Contractor Activity" header-tag="header">
+     <b-row v-if="activities.length === 0">
+      <b-col>
+        <header class="subheader">There is no recent contractor activity to show</header>
+      </b-col>
+    </b-row>
+    <b-row class="subheader" v-if="activities.length !== 0">
       <b-col sm="3">
         <header>Site Address</header>
       </b-col>
@@ -17,6 +20,7 @@
 export default {
   data () {
     return {
+      activities: []
     }
   }
 }
@@ -50,7 +54,7 @@ export default {
     color:#1376ad;
   }
   
-  .col-sm-3 {
+  .col-sm-3, .col{
     margin: 0;
     padding: 0;
   }
@@ -59,6 +63,7 @@ export default {
     margin-left: 0;
     margin-top: 20px;
   }
+
   
    ul {
     list-style: none;

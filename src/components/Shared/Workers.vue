@@ -3,69 +3,96 @@
     <b-modal
       v-model="createNew"
       v-if="createNew" 
-      @ok="saveWorker" 
+      @ok="handleOk"
+      @cancel="handleCancel"
       centered 
       header-bg-variant="info"
       headerTextVariant= 'light'
       title="Add New Worker">
       <div>
-         <b-row class="inner-row">
-          <b-col md="6" lg="4">
-            <p>Name:</p>
-          </b-col>
-          <b-col md="6" lg="8">
-            <b-form-input type="text" :value="newWorker.name" required/>
-          </b-col>
-        </b-row>
-        <b-row class="inner-row">
-          <b-col md="6" lg="4">
-            <p>Email Address:</p>
-          </b-col>
-          <b-col md="6" lg="8">
-            <b-form-input type="text" :value="newWorker.email" required/>
-          </b-col>
-        </b-row>
-        <b-row class="inner-row">
-          <b-col md="6" lg="4">
-            <p>Phone Number:</p>
-          </b-col>
-          <b-col md="6" lg="8">
-            <b-form-input type="text" :value="newWorker.phone" required/>
-          </b-col>
-        </b-row>
-        <b-row class="inner-row">
-          <b-col md="6" lg="4">
-            <p>Role:</p>
-          </b-col>
-          <b-col md="6" lg="8">
-            <b-form-input type="text" :value="newWorker.role" required/>
-          </b-col>
-        </b-row>
+        <form @submit.stop.prevent="handleSubmit">
           <b-row class="inner-row">
-          <b-col md="6" lg="4">
-            <p>Admin User:</p>
-          </b-col>
-          <b-col md="6" lg="8">
-            <b-form-checkbox id="checkbox"
-              class="mt-1 mb-1"
-              v-model="newWorker.admin"
-              value=true
-              unchecked-value=false>
-            </b-form-checkbox>
-          </b-col>
-        </b-row>
+            <b-col md="6" lg="4">
+              <p>Name:</p>
+            </b-col>
+            <b-col md="6" lg="8">
+              <b-form-input type="text" v-model="newWorker.name"/>
+              <div class="alert alert-danger" v-show="error.name">Please enter name</div>
+            </b-col>
+          </b-row>
+          <b-row class="inner-row">
+            <b-col md="6" lg="4">
+              <p>Role:</p>
+            </b-col>
+            <b-col md="6" lg="8">
+              <b-form-select
+                v-validate="'required'"
+                v-model="newWorker.role"
+                :options="userRoles"   
+                :class="{'alert-border': error.role}">
+              </b-form-select>
+              <div class="alert alert-danger" v-show="error.role">Please select job role</div>
+            </b-col>
+          </b-row>
+          <b-row class="inner-row">
+            <b-col md="6" lg="4">
+              <p>Email Address:</p>
+            </b-col>
+            <b-col md="6" lg="8">
+              <b-form-input type="text" v-model="newWorker.email"/>
+              <b-form-text>
+                Not required for mobile-only users
+              </b-form-text>
+              <div class="alert alert-danger" v-show="error.email">Please enter email</div>
+            </b-col>
+          </b-row>
+          <b-row class="inner-row">
+            <b-col md="6" lg="4">
+              <p>Phone Number:</p>
+            </b-col>
+            <b-col md="6" lg="8">
+              <b-form-input type="text" v-model="newWorker.phone"/>
+              <div class="alert alert-danger" v-show="error.phone">Please enter phone number</div>
+            </b-col>
+          </b-row>
+          <b-row class="inner-row">
+            <b-col md="6" lg="4">
+              <p>Admin User:</p>
+            </b-col>
+            <b-col md="6" lg="8">
+              <b-form-checkbox id="checkbox"
+                class="mt-1 mb-1"
+                v-model="newWorker.admin"
+                value=true
+                unchecked-value=false>
+              </b-form-checkbox>
+            </b-col>
+          </b-row>
+        </form>
       </div>
     </b-modal>
 
+     <b-modal
+      v-model="success"
+      v-if="success" 
+      ok-only
+      centered 
+      header-bg-variant="info"
+      headerTextVariant= 'light'
+      title="Success!">
+        <h5>{{newWorker.name}} has been added to your Minimise community.</h5>
+        <p>{{successMessage}}</p>
+     </b-modal>
+
     <b-card>
       <div class="card-header">Worker Management
-       <b-button class="addBtn" @click="createWorker">Add New Worker</b-button>
+       <b-button class="addBtn" @click="createNew = true">Add New Worker</b-button>
       </div>
       <div class="scroll-container">
         <div v-for="worker in workers" :key="worker.id">
           <workerview :worker="worker.worker"></workerview>
         </div>
-       </div>
+      </div>
     </b-card>
   </b-container>
 </template>
@@ -78,13 +105,31 @@ export default {
   },
   data () {
     return {
+      error: {
+        name: false,
+        email: false,
+        phone: false,
+        role: false
+      },
+      success: false,
+      successMessage: '',
+      userRoles: [
+        { value: null, text: 'Please select an option' },
+        { value: 'Health and Safety Manager', text: 'Health and Safety Manager' },
+        { value: 'Health and Safety Administrator', text: 'Health and Safety Administrator' },
+        { value: 'Business Administrator', text: 'Business Administrator' },
+        { value: 'Project Manager', text: 'Project Manager' },
+        { value: 'Supervisor', text: 'Supervisor' },
+        { value: 'Worker', text: 'Worker' }
+      ],
       createNew: false,
       newWorker: {
         name: '',
         email: '',
         phone: '',
-        role: '',
-        admin: false
+        role: null,
+        admin: false,
+        webUser: false
       }
     }
   },
@@ -94,12 +139,61 @@ export default {
     }
   },
   methods: {
-    createWorker () {
-      // modal pop up with new worker details
-      this.createNew = true
+    handleOk (evt) {
+      // check that form is valid and then call submit function
+      evt.preventDefault()
+      this.error.name = false
+      this.error.email = false
+      this.error.phone = false
+      this.error.role = false
+      if (this.newWorker.name === '') {
+        console.log('name error')
+        this.error.name = true
+        return
+      }
+      if (this.newWorker.role === null) {
+        this.error.role = true
+        return
+      }
+      if (this.newWorker.role !== 'Worker') {
+        this.newWorker.webUser = true
+        if (this.newWorker.email === '') {
+          this.error.email = true
+          return
+        }
+      }
+      if (this.newWorker.phone === '') {
+        this.error.phone = true
+        return
+      } else {
+        this.handleSubmit()
+      }
     },
-    saveWorker () {
-      // save worker in firebase
+    handleCancel () {
+      this.newWorker.name = ''
+      this.newWorker.email = ''
+      this.newWorker.phone = ''
+      this.newWorker.role = null
+      this.newWorker.admin = false
+      this.newWorker.webUser = false
+      this.error.name = false
+      this.error.email = false
+      this.error.phone = false
+      this.error.role = false
+    },
+    handleSubmit () {
+      // create a new user and send an email invitation if the user is not a worker
+      console.log('submitting form', this.newWorker)
+      this.$store.dispatch('inviteUser', this.newWorker)
+      .then(() => {
+        if (this.newWorker.role !== 'Worker') {
+          this.successMessage = 'An email invitation has been sent'
+          this.success = true
+        } else {
+          this.success = true
+        }
+        this.handleCancel()
+      })
     }
   }
 }

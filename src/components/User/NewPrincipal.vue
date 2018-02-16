@@ -163,9 +163,9 @@ export default {
             hseManager: this.userName,
             hsePhone: this.userPhone
           })
-          await this.$store.dispatch('newUser', {
+          await this.$store.dispatch('newUserProfile', {
             name: this.userName,
-            id: this.$store.getters.userKey,
+            uid: this.$store.getters.uid,
             email: this.userEmail,
             phone: this.userPhone,
             role: this.userRole,

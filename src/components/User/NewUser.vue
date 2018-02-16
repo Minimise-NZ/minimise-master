@@ -6,66 +6,42 @@
         <div class="user-header">
           <h3>Sign Up: New User</h3>
         </div>
-        <b-form @submit.prevent="onSubmit" id="form">
-          <v-select name="company"
-              v-validate="'required'"
-              v-model="company" 
-              :options="companies"
-              placeholder="Company Name"
-              id="selectBox"
-              :class="{'alert-border': errors.has('company')}">
-          </v-select>
-          <div class="alert alert-danger" v-show="errors.has('company')">Please select your Company</div>
 
-          <v-select name="userRole"
-              v-validate="'required'"
-              v-model="userRole" 
-              :options="userRoles"
-              placeholder="Job Role"
-              class="mt-3"          
-              id="selectBox"
-              :class="{'alert-border': errors.has('userRole')}">
-          </v-select>
-          <div class="alert alert-danger" v-show="errors.has('userRole')">Please select your job role</div>
-
-          <b-form-input name="name"
-                v-validate="'required|alpha_spaces'"
-                v-model="name"
-                placeholder="Name"
-                :class="{'alert-border': errors.has('name')}">
-          </b-form-input>
-          <div class="alert alert-danger" v-show="errors.has('name')">Please enter your name</div>
-
-          <b-form-input name="phone"
-                v-validate="'required|numeric'"
-                v-model="phone"
-                class="no-spinners"
-                placeholder="Phone Number"
-                :class="{'alert-border': errors.has('phone')}">
-          </b-form-input>
-          <div class="alert alert-danger" v-show="errors.has('phone')">Please enter your phone number</div>
-          
-          <b-form-input name="email"
-                v-validate="'required|email'"
-                v-model="email"
-                data-vv-delay="2000"
-                placeholder="Email Address"
-                :class="{'alert-border': errors.has('email')}">
+        <b-form v-if="!confirmUser">
+          <label class="mt-4" for="email">Please enter your email address:</label>
+          <b-form-input 
+            id="email"
+            v-model="email"
+            data-vv-delay="2000"
+            placeholder="Email Address"
+            :class="{'alert-border': errors.has('email')}">
           </b-form-input>
           <div class="alert alert-danger" v-show="errors.has('email')">Please enter a valid email address</div>
+          <b-button class="btn btn-block mt-4" @click="getUser">Continue</b-button>
+          <b-row class="links">
+            <router-link to="login">EXISTING USER LOGIN</router-link>
+          </b-row>
+        </b-form>
 
+        <b-form @submit.prevent="onSubmit" id="form" v-if="confirmUser">
+          <b-form-input :value="user.name" readonly></b-form-input>
+          <b-form-input :value="user.phone" readonly></b-form-input>
+          <b-form-input :value="user.email" readonly></b-form-input>
+          <b-form-input :value="user.companyName" readonly></b-form-input>
+          <b-form-input :value="user.role" readonly></b-form-input>
           <b-form-input name="password"
-              v-validate="'required|min:6'"
-              type="password"
-              v-model="password"
-              data-vv-delay="2000"
-              placeholder="Password"
-              :class="{'alert-border': errors.has('password')}">
+            v-validate="'required|min:6'"
+            v-if="confirmUser"
+            type="password"
+            v-model="password"
+            data-vv-delay="2000"
+            placeholder="Enter Password"
+            :class="{'alert-border': errors.has('password')}">
           </b-form-input>
           <div class="alert alert-danger" v-show="errors.has('password')">{{ errors.first('password') }}</div>
-
           <b-form-input name="confirmPassword"
             v-validate="'confirmed:password'"
+            v-if="confirmUser"
             type="password"
             v-model="confirmPassword"
             data-vv-delay="3000"
@@ -74,15 +50,9 @@
             :class="{'alert-border': errors.has('confirmPassword')}">
           </b-form-input>
           <div class="alert alert-danger" v-show="errors.has('confirmPassword')">{{ errors.first('confirmPassword') }}</div>
-
-          <b-button class="btn btn-block mt-4" type="submit">Sign Me Up</b-button>
+          <b-button class="btn btn-block mt-4" @click="onSubmit">Sign Up</b-button>
           <b-row class="links">
-            <b-col class="leftcol">
-              <router-link to="login">LOGIN</router-link>
-            </b-col>
-            <b-col>
-              <router-link to="/">CANCEL</router-link>
-            </b-col>
+            <router-link to="login">EXISTING USER LOGIN</router-link>
           </b-row>
         </b-form>
       </b-container>
@@ -98,61 +68,38 @@
     },
     data () {
       return {
-        userRoles: ['Health and Safety Manager', 'Health and Safety Administrator', 'Business Administrator', 'Project Manager', 'Supervisor'],
-        company: '',
-        name: '',
-        email: '',
-        phone: '',
+        confirmUser: false,
         password: '',
         confirmPassword: '',
-        userRole: ''
+        user: {},
+        email: ''
       }
     },
     computed: {
-      admin () {
-        if (this.userRole === 'Health and Safety Manager' | this.userRole === 'Health and Safety Administrator' | this.userRole === 'Business Administrator') {
-          return true
-        } else {
-          return false
-        }
-      },
-      companies () {
-        return this.$store.getters.companyIndex
-      },
-      loading () {
-        return this.$store.getters.loading
-      }
     },
     created () {
-      this.$store.dispatch('getCompanyIndex')
     },
     methods: {
+      getUser () {
+        // get user with this email address and return user object
+        this.$store.dispatch('getPendingUser', this.email)
+        .then((user) => {
+          console.log(user)
+          this.user = user
+          this.confirmUser = true
+        })
+      },
       onSubmit () {
         this.$validator.validateAll().then(async(valid) => {
           if (!valid) { return }
           try {
             // create new user in firebase
-            await this.$store.dispatch('signUp', {email: this.email, password: this.password})
-            let company = await this.$store.dispatch('getCompany', {key: this.company.value})
-            // add user information to firestore
-            let companyType = 'contractor'
-            if (company.principal === true) {
-              companyType = 'principal'
-            }
-            await this.$store.dispatch('newUser', {
-              id: this.$store.getters.userKey,
-              name: this.name,
-              email: this.email,
-              phone: this.phone,
-              role: this.userRole,
-              admin: this.admin,
-              webUser: true,
-              company: this.company.value,
-              companyName: this.company.label,
-              companyType,
-              training: []
-            })
-            // go to companyType home page
+            let uid = await this.$store.dispatch('signUp', {email: this.email, password: this.password})
+            // update userProfile with uid
+            this.user.uid = uid
+            await this.$store.dispatch('updateUserProfile', this.user)
+            await this.$store.dispatch('getUser')
+            let companyType = this.user.companyType
             this.$router.push('/' + companyType)
           } catch (err) {
             console.log(err)
@@ -173,15 +120,16 @@
   
   .form-container {
     padding: 0;
-    margin-top: 80px;
+    margin-top: 120px;
     margin-bottom: 100px;
   }
   
   .user-header {
-    max-width: 658px;
+    max-width: 400px;
     border-radius: 5px;
     padding: 15px 0 10px 0;
     margin: auto;
+    margin-bottom: 25px;
     text-align: center;
     background-color: rgba(111, 50, 130, 0.75);
     color: white;
@@ -189,7 +137,7 @@
   }
   
   form {
-    max-width: 658px;
+    max-width: 400px;
     margin: auto;
   }
   
@@ -208,7 +156,7 @@
   }
   
   .form-control {
-    margin-top: 15px;
+    margin-top: 10px;
   }
   
   .btn {
@@ -225,27 +173,8 @@
   }
   
   a {
+    margin: auto;
     font-size: 0.9rem;
-  }
-
-  .alert-danger {
-    margin-top:10px;
-    padding: 5px;
-    font-size: 0.9rem;
-  }
-
-  .alert-border {
-    border: 1px solid salmon;
-  }
-  
-  .no-spinners {
-    -moz-appearance:textfield;
-  }
-
-  .no-spinners::-webkit-outer-spin-button,
-  .no-spinners::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
   }
   
 </style>

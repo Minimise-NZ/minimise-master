@@ -18,7 +18,7 @@
     "firebase": "^4.6.2",
     "lodash": "^4.17.4",
     "luxon": "^0.2.11",
-    "vee-validate": "^2.0.0-rc.21",
+    "vee-validate": "^2.0.3",
     "vue": "^2.4.2",
     "vue-bs-drawer": "^1.0.4",
     "vue-datetime": "^1.0.0-alpha.3",

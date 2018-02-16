@@ -23,7 +23,7 @@
       v-model="confirmAction"
       v-if="confirmAction" 
       @ok="remove" 
-      centered 
+      centered
       header-bg-variant="danger"
       headerTextVariant= 'light'
       title="Confirm Action">

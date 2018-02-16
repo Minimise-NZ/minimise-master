@@ -1,39 +1,42 @@
 <template>
-  <b-card 
-   header="Incidents Summary" 
-   header-tag="header">
-    <b-row class="subheader">
+  <b-card header="Incidents Summary" header-tag="header">
+    <b-row v-if="incidents.length === 0">
+      <b-col>
+        <header class="subheader">You have no open incident reports</header>
+      </b-col>
+    </b-row>
+    <b-row class="subheader" v-if="incidents.length !== 0">
+      <b-col>
+        <header>Site Address</header>
+      </b-col>
         <b-col>
-          <header>Site Address</header>
-        </b-col>
-         <b-col>
-          <header>Incident Type</header>
-        </b-col>
-        <b-col>
-          <header>Action Owner</header>
-        </b-col>
-        <b-col>
-          <header>Reported Date</header>
-        </b-col>
-      </b-row>
-      <b-row 
-         class="content"
-         v-for="incident in incidents"
-         v-if="incident.open"
-         :key="incident.id">
-        <b-col>
-          <p style="text-decoration: underline; color: #178ac3; cursor: pointer" @click="viewIncident(incident.id)">{{incident.address}}</p>
-        </b-col>
-        <b-col>
-          <p>{{incident.type}}</p>
-        </b-col>
-        <b-col>
-          <p>{{incident.actionOwner.name}}</p>
-        </b-col>
-        <b-col>
-         <p>{{formattedDate(incident.date)}}</p>
-        </b-col>
-      </b-row>
+        <header>Incident Type</header>
+      </b-col>
+      <b-col>
+        <header>Action Owner</header>
+      </b-col>
+      <b-col>
+        <header>Reported Date</header>
+      </b-col>
+    </b-row>
+    <b-row 
+      class="content"
+      v-for="incident in incidents"
+      v-if="incident.open"
+      :key="incident.id">
+      <b-col>
+        <p style="text-decoration: underline; color: #178ac3; cursor: pointer" @click="viewIncident(incident.id)">{{incident.address}}</p>
+      </b-col>
+      <b-col>
+        <p>{{incident.type}}</p>
+      </b-col>
+      <b-col>
+        <p>{{incident.actionOwner.name}}</p>
+      </b-col>
+      <b-col>
+        <p>{{formattedDate(incident.date)}}</p>
+      </b-col>
+    </b-row>
   </b-card>
 </template>
 
@@ -50,7 +53,7 @@ export default {
   },
   methods: {
     viewIncident (id) {
-      this.$router.push('/principal/incident/' + id)
+      this.$router.push('/principal/incidents/incident/' + id)
     },
     formattedDate (date) {
       var d = new Date(date)
@@ -61,11 +64,6 @@ export default {
 </script>
 
 <style scoped>
-  .container-fluid {
-    padding-top: 20px;
-    margin-bottom: 100px;
-  }
-  
   .card {
     border: 1px solid #12807a;
     margin-bottom: 30px;

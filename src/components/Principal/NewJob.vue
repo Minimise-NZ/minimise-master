@@ -19,6 +19,18 @@
         <b-form @submit.prevent="onSubmit">
           <b-row class="outer-row">
             <b-col m="12" lg="6" class="outer-col">
+              <b-row class="input-group search">
+                <b-col>
+                  <b-input-group>
+                    <b-form-input type="text" placeholder="Please enter site address" v-model="siteAddress" required/>
+                  </b-input-group>
+                </b-col>
+              </b-row>
+              <b-row class="search mt-0">
+                <b-col>
+                  <div class="alert alert-danger mt-0" v-if="addressError">Please enter Site Address</div>
+                </b-col>
+              </b-row>
               <b-row>
                 <b-col md="12" lg="4">
                   <p>Project Manager:</p>
@@ -51,20 +63,19 @@
                   <b-form-input type="text" v-model="company.hsePhone" readonly/>
                 </b-col>
               </b-row>
-
               <b-row class="input-group search">
                 <b-col>
                   <b-input-group>
-                    <b-form-input type="text" placeholder="Site Address" v-model="siteAddress" required/>
-                      <b-input-group-button>
-                        <b-button @click="searchAddress" class="fa fa-search"></b-button>
+                     <b-input-group-button>
+                        <b-button @click="searchMedical" class="fa fa-search"></b-button>
                       </b-input-group-button>
+                    <b-form-input type="text" :placeholder='placeholder' v-model="medical" required></b-form-input>
                   </b-input-group>
                 </b-col>
               </b-row>
               <b-row class="search mt-0">
                 <b-col>
-                  <div class="alert alert-danger mt-0" v-if="addressError">Please enter Site Address</div>
+                  <div class="alert alert-danger mt-0" v-if="medicalError">You have not entered a medical centre</div>
                 </b-col>
               </b-row>
             </b-col>
@@ -78,9 +89,7 @@
               </iframe>
             </b-col>
           </b-row>
-
           <hr>
-
           <b-row>
             <b-col md="4" lg="6" xl="5">
               <p>Do you have subcontractors?</p>
@@ -106,10 +115,10 @@
                 :value.sync="contractors.selected"
                 :options="contractorList">
               </v-select>
+              <div class="alert alert-danger" v-if="contractorError">You have not selected any contractors</div>
             </b-col>
-            <div class="alert alert-danger ml-2" v-if="contractorError">Please select your contractors</div>
           </b-row>
-
+         
           <hr>
           
           <b-row>
@@ -132,7 +141,11 @@
                 :options="notifiable.radioOptions">
               </b-form-radio-group>
             </b-col>
-            <div class="alert alert-danger ml-2" v-if="notifiableError">Please select notifiable works</div>
+          </b-row>
+          <b-row class="search mt-0">
+            <b-col>
+              <div class="alert alert-danger ml-2" v-if="notifiableError">Please select notifiable works</div>
+            </b-col>
           </b-row>
           
           <hr>
@@ -156,7 +169,7 @@
                 v-if="showInfo"
                 required
                 id="info"
-                v-model="infotext"
+                v-model="addinfo.infotext"
                 placeholder="Additional information"
                 :rows="6">
             </b-form-textarea>
@@ -178,6 +191,7 @@
 export default {
   data () {
     return {
+      placeholder: 'Search for nearby Medical Centre',
       contractors: {
         radioValue: 'yes',
         radioOptions: [
@@ -210,7 +224,9 @@ export default {
       selectError: false,
       mapRoot: 'https://www.google.com/maps/embed/v1/place?key=AIzaSyD7W7NiKKy0qZfRUsslzHOe-Hnkp-IncyU&q=Christchurch City',
       siteAddress: '',
+      medical: '',
       addressError: false,
+      medicalError: false,
       contractorError: false,
       notifiableError: false,
       showModal: false
@@ -250,11 +266,13 @@ export default {
     }
   },
   methods: {
-    searchAddress () {
+    searchMedical () {
+      this.addressError = false
       if (this.siteAddress === '') {
-        return
+        this.addressError = true
       } else {
-        this.mapRoot = 'https://www.google.com/maps/embed/v1/place?key=AIzaSyD7W7NiKKy0qZfRUsslzHOe-Hnkp-IncyU&q=' + this.siteAddress
+        this.mapRoot = 'https://www.google.com/maps/embed/v1/place?key=AIzaSyD7W7NiKKy0qZfRUsslzHOe-Hnkp-IncyU&q=' + this.siteAddress + 'medical center'
+        this.placeholder = 'Please enter name and address of Medical Centre'
       }
     },
     cancel () {
@@ -273,6 +291,12 @@ export default {
         return
       } else {
         this.addressError = false
+      }
+      if (this.medical === '') {
+        this.medicalError = true
+        return
+      } else {
+        this.medicalError = false
       }
       if (this.contractors.radioValue === 'yes' && this.contractors.selected <= 0) {
         this.contractorError = true
@@ -327,10 +351,6 @@ export default {
     margin-bottom: 10px;
   }
 
-  form {
-    margin-top: 20px
-  }
-
   .card-header {
     margin: -20px -20px 0px -20px;
     background-color: #12807a;
@@ -359,7 +379,6 @@ export default {
   .search {
     margin-left: 2px;
     padding-left: 5px;
-    margin-top: 25px;
     width: 93%;
   }
   

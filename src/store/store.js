@@ -10,6 +10,7 @@ export const store = new Vuex.Store({
   state: {
     userKey: '',
     user: {},
+    uid: '',
     workers: [],
     company: {},
     companyKey: '',
@@ -26,7 +27,9 @@ export const store = new Vuex.Store({
   mutations: {
     clearStore (state) {
       state.userKey = ''
+      state.uid = ''
       state.user = {}
+      state.userKey = ''
       state.workers = []
       state.company = {}
       state.companyKey = ''
@@ -42,6 +45,10 @@ export const store = new Vuex.Store({
       console.log('Userkey set')
       state.userKey = payload
     },
+    setUID (state, payload) {
+      console.log('UID set')
+      state.uid = payload
+    },
     setUser (state, payload) {
       console.log('User profile set')
       state.user = payload
@@ -55,7 +62,7 @@ export const store = new Vuex.Store({
       state.company = payload
     },
     setCompanyKey (state, payload) {
-      console.log('CompanyKey set')
+      console.log('CompanyKey set', payload)
       state.companyKey = payload
     },
     setCompanyIndex (state, payload) {
@@ -98,13 +105,13 @@ export const store = new Vuex.Store({
   },
   actions: {
     signUp ({commit}, payload) {
-      // create a new user in firebase and set the userkey
+      // create a new user in firebase
       let promise = new Promise((resolve, reject) => {
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
         .then((user) => {
-          commit('setUserKey', user.uid)
+          commit('setUID', user.uid)
           console.log('User registered')
-          resolve()
+          resolve(user.uid)
         })
         .catch((error) => {
           console.log(error)
@@ -118,7 +125,7 @@ export const store = new Vuex.Store({
         firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
         .then(
           user => {
-            commit('setUserKey', user.uid)
+            commit('setUID', user.uid)
             resolve()
           }
         )
@@ -130,14 +137,39 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    newUser ({commit, getters}, payload) {
-      // add user info to firestore
-      commit('setUser', payload)
+    newUserProfile ({commit, getters}, payload) {
+      // add user profile to firestore after creating a user sign in
+      let user = payload
+      commit('setUser', user)
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('users').doc(getters.userKey).set(payload)
+        firestore.collection('users').add(user)
         .then(() => {
           console.log('User updated')
           resolve()
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+      })
+      return promise
+    },
+    getPendingUser ({commit, dispatch}, payload) {
+      // get user doc with email = this.email
+      let promise = new Promise((resolve, reject) => {
+        firestore.collection('users').where('email', '==', payload)
+        .get()
+        .then((snapshot) => {
+          if (snapshot.empty) {
+            console.log('No such user')
+            return
+          } else {
+            snapshot.forEach((doc) => {
+              let user = doc.data()
+              commit('setUserKey', doc.id)
+              resolve(user)
+            })
+          }
         })
         .catch((error) => {
           console.log(error)
@@ -148,14 +180,17 @@ export const store = new Vuex.Store({
     },
     getUser ({commit, state}) {
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('users').doc(state.userKey)
+        firestore.collection('users').where('uid', '==', state.uid)
         .get()
-        .then((doc) => {
-          let user = doc.data()
-          commit('setUser', user)
-          commit('setCompanyKey', user.company)
-          console.log('User profile set')
-          resolve(user)
+        .then((snapshot) => {
+          snapshot.forEach((doc) => {
+            let user = doc.data()
+            commit('setUser', user)
+            commit('setUserKey', doc.id)
+            commit('setCompanyKey', user.company)
+            console.log('User profile set')
+            resolve(user)
+          })
         })
         .catch((error) => {
           console.log(error)
@@ -164,10 +199,12 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    updateUser ({commit, getters}, payload) {
+    updateUserProfile ({commit, state}, payload) {
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('users').doc(payload.id).set(payload, {merge: true})
-        .then(() => {
+        firestore.collection('users').doc(state.userKey)
+        .get()
+        .then((doc) => {
+          firestore.collection('users').doc(doc.id).set(payload, {merge: true})
           console.log('User updated')
           resolve()
         })
@@ -177,6 +214,52 @@ export const store = new Vuex.Store({
         })
       })
       return promise
+    },
+    inviteUser ({commit, state}, payload) {
+      // check that user does not already exist
+      firestore.collection('users').where('email', '==', payload.email)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.empty) {
+          // create a user doc in firestore and send an email invitation to user email
+          let user = payload
+          user.company = state.companyKey
+          user.companyName = state.company.name
+          user.companyType = state.user.companyType
+          user.training = []
+          if (user.role !== 'Worker') {
+            window.emailjs.send('my_service', 'invitation', {
+              name: user.name,
+              email: user.email,
+              from: state.user.name
+            })
+            .then(
+              function (response) {
+                console.log('Email SUCCESS', response)
+              },
+              function (error) {
+                console.log('Email FAILED', error)
+              }
+            )
+          }
+          let promise = new Promise((resolve, reject) => {
+            firestore.collection('users').add(user)
+            .then((doc) => {
+              console.log('User updated', doc.id)
+              resolve()
+            })
+            .catch((error) => {
+              console.log(error)
+              reject()
+            })
+          })
+          return promise
+        } else {
+          // user already exists
+          console.log('User already exists')
+          return
+        }
+      })
     },
     getWorkers ({commit, state}) {
       // get all workers with company = this companyKey
@@ -224,10 +307,9 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    getCompany ({commit, state}, payload) {
+    getCompany ({commit, state}) {
       let promise = new Promise((resolve, reject) => {
-        commit('setCompanyKey', payload.key)
-        firestore.collection('companies').doc(payload.key)
+        firestore.collection('companies').doc(state.companyKey)
         .get()
         .then((doc) => {
           let company = doc.data()
@@ -322,17 +404,25 @@ export const store = new Vuex.Store({
     },
     closeJob ({dispatch}, payload) {
       // close job in jobSites collection and close job in each comapnies jobSite list
-      let contractors = payload.contractors
-      let jobId = payload.id
-      firestore.collection('jobSites').doc(jobId)
-      .update({'open': false, 'closedDate': new Date()})
-      .then(() => {
-        contractors.forEach((val) => {
-          firestore.collection('companies').doc(val.key).collection('jobSites').doc(jobId)
-          .set({open: false}, {merge: true})
+      let promise = new Promise((resolve, reject) => {
+        let contractors = payload.contractors
+        let jobId = payload.id
+        firestore.collection('jobSites').doc(jobId)
+        .update({'open': false, 'closedDate': new Date()})
+        .then(() => {
+          contractors.forEach((val) => {
+            firestore.collection('companies').doc(val.key).collection('jobSites').doc(jobId)
+            .set({open: false}, {merge: true})
+          })
+          dispatch('getJobs')
+          resolve()
         })
-        dispatch('getJobs')
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
       })
+      return promise
     },
     getJobs ({commit, state}) {
       // get all jobs in progress that are assigned to this company as principal
@@ -414,8 +504,7 @@ export const store = new Vuex.Store({
     newIncident ({commit, dispatch, state}, payload) {
       // create new incident in firestore
       let promise = new Promise((resolve, reject) => {
-        let incident = payload
-        firestore.collection('incidents').add({incident})
+        firestore.collection('incidents').add(payload)
         .then(() => {
           dispatch('getIncidents')
           resolve()
@@ -450,65 +539,81 @@ export const store = new Vuex.Store({
       dispatch('getIncidents')
     },
     getIncidents ({commit, state}) {
-      let incidents = []
-      // if user is admin, get all incidents that are assigned to this company
-      if (state.user.admin) {
-        firestore.collection('incidents').where('incident.company', '==', state.companyKey)
-        .get()
-        .then((snapshot) => {
-          snapshot.forEach((doc) => {
-            let obj = doc.data().incident
-            let key = doc.id
-            incidents.push({
-              id: key,
-              address: obj.address,
-              date: obj.date,
-              reportedBy: obj.reportedBy,
-              type: obj.type,
-              description: obj.description,
-              injury: obj.injury,
-              injuryDescription: obj.injuryDescription,
-              plant: obj.plant,
-              plantDamage: obj.plantDamage,
-              cause: obj.cause,
-              corrective: obj.corrective,
-              escalate: obj.escalate,
-              open: obj.open,
-              loggedBy: obj.loggedBy,
-              actionOwner: obj.actionOwner
+      let promise = new Promise((resolve, reject) => {
+        let incidents = []
+        // if user is admin, get all incidents that are assigned to this company
+        if (state.user.admin) {
+          firestore.collection('incidents').where('company', '==', state.companyKey)
+          .get()
+          .then((snapshot) => {
+            console.log('incidents', snapshot)
+            snapshot.forEach((doc) => {
+              let obj = doc.data()
+              let key = doc.id
+              incidents.push({
+                id: key,
+                address: obj.address,
+                date: obj.date,
+                reportedBy: obj.reportedBy,
+                type: obj.type,
+                description: obj.description,
+                injury: obj.injury,
+                injuryDescription: obj.injuryDescription,
+                plant: obj.plant,
+                plantDamage: obj.plantDamage,
+                cause: obj.cause,
+                corrective: obj.corrective,
+                escalate: obj.escalate,
+                open: obj.open,
+                loggedBy: obj.loggedBy,
+                actionOwner: obj.actionOwner
+              })
             })
+            commit('setIncidents', incidents)
+            resolve()
           })
-        })
-      } else {
-        // get all incidents that are assigned to user as action owner
-        firestore.collection('incidents').where('actionOwner.key', '==', state.userKey)
-        .get()
-        .then((snapshot) => {
-          snapshot.forEach((doc) => {
-            let obj = doc.data()
-            let key = doc.id
-            incidents.push({
-              id: key,
-              address: obj.address,
-              date: obj.date,
-              reportedBy: obj.reportedBy,
-              type: obj.type,
-              description: obj.description,
-              injury: obj.injury,
-              injuryDescription: obj.injuryDescription,
-              plant: obj.plant,
-              plantDamage: obj.plantDamage,
-              cause: obj.cause,
-              corrective: obj.corrective,
-              escalate: obj.escalate,
-              open: obj.open,
-              loggedBy: obj.loggedBy,
-              actionOwner: obj.actionOwner
+          .catch((error) => {
+            console.log(error)
+            reject()
+          })
+        } else {
+          // get all incidents that are assigned to user as action owner
+          firestore.collection('incidents').where('actionOwner.key', '==', state.userKey)
+          .get()
+          .then((snapshot) => {
+            console.log('incidents', snapshot)
+            snapshot.forEach((doc) => {
+              let obj = doc.data()
+              let key = doc.id
+              incidents.push({
+                id: key,
+                address: obj.address,
+                date: obj.date,
+                reportedBy: obj.reportedBy,
+                type: obj.type,
+                description: obj.description,
+                injury: obj.injury,
+                injuryDescription: obj.injuryDescription,
+                plant: obj.plant,
+                plantDamage: obj.plantDamage,
+                cause: obj.cause,
+                corrective: obj.corrective,
+                escalate: obj.escalate,
+                open: obj.open,
+                loggedBy: obj.loggedBy,
+                actionOwner: obj.actionOwner
+              })
             })
+            commit('setIncidents', incidents)
+            resolve()
           })
-        })
-      }
-      commit('setIncidents', incidents)
+          .catch((error) => {
+            console.log(error)
+            reject()
+          })
+        }
+      })
+      return promise
     },
     getAllHazards ({commit, state}, payload) {
       const allHazards = []
@@ -664,6 +769,7 @@ export const store = new Vuex.Store({
   getters: {
     userKey: (state) => state.userKey,
     user: (state) => state.user,
+    uid: (state) => state.uid,
     companyKey: (state) => state.companyKey,
     companyIndex: (state) => state.companyIndex,
     company: (state) => state.company,

@@ -9,7 +9,7 @@
           <b-card>
              <div class="card-header principal">
                <h3>Principal</h3>
-               <p>$40/month <span>(per job site)</span></p>
+               <p>$99 month <span>+ GST</span></p>
              </div>
              <ul class="principal-li">
                <li>Unlimited Users</li>
@@ -24,7 +24,7 @@
           <b-card>
            <div class="card-header contractor">
              <h3>Contractor</h3>
-             <p>$50/month <span>fixed</span></p>
+             <p>$49 month<span> + GST</span></p>
            </div>
             <ul class="contractor-li">
                <li>Unlimited Users</li>
@@ -36,6 +36,7 @@
              </ul>
              <b-button class="btn-block signUp contractor" @click="signUp('contractor')">Sign Up</b-button>
           </b-card>
+          <!--
           <b-card>
            <div class="card-header user">
              <h3>User</h3>
@@ -50,6 +51,7 @@
             <p class="smaller">***Web user registration only.<br>Mobile users (workers) must register via mobile app</p><br>
             <b-button class="btn-block signUp user" @click="signUp('user')">Sign Up</b-button>
           </b-card>
+          -->
         </b-card-group>
       </b-container>
     </b-container>
@@ -79,9 +81,6 @@
             break
           case 'contractor':
             this.$router.push('newContractor')
-            break
-          case 'user':
-            this.$router.push('newUser')
             break
         }
       }

@@ -81,12 +81,14 @@ export default new Router({
       children: [
         {
           path: '',
-          component: ContractorHome
-        },
-        {
-          path: 'job/:id',
-          component: JobForm,
-          props: true
+          component: ContractorHome,
+          children: [
+            {
+              path: 'job/:id',
+              component: JobForm,
+              props: true
+            }
+          ]
         },
         {
           path: 'hazards',
@@ -101,7 +103,7 @@ export default new Router({
           component: Tasks,
           children: [
             {
-              path: 'task/:id',
+              path: 'task',
               component: Task,
               props: true
             }
@@ -124,13 +126,13 @@ export default new Router({
           component: IncidentReports
         },
         {
-          path: 'newIncident',
-          component: NewIncident
-        },
-        {
-          path: 'incident/:id',
+          path: 'incidents/incident/:id',
           component: IncidentView,
           props: true
+        },
+        {
+          path: 'newIncident',
+          component: NewIncident
         },
         {
           path: 'support',
@@ -152,13 +154,13 @@ export default new Router({
           component: Contractors
         },
         {
-          path: 'job/:id',
-          component: JobDetails,
-          props: true
-        },
-        {
           path: 'jobs',
           component: JobsInProgress
+        },
+        {
+          path: 'jobs/job/:id',
+          component: JobDetails,
+          props: true
         },
         {
           path: 'master',
@@ -189,7 +191,7 @@ export default new Router({
           component: NewIncident
         },
         {
-          path: 'incident/:id',
+          path: 'incidents/incident/:id',
           component: IncidentView,
           props: true
         },

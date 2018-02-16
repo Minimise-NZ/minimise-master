@@ -46,12 +46,33 @@ body.modal-open {
   color:#FFC80B;
 }
 
+.alert-danger {
+  margin-top:10px;
+  padding: 2px;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
+.alert-border {
+  border: 1px solid salmon;
+}
+
 .alert-text {
   color: red;
 }
 
 .my-secondary-accent {
   color:#383838;
+}
+
+.no-spinners {
+  -moz-appearance:textfield;
+}
+
+.no-spinners::-webkit-outer-spin-button,
+.no-spinners::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 </style>

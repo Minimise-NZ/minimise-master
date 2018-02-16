@@ -3,18 +3,23 @@
       <b-card>
         <div class="card-header">Jobs In Progress</div>
         <div class="scroll-container">
+          <b-row v-if="jobSites.length === 0">
+            <b-col>
+              <header class="subheader">You currently have no jobs in progress</header>
+            </b-col>
+          </b-row>
           <b-card
             v-for="job in jobSites"
             :key="job.id"
             class="siteCard mt-2 mb-4">
             <header class="card-header job">{{job.address}}
-              <b-button class="editBtn pt-1 pb-1" @click="editJob(job.id)">Edit Job</b-button>
+              <b-button class="editBtn pt-1 pb-1" @click="editJob(job.id)">View Job Details</b-button>
             </header>
             <b-row>
               <b-col>
                 <header class="subheader">Approved Contractors</header>
                 <ul>
-                  <li v-for="contractor in job.contractors" :key='contractor.key' v-if="contractor.approved === true">{{contractor}}</li>
+                  <li v-for="contractor in job.contractors" :key='contractor.key' v-if="contractor.approved === true">{{contractor.name}}</li>
                 </ul>
               </b-col>
               <b-col>
@@ -70,7 +75,7 @@ export default {
     },
     editJob (id) {
       let companyType = this.$store.getters.user.companyType
-      this.$router.push('/' + companyType + '/job/' + id)
+      this.$router.push('/' + companyType + '/jobs/job/' + id)
     }
   }
 }
@@ -103,10 +108,10 @@ export default {
   }
 
   .subheader {
-    padding: 10px 0 10px 15px;
+    padding: 15px 0 15px 15px;
     border-bottom: 1px solid lightgrey;
     font-weight: bold;
-    color: black;
+    color: rgba(29, 92, 158, 0.89);
   }
   
   .siteCard > .card-body {
