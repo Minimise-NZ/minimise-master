@@ -16,6 +16,7 @@ import lodash from 'lodash'
 import VueLodash from 'vue-lodash'
 import VeeValidate from 'vee-validate'
 import vSelect from 'vue-select'
+import Moment from 'moment'
 
 Vue.component('v-select', vSelect)
 Vue.use(VueLodash, lodash)
@@ -25,6 +26,7 @@ Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(AnimatedVue)
 Vue.use(VeeValidate)
+Vue.use(Moment)
 
 /* eslint-disable no-new */
 new Vue({

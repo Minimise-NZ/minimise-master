@@ -64,6 +64,8 @@ export default {
           if (item.expiry === '') {
             item.status = 'Incomplete'
             this.trainingAlerts.push(item)
+          } else {
+            // get difference bwtween expiry daye and now
           }
         }
       }
