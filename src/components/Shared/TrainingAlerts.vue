@@ -53,6 +53,21 @@ export default {
         }
       ]
     }
+  },
+  computed: {
+    workers () {
+      return this.$store.getters.workers
+    },
+    training () {
+      for (let worker in this.workers) {
+        for (let item in worker.training) {
+          if (item.expiry === '') {
+            item.status = 'Incomplete'
+            this.trainingAlerts.push(item)
+          }
+        }
+      }
+    }
   }
 }
 </script>

@@ -77,7 +77,7 @@ export const store = new Vuex.Store({
     },
     setJobs (state, payload) {
       state.jobsInProgress = payload
-      console.log('Jobs in progress set', state.jobsInProgress)
+      console.log('Jobs in progress set')
     },
     setAllHazards (state, payload) {
       state.allHazards = payload
@@ -143,7 +143,8 @@ export const store = new Vuex.Store({
       commit('setUser', user)
       let promise = new Promise((resolve, reject) => {
         firestore.collection('users').add(user)
-        .then(() => {
+        .then((doc) => {
+          commit('setUserKey', doc.id)
           console.log('User updated')
           resolve()
         })
@@ -161,19 +162,21 @@ export const store = new Vuex.Store({
         .get()
         .then((snapshot) => {
           if (snapshot.empty) {
-            console.log('No such user')
-            return
+            reject('This email has not been registered. Please contact your administrator')
           } else {
             snapshot.forEach((doc) => {
               let user = doc.data()
-              commit('setUserKey', doc.id)
-              resolve(user)
+              if (user.uid) {
+                reject('User already exists. Please log in with existing user details')
+              } else {
+                commit('setUserKey', doc.id)
+                resolve(user)
+              }
             })
           }
         })
         .catch((error) => {
-          console.log(error)
-          reject()
+          reject(error)
         })
       })
       return promise
@@ -199,7 +202,7 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    updateUserProfile ({commit, state}, payload) {
+    updateCurrentUser ({commit, state}, payload) {
       let promise = new Promise((resolve, reject) => {
         firestore.collection('users').doc(state.userKey)
         .get()
@@ -215,7 +218,26 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    inviteUser ({commit, state}, payload) {
+    updateWorker ({dispatch}, payload) {
+      // update worker training
+      let promise = new Promise((resolve, reject) => {
+        let workerId = payload.id
+        let worker = payload.worker
+        console.log(workerId, worker)
+        firestore.collection('users').doc(workerId).set(worker, {merge: true})
+        .then(() => {
+          console.log('Worker updated')
+          dispatch('getWorkers')
+          resolve()
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+      })
+      return promise
+    },
+    inviteUser ({dispatch, state}, payload) {
       // check that user does not already exist
       firestore.collection('users').where('email', '==', payload.email)
       .get()
@@ -226,7 +248,6 @@ export const store = new Vuex.Store({
           user.company = state.companyKey
           user.companyName = state.company.name
           user.companyType = state.user.companyType
-          user.training = []
           if (user.role !== 'Worker') {
             window.emailjs.send('my_service', 'invitation', {
               name: user.name,
@@ -246,6 +267,7 @@ export const store = new Vuex.Store({
             firestore.collection('users').add(user)
             .then((doc) => {
               console.log('User updated', doc.id)
+              dispatch('getWorkers')
               resolve()
             })
             .catch((error) => {
@@ -546,7 +568,6 @@ export const store = new Vuex.Store({
           firestore.collection('incidents').where('company', '==', state.companyKey)
           .get()
           .then((snapshot) => {
-            console.log('incidents', snapshot)
             snapshot.forEach((doc) => {
               let obj = doc.data()
               let key = doc.id
@@ -759,6 +780,32 @@ export const store = new Vuex.Store({
         dispatch('getTaskAnalysis')
         console.log('Task has been updated')
       })
+    },
+    submitFeedback ({state}, payload) {
+      // send an email to Minimse support
+      let promise = new Promise((resolve, reject) => {
+        let form = payload
+        window.emailjs.send('my_service', 'support', {
+          username: form.username,
+          userEmail: form.userEmail,
+          subject: form.subject,
+          platform: form.platform,
+          os: form.os,
+          mobile: form.mobile,
+          details: form.details
+        })
+        .then(
+          function (response) {
+            console.log('Email SUCCESS', response)
+            resolve(response)
+          },
+          function (error) {
+            console.log('Email FAILED', error)
+            reject(error)
+          }
+        )
+      })
+      return promise
     },
     logout ({commit}) {
       firebase.auth().signOut()

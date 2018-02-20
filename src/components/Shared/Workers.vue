@@ -76,6 +76,7 @@
       v-model="success"
       v-if="success" 
       ok-only
+      @ok="handleCancel"
       centered 
       header-bg-variant="info"
       headerTextVariant= 'light'
@@ -90,7 +91,7 @@
       </div>
       <div class="scroll-container">
         <div v-for="worker in workers" :key="worker.id">
-          <workerview :worker="worker.worker"></workerview>
+          <workerview :id="worker.id" :worker="worker.worker"></workerview>
         </div>
       </div>
     </b-card>
@@ -129,7 +130,24 @@ export default {
         phone: '',
         role: null,
         admin: false,
-        webUser: false
+        webUser: false,
+        training: [
+          {
+            description: 'Company Induction',
+            ID: '',
+            expiry: ''
+          },
+          {
+            description: 'First Aid Certificate',
+            ID: '',
+            expiry: ''
+          },
+          {
+            description: 'Site Safe Passport',
+            ID: '',
+            expiry: ''
+          }
+        ]
       }
     }
   },
@@ -192,7 +210,6 @@ export default {
         } else {
           this.success = true
         }
-        this.handleCancel()
       })
     }
   }

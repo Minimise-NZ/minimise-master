@@ -2,6 +2,18 @@
  <animated-roll-in>
   <b-container fluid>
     <miniHeader></miniHeader>
+    <b-modal 
+      v-model="error" 
+      v-if="error"
+      ok-only
+      centered 
+      header-bg-variant="danger"
+      headerTextVariant= 'light'
+      title="Oops...">
+      <div class="d-block text-center">
+        <h4 class="mt-2">{{message}}. Please contact your administrator</h4>
+      </div>
+    </b-modal>
     <b-container class="login-container">
       <h2>Log In</h2>
       <b-form @submit.prevent="loginUser" id="login">
@@ -54,6 +66,8 @@
     },
     data () {
       return {
+        error: false,
+        message: '',
         email: '',
         password: ''
       }
@@ -68,7 +82,10 @@
         })
         .catch(
           err => {
-            alert(err.message)
+            this.message = err.message
+            this.error = true
+            this.email = ''
+            this.password = ''
           }
         )
       }

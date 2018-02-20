@@ -174,7 +174,23 @@ export default {
             company: company,
             companyType: 'principal',
             companyName: this.companyName,
-            training: []
+            training: [
+              {
+                description: 'Company Induction',
+                ID: '',
+                expiry: ''
+              },
+              {
+                description: 'First Aid Certificate',
+                ID: '',
+                expiry: ''
+              },
+              {
+                description: 'Site Safe Passport',
+                ID: '',
+                expiry: ''
+              }
+            ]
           })
           this.$router.push('/principal')
         } catch (err) {

@@ -160,7 +160,23 @@ export default {
             webUser: true,
             company,
             companyType: 'contractor',
-            training: []
+            training: [
+              {
+                description: 'Company Induction',
+                ID: '',
+                expiry: ''
+              },
+              {
+                description: 'First Aid Certificate',
+                ID: '',
+                expiry: ''
+              },
+              {
+                description: 'Site Safe Passport',
+                ID: '',
+                expiry: ''
+              }
+            ]
           })
           this.$router.push('/contractor')
         } catch (err) {

@@ -2,6 +2,18 @@
   <animated-fade-in>
     <b-container fluid>
       <miniHeader></miniHeader>
+      <b-modal 
+      v-model="error" 
+      v-if="error"
+      ok-only
+      centered 
+      header-bg-variant="danger"
+      headerTextVariant= 'light'
+      title="Oops...">
+      <div class="d-block text-center">
+        <h4 class="mt-2">{{message}}</h4>
+      </div>
+      </b-modal>
       <b-container class="form-container">
         <div class="user-header">
           <h3>Sign Up: New User</h3>
@@ -68,6 +80,8 @@
     },
     data () {
       return {
+        error: false,
+        message: '',
         confirmUser: false,
         password: '',
         confirmPassword: '',
@@ -88,6 +102,10 @@
           this.user = user
           this.confirmUser = true
         })
+        .catch((error) => {
+          this.message = error
+          this.error = true
+        })
       },
       onSubmit () {
         this.$validator.validateAll().then(async(valid) => {
@@ -97,7 +115,7 @@
             let uid = await this.$store.dispatch('signUp', {email: this.email, password: this.password})
             // update userProfile with uid
             this.user.uid = uid
-            await this.$store.dispatch('updateUserProfile', this.user)
+            await this.$store.dispatch('updateCurrentUser', this.user)
             await this.$store.dispatch('getUser')
             let companyType = this.user.companyType
             this.$router.push('/' + companyType)
