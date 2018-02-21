@@ -1,10 +1,12 @@
 <template>
   <b-container fluid>
-      <b-card header="Principal Home" header-tag="header">
+    <b-card header="Principal Home" header-tag="header">
+      <div class="scroll-container">
         <contractorActivity></contractorActivity>
         <incidentSummary></incidentSummary>
         <trainingAlerts></trainingAlerts>
-      </b-card>
+      </div>  
+    </b-card>
   </b-container>
 </template>
 

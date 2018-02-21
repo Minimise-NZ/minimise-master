@@ -192,11 +192,13 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   props: ['id'],
   data () {
     return {
       error: false,
+      today: '',
       workDescription: '',
       supervisor: '',
       supervisorPhone: '',
@@ -256,7 +258,7 @@ export default {
           trainingRegister: this.trainingRegister,
           hazardRegister: this.hazardRegister,
           firstAidKit: this.firstAidKit,
-          date: new Date(),
+          date: this.today,
           companyName: this.company.name
         }
         if (this.notifiable === 'true') {
@@ -290,6 +292,10 @@ export default {
       this.firstAidKit = false
       this.$refs.focus.$el.focus()
     }
+  },
+  mounted () {
+    this.today = moment().format('DD-MM-YYYY')
+    console.log(this.today)
   }
 }
 </script>

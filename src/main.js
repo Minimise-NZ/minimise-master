@@ -16,7 +16,7 @@ import lodash from 'lodash'
 import VueLodash from 'vue-lodash'
 import VeeValidate from 'vee-validate'
 import vSelect from 'vue-select'
-import Moment from 'moment'
+import moment from 'moment'
 
 Vue.component('v-select', vSelect)
 Vue.use(VueLodash, lodash)
@@ -26,7 +26,12 @@ Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(AnimatedVue)
 Vue.use(VeeValidate)
-Vue.use(Moment)
+
+Vue.filter('formatDate', function (value) {
+  if (value) {
+    return moment(String(value)).format('DD-MM-YYYY')
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({

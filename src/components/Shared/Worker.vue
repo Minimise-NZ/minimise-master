@@ -95,7 +95,7 @@
               <b-form-input id="id" placeholder="ID# License#..." :readonly="readonly" type="text" v-model="training.ID"/>
             </b-col>
             <b-col md="3" class="training-col">
-              <b-form-input id="expiry" class="no-spinners" placeholder="Expiry" :readonly="readonly" type="text" onfocus="(this.type='date')" v-model="training.expiry" :class="{error: error.expiry}"/>
+              <b-form-input id="expiry" class="no-spinners" placeholder="Expiry Date" :readonly="readonly" type="text" onfocus="(this.type='date')" v-model="training.expiry" :class="{error: error.expiry}"/>
             </b-col>
             <b-col md="1" class="training-col">
               <b-button variant="primary" :disabled="disabled" @click="addTraining"><i class="fa fa-plus"></i></b-button> 
@@ -106,10 +106,10 @@
               <b-form-input :readonly="readonly" :value="training.description"/>
             </b-col>
             <b-col md="3" class="training-col">
-              <b-form-input id="id" placeholder="ID# License#..." :readonly="readonly" type="text" v-model="training.ID"/>
+              <b-form-input id="id" :readonly="readonly" type="text" v-model="training.ID"/>
             </b-col>
             <b-col md="3" class="training-col">
-              <b-form-input class="no-spinners" placeholder="Expiry" :value="formattedDate(training.expiry)" :readonly="readonly"/>
+              <b-form-input id="expiry" type="date" class="no-spinners" :value="training.expiry | formatDate" v-model="training.expiry" :readonly="readonly"/>
             </b-col>
           </b-row>
         </b-col>
@@ -150,25 +150,21 @@ export default {
     }
   },
   methods: {
-    formattedDate (trainingDate) {
-      if (trainingDate === '') {
-        return
-      } else {
-        var d = new Date(trainingDate)
-        return [d.getDate(), d.getMonth() + 1, d.getFullYear()].join('/')
-      }
-    },
     edit () {
       this.readonly = false
       this.editMode = true
       this.disabled = false
+      document.getElementById('expiry').type = 'date'
     },
     save () {
       // save updates to user profile
       if (this.dirty === true) {
-        this.$store.dispatch('updateWorker', {id: this.id, worker: this.worker})
+        this.$store.dispatch('updateWorker', {id: this.id, training: this.worker.training})
         .then(() => {
           this.success = true
+          this.readonly = true
+          this.editMode = false
+          this.disabled = true
         })
       } else {
         this.readonly = true

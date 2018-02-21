@@ -2,7 +2,7 @@
   <b-card header="Training Alerts" header-tag="header">
      <b-row v-if="trainingAlerts.length === 0">
       <b-col>
-        <header class="subheader">You currently have no open itrainng alerts</header>
+        <header class="subheader">You have no training alerts</header>
       </b-col>
     </b-row>
     <b-row class="subheader" v-if="trainingAlerts.length !== 0">
@@ -14,7 +14,7 @@
       </b-col>
       <b-col>
         <header>Training Description</header>
-      </b-col>
+      </b-col>  
       <b-col>
         <header>Expiry Date</header>
       </b-col>
@@ -24,8 +24,8 @@
        v-for="training in trainingAlerts"
        :key="training.name">
       <b-col>
-        <p style="text-decoration: underline; color:#178ac3; cursor: pointer"
-          >{{training.name}}</p>
+        <router-link style="text-decoration: underline; color:#178ac3; cursor: pointer" to='/principal/workers'
+          >{{training.name}}</router-link>
       </b-col>
       <b-col>
         <p>{{training.status}}</p>
@@ -33,39 +33,52 @@
       <b-col>
         <p>{{training.description}}</p>
       </b-col>
-      <b-col>
-       <p>{{training.expiry}}</p>
+      <b-col v-if="training.expiry !== ''">
+       <p>{{training.expiry | formatDate}}</p>
+      </b-col>
+      <b-col v-else>
+       <p>Not entered</p>
       </b-col>
     </b-row>
   </b-card>
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   data () {
     return {
       trainingAlerts: [
-        {
-          name: 'Sam Stevens',
-          status: 'Expired',
-          description: 'First Aid Certificate',
-          expiry: '18/10/2017'
-        }
       ]
     }
   },
   computed: {
     workers () {
       return this.$store.getters.workers
-    },
+    }
+  },
+  mounted () {
+    this.training()
+  },
+  methods: {
     training () {
-      for (let worker in this.workers) {
-        for (let item in worker.training) {
-          if (item.expiry === '') {
-            item.status = 'Incomplete'
-            this.trainingAlerts.push(item)
+      for (let i of this.workers) {
+        for (let training of i.worker.training) {
+          if (training.expiry !== '') {
+            let alertDate = moment(training.expiry).subtract(14, 'days').format('YYYY-MM-DD')
+            if (moment().isAfter(training.expiry)) {
+              training.name = i.worker.name
+              training.status = 'Expired'
+              this.trainingAlerts.push(training)
+            } else if (moment().isAfter(alertDate)) {
+              training.name = i.worker.name
+              training.status = 'Due to expire'
+              this.trainingAlerts.push(training)
+            }
           } else {
-            // get difference bwtween expiry daye and now
+            training.name = i.worker.name
+            training.status = 'Incomplete'
+            this.trainingAlerts.push(training)
           }
         }
       }

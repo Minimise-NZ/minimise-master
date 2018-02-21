@@ -6,11 +6,11 @@
       @ok="route" 
       ok-only 
       centered 
-      header-bg-variant="dark"
+      header-bg-variant="info"
       headerTextVariant= 'light'
       title="New Job Created">
       <div class="d-block text-center">
-        <h4 >{{siteAddress}}</h4>
+        <h4 >Job site {{siteAddress}} ihas been created</h4>
       </div>
     </b-modal>
     <b-card>

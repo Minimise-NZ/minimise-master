@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import * as firebase from 'firebase'
 import {firestore} from '../firebase'
 import createPersistedState from 'vuex-persistedstate'
+import moment from 'moment'
 
 Vue.use(Vuex)
 
@@ -222,11 +223,10 @@ export const store = new Vuex.Store({
       // update worker training
       let promise = new Promise((resolve, reject) => {
         let workerId = payload.id
-        let worker = payload.worker
-        console.log(workerId, worker)
-        firestore.collection('users').doc(workerId).set(worker, {merge: true})
+        let training = payload.training
+        firestore.collection('users').doc(workerId).set({training: training}, {merge: true})
         .then(() => {
-          console.log('Worker updated')
+          console.log('Worker training updated')
           dispatch('getWorkers')
           resolve()
         })
@@ -362,6 +362,7 @@ export const store = new Vuex.Store({
       let promise = new Promise((resolve, reject) => {
         let subcontractors = payload.subcontractors
         let approved = {}
+        let today = moment().format('DD-MM-YYYY')
         subcontractors.forEach((val) => {
           let key = val.key
           approved[key] = false
@@ -378,7 +379,7 @@ export const store = new Vuex.Store({
           info: payload.info,
           approved: approved,
           open: true,
-          date: new Date()
+          date: today
         })
         .then((doc) => {
           let jobId = doc.id
@@ -430,7 +431,7 @@ export const store = new Vuex.Store({
         let contractors = payload.contractors
         let jobId = payload.id
         firestore.collection('jobSites').doc(jobId)
-        .update({'open': false, 'closedDate': new Date()})
+        .update({'open': false, 'closedDate': moment()})
         .then(() => {
           contractors.forEach((val) => {
             firestore.collection('companies').doc(val.key).collection('jobSites').doc(jobId)

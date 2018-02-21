@@ -36,7 +36,7 @@
             <p>{{incident.reportedBy}}</p>
           </b-col>
           <b-col>
-            <p>{{formattedDate(incident.date)}}</p>
+            <p>{{incident.date | formatDate}}</p>
           </b-col>
           <b-col>
             <p>{{status(incident.open)}}</p>
@@ -69,10 +69,6 @@ export default {
       } else {
         return 'closed'
       }
-    },
-    formattedDate (date) {
-      var d = new Date(date)
-      return [d.getDate(), d.getMonth() + 1, d.getFullYear()].join('/')
     }
   }
 }

@@ -32,6 +32,7 @@
     "vue-select": "github:sagalbot/vue-select",
     "vuebar": "0.0.17",
     "vuefire": "^1.4.3",
+    "vuejs-datepicker": "^0.9.26",
     "vuelidate": "^0.6.1",
     "vuex": "^2.4.0",
     "vuex-persistedstate": "^2.4.2"

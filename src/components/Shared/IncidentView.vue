@@ -38,7 +38,7 @@
           <b-row>
             <b-col sm="3" lg="2">Date of Incident:</b-col>
             <b-col sm="9" lg="10">
-              <b-form-input type="text" v-model="formattedDate" readonly></b-form-input>
+              <b-form-input type="text" v-model="incident.date" :value="incident.date | formatDate" readonly></b-form-input>
             </b-col>
           </b-row>
           <b-row>
@@ -174,10 +174,6 @@ export default {
     headerText () {
       let text = this.incident.address + ' - ' + this.formattedDate
       return text
-    },
-    formattedDate () {
-      var d = new Date(this.incident.date)
-      return [d.getDate(), d.getMonth() + 1, d.getFullYear()].join('/')
     },
     status () {
       if (this.incident.open === false) {

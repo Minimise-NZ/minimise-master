@@ -2,31 +2,32 @@
   <animated-fade-in>
     <div>
       <dashboard-header></dashboard-header>
-      <b-row>
-        <b-col sm="2" class="side-wrapper" >
-          <b-list-group>
-            <router-link to='/principal' tag="li" class="list-group-item" exact>
-              <p>Home</p>
-            </router-link>
-            <router-link v-for="item in sideNavItems" :to='item.link' tag="li" class="list-group-item" :key = "item.name">
-              <p>{{item.name}}</p>
-            </router-link>
-            <router-link v-if="user.admin" v-for="item in adminNav" :to='item.link' tag="li" class="list-group-item" :key = "item.name">
-              <p>{{item.name}}</p>
-            </router-link>
-            <router-link to='/principal/support' tag="li" class="list-group-item" exact>
-              <p>Support / Feedback</p>
-            </router-link>
-          </b-list-group>
-        </b-col>
-        
-        <b-col>
-          <animated-fade-in>
-            <router-view></router-view>
-          </animated-fade-in>
-        </b-col>
-        
-      </b-row>
+      
+        <b-row>
+          <b-col sm="2" class="side-wrapper">
+            <b-list-group>
+              <router-link to='/principal' tag="li" class="list-group-item" exact>
+                <p>Home</p>
+              </router-link>
+              <router-link v-for="item in sideNavItems" :to='item.link' tag="li" class="list-group-item" :key = "item.name">
+                <p>{{item.name}}</p>
+              </router-link>
+              <router-link v-if="user.admin" v-for="item in adminNav" :to='item.link' tag="li" class="list-group-item" :key = "item.name">
+                <p>{{item.name}}</p>
+              </router-link>
+              <router-link to='/principal/support' tag="li" class="list-group-item" exact>
+                <p>Support / Feedback</p>
+              </router-link>
+            </b-list-group>
+          </b-col>
+
+          <b-col>
+            <animated-fade-in>
+              <router-view></router-view>
+            </animated-fade-in>
+          </b-col>
+          
+        </b-row>
     </div>
   </animated-fade-in>
 </template>
@@ -102,12 +103,7 @@ export default {
   .side-wrapper { 
     background-color: #383838;
     padding: 0 20px;
+    min-width: 200px;
   }
   
-  @media (max-width: 1040px) {
-    .side-wrapper {
-        display: none;
-    }
-  }
-
 </style>

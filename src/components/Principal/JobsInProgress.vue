@@ -1,58 +1,57 @@
 <template>
-    <b-container fluid class="outside-container">
-      <b-card>
-        <div class="card-header">Jobs In Progress</div>
-        <div class="scroll-container">
-          <b-row v-if="jobSites.length === 0">
+  <b-container fluid class="outside-container">
+    <b-card>
+      <div class="card-header">Jobs In Progress</div>
+      <div class="scroll-container">
+        <b-row v-if="jobSites.length === 0">
+          <b-col>
+            <header class="subheader" style="color: rgba(111, 50, 130, 0.86)">You currently have no jobs in progress</header>
+          </b-col>
+        </b-row>
+        <b-card
+          v-for="job in jobSites"
+          :key="job.id"
+          class="siteCard mt-2 mb-4">
+          <header class="card-header job">{{job.address}}
+            <b-button class="editBtn pt-1 pb-1" @click="editJob(job.id)">View Job Details</b-button>
+          </header>
+          <b-row>
             <b-col>
-              <header class="subheader">You currently have no jobs in progress</header>
+              <header class="subheader">Approved Contractors</header>
+              <ul>
+                <li v-for="contractor in job.contractors" :key='contractor.key' v-if="contractor.approved">{{contractor.name}}</li>
+                <li v-else>No contractors approved</li>
+              </ul>
+            </b-col>
+            <b-col>
+              <header class="subheader">Pending Contractors</header>
+              <ul>
+                <li v-for="contractor in job.contractors" :key='contractor.key' v-if="!contractor.approved">{{contractor.name}}</li>
+              </ul>
+            </b-col>
+            <b-col> 
+              <header class="subheader">Signed In</header>
+              <ul>
+                <li>Worker name/Timestamp</li>
+              </ul>
+            </b-col>
+            <b-col>
+              <header class="subheader">Current Safety Plans</header>
+              <ul>
+                <li>View Safety Plan: Date</li>
+              </ul>
             </b-col>
           </b-row>
-          <b-card
-            v-for="job in jobSites"
-            :key="job.id"
-            class="siteCard mt-2 mb-4">
-            <header class="card-header job">{{job.address}}
-              <b-button class="editBtn pt-1 pb-1" @click="editJob(job.id)">View Job Details</b-button>
-            </header>
-            <b-row>
-              <b-col>
-                <header class="subheader">Approved Contractors</header>
-                <ul>
-                  <li v-for="contractor in job.contractors" :key='contractor.key' v-if="contractor.approved === true">{{contractor.name}}</li>
-                </ul>
-              </b-col>
-              <b-col>
-                <header class="subheader">Pending Contractors</header>
-                <ul>
-                  <li v-for="contractor in job.contractors" :key='contractor.key' v-if="contractor.approved === false">{{contractor.name}}</li>
-                </ul>
-              </b-col>
-              <b-col> 
-                <header class="subheader">Signed In</header>
-                <ul>
-                  <li>Worker name/Timestamp</li>
-                </ul>
-              </b-col>
-              <b-col>
-                <header class="subheader">Current Safety Plans</header>
-                <ul>
-                  <li>View Safety Plan: Date</li>
-                </ul>
-              </b-col>
-            </b-row>
-          </b-card>
-        </div>
-      </b-card>
-    </b-container>
+        </b-card>
+      </div>
+    </b-card>
+  </b-container>  
 </template>
 
 <script>
 export default {
   data () {
     return {
-      pending: [],
-      approved: []
     }
   },
   computed: {
@@ -64,15 +63,6 @@ export default {
     }
   },
   methods: {
-    status () {
-      this.contractors.forEach((contractor) => {
-        if (contractor.status === 'pending') {
-          this.pending.push(contractor)
-        } else {
-          this.approved.push(contractor)
-        }
-      })
-    },
     editJob (id) {
       let companyType = this.$store.getters.user.companyType
       this.$router.push('/' + companyType + '/jobs/job/' + id)
