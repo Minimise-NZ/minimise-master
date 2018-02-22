@@ -20,7 +20,6 @@
               <header class="subheader">Approved Contractors</header>
               <ul>
                 <li v-for="contractor in job.contractors" :key='contractor.key' v-if="contractor.approved">{{contractor.name}}</li>
-                <li v-else>No contractors approved</li>
               </ul>
             </b-col>
             <b-col>

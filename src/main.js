@@ -18,6 +18,26 @@ import VeeValidate from 'vee-validate'
 import vSelect from 'vue-select'
 import moment from 'moment'
 
+const config = {
+  errorBagName: 'errors', // change if property conflicts.
+  fieldsBagName: 'inputs ', // Default is fields
+  delay: 0,
+  locale: 'en',
+  dictionary: null,
+  strict: true,
+  enableAutoClasses: false,
+  classNames: {
+    touched: 'touched', // the control has been blurred
+    untouched: 'untouched', // the control hasn't been blurred
+    valid: 'valid', // model is valid
+    invalid: 'invalid', // model is invalid
+    pristine: 'pristine', // control has not been interacted with
+    dirty: 'dirty' // control has been interacted with
+  },
+  events: 'input|blur',
+  inject: true
+}
+
 Vue.component('v-select', vSelect)
 Vue.use(VueLodash, lodash)
 Vue.use(AOS)
@@ -25,7 +45,7 @@ Vue.use(Vuebar)
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(AnimatedVue)
-Vue.use(VeeValidate)
+Vue.use(VeeValidate, config)
 
 Vue.filter('formatDate', function (value) {
   if (value) {

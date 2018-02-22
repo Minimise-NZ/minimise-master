@@ -43,6 +43,14 @@
                 <b-form-input type="text" v-model="job.HSEcontact" readonly=""/>
               </b-col>
             </b-row>
+            <b-row>
+              <b-col cols="2">
+               <p>Nearest Medical Centre:</p>
+              </b-col>
+              <b-col cols="8">
+                <b-form-input type="text" v-model="job.medical" readonly/>
+              </b-col>
+            </b-row>
           </b-card>
           
           <b-card>
@@ -295,7 +303,6 @@ export default {
   },
   mounted () {
     this.today = moment().format('DD-MM-YYYY')
-    console.log(this.today)
   }
 }
 </script>

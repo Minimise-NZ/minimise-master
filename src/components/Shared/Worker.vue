@@ -255,6 +255,10 @@ export default {
     padding: 0 5px 0 5px;
   }
 
+  #expiry {
+    padding-bottom: 4px;
+  }
+
   p {
     margin-top: 5px;
     margin-bottom: 5px;

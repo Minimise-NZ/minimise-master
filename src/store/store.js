@@ -370,6 +370,7 @@ export const store = new Vuex.Store({
         firestore.collection('jobSites').add({
           principalKey: payload.principalKey,
           principalName: payload.principalName,
+          medical: payload.medical,
           pm: payload.pm,
           pmPhone: payload.pmPhone,
           hse: payload.hse,
@@ -515,7 +516,8 @@ export const store = new Vuex.Store({
               date: job.date,
               notifiable: job.notifiable,
               info: job.info,
-              status: job.status
+              status: job.status,
+              medical: job.medical
             })
           })
         })
