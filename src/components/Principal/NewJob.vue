@@ -326,7 +326,8 @@ export default {
           address: this.siteAddress,
           notifiable: this.notifiable.selected,
           info: this.addinfo.infotext,
-          subcontractors: this.subcontractors
+          subcontractors: this.subcontractors,
+          medical: this.medical
         })
         .then(() => {
           this.showModal = true

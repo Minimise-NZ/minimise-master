@@ -81,7 +81,7 @@
         </b-col>
         <b-col>
           <textarea class="form-control step" rows="3" v-model="step.description" placeholder="Please enter description of step"></textarea>
-        </b-col>
+        </b-col> 
         <b-col>
           <textarea class="form-control step" rows="3" v-model="step.hazards" placeholder="Please enter hazards"></textarea>
         </b-col>

@@ -6,20 +6,17 @@
       <b-row>
         <b-col sm="2" class="side-wrapper">
           <b-list-group>
-            <router-link 
-              to='/contractor'
-              tag="li"
-              class="list-group-item"
-              exact>
-              <p>Home</p>
-            </router-link>
-            <router-link 
-            v-for="item in sideNavItems"
-            :to='item.link' 
-            tag="li"
-            class="list-group-item"
-            :key = "item.name">
-              <p>{{item.name}}</p>
+            <router-link to='/contractor' tag="li" class="list-group-item" exact>
+                <p>Home</p>
+              </router-link>
+              <router-link v-for="item in sideNavItems" :to='item.link' tag="li" class="list-group-item" :key = "item.name">
+                <p>{{item.name}}</p>
+              </router-link>
+              <router-link v-if="user.admin" v-for="item in adminNav" :to='item.link' tag="li" class="list-group-item" :key = "item.name">
+                <p>{{item.name}}</p>
+              </router-link>
+              <router-link to='/contractor/support' tag="li" class="list-group-item" exact>
+                <p>Support / Feedback</p>
             </router-link>
           </b-list-group>
         </b-col>
@@ -44,15 +41,22 @@ export default {
   data () {
     return {
       sideNavItems: [
+        {name: 'Job Requests', link: '/contractor/jobs'},
         {name: 'Hazard Register', link: '/contractor/hazards'},
         // {name: 'Hazardous Substances', link: '/contractor/hazardousSubstances'},
         {name: 'Task Analysis', link: '/contractor/taskAnalysis'},
         {name: 'Incident Reports', link: '/contractor/incidents'},
-        {name: 'New Incident', link: '/contractor/newIncident'},
-        {name: 'Worker Management', link: '/contractor/workers'},
+        {name: 'New Incident', link: '/contractor/newIncident'}
+      ],
+      adminNav: [
+         {name: 'Worker Management', link: '/contractor/workers'}
         // {name: 'Administration', link: '/contractor/admin'},
-        {name: 'Support / Feedback', link: '/contractor/support'}
       ]
+    }
+  },
+  computed: {
+    user () {
+      return this.$store.getters.user
     }
   },
   beforeCreate () {
@@ -99,14 +103,10 @@ export default {
     height: 880px;
   }
   
- .side-wrapper {
+ .side-wrapper { 
     background-color: #383838;
     padding: 0 20px;
+    min-width: 200px;
   }
   
-  @media (max-width: 1040px) {
-    .side-wrapper {
-        display: none;
-    }
-  }
 </style>

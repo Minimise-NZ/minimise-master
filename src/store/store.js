@@ -474,6 +474,7 @@ export const store = new Vuex.Store({
               address: doc.data().address,
               date: doc.data().date,
               hse: doc.data().hse,
+              medical: doc.data().medical,
               hsePhone: doc.data().hsePhone,
               info: doc.data().info,
               notifiable: doc.data().notifiable,

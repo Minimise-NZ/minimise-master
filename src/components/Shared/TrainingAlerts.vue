@@ -24,8 +24,8 @@
        v-for="training in trainingAlerts"
        :key="training.name">
       <b-col>
-        <router-link style="text-decoration: underline; color:#178ac3; cursor: pointer" to='/principal/workers'
-          >{{training.name}}</router-link>
+        <a style="text-decoration: underline; color:#178ac3; cursor: pointer" @click="workerView"
+          >{{training.name}}</a>
       </b-col>
       <b-col>
         <p>{{training.status}}</p>
@@ -82,6 +82,10 @@ export default {
           }
         }
       }
+    },
+    workerView () {
+      let companyType = this.$store.getters.user.companyType
+      this.$router.push('/' + companyType + '/workers')
     }
   }
 }

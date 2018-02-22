@@ -1,20 +1,22 @@
 <template>
   <b-container fluid>
     <b-card header="Contractor Home" header-tag="header">
-      <jobRequests></jobRequests>
-      <incidentSummary></incidentSummary>
-      <trainingAlerts></trainingAlerts>
+      <div class="scroll-container">
+        <jobSummary></jobSummary>
+        <incidentSummary></incidentSummary>
+        <trainingAlerts></trainingAlerts>
+      </div>
     </b-card>
   </b-container>
 </template>
 
 <script>
-import JobRequests from '@/components/Contractor/JobRequests.vue'
+import JobSummary from '@/components/Contractor/JobSummary.vue'
 import IncidentSummary from '@/components/Shared/IncidentSummary.vue'
 import TrainingAlerts from '@/components/Shared/TrainingAlerts.vue'
 export default {
   components: {
-    'jobRequests': JobRequests,
+    'jobSummary': JobSummary,
     'incidentSummary': IncidentSummary,
     'trainingAlerts': TrainingAlerts
   },

@@ -1,43 +1,44 @@
 <template>
-  <b-card
-   header="Job Requests" 
-   header-tag="header">
-    <b-row class="subheader">
-      <b-col>
-        <header>Site Address</header>
-      </b-col>
-      <b-col>
-        <header>Principal Contractor</header>
-      </b-col>
-      <b-col>
-        <header>Project Manager</header>
-      </b-col>
-      <b-col>
-        <header>Request Date</header>
-      </b-col>
-    </b-row>
-    <b-row 
-       class="content"
-       v-for="job in jobRequests"
-       :key="job.id">
-      <b-col>
-      <router-link :to='joblink(job.id)'>
-        <p class="mb-0 mr-3"
-          style="text-decoration: underline; color:#178ac3; cursor: pointer"
-          >{{job.address}}</p>
-        </router-link>
-      </b-col>
-      <b-col>
-        <p>{{job.principal}}</p>
-      </b-col>
-      <b-col>
-        <p>{{job.projectManager}}</p>
-      </b-col>
-      <b-col>
-       <p>{{date(job.date)}}</p>
-      </b-col>
-    </b-row>
-  </b-card>
+  <b-container fluid class="outside-container">
+    <b-card>
+      <div class="card-header">Job Requests</div>
+      <div class="scroll-container">
+        <b-row v-if="jobRequests.length === 0">
+          <b-col>
+            <header class="subheader">You have no new job requests</header>
+          </b-col>
+        </b-row>
+        <b-row class="subheader" v-if="jobRequests.length !== 0">
+          <b-col>
+            <p>Site Address</p>
+          </b-col>
+          <b-col>
+            <p>Principal Contractor</p>
+          </b-col>
+          <b-col>
+            <header>Project Manager</header>
+          </b-col>
+          <b-col>
+            <header>Request Date</header>
+          </b-col>
+        </b-row>
+        <b-row v-for="job in jobRequests" :key="job.id" class="content">
+          <b-col>
+            <p style="text-decoration: underline; color: #178ac3; cursor: pointer"  @click="viewJob(job.id)">{{job.address}}</p>
+          </b-col>
+          <b-col>
+            <p>{{job.principal}}</p>
+          </b-col>
+          <b-col>
+            <p>{{job.projectManager}}</p>
+          </b-col>
+          <b-col>
+            <p>{{job.date | formatDate}}</p>
+          </b-col>
+        </b-row>
+      </div>
+    </b-card>
+  </b-container>
 </template>
 
 <script>
@@ -52,43 +53,27 @@ export default {
     }
   },
   methods: {
-    joblink (id) {
-      return '/contractor/job/' + id
-    },
-    date (longDate) {
-      let newdate = longDate.toString().slice(0, 15)
-      return newdate
+    viewJob (id) {
+      this.$router.push('/contractor/jobs/job/' + id)
     }
   }
 }
 </script>
 
 <style scoped>
-  .container-fluid {
-    padding-top: 20px;
-    margin-bottom: 100px;
-  }
-  
-  .card {
-    border: 1px solid rgba(29, 92, 158, 0.89);
-    margin-bottom: 30px;
-  }
-  
+
   .card-header {
-    background-color: rgba(29, 92, 158, 0.89);
-    font-size: 1.2rem;
+    margin: -20px -20px 0px -20px;
+    background-color: #12807a;
+    font-size: 1.4rem;
     color: white;
   }
   
-  .card-body {
-    padding-top: 0;
-  }
-  
   .subheader {
-    padding: 15px 0 15px 15px;
+    padding: 10px 0 10px 15px;
     border-bottom: 1px solid lightgrey;
     font-weight: bold;
-    color:#1376ad;
+    color: #12807a;
   }
   
   .col {
@@ -100,4 +85,5 @@ export default {
     margin-left: 0;
     margin-top: 20px;
   }
+
 </style>

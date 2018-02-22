@@ -14,6 +14,7 @@ import NewUser from '@/components/User/NewUser.vue'
 
 import Contractor from '@/components/Contractor/Contractor.vue'
 import ContractorHome from '@/components/Contractor/Home.vue'
+import JobRequests from '@/components/Contractor/JobRequests.vue'
 import JobForm from '@/components/Contractor/JobForm.vue'
 import Hazards from '@/components/Contractor/HazardRegister.vue'
 import HazardousSubstances from '@/components/Contractor/HazardousSubstances.vue'
@@ -81,14 +82,16 @@ export default new Router({
       children: [
         {
           path: '',
-          component: ContractorHome,
-          children: [
-            {
-              path: 'job/:id',
-              component: JobForm,
-              props: true
-            }
-          ]
+          component: ContractorHome
+        },
+        {
+          path: 'jobs',
+          component: JobRequests
+        },
+        {
+          path: 'jobs/job/:id',
+          component: JobForm,
+          props: true
         },
         {
           path: 'hazards',
@@ -103,7 +106,7 @@ export default new Router({
           component: Tasks,
           children: [
             {
-              path: 'task',
+              path: 'task/:index',
               component: Task,
               props: true
             }

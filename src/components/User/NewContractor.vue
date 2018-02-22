@@ -106,7 +106,7 @@
           </div>
           <button class="btn btn-block mt-4 mb-3" type="submit">Submit</button>
           <router-link to="/">Cancel</router-link>
-        </b-form>
+        </b-form> 
       </b-container>
     </b-container>
   </animated-fade-in>
@@ -178,6 +178,7 @@ export default {
               }
             ]
           })
+          await this.$store.dispatch('newTaskAnalysis', 'Working at heights > 5m')
           this.$router.push('/contractor')
         } catch (err) {
           console.log(err)

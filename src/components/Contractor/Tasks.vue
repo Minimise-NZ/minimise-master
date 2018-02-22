@@ -5,7 +5,7 @@
       v-if="newPopUp"
       @cancel="title = ''"
       @ok="createNew"
-      centered
+      centered 
       header-bg-variant="info"
       headerTextVariant= 'light'
       title="Create new task analysis">
@@ -78,7 +78,7 @@ export default {
     }
   },
   beforeMount () {
-    this.$router.push('/contractor/taskAnalysis/task/0')
+    this.$router.push('/contractor/taskAnalysis/task/' + this.selectedIndex)
   }
 }
 </script>
