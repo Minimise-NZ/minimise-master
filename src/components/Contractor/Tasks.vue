@@ -73,6 +73,7 @@ export default {
     },
     changeTask (index) {
       // check there is nothing to be saved
+      this.errors.clear()
       this.selectedIndex = index
       this.$router.push('/contractor/taskAnalysis/task/' + this.selectedIndex)
     }

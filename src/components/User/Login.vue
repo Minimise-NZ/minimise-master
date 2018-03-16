@@ -11,7 +11,7 @@
       headerTextVariant= 'light'
       title="Oops...">
       <div class="d-block text-center">
-        <h4 class="mt-2">{{message}}. Please contact your administrator</h4>
+        <h4 class="mt-2">{{message}}</h4>
       </div>
     </b-modal>
     <b-container class="login-container">
@@ -45,12 +45,12 @@
 
         <b-button class="btn-block" type="submit">LOGIN</b-button>
         <b-row class="links">
+          <!--
           <b-col class="leftcol">
             <router-link to="signup">SIGN UP</router-link>
           </b-col>
-          <b-col>
-            <router-link to="password">PASSWORD</router-link>
-          </b-col>
+          -->
+          <router-link to="password">FORGOT PASSWORD</router-link>
         </b-row>
       </b-form>
     </b-container>
@@ -77,8 +77,14 @@
         this.$store.dispatch('signIn', {email: this.email, password: this.password})
         .then(async() => {
           let user = await this.$store.dispatch('getUser')
-          let companyType = user.companyType
-          this.$router.push('/' + companyType)
+          if (user.webUser === true) {
+            let companyType = user.companyType
+            this.$router.push('/' + companyType)
+          } else {
+            this.message = 'You do not have access to the web portal. Please log in to the mobile app'
+            this.error = true
+            this.$store.dispatch('logout')
+          }
         })
         .catch(
           err => {
@@ -133,7 +139,7 @@
     cursor: pointer;
   }
   
-  .row.links {
+  .row {
     margin-top: 20px;
   }
   
@@ -144,6 +150,7 @@
   
   a {
     font-size: 0.9rem;
+    margin:auto;
   }
   
   

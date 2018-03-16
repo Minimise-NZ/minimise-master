@@ -57,7 +57,7 @@
             <div class="item card-header">Contractor Details</div>
              <b-row>
               <b-col cols="2">
-               <p><strong>Contractor/PCBU:</strong></p>
+               <p><strong>Contractor / PCBU:</strong></p>
               </b-col>
               <b-col cols="8">
                 <b-form-input type="text" v-model="company.name" readonly/>
@@ -160,7 +160,7 @@
                 value='true'
                 required>
                 Our training register is complete and up to date
-              </b-form-checkbox>
+              </b-form-checkbox>  
             </b-row>
             <b-row>
               <b-form-checkbox

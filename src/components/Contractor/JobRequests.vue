@@ -33,7 +33,7 @@
             <p>{{job.projectManager}}</p>
           </b-col>
           <b-col>
-            <p>{{job.date | formatDate}}</p>
+            <p>{{job.date}}</p>
           </b-col>
         </b-row>
       </div>

@@ -48,7 +48,9 @@ export default {
   },
   computed: {
     incidents () {
-      return this.$store.getters.incidents
+      let incidents = this.$store.getters.incidents
+      this._.orderBy(incidents, ['open', 'actionOwner'], ['desc', 'asc'])
+      return incidents
     }
   },
   methods: {

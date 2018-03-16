@@ -40,9 +40,6 @@
             </b-col>
             <b-col md="6" lg="8">
               <b-form-input type="text" v-model="newWorker.email"/>
-              <b-form-text>
-                Not required for mobile-only users
-              </b-form-text>
               <div class="alert alert-danger" v-show="error.email">Please enter email</div>
             </b-col>
           </b-row>
@@ -175,10 +172,10 @@ export default {
       }
       if (this.newWorker.role !== 'Worker') {
         this.newWorker.webUser = true
-        if (this.newWorker.email === '') {
-          this.error.email = true
-          return
-        }
+      }
+      if (this.newWorker.email === '') {
+        this.error.email = true
+        return
       }
       if (this.newWorker.phone === '') {
         this.error.phone = true

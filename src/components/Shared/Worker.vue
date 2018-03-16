@@ -108,7 +108,7 @@
             <b-col md="3" class="training-col">
               <b-form-input id="id" :readonly="readonly" type="text" v-model="training.ID"/>
             </b-col>
-            <b-col md="3" class="training-col">
+            <b-col md="4" class="training-col">
               <b-form-input id="expiry" type="date" class="no-spinners" :value="training.expiry | formatDate" v-model="training.expiry" :readonly="readonly"/>
             </b-col>
           </b-row>
@@ -189,7 +189,7 @@ export default {
       this.worker.company = ''
       this.worker.companyName = ''
       this.worker.companyType = ''
-      this.$store.dispatch('updateWorker', {id: this.id, worker: this.worker})
+      this.$store.dispatch('removeWorker', {id: this.id, worker: this.worker})
     },
     addTraining () {
       this.error.description = false
@@ -214,7 +214,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 .editBtn {
     float: right;

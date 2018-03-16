@@ -30,7 +30,7 @@ body.modal-open {
   overflow: scroll;
   padding-bottom: 20px;
   padding-right: 10px;
-  margin-top: 20px;
+  margin-top: 10px;
   overflow-x: hidden;
 }
 

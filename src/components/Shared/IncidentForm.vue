@@ -210,7 +210,7 @@ export default {
       if (this.incident.open === false) {
         return ''
       } else if (this.incident.escalate === true) {
-        return {name: this.$store.getters.company.hseManager, key: this.$store.getters.companyKey}
+        return {name: this.$store.getters.company.hseManager}
       } else {
         return this.incident.loggedBy
       }

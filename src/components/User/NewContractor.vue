@@ -62,8 +62,8 @@
                 v-model="userName"
                 placeholder="Name"
                 :class="{'alert-border': errors.has('name')}">
-            </b-form-input>
-            <div class="alert alert-danger" v-show="errors.has('name')">Please enter your name</div>
+            </b-form-input><div class="alert alert-danger" v-show="errors.has('name')">Please enter your name</div>
+            
 
             <b-form-input name="userPhone"
                 v-validate="'required|numeric'"
@@ -72,7 +72,7 @@
                 placeholder="Phone Number"
                 :class="{'alert-border': errors.has('userPhone')}">
             </b-form-input>
-            <div class="alert alert-danger" v-show="errors.has('name')">Please enter your phone number</div>
+            <div class="alert alert-danger" v-show="errors.has('userPhone')">Please enter your phone number</div>
 
             <b-form-input name="email"
                 v-validate="'required|email'"
@@ -178,7 +178,7 @@ export default {
               }
             ]
           })
-          await this.$store.dispatch('newTaskAnalysis', 'Working at heights > 5m')
+          await this.$store.dispatch('createTaskAnalysis')
           this.$router.push('/contractor')
         } catch (err) {
           console.log(err)
@@ -252,24 +252,4 @@ export default {
     text-decoration: none;
   }
 
-  .alert-danger {
-    margin-top:10px;
-    padding: 5px;
-    font-size: 0.9rem;
-  }
-
-  .alert-border {
-    border: 1px solid salmon;
-  }
-  
-  .no-spinners {
-    -moz-appearance:textfield;
-  }
-
-  .no-spinners::-webkit-outer-spin-button,
-  .no-spinners::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  
 </style>

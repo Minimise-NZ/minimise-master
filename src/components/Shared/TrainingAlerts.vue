@@ -1,11 +1,11 @@
 <template>
   <b-card header="Training Alerts" header-tag="header">
-     <b-row v-if="trainingAlerts.length === 0">
+     <b-row v-if="training.length === 0">
       <b-col>
         <header class="subheader">You have no training alerts</header>
       </b-col>
     </b-row>
-    <b-row class="subheader" v-if="trainingAlerts.length !== 0">
+    <b-row class="subheader" v-if="training.length !== 0">
       <b-col>
         <header>Name</header>
       </b-col>
@@ -21,7 +21,7 @@
     </b-row>
     <b-row 
        class="content"
-       v-for="training in trainingAlerts"
+       v-for="training in training"
        :key="training.name">
       <b-col>
         <a style="text-decoration: underline; color:#178ac3; cursor: pointer" @click="workerView"
@@ -44,45 +44,20 @@
 </template>
 
 <script>
-import moment from 'moment'
 export default {
   data () {
     return {
-      trainingAlerts: [
-      ]
     }
   },
   computed: {
     workers () {
       return this.$store.getters.workers
+    },
+    training () {
+      return this.$store.getters.training
     }
   },
-  mounted () {
-    this.training()
-  },
   methods: {
-    training () {
-      for (let i of this.workers) {
-        for (let training of i.worker.training) {
-          if (training.expiry !== '') {
-            let alertDate = moment(training.expiry).subtract(14, 'days').format('YYYY-MM-DD')
-            if (moment().isAfter(training.expiry)) {
-              training.name = i.worker.name
-              training.status = 'Expired'
-              this.trainingAlerts.push(training)
-            } else if (moment().isAfter(alertDate)) {
-              training.name = i.worker.name
-              training.status = 'Due to expire'
-              this.trainingAlerts.push(training)
-            }
-          } else {
-            training.name = i.worker.name
-            training.status = 'Incomplete'
-            this.trainingAlerts.push(training)
-          }
-        }
-      }
-    },
     workerView () {
       let companyType = this.$store.getters.user.companyType
       this.$router.push('/' + companyType + '/workers')

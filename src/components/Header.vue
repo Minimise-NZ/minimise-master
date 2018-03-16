@@ -20,10 +20,16 @@
 </template>
 
 <script>
+import * as firebase from 'firebase'
 export default {
   methods: {
     logout () {
       this.$store.dispatch('logout')
+      firebase.auth().signOut().then(function () {
+        console.log('user signed out')
+      }).catch(function (error) {
+        console.log('use sign out error', error)
+      })
       this.$router.push('/')
     },
     userDetails () {

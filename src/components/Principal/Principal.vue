@@ -1,8 +1,7 @@
 <template>
   <animated-fade-in>
-    <div>
+    <div class="min-width-container">
       <dashboard-header></dashboard-header>
-      
         <b-row>
           <b-col sm="2" class="side-wrapper">
             <b-list-group>
@@ -20,13 +19,11 @@
               </router-link>
             </b-list-group>
           </b-col>
-
           <b-col>
             <animated-fade-in>
               <router-view></router-view>
             </animated-fade-in>
           </b-col>
-          
         </b-row>
     </div>
   </animated-fade-in>
@@ -63,16 +60,24 @@ export default {
     this.$store.dispatch('getCompany')
   },
   mounted () {
-    this.$store.dispatch('getCompanyIndex')
+    if (this.$store.getters.companyIndex === null) {
+      this.$store.dispatch('getCompanyIndex')
+    }
     // this.$store.dispatch('getProjectManagers') *will add this functionallity later. Need to check if change ofproject managers is required
     this.$store.dispatch('getJobs')
     this.$store.dispatch('getIncidents')
     this.$store.dispatch('getWorkers')
+    if (this.user.admin) {
+      this.$store.dispatch('getTraining')
+    }
   }
 }
 </script>
 
 <style scoped>
+  .min-width-container {
+    min-width: 950px;
+  }
 
   .list-group-item {
     border-radius: 0.25rem;

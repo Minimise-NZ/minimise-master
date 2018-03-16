@@ -73,9 +73,17 @@
                   </b-input-group>
                 </b-col>
               </b-row>
+               <b-row>
+                <b-col md="12" lg="4">
+                  <p>Medical Centre Phone:</p>
+                </b-col>
+                <b-col md="12" lg="7">
+                  <b-form-input type="number" class="no-spinners" v-model="medPhone"/>
+                </b-col>
+              </b-row>
               <b-row class="search mt-0">
                 <b-col>
-                  <div class="alert alert-danger mt-0" v-if="medicalError">You have not entered a medical centre</div>
+                  <div class="alert alert-danger mt-0" v-if="medicalError">Please enter medical centre details</div>
                 </b-col>
               </b-row>
             </b-col>
@@ -225,6 +233,7 @@ export default {
       mapRoot: 'https://www.google.com/maps/embed/v1/place?key=AIzaSyD7W7NiKKy0qZfRUsslzHOe-Hnkp-IncyU&q=Christchurch City',
       siteAddress: '',
       medical: '',
+      medPhone: '',
       addressError: false,
       medicalError: false,
       contractorError: false,
@@ -292,7 +301,7 @@ export default {
       } else {
         this.addressError = false
       }
-      if (this.medical === '') {
+      if (this.medical === '' || this.medPhone === '') {
         this.medicalError = true
         return
       } else {
@@ -321,6 +330,7 @@ export default {
           principalName: this.company.name,
           pm: this.user.name,
           pmPhone: this.user.phone,
+          pmKey: this.$store.getters.userKey,
           hse: this.company.hseManager,
           hsePhone: this.company.hsePhone,
           address: this.siteAddress,

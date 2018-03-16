@@ -1,9 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import AuthGuard from './auth-guard'
+import {store} from '../store/store'
 
 import Home from '@/components/Home.vue'
-import Temp from '@/components/Temp.vue'
 
 import Login from '@/components/User/Login.vue'
 import SignUp from '@/components/User/SignUp.vue'
@@ -43,11 +42,6 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Coming Soon',
-      component: Temp
-    },
-    {
-      path: '/home',
       name: 'Home',
       component: Home
     },
@@ -78,7 +72,19 @@ export default new Router({
     {
       path: '/contractor',
       component: Contractor,
-      beforeEach: AuthGuard,
+      beforeEnter: (to, from, next) => {
+        console.log('auth guard')
+        if (store.getters.userKey !== '') {
+          if (store.getters.user.companyType === 'contractor') {
+            next()
+          } else {
+            alert('Access not allowed')
+            next('/principal')
+          }
+        } else {
+          next('/login')
+        }
+      },
       children: [
         {
           path: '',
@@ -114,11 +120,29 @@ export default new Router({
         },
         {
           path: 'billing',
-          component: Billing
+          component: Billing,
+          beforeEnter: (to, from, next) => {
+            console.log('auth guard')
+            if (store.getters.user.admin) {
+              next()
+            } else {
+              alert('Access not allowed')
+              next('/contractor')
+            }
+          }
         },
         {
           path: 'admin',
-          component: AdminUsers
+          component: AdminUsers,
+          beforeEnter: (to, from, next) => {
+            console.log('auth guard')
+            if (store.getters.user.admin) {
+              next()
+            } else {
+              alert('Access not allowed')
+              next('/contractor')
+            }
+          }
         },
         {
           path: 'workers',
@@ -146,7 +170,18 @@ export default new Router({
     {
       path: '/principal',
       component: Principal,
-      beforeEach: AuthGuard,
+      beforeEnter: (to, from, next) => {
+        if (store.getters.userKey !== '') {
+          if (store.getters.user.companyType === 'principal') {
+            next()
+          } else {
+            alert('Access not allowed')
+            next('/contractor')
+          }
+        } else {
+          next('/login')
+        }
+      },
       children: [
         {
           path: '',
@@ -167,7 +202,15 @@ export default new Router({
         },
         {
           path: 'master',
-          component: Master
+          component: Master,
+          beforeEnter: (to, from, next) => {
+            if (store.getters.user.admin) {
+              next()
+            } else {
+              alert('Access not allowed')
+              next('/principal')
+            }
+          }
         },
         {
           path: 'newJob',
@@ -175,15 +218,39 @@ export default new Router({
         },
         {
           path: 'billing',
-          component: Billing
+          component: Billing,
+          beforeEnter: (to, from, next) => {
+            if (store.getters.user.admin) {
+              next()
+            } else {
+              alert('Access not allowed')
+              next('/principal')
+            }
+          }
         },
         {
           path: 'admin',
-          component: AdminUsers
+          component: AdminUsers,
+          beforeEnter: (to, from, next) => {
+            if (store.getters.user.admin) {
+              next()
+            } else {
+              alert('Access not allowed')
+              next('/principal')
+            }
+          }
         },
         {
           path: 'workers',
-          component: Workers
+          component: Workers,
+          beforeEnter: (to, from, next) => {
+            if (store.getters.user.admin) {
+              next()
+            } else {
+              alert('Access not allowed')
+              next('/principal')
+            }
+          }
         },
         {
           path: 'incidents',

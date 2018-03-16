@@ -38,7 +38,7 @@
           <b-row>
             <b-col sm="3" lg="2">Date of Incident:</b-col>
             <b-col sm="9" lg="10">
-              <b-form-input type="text" v-model="incident.date" :value="incident.date | formatDate" readonly></b-form-input>
+              <b-form-input type="text" :value="displayDate" readonly></b-form-input>
             </b-col>
           </b-row>
           <b-row>
@@ -148,6 +148,7 @@
 
 <script>
 import IncidentForm from '@/components/Shared/IncidentForm.vue'
+import moment from 'moment'
 export default {
   props: ['id'],
   components: {
@@ -165,6 +166,9 @@ export default {
     }
   },
   computed: {
+    displayDate () {
+      return moment(String(this.incident.date, 'YYYY-MM-DD')).format('DD-MM-YYYY')
+    },
     companyType () {
       return this.$store.getters.user.companyType
     },
@@ -172,7 +176,7 @@ export default {
       return this.$store.getters.incident(this.id)
     },
     headerText () {
-      let text = this.incident.address + ' - ' + this.formattedDate
+      let text = this.incident.address + ' : ' + this.displayDate
       return text
     },
     status () {
@@ -210,6 +214,7 @@ export default {
     onConfirm () {
       this.error = ''
       this.incident.actionOwner = this.actionOwner
+      console.log('updating incident', this.incident)
       this.$store.dispatch('updateIncident', this.incident)
       .then(() => {
         this.success = true

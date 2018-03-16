@@ -22,19 +22,31 @@
       <b-form @submit.prevent="onSubmit">
         <b-row>
           <b-col sm="3"><label>Feedback Type:</label></b-col>
-          <b-col sm="7"><b-form-select v-model="form.subject" :options="subjects"/></b-col>
+          <b-col sm="7" class="error">
+            <b-form-select v-model="form.subject" :options="subjects"/>
+            <b-alert variant="danger" :show="subjectError">Please select feedback type</b-alert>
+          </b-col>
         </b-row>
         <b-row>
           <b-col sm="3"><label>Application Type:</label></b-col>
-          <b-col sm="7"><b-form-select v-model="form.platform" :options="platforms"/></b-col>
+          <b-col sm="7">
+            <b-form-select v-model="form.platform" :options="platforms"/>
+            <b-alert variant="danger" :show="platformError">Please select application type</b-alert>
+          </b-col>
         </b-row>
         <b-row v-if="form.platform === 'web'">
           <b-col sm="3"><label>Which operating system do you use?</label></b-col>
-          <b-col sm="7"><b-form-select v-model="form.os" :options="osTypes"/></b-col>
+          <b-col sm="7">
+            <b-form-select v-model="form.os" :options="osTypes"/>
+            <b-alert variant="danger" :show="osError">Please select operating system</b-alert>
+          </b-col>
         </b-row>
           <b-row v-if="form.platform === 'mobile'">
           <b-col sm="3"><label>Mobile type:</label></b-col>
-          <b-col sm="7"><b-form-select v-model="form.mobile" :options="mobiles"/></b-col>
+          <b-col sm="7">
+            <b-form-select v-model="form.mobile" :options="mobiles"/>
+            <b-alert variant="danger" :show="mobileError">Please select mobile type</b-alert>
+          </b-col>
         </b-row>
         <b-row>
           <b-col sm="3"><label>Description:</label></b-col>
@@ -45,12 +57,13 @@
               placeholder="Please enter detailed description"
               :rows="8">
             </b-form-textarea>
+            <b-alert variant="danger" :show="detailError">Please enter details</b-alert>
           </b-col>
         </b-row>
         <div class="text-center">
           <b-button-group class="pt-4 pb-4">
             <b-button class="buttons" variant="success" @click="submit">Submit</b-button>
-            <b-button class="buttons" variant="danger" @click="clear">Cancel</b-button>
+            <b-button class="buttons" variant="danger" @click="clear">Clear</b-button>
           </b-button-group>
         </div>
       </b-form>
@@ -63,6 +76,11 @@
 export default {
   data () {
     return {
+      subjectError: false,
+      platformError: false,
+      osError: false,
+      mobileError: false,
+      detailError: false,
       subjects: [
         { value: 'Support Request', text: 'Help/Support' },
         { value: 'Report an issue', text: 'Report an issue' },
@@ -103,21 +121,47 @@ export default {
   methods: {
     submit () {
       // submit
+      this.subjectError = false
+      this.platformError = false
+      this.osError = false
+      this.mobileError = false
+      this.detailError = false
       let form = this.form
-      form.username = this.user.name
-      form.userEmail = this.user.email
-      this.$store.dispatch('submitFeedback', form)
-      .then((response) => {
-        console.log(response)
-        if (response.status === 200) {
-          this.success = true
-        } else {
-          console.log('error')
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+      if (form.subject === '') {
+        this.subjectError = true
+        return
+      }
+      if (form.platform === '') {
+        this.platformError = true
+        return
+      }
+      if (form.platform === 'web' && form.os === '') {
+        this.osError = true
+        return
+      }
+      if (form.platform === 'mobile' && form.mobile === '') {
+        this.mobileError = true
+        return
+      }
+      if (form.details === '') {
+        this.detailError = true
+        return
+      } else {
+        form.username = this.user.name
+        form.userEmail = this.user.email
+        this.$store.dispatch('submitFeedback', form)
+        .then((response) => {
+          console.log(response)
+          if (response.status === 200) {
+            this.success = true
+          } else {
+            console.log('error')
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      }
     },
     clear () {
       this.form.subject = ''
@@ -125,6 +169,11 @@ export default {
       this.form.os = ''
       this.form.mobile = ''
       this.form.details = ''
+      this.subjectError = false
+      this.platformError = false
+      this.osError = false
+      this.mobileError = false
+      this.detailError = false
     }
   }
 }
@@ -133,7 +182,7 @@ export default {
 <style scoped>
   .container-fluid {
     padding-top: 20px;
-    margin-bottom: 100px;;
+    margin-bottom: 100px;
   }
 
   .card-header {
@@ -162,7 +211,6 @@ export default {
 
    .row {
     padding: 15px;
-    margin-right: 20px;
   }
 
   .col {
