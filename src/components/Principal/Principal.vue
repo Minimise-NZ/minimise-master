@@ -60,14 +60,12 @@ export default {
     this.$store.dispatch('getCompany')
   },
   mounted () {
-    if (this.$store.getters.companyIndex === null) {
-      this.$store.dispatch('getCompanyIndex')
-    }
+    this.$store.dispatch('getCompanyIndex')
     // this.$store.dispatch('getProjectManagers') *will add this functionallity later. Need to check if change ofproject managers is required
     this.$store.dispatch('getJobs')
     this.$store.dispatch('getIncidents')
     this.$store.dispatch('getWorkers')
-    if (this.user.admin) {
+    if (this.user.admin === true) {
       this.$store.dispatch('getTraining')
     }
   }

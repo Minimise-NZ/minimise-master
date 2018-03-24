@@ -31,13 +31,13 @@
             <b-col> 
               <header class="subheader">Signed In</header>
               <ul>
-                <li>Worker name/Timestamp</li>
+                <li v-for="(plan, index) in job.safetyPlans" :key='index'>{{plan.workerName}}</li>
               </ul>
             </b-col>
             <b-col>
-              <header class="subheader">Current Safety Plans</header>
+              <header class="subheader">Safety Plans</header>
               <ul>
-                <li>View Safety Plan: Date</li>
+                <b-link v-for="(plan, index) in job.safetyPlans" :key='index'>{{plan.workerName}}</b-link>
               </ul>
             </b-col>
           </b-row>

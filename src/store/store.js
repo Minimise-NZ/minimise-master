@@ -497,18 +497,28 @@ export const store = new Vuex.Store({
                 }
               })
             }
-            jobSites.push({
-              id: doc.id,
-              address: doc.data().address,
-              date: doc.data().date,
-              hse: doc.data().hse,
-              medical: doc.data().medical,
-              hsePhone: doc.data().hsePhone,
-              info: doc.data().info,
-              notifiable: doc.data().notifiable,
-              pm: doc.data().pm,
-              pmPhone: doc.data().pmPhone,
-              contractors: list
+            // get the safety plans
+            firestore.collection('jobSites').doc(doc.id).collection('safetyPlans')
+            .get()
+            .then((snapshot) => {
+              let safetyPlans = []
+              snapshot.forEach((doc) => {
+                safetyPlans.push(doc.data())
+              })
+              jobSites.push({
+                id: doc.id,
+                address: doc.data().address,
+                date: doc.data().date,
+                hse: doc.data().hse,
+                medical: doc.data().medical,
+                hsePhone: doc.data().hsePhone,
+                info: doc.data().info,
+                notifiable: doc.data().notifiable,
+                pm: doc.data().pm,
+                pmPhone: doc.data().pmPhone,
+                contractors: list,
+                safetyPlans: safetyPlans
+              })
             })
           })
           commit('setJobs', jobSites)
@@ -518,8 +528,8 @@ export const store = new Vuex.Store({
           console.log('Error getting documents: ', error)
           reject(error)
         })
+        return promise
       })
-      return promise
     },
     getJobRequests ({commit, state}, payload) {
       // get all jobs in progress that are assigned to this company
