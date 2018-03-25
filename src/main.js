@@ -12,7 +12,7 @@ import 'animate.css/animate.css'
 import Vuebar from 'vuebar'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
-import lodash from 'lodash'
+import _ from 'lodash'
 import VueLodash from 'vue-lodash'
 import VeeValidate from 'vee-validate'
 import vSelect from 'vue-select'
@@ -39,7 +39,7 @@ const config = {
 }
 
 Vue.component('v-select', vSelect)
-Vue.use(VueLodash, lodash)
+Vue.use(VueLodash, _)
 Vue.use(AOS)
 Vue.use(Vuebar)
 Vue.config.productionTip = false

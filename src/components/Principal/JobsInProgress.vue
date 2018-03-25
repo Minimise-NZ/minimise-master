@@ -31,13 +31,16 @@
             <b-col> 
               <header class="subheader">Signed In</header>
               <ul>
-                <li v-for="(plan, index) in job.safetyPlans" :key='index'>{{plan.workerName}}</li>
+                <li v-for="(plan, index) in job.safetyPlans" v-if="plan.signedIn === true" :key='index'>{{plan.workerName}}</li>
               </ul>
             </b-col>
             <b-col>
               <header class="subheader">Safety Plans</header>
               <ul>
-                <b-link v-for="(plan, index) in job.safetyPlans" :key='index'>{{plan.workerName}}</b-link>
+                <router-link
+                  v-for="(plan, index) in job.safetyPlans" :key='index'
+                  :to="{ name: 'safetyplan', params: { jobid: job.id, planid: index} }"
+                  >{{plan.workerName}}</router-link>
               </ul>
             </b-col>
           </b-row>
@@ -59,12 +62,18 @@ export default {
     },
     contractors () {
       return this.jobSites.contractors
+    },
+    companyType () {
+      return this.$store.getters.user.companyType
     }
   },
   methods: {
     editJob (id) {
-      let companyType = this.$store.getters.user.companyType
-      this.$router.push('/' + companyType + '/jobs/job/' + id)
+      this.$router.push('/' + this.companyType + '/jobs/job/' + id)
+    },
+    viewSafetyPlan (jobid, safetyplanid) {
+      console.log(jobid, safetyplanid)
+      this.$router.push('/' + this.companyType + '/jobs/' + jobid + '/' + safetyplanid)
     }
   }
 }

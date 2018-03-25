@@ -34,6 +34,7 @@ import NewJob from '@/components/Principal/NewJob.vue'
 import Contractors from '@/components/Principal/ContractorManagement.vue'
 import JobDetails from '@/components/Principal/JobDetails.vue'
 import JobsInProgress from '@/components/Principal/JobsInProgress.vue'
+import SafetyPlan from '@/components/Principal/SafetyPlanView.vue'
 import Master from '@/components/Principal/MasterSafetyPlan.vue'
 
 Vue.use(Router)
@@ -198,6 +199,12 @@ export default new Router({
         {
           path: 'jobs/job/:id',
           component: JobDetails,
+          props: true
+        },
+        {
+          path: 'jobs/:jobid/:planid',
+          name: 'safetyplan',
+          component: SafetyPlan,
           props: true
         },
         {

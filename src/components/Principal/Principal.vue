@@ -62,12 +62,16 @@ export default {
   mounted () {
     this.$store.dispatch('getCompanyIndex')
     // this.$store.dispatch('getProjectManagers') *will add this functionallity later. Need to check if change ofproject managers is required
-    this.$store.dispatch('getJobs')
-    this.$store.dispatch('getIncidents')
-    this.$store.dispatch('getWorkers')
     if (this.user.admin === true) {
-      this.$store.dispatch('getTraining')
+      console.log('user is an admin user')
+      this.$store.dispatch('getAllJobs')
+      this.$store.dispatch('getAllIncidents')
+    } else {
+      console.log('user is NOT an admin user')
+      this.$store.dispatch('getMyJobs')
+      this.$store.dispatch('getMyIncidents')
     }
+    this.$store.dispatch('getWorkers')
   }
 }
 </script>

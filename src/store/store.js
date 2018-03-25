@@ -35,7 +35,7 @@ export const store = new Vuex.Store({
       state.company = {}
       state.companyKey = ''
       state.companyIndex = []
-      state.jobsInProgress = []
+      state.jobsInProgress = null
       state.jobRequests = []
       state.myIncidents = []
       state.allHazards = []
@@ -309,7 +309,7 @@ export const store = new Vuex.Store({
         }
       })
     },
-    getWorkers ({commit, state}) {
+    getWorkers ({commit, dispatch, state}) {
       // get all workers with company = this companyKey
       let workers = []
       firestore.collection('users').where('company', '==', state.companyKey)
@@ -319,6 +319,9 @@ export const store = new Vuex.Store({
           workers.push({id: doc.id, worker: doc.data()})
         })
         commit('setWorkers', workers)
+        if (state.user.admin === true) {
+          dispatch('getTraining')
+        }
       })
     },
     getCompanyIndex ({commit}) {
@@ -475,10 +478,67 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    getJobs ({commit, state}) {
+    getAllJobs ({commit, state}) {
       // get all jobs in progress that are assigned to this company as principal
       let promise = new Promise((resolve, reject) => {
         firestore.collection('jobSites').where('principalKey', '==', state.companyKey).where('open', '==', true)
+        .get()
+        .then((snapshot) => {
+          var jobSites = []
+          snapshot.forEach((doc) => {
+            let list = []
+            let contractors = doc.data().approved
+            // get the contractor name from companyIndex
+            for (let key in contractors) {
+              state.companyIndex.find((id) => {
+                if (id.value === key) {
+                  list.push({
+                    approved: contractors[key],
+                    name: id.label,
+                    key: id.value
+                  })
+                }
+              })
+            }
+            // get the safety plans
+            firestore.collection('jobSites').doc(doc.id).collection('safetyPlans')
+            .get()
+            .then((snapshot) => {
+              let safetyPlans = []
+              snapshot.forEach((doc) => {
+                safetyPlans.push(doc.data())
+              })
+              jobSites.push({
+                id: doc.id,
+                address: doc.data().address,
+                date: doc.data().date,
+                hse: doc.data().hse,
+                medical: doc.data().medical,
+                hsePhone: doc.data().hsePhone,
+                info: doc.data().info,
+                notifiable: doc.data().notifiable,
+                pm: doc.data().pm,
+                pmPhone: doc.data().pmPhone,
+                contractors: list,
+                safetyPlans: safetyPlans
+              })
+            })
+          })
+          commit('setJobs', jobSites)
+          console.log(jobSites)
+          resolve()
+        })
+        .catch((error) => {
+          console.log('Error getting documents: ', error)
+          reject(error)
+        })
+        return promise
+      })
+    },
+    getMyJobs ({commit, state}) {
+      // get all jobs in progress that are assigned to this project manager
+      let promise = new Promise((resolve, reject) => {
+        firestore.collection('jobSites').where('pmKey', '==', state.userKey).where('open', '==', true)
         .get()
         .then((snapshot) => {
           var jobSites = []
@@ -626,79 +686,80 @@ export const store = new Vuex.Store({
       })
       dispatch('getIncidents')
     },
-    getIncidents ({commit, state}) {
+    getAllIncidents ({commit, state}) {
       let promise = new Promise((resolve, reject) => {
         let incidents = []
-        // if user is admin, get all incidents that are assigned to this company
-        if (state.user.admin) {
-          firestore.collection('incidents').where('company', '==', state.companyKey)
-          .get()
-          .then((snapshot) => {
-            snapshot.forEach((doc) => {
-              let obj = doc.data()
-              let key = doc.id
-              incidents.push({
-                id: key,
-                address: obj.address,
-                date: obj.date,
-                reportedBy: obj.reportedBy,
-                type: obj.type,
-                description: obj.description,
-                injury: obj.injury,
-                injuryDescription: obj.injuryDescription,
-                plant: obj.plant,
-                plantDamage: obj.plantDamage,
-                cause: obj.cause,
-                corrective: obj.corrective,
-                escalate: obj.escalate,
-                open: obj.open,
-                loggedBy: obj.loggedBy,
-                actionOwner: obj.actionOwner
-              })
+        firestore.collection('incidents').where('company', '==', state.companyKey)
+        .get()
+        .then((snapshot) => {
+          snapshot.forEach((doc) => {
+            let obj = doc.data()
+            let key = doc.id
+            incidents.push({
+              id: key,
+              address: obj.address,
+              date: obj.date,
+              reportedBy: obj.reportedBy,
+              type: obj.type,
+              description: obj.description,
+              injury: obj.injury,
+              injuryDescription: obj.injuryDescription,
+              plant: obj.plant,
+              plantDamage: obj.plantDamage,
+              cause: obj.cause,
+              corrective: obj.corrective,
+              escalate: obj.escalate,
+              open: obj.open,
+              loggedBy: obj.loggedBy,
+              actionOwner: obj.actionOwner
             })
-            commit('setIncidents', incidents)
-            resolve()
           })
-          .catch((error) => {
-            console.log(error)
-            reject()
-          })
-        } else {
-          // get all incidents that are assigned to user as action owner
-          firestore.collection('incidents').where('actionOwner.key', '==', state.userKey)
-          .get()
-          .then((snapshot) => {
-            console.log('incidents', snapshot)
-            snapshot.forEach((doc) => {
-              let obj = doc.data()
-              let key = doc.id
-              incidents.push({
-                id: key,
-                address: obj.address,
-                date: obj.date,
-                reportedBy: obj.reportedBy,
-                type: obj.type,
-                description: obj.description,
-                injury: obj.injury,
-                injuryDescription: obj.injuryDescription,
-                plant: obj.plant,
-                plantDamage: obj.plantDamage,
-                cause: obj.cause,
-                corrective: obj.corrective,
-                escalate: obj.escalate,
-                open: obj.open,
-                loggedBy: obj.loggedBy,
-                actionOwner: obj.actionOwner
-              })
+          commit('setIncidents', incidents)
+          resolve()
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+      })
+      return promise
+    },
+    getMyIncidents ({commit, state}) {
+      let promise = new Promise((resolve, reject) => {
+        let incidents = []
+        firestore.collection('incidents').where('actionOwner.key', '==', state.userKey)
+        .get()
+        .then((snapshot) => {
+          console.log('incidents', snapshot)
+          snapshot.forEach((doc) => {
+            let obj = doc.data()
+            let key = doc.id
+            incidents.push({
+              id: key,
+              address: obj.address,
+              date: obj.date,
+              reportedBy: obj.reportedBy,
+              type: obj.type,
+              description: obj.description,
+              injury: obj.injury,
+              injuryDescription: obj.injuryDescription,
+              plant: obj.plant,
+              plantDamage: obj.plantDamage,
+              cause: obj.cause,
+              corrective: obj.corrective,
+              escalate: obj.escalate,
+              open: obj.open,
+              loggedBy: obj.loggedBy,
+              actionOwner: obj.actionOwner
             })
-            commit('setIncidents', incidents)
-            resolve()
           })
-          .catch((error) => {
-            console.log(error)
-            reject()
-          })
-        }
+          commit('setIncidents', incidents)
+          resolve()
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
       })
       return promise
     },
