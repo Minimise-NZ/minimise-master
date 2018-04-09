@@ -76,7 +76,9 @@
       loginUser () {
         this.$store.dispatch('signIn', {email: this.email, password: this.password})
         .then(async() => {
+          console.log('getting user info')
           let user = await this.$store.dispatch('getUser')
+          console.log(user)
           if (user.webUser === true) {
             let companyType = user.companyType
             this.$router.push('/' + companyType)

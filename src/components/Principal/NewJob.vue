@@ -78,7 +78,7 @@
                   <p>Medical Centre Phone:</p>
                 </b-col>
                 <b-col md="12" lg="7">
-                  <b-form-input type="number" class="no-spinners" v-model="medPhone"/>
+                  <b-form-input type="text" class="no-spinners" v-model="medPhone"/>
                 </b-col>
               </b-row>
               <b-row class="search mt-0">
@@ -337,7 +337,8 @@ export default {
           notifiable: this.notifiable.selected,
           info: this.addinfo.infotext,
           subcontractors: this.subcontractors,
-          medical: this.medical
+          medical: this.medical,
+          medPhone: this.medPhone
         })
         .then(() => {
           this.showModal = true

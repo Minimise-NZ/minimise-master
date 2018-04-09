@@ -400,6 +400,7 @@ export const store = new Vuex.Store({
           principalKey: payload.principalKey,
           principalName: payload.principalName,
           medical: payload.medical,
+          medPhone: payload.medPhone,
           pm: payload.pm,
           pmPhone: payload.pmPhone,
           pmKey: payload.pmKey,
@@ -443,7 +444,7 @@ export const store = new Vuex.Store({
         dispatch('getJobs')
       })
     },
-    approveContractor ({state}, payload) {
+    approveContractor ({state, dispatch}, payload) {
       // add agreement to job sites agreement collection
       let approved = {}
       let key = state.companyKey
@@ -455,6 +456,10 @@ export const store = new Vuex.Store({
       // update companies jobSites approved to true
       firestore.collection('companies').doc(key)
       .collection('jobSites').doc(payload.job.id).update({'approved': true})
+      .then(() => {
+        console.log('job updated')
+        dispatch('getJobRequests')
+      })
     },
     closeJob ({dispatch}, payload) {
       // close job in jobSites collection and close job in each comapnies jobSite list

@@ -2,7 +2,7 @@
   <b-container fluid>
     <b-card header="Principal Home" header-tag="header">
       <div class="scroll-container">
-        <contractorActivity></contractorActivity>
+        <!--<contractorActivity></contractorActivity>-->
         <incidentSummary></incidentSummary>
         <trainingAlerts></trainingAlerts>
       </div>  
@@ -13,10 +13,10 @@
 <script>
 import IncidentSummary from '@/components/Shared/IncidentSummary.vue'
 import TrainingAlerts from '@/components/Shared/TrainingAlerts.vue'
-import ContractorActivity from '@/components/Principal/ContractorActivity.vue'
+// import ContractorActivity from '@/components/Principal/ContractorActivity.vue'
 export default {
   components: {
-    'contractorActivity': ContractorActivity,
+    // 'contractorActivity': ContractorActivity,
     'incidentSummary': IncidentSummary,
     'trainingAlerts': TrainingAlerts
   },

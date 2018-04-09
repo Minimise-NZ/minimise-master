@@ -275,6 +275,7 @@ export default {
           form.taskAnalysis = this.taskAnalysis
         }
         this.$store.dispatch('approveContractor', {job: this.job, form})
+        this.$router.go(-1)
       }
     },
     cancel () {
