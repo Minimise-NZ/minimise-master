@@ -123,7 +123,6 @@ export default new Router({
           path: 'billing',
           component: Billing,
           beforeEnter: (to, from, next) => {
-            console.log('auth guard')
             if (store.getters.user.admin) {
               next()
             } else {

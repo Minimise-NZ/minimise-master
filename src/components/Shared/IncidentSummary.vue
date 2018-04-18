@@ -6,16 +6,19 @@
       </b-col>
     </b-row>
     <b-row class="subheader" v-if="incidents.length !== 0">
-      <b-col>
+      <b-col cols="3">
         <header>Site Address</header>
       </b-col>
-        <b-col>
+      <b-col cols="2">
         <header>Incident Type</header>
       </b-col>
       <b-col>
         <header>Action Owner</header>
       </b-col>
       <b-col>
+        <header>Reported By</header>
+      </b-col>
+      <b-col cols="2">
         <header>Reported Date</header>
       </b-col>
     </b-row>
@@ -24,16 +27,19 @@
       v-for="incident in incidents"
       v-if="incident.open"
       :key="incident.id">
-      <b-col>
+      <b-col cols="3">
         <p style="text-decoration: underline; color: #178ac3; cursor: pointer" @click="viewIncident(incident.id)">{{incident.address}}</p>
       </b-col>
-      <b-col>
+      <b-col cols="2">
         <p>{{incident.type}}</p>
       </b-col>
       <b-col>
         <p>{{incident.actionOwner.name}}</p>
       </b-col>
       <b-col>
+        <p>{{incident.reportedBy}}</p>
+      </b-col>
+      <b-col cols="2">
         <p>{{incident.date | formatDate}}</p>
       </b-col>
     </b-row>
@@ -84,7 +90,7 @@ export default {
     color: #12807a;
   }
   
-  .col {
+  .col, .col-3, .col-2 {
     margin: 0;
     padding: 0;
   }

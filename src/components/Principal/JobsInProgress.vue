@@ -37,10 +37,11 @@
             <b-col>
               <header class="subheader">Safety Plans</header>
               <ul>
-                <router-link
-                  v-for="(plan, index) in job.safetyPlans" :key='index'
+                <li v-for="(plan, index) in job.safetyPlans" :key='index'>
+                  <router-link
                   :to="{ name: 'safetyplan', params: { jobid: job.id, planid: index} }"
                   >{{plan.workerName}}</router-link>
+                </li>
               </ul>
             </b-col>
           </b-row>

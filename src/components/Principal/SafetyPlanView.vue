@@ -12,9 +12,9 @@
                 role="tab"
                 class="hazardCard mt-2 mb-4">
                 <header class="card-header hazard">
-                  <b-btn block v-b-toggle="'collapse' + index" class="text-left">{{hazard.name}}</b-btn>
+                  <b-btn block v-b-toggle="'collapse' + index" class="text-left togglebtn">{{hazard.name}}</b-btn>
                 </header>
-                <b-collapse :id="'collapse' + index" accordion="my-accordion" visible>
+                <b-collapse :id="'collapse' + index" visible>
                 <b-row>
                   <b-col>
                     <b-img
@@ -40,7 +40,88 @@
             </div>
           </b-card>
           <b-card v-if="!_.isEmpty(safetyPlan.taskAnalysis)">
-            <div class="section card-header">Task Analysis</div>
+            <div class="section card-header">Task Analysis <span style="font-size: 0.9rem"> (click task title to hide/show details)</span></div>
+            <b-card class="taskAnalysis">
+              <header class="card-header hazard">
+                <b-btn block v-b-toggle.collapseTask class="text-left togglebtn">{{task.title}}</b-btn>
+              </header>
+              <b-collapse id="collapseTask" visible>
+                <b-row class="pl-2">
+                  <b-col class="ml-0 pl-0">
+                    <b-form-checkbox
+                      id="notification"
+                      value="task.worksafe"
+                      disabled
+                      class="mb-4">
+                      Worksafe notification required
+                    </b-form-checkbox><br>
+                    <b-form-checkbox
+                      id="signage"
+                      value="task.signage"
+                      disabled
+                      class="mb-4">
+                      Signage required
+                    </b-form-checkbox><br>
+                    <b-form-checkbox
+                      value="task.ppeRequired"
+                      disabled
+                      class="mb-4">
+                      PPE required
+                    </b-form-checkbox><br>
+                    <b-form-input
+                      name="ppe"
+                      class="mb-4"
+                      readonly
+                      v-if="task.ppeRequired"
+                      value="task.ppe">
+                    </b-form-input>
+                    <b-form-checkbox
+                      value="task.plantRequired"
+                      disabled
+                      class="mb-4">
+                      Plant required
+                    </b-form-checkbox><br>
+                    <b-form-input
+                      name="plant"
+                      readonly
+                      class="mb-4"
+                      v-if="task.plantRequired"
+                      value="task.plant">
+                    </b-form-input>
+                  </b-col>
+                </b-row>
+                <b-row class="mt-5">
+                  <b-col lg="1" md="2">
+                    <header class="task-subheader">Step</header>
+                  </b-col>
+                  <b-col>
+                    <header class="task-subheader">Task Description</header>
+                  </b-col>
+                  <b-col> 
+                    <header class="task-subheader">Potential Hazards</header>  
+                  </b-col>
+                  <b-col>
+                    <header class="task-subheader">Hazard Controls</header>
+                  </b-col>
+                </b-row>
+                
+              <b-row v-for="(step, index) in task.steps" :key="index">
+                <b-col cols="1">
+                  <h4>{{index + 1}}</h4>
+                </b-col>
+                <b-col>
+                  <textarea class="form-control step" rows="3" value="step.description" readonly></textarea>
+                </b-col> 
+                <b-col>
+                  <textarea class="form-control step" rows="3" value="step.hazards" readonly></textarea>
+                </b-col>
+                <b-col>
+                  <textarea class="form-control step" rows="3" value="step.controls" readonly></textarea>
+                </b-col>
+              </b-row>
+            </b-collapse>
+          </b-card>
+
           </b-card>
           <b-card>
             <div class="section card-header">Training Register</div>
@@ -98,6 +179,9 @@ export default {
     },
     hazards () {
       return this.safetyPlan.hazardRegister
+    },
+    task () {
+      return this.safetyPlan.taskAnalysis
     }
   },
   methods: {
@@ -129,7 +213,7 @@ export default {
     color: white;
   }
 
-  .card-header.hazard{
+  .card-header.hazard {
     margin: -20px -20px 20px -20px;
     padding: 0;
   }
@@ -140,6 +224,25 @@ export default {
 
   .expiry {
     float: right
+  }
+
+  .task-subheader {
+    padding-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+    color: black;
+    border-bottom: 2px solid rgba(155, 35, 53, 0.88);
+  }
+
+  h4 {
+    padding-top: 20px;
+    text-align: center;
+    color: rgba(155, 35, 53, 0.88);
+    font-weight: bold;
+  }
+
+  .togglebtn:hover {
+    background-color: rgba(155, 35, 53, 0.88);
   }
 
 </style>
