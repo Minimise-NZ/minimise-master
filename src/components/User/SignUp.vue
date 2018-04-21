@@ -23,7 +23,7 @@
           <div class="card-header register-header">
             <h5>We are currently in testing phase but please register your interest to receive updates or request a demo</h5>
           </div>
-          <b-form @submit.prevent="register">
+          <b-form @submit.prevent="register" autocomplete="on">
             <b-form-checkbox class="ml-2 mb-3" v-model="demo" value="true">Request a demo</b-form-checkbox><br>
             <b-form-checkbox class="ml-2" v-model="notify" value="true">Notify me of Minimise launch</b-form-checkbox>
 
@@ -31,7 +31,8 @@
               name="name"
               class="mt-3" 
               placeholder="Name" 
-              v-model="name" 
+              v-model="name"
+              autocomplete="name"
               v-validate="'required|alpha_spaces'"
               :class="{'alert-border': errors.has('name')}">
             </b-form-input>
@@ -40,6 +41,7 @@
             <b-form-input 
               name="company"
               placeholder="Company Name" 
+              autocomplete="company"
               v-model="companyName"
               v-validate="'required|alpha_spaces'"
               :class="{'alert-border': errors.has('company')}"
@@ -57,6 +59,7 @@
 
             <b-form-input 
               name="email"
+              autocomplete="email"
               placeholder="Email Address"
               v-model="email"
               v-validate="'required|email'"
@@ -66,6 +69,7 @@
 
             <b-form-input 
               name="phone"
+              autocomplete="phone"
               placeholder="Phone" 
               v-model="phone"
               v-validate="'required|numeric'"

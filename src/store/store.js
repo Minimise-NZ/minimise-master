@@ -265,15 +265,16 @@ export const store = new Vuex.Store({
     },
     inviteUser ({dispatch, state}, payload) {
       // check that user does not already exist
-      firestore.collection('users').where('email', '==', payload.email)
+      firestore.collection('users').where('email', '==', payload.worker.email)
       .get()
       .then((snapshot) => {
         if (snapshot.empty) {
           // create a user doc in firestore and send an email invitation to user email
-          let user = payload
+          let user = payload.worker
           user.company = state.companyKey
           user.companyName = state.company.name
           user.companyType = state.user.companyType
+          console.log('inviting user', user)
           if (user.role !== 'Worker') {
             window.emailjs.send('my_service', 'invitation', {
               name: user.name,
@@ -704,6 +705,7 @@ export const store = new Vuex.Store({
               id: key,
               address: obj.address,
               date: obj.date,
+              company: obj.company,
               reportedBy: obj.reportedBy,
               type: obj.type,
               description: obj.description,
@@ -745,6 +747,7 @@ export const store = new Vuex.Store({
               date: obj.date,
               reportedBy: obj.reportedBy,
               type: obj.type,
+              company: obj.company,
               description: obj.description,
               injury: obj.injury,
               injuryDescription: obj.injuryDescription,

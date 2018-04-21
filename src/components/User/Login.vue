@@ -16,7 +16,7 @@
     </b-modal>
     <b-container class="login-container">
       <h2>Log In</h2>
-      <b-form @submit.prevent="loginUser" id="login">
+      <b-form @submit.prevent="loginUser" id="login" autocomplete="on">
          <b-input-group>
            <b-input-group-addon>
              <i class="fa fa-envelope" aria-hidden="true"></i>

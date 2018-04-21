@@ -17,6 +17,7 @@ import VueLodash from 'vue-lodash'
 import VeeValidate from 'vee-validate'
 import vSelect from 'vue-select'
 import moment from 'moment'
+import VueScrollTo from 'vue-scrollto'
 
 const config = {
   errorBagName: 'errors', // change if property conflicts.
@@ -42,6 +43,18 @@ Vue.component('v-select', vSelect)
 Vue.use(VueLodash, _)
 Vue.use(AOS)
 Vue.use(Vuebar)
+Vue.use(VueScrollTo, {
+  container: 'body',
+  duration: 500,
+  easing: 'ease',
+  offset: 0,
+  cancelable: true,
+  onStart: false,
+  onDone: false,
+  onCancel: false,
+  x: false,
+  y: true
+})
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(AnimatedVue)
