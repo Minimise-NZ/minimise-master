@@ -18,6 +18,9 @@ import VeeValidate from 'vee-validate'
 import vSelect from 'vue-select'
 import moment from 'moment'
 import VueScrollTo from 'vue-scrollto'
+import VueCarousel from 'vue-carousel'
+
+Vue.use(VueCarousel)
 
 const config = {
   errorBagName: 'errors', // change if property conflicts.

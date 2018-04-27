@@ -41,7 +41,6 @@ export default {
   data () {
     return {
       sideNavItems: [
-        {name: 'Job Requests', link: '/contractor/jobs'},
         {name: 'Hazard Register', link: '/contractor/hazards'},
         // {name: 'Hazardous Substances', link: '/contractor/hazardousSubstances'},
         {name: 'Task Analysis', link: '/contractor/taskAnalysis'},

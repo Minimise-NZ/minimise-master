@@ -41,6 +41,7 @@
               class="mb-4"
               v-validate="'required'" 
               v-if="task.ppeRequired"
+              placeholder="Please enter required PPE"
               :class="{'alert-border': errors.has('ppe')}"
               v-model="task.ppe">
             </b-form-input>
@@ -53,6 +54,7 @@
             <b-form-input
               name="plant"
               class="mb-4"
+              placeholder="Please enter required plant"
               v-validate="'required'"
               v-if="task.plantRequired"
               :class="{'alert-border': errors.has('plant')}"

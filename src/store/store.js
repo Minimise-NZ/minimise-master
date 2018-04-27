@@ -110,6 +110,7 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
+    // user functions
     signUp ({commit}, payload) {
       // create a new user in firebase
       let promise = new Promise((resolve, reject) => {
@@ -226,6 +227,7 @@ export const store = new Vuex.Store({
       })
       return promise
     },
+    // worker functions
     updateWorker ({dispatch}, payload) {
       // update worker training
       let promise = new Promise((resolve, reject) => {
@@ -325,6 +327,7 @@ export const store = new Vuex.Store({
         }
       })
     },
+    // company functions
     getCompanyIndex ({commit}) {
       // must already have key in state
       let companies = []
@@ -387,7 +390,8 @@ export const store = new Vuex.Store({
         return list
       })
     },
-    newJob ({commit, dispatch}, payload) {
+    // job site functions
+    newJob ({state, commit, dispatch}, payload) {
       // create new job in firestore jobSites collection
       let promise = new Promise((resolve, reject) => {
         let subcontractors = payload.subcontractors
@@ -423,6 +427,11 @@ export const store = new Vuex.Store({
               open: true
             })
           })
+          if (state.user.admin === true) {
+            dispatch('getAllJobs')
+          } else {
+            dispatch('getMyJobs')
+          }
           resolve()
         })
         .catch((error) => {
@@ -655,12 +664,18 @@ export const store = new Vuex.Store({
       }
       commit('setTrainingAlerts', trainingAlerts)
     },
+    // incident functions
     newIncident ({commit, dispatch, state}, payload) {
       // create new incident in firestore
       let promise = new Promise((resolve, reject) => {
         firestore.collection('incidents').add(payload)
         .then(() => {
-          dispatch('getIncidents')
+          // if admin getAllIncidents, else getMyIncidents
+          if (state.user.admin === true) {
+            dispatch('getAllIncidents')
+          } else {
+            dispatch('getMyIncidents')
+          }
           resolve()
         })
         .catch((error) => {
@@ -670,7 +685,7 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    updateIncident ({dispatch}, payload) {
+    updateIncident ({state, dispatch}, payload) {
       console.log(payload)
       firestore.collection('incidents').doc(payload.id).set({
         address: payload.address,
@@ -690,7 +705,11 @@ export const store = new Vuex.Store({
         loggedBy: payload.loggedBy,
         actionOwner: payload.actionOwner
       })
-      dispatch('getIncidents')
+      if (state.user.admin === true) {
+        dispatch('getAllIncidents')
+      } else {
+        dispatch('getMyIncidents')
+      }
     },
     getAllIncidents ({commit, state}) {
       let promise = new Promise((resolve, reject) => {
@@ -771,6 +790,7 @@ export const store = new Vuex.Store({
       })
       return promise
     },
+    // hazard functions
     getAllHazards ({commit, state}, payload) {
       const allHazards = []
       let promise = new Promise((resolve, reject) => {
@@ -847,6 +867,7 @@ export const store = new Vuex.Store({
       commit('setMyHazards', myHazards)
       return
     },
+    // task analysis functions
     getTaskAnalysis ({commit, state}) {
       // get taskAnalysis from company
       firestore.collection('companies').doc(state.companyKey)

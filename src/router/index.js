@@ -13,7 +13,6 @@ import NewUser from '@/components/User/NewUser.vue'
 
 import Contractor from '@/components/Contractor/Contractor.vue'
 import ContractorHome from '@/components/Contractor/Home.vue'
-import JobRequests from '@/components/Contractor/JobRequests.vue'
 import JobForm from '@/components/Contractor/JobForm.vue'
 import Hazards from '@/components/Contractor/HazardRegister.vue'
 import HazardousSubstances from '@/components/Contractor/HazardousSubstances.vue'
@@ -90,10 +89,6 @@ export default new Router({
         {
           path: '',
           component: ContractorHome
-        },
-        {
-          path: 'jobs',
-          component: JobRequests
         },
         {
           path: 'jobs/job/:id',

@@ -1,8 +1,7 @@
 <template>
- <animated-slide-in-down>
   <div id="home">
     <!--navbar-->
-    <b-navbar sticky toggleable="lg" type="dark" class="my-primary-bg padding-side">
+    <b-navbar toggleable="lg" type="dark" class="my-primary-bg padding-side">
       <b-nav-toggle target="nav_collapse"></b-nav-toggle>
       <b-navbar-brand>
         <span class="my-primary-accent brand-name" style="margin-left: 10px">minimise</span>
@@ -55,6 +54,7 @@
           </b-col>
         </b-row>
       </b-jumbotron>
+
       <!--About Section-->
       <b-navbar class="my-primary-bg padding-side section-nav" id="about">
         <h4 class="my-primary-accent section-title">About minimise</h4>
@@ -63,8 +63,8 @@
           <b-nav-item href="https://twitter.com/MinimiseNZ?lang=en" target="_blank" ><i class="fa fa-twitter-square fa-3x social-icon" aria-hidden="true"></i></b-nav-item>
         </b-nav>
       </b-navbar>
-      <b-container fluid class="flex-grid" data-aos="fade-zoom-in" data-aos-offset="200" data-aos-easing="ease-in-sine" data-aos-duration="800">
-        <b-row class="flex-row" >
+      <b-container fluid class="flex-grid" data-aos="fade-zoom-in" data-aos-offset="200" data-aos-easing="ease-in-out-sine" data-aos-duration="500">
+        <b-row class="flex-row">
           <b-col>
             <h2>Fast</h2>
             <p>Don’t spend hours preparing safety plans. Workers can create site specific safety plans in minutes using our mobile app</p>
@@ -99,36 +99,231 @@
           </b-col>
         </b-row>
       </b-container>
+
       <!--Principal Section-->
       <b-navbar class="my-primary-bg padding-side section-nav" id="principal">
         <h4 class="my-primary-accent section-title">Principal Contractors</h4>
+        <b-nav>
+          <b-nav-item v-scroll-to="'#home'" ><p class="my-primary-accent" style="margin-bottom: 0">Back to Top</p></b-nav-item>
+        </b-nav>
       </b-navbar>
-      <b-container class="flex-grid"></b-container>
+      <b-container fluid data-aos="fade-zoom-in" data-aos-offset="200" data-aos-easing="ease-in-out-sine" data-aos-duration="500">
+        <b-row class="flex-row">
+          <b-col lg="7" md="12" sm="12">
+            <b-carousel
+              controls
+              :data-wrap=false
+              :interval="5000"
+              img-width="1024"
+              img-height="480"
+            >
+            <b-carousel-slide img-src='/static/Principal/Home.PNG' height="985" width="1480"></b-carousel-slide>
+            <b-carousel-slide img-src='/static/Principal/NewJob.PNG'></b-carousel-slide>
+            <b-carousel-slide img-src='/static/Principal/JobsInProgress.PNG'></b-carousel-slide>
+            <b-carousel-slide img-src='/static/Principal/Incident.PNG'></b-carousel-slide>
+          </b-carousel>
+          </b-col>
+          <b-col lg="5" md="12" class="list-col">
+            <h3>View all key safety information from one easy to use dashboard</h3>
+            <ul style="color:rgb(28, 118, 195)" class="feature-list">
+              <li>
+                <i class="fa fa-check"></i>
+                Manage multiple job sites from one view
+              </li>
+              <li>
+                <i class="fa fa-check"></i>
+                Request health and safety agreements</li>
+              <li>
+                <i class="fa fa-check"></i>
+                View signed in status on job sites</li>
+              <li>
+                <i class="fa fa-check"></i>
+                Manage incidents</li>
+              <li>
+                <i class="fa fa-check"></i>
+                Manage workers and training register</li>
+              <li>
+                <i class="fa fa-check"></i>
+                View site safety plans remotely</li>
+            </ul>
+          </b-col>
+        </b-row>
+      </b-container>
+
       <!--Contractor Section-->
       <b-navbar class="my-primary-bg padding-side section-nav" id="contractor">
         <h4 class="my-primary-accent section-title">Contractors</h4>
+         <b-nav>
+          <b-nav-item v-scroll-to="'#home'" ><p class="my-primary-accent" style="margin-bottom: 0">Back to Top</p></b-nav-item>
+        </b-nav>
       </b-navbar>
-      <b-container class="flex-grid"></b-container>
+      <b-container fluid data-aos="fade-zoom-in" data-aos-offset="200" data-aos-easing="ease-in-out-sine" data-aos-duration="500">
+        <b-row class="flex-row">
+          <b-col lg="5" md="12" class="list-col-2">
+            <h3 style="padding-left: 0; color:rgba(40,26,101,.8)">One master safety plan for all of your job sites</h3>
+            <ul style="color:rgb(28, 118, 195); padding-left: 0" class="feature-list">
+              <li>
+                <i class="fa fa-check"></i>
+                Receive job requests from Principal Contractors</li>
+              <li>
+                <i class="fa fa-check"></i>
+                Submit health and safety agreements</li>
+              <li>
+                <i class="fa fa-check"></i>
+                Maintain hazard register</li>
+              <li>
+                <i class="fa fa-check"></i>
+                Prepare task analysis</li>
+              <li>
+                <i class="fa fa-check"></i>
+                Manage workers and training register</li>
+              <li>
+                <i class="fa fa-check"></i>
+                Manage incidents</li>
+            </ul>
+          </b-col>
+           <b-col lg="7" md="12" sm="12">
+            <b-carousel
+              controls
+              wrap=false
+              :interval="6000"
+              img-width="1024"
+              img-height="480"
+            >
+            <b-carousel-slide img-src='/static/Contractor/Home.PNG'></b-carousel-slide>
+            <b-carousel-slide img-src='/static/Contractor/Hazards.PNG'></b-carousel-slide>
+            <b-carousel-slide img-src='/static/Contractor/Task.PNG'></b-carousel-slide>
+            <b-carousel-slide img-src='/static/Contractor/Incident.PNG'></b-carousel-slide>
+          </b-carousel>
+          </b-col>
+
+        </b-row>
+      </b-container>
+
       <!--Worker Section-->
       <b-navbar class="my-primary-bg padding-side section-nav" id="workers">
         <h4 class="my-primary-accent section-title">Workers</h4>
+         <b-nav>
+          <b-nav-item v-scroll-to="'#home'" ><p class="my-primary-accent" style="margin-bottom: 0">Back to Top</p></b-nav-item>
+        </b-nav>
       </b-navbar>
-      <b-container class="flex-grid"></b-container>
+      <b-container fluid data-aos="fade-zoom-in" data-aos-offset="200" data-aos-easing="ease-in-out-sine" data-aos-duration="500">
+        <b-row class="flex-row">
+         <b-col lg="7" md="12" sm="12">
+           <b-img src="/static/Worker/master.png" style="max-width: 100%"/>
+          </b-col>
+          <b-col lg="5" md="12" class="list-col">
+             <h3>Create site specific safety plans in minutes</h3>
+            <ul style="color:rgb(28, 118, 195)" class="feature-list">
+              <li>
+                <i class="fa fa-check"></i>
+                Select site hazards</li>
+              <li>
+                <i class="fa fa-check"></i>
+                Check controls are in place</li>
+              <li>
+                <i class="fa fa-check"></i>View and sign on to task analysis</li>
+              <li>
+                <i class="fa fa-check"></i>View emergency contact information</li>
+              <li>
+                <i class="fa fa-check"></i>
+                Report incidents</li>
+              <li>
+                <i class="fa fa-check"></i>
+                Sign in and out of safety plans</li>
+            </ul>
+          </b-col>
+        </b-row>
+      </b-container>
+
       <!--Contact Section-->
       <b-navbar class="my-primary-bg padding-side section-nav" id="contact">
         <h4 class="my-primary-accent section-title">Contact Us</h4>
+         <b-nav>
+          <b-nav-item v-scroll-to="'#home'" ><p class="my-primary-accent" style="margin-bottom: 0">Back to Top</p></b-nav-item>
+        </b-nav>
       </b-navbar>
-      <b-container class="flex-grid"></b-container>
+      <b-container class="flex-grid">
+        <b-card 
+          class="demo-text" 
+          border-variant="secondary">
+          <div class="card-header register-header">
+            <h5>Get in Touch</h5>
+          </div>
+          <b-form @submit.prevent="register" autocomplete="on">
+            <b-form-checkbox class="ml-2 mb-3" v-model="demo" value="true">Request a demo</b-form-checkbox><br>
+            <b-form-checkbox class="ml-2" v-model="notify" value="true">Notify me of Minimise launch</b-form-checkbox>
+
+            <b-form-input
+              name="name"
+              class="mt-3" 
+              placeholder="Name" 
+              v-model="name"
+              autocomplete="name"
+              >
+            </b-form-input>
+
+            <b-form-input 
+              name="company"
+              placeholder="Company Name" 
+              autocomplete="company"
+              v-model="companyName"
+              ></b-form-input>
+
+            <b-form-select 
+              name="companyType"
+              v-model="companyType">
+              <option :value="null">Please select company type</option>
+              <option value="principal">Principal</option>
+              <option value="contractor">Contractor</option>
+            </b-form-select>
+
+            <b-form-input 
+              name="email"
+              autocomplete="email"
+              placeholder="Email Address"
+              v-model="email"
+              ></b-form-input>
+
+            <b-form-input 
+              name="phone"
+              autocomplete="phone"
+              placeholder="Phone" 
+              v-model="phone"
+              ></b-form-input>
+
+            <b-form-textarea id="textarea1"
+              class="mt-3"
+              v-model="text"
+              placeholder="Please enter enquiry details"
+              :rows="5">
+            </b-form-textarea>
+
+            <button class="btn btn-block mt-4 mb-3 registerBtn" type="submit">Submit</button>
+          </b-form>
+        </b-card>
+      </b-container>
     </div>
   </div>
-  </animated-slide-in-down>
 </template>
 
 <script>
 export default {
   data () {
     return {
-      flexItems: ['Simple', 'Practical', 'Relevant', 'Engaging', 'Collaborative', 'Dynamic']
+      entered: {
+        email: '',
+        password: ''
+      },
+      demo: '',
+      notify: '',
+      beta: '',
+      name: '',
+      companyName: '',
+      companyType: null,
+      email: '',
+      phone: '',
+      text: ''
     }
   },
   computed: {
@@ -143,19 +338,52 @@ export default {
     dashboard () {
       let companyType = this.user.companyType
       this.$router.push('/' + companyType)
+    },
+    register () {
+      // register interest
+      this.$validator.validateAll().then(async(valid) => {
+        window.emailjs.send('my_service', 'register', {
+          name: this.name,
+          email: this.email,
+          demo: this.name,
+          notify: this.notify,
+          companyName: this.companyName,
+          companyType: this.companyType,
+          phone: this.phone,
+          text: this.text
+        })
+        .then(
+          function (response) {
+            alert('Thank you. We will be in touch')
+          },
+          function (error) {
+            alert('Oops. Something went wrong', error)
+          }
+        )
+      })
     }
   }
 }
 </script>
 
 <style scoped>
-
+.worker-slide {
+  margin: auto;
+  height: 600px;
+  max-width: 300px;
+}
 
 .padding-side {
   padding-left: 40px;
   padding-right: 40px;
 }
 
+h3 {
+  padding-left: 40px;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  color: #12807a;
+}
 .navbar {
   height: 8vh;
 }
@@ -173,17 +401,30 @@ button {
   min-height: 600px;
 }
 
-.flex-row > .col {
-  min-width: 300px;
+.flex-row {
   margin: 20px;
   padding: 20px;
+  margin-bottom: 100px;
+  margin-top: 100px;
+}
+
+.flex-row > .col {
+  min-width: 300px;
   background-color: white;
   text-align: center;
+  margin-top: 25px;
+  margin-bottom: 50px;
+  padding: 20px 30px;
 }
 
 .flex-row > .col > p {
+  font-size: 16px;
   line-height: 30px;
   color: #383838;
+}
+
+li {
+  list-style-type: none;
 }
 
 h2 {
@@ -193,6 +434,11 @@ h2 {
 
 .flex-row > .col > h2 {
  margin-bottom: 20px;
+}
+
+.carousel-row {
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
 .login-btn {
@@ -275,26 +521,153 @@ h2 {
   color: #fc8700;
 }
 
+.slide-img {
+  width: 100%;
+  max-width: 950px;
+  display: block;
+  margin: auto;
+}
 
+.feature-list > li {
+  padding-bottom: 20px;
+}
+
+li > i {
+  margin-right: 15px;
+}
+
+.demo-text {
+  margin: auto;
+  width: 60vw;
+  margin-top: 60px;
+}
+
+  form {
+    padding: 20px;
+  }
+
+  input, select {
+    margin-top: 16px;
+  }
+
+  .registerBtn {
+    background-color: rgba(18, 128, 122, 0.85);
+    cursor: pointer;
+    height: 50px;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.2rem;
+  }
+
+  .registerBtn:hover {
+    background-color: #884dff;
+  }
+
+  .register-header {
+    background-color: rgba(111, 50, 130, 0.75);
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    padding-top: 20px; 
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .card {
+    margin-bottom: 70px;
+  }
+
+  .card-header {
+    text-align: center;
+  }
+ 
+  .card-body {
+    padding: 0;
+    word-wrap: normal;
+    min-height: 500px;
+  }
+  
+/*small screens*/
 @media only screen and (max-width: 340px) {
   .navbar-brand {
     display: none;
   }
 }
 
-@media only screen and (min-width: 710px) {
+/*medium screens*/
+@media only screen and (min-width: 768px) {
   .first-col {
     padding-top: 60px;
     padding-bottom: 50px;
   }   
 }
 
+/*less than large screens*/
 @media only screen and (max-width: 990px ) {
   .second-col {
     display: none;
   }
   .login-btn {
     margin-top: 10px;
+  }
+  .flex-row {
+    margin: 20px;
+  }
+  .flex-row > .col {
+    text-align: center;
+    margin-top: 25px;
+    margin-bottom: 0;
+  }
+  .list-col {
+    margin-top: 50px;
+  }
+  .list-col-2 {
+    margin-bottom: 35px;
+  }
+  h3 {
+    padding-left: 0;
+  }
+  .feature-list {
+    padding-left: 0;
+    font-size:1.4rem;
+  }
+  .feature-list > li {
+    padding-bottom: 10px;
+  }
+  li > i {
+    font-size:2.5rem;
+  }
+}
+
+/*large screens*/
+@media only screen and (min-width: 992px) {
+  .feature-list {
+    font-size:1.1rem;
+  }
+  .feature-list > li {
+    padding-bottom: 15px;
+  }
+  li > i {
+    font-size:1.6rem;
+  }
+}
+
+@media only screen and (min-width: 1100px) {
+  .feature-list {
+    font-size:1.2rem;
+  }
+}
+
+/*extra large screens*/
+@media only screen and (min-width: 1400px) {
+  .feature-list {
+    font-size:1.4rem;
+  }
+
+  li > i {
+    font-size:2.5rem;
   }
 }
 

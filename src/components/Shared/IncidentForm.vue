@@ -35,8 +35,9 @@
           <b-row>
             <b-col sm="3" lg="2">Date of Incident:</b-col>
             <b-col sm="5" lg="3">
-              <b-form-input class="no-spinners" type="date" placeholder="Incident Date" v-model="incident.date"/>
+              <b-form-input class="no-spinners" ref="date" type="date" placeholder="Incident Date" v-model="incident.date"/>
             </b-col>
+            <b-col><div class="alert alert-danger" v-show="this.dateerror !== ''">{{this.dateerror}}</div></b-col>
           </b-row>
           <b-row>
             <b-col sm="3" lg="2"><label>Reported By:</label></b-col>
@@ -44,10 +45,10 @@
           </b-row>
           <b-row>
             <b-col sm="3" lg="2"><label>Location:</label></b-col>
-            <b-col sm="9" lg="10"><b-form-input v-model="incident.address" required></b-form-input></b-col>
+            <b-col sm="9" lg="10"><b-form-input ref="error" v-model="incident.address" required></b-form-input></b-col>
           </b-row>
           <hr>
-          <b-row>
+          <b-row >
             <b-col sm="3" lg="2"><label>Incident Type:</label></b-col>
             <b-col sm="9" lg="10">
               <v-select
@@ -193,6 +194,7 @@ export default {
         loggedBy: {}
       },
       incidentTypes: ['Near Miss', 'Minor Harm', 'Serious Harm', 'Plant Damage'],
+      dateerror: '',
       error: ''
     }
   },
@@ -221,8 +223,16 @@ export default {
   },
   methods: {
     onSubmit () {
+      this.error = ''
+      this.dateerror = ''
+      if (this.incident.date === '') {
+        this.dateerror = 'Please select incident date'
+        this.$refs.date.$el.focus()
+        return this.dateerror
+      }
       if (this.incident.type === '') {
         this.error = 'Please select incident type'
+        this.$refs.error.$el.focus()
         return this.error
       } else {
         if (this.incident.open === false) {
@@ -234,6 +244,7 @@ export default {
     },
     onConfirm () {
       this.error = ''
+      this.dateerror = ''
       this.incident.loggedBy = this.loggedBy
       this.incident.actionOwner = this.actionOwner
       this.incident.company = this.$store.getters.companyKey

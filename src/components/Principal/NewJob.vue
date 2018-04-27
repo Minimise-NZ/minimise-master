@@ -10,7 +10,7 @@
       headerTextVariant= 'light'
       title="New Job Created">
       <div class="d-block text-center">
-        <h4 >Job site {{siteAddress}} has been created</h4>
+        <h4 >Job site: {{siteAddress}} has been created</h4>
       </div>
     </b-modal>
     <b-card>
@@ -346,7 +346,6 @@ export default {
       }
     },
     route () {
-      this.$store.dispatch('getJobs')
       this.$router.push('/principal/jobs')
     }
   }

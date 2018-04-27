@@ -22,6 +22,7 @@
     "vee-validate": "^2.0.3",
     "vue": "^2.4.2",
     "vue-bs-drawer": "^1.0.4",
+    "vue-carousel": "^0.7.3",
     "vue-datetime": "^1.0.0-alpha.3",
     "vue-datetime-picker": "^0.2.1",
     "vue-firestore": "^0.1.2",
