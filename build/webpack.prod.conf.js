@@ -3,6 +3,8 @@ var utils = require('./utils')
 var webpack = require('webpack')
 var config = require('../config')
 var merge = require('webpack-merge')
+const PrerenderSPAPlugin = require('prerender-spa-plugin')
+const PuppeteerRenderer = PrerenderSPAPlugin.PuppeteerRenderer
 var baseWebpackConfig = require('./webpack.base.conf')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -28,6 +30,15 @@ var webpackConfig = merge(baseWebpackConfig, {
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env': env
+    }),
+    new PrerenderSPAPlugin({
+      staticDir: __dirname, // LOOK AT THIS. LOOK AT THIS. LOOK AT THIS
+      routes: ['/', '/contractor', '/principal'], // List of routes to prerender.
+      renderer: new PuppeteerRenderer({ //Yes, checkout the renderer option. It is oh so sweet.
+        renderAfterElementExists: '#app'
+        // Wait to render until a specified event is fired on the document.
+        // renderAfterDocumentEvent: 'renderIt'
+      })
     }),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
