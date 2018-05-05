@@ -1,12 +1,12 @@
 <template>
   <div id="home">
     <!--navbar-->
-    <b-navbar toggleable="lg" type="dark" class="my-primary-bg padding-side">
-      <b-nav-toggle target="nav_collapse"></b-nav-toggle>
-      <b-navbar-brand>
+    <b-navbar toggleable="lg" type="dark" class="my-primary-bg main-nav" style="z-index: 9999">
+      <b-nav-toggle target="nav_collapse" class="ml-4"></b-nav-toggle>
+      <b-navbar-brand class="ml-4">
         <span class="my-primary-accent brand-name" style="margin-left: 10px">minimise</span>
       </b-navbar-brand>
-      <b-collapse is-nav id="nav_collapse">
+      <b-collapse is-nav id="nav_collapse" type="dark">
         <b-nav is-nav-bar class="ml-auto">
           <b-nav-item v-scroll-to="'#home'">Home</b-nav-item>
           <b-nav-item v-scroll-to="'#about'">About</b-nav-item>
@@ -64,7 +64,7 @@
         </b-nav>
       </b-navbar>
       <b-container fluid class="flex-grid" data-aos="fade-zoom-in" data-aos-offset="200" data-aos-easing="ease-in-out-sine" data-aos-duration="500">
-        <b-row class="flex-row">
+        <b-row class="flex-row" style="margin-top: 25px; margin-bottom: 50px">
           <b-col>
             <h2>Fast</h2>
             <p>Don’t spend hours preparing safety plans. Workers can create site specific safety plans in minutes using our mobile app</p>
@@ -259,6 +259,7 @@
               class="mt-3" 
               placeholder="Name" 
               v-model="name"
+              required
               autocomplete="name"
               >
             </b-form-input>
@@ -267,6 +268,7 @@
               name="company"
               placeholder="Company Name" 
               autocomplete="company"
+              required
               v-model="companyName"
               ></b-form-input>
 
@@ -276,10 +278,12 @@
               <option :value="null">Please select company type</option>
               <option value="principal">Principal</option>
               <option value="contractor">Contractor</option>
+              <option value="other">Other</option>
             </b-form-select>
 
             <b-form-input 
               name="email"
+              required
               autocomplete="email"
               placeholder="Email Address"
               v-model="email"
@@ -303,6 +307,9 @@
           </b-form>
         </b-card>
       </b-container>
+      <b-navbar class="my-primary-bg padding-side section-nav">
+        <p class="my-primary-accent section-title" style="margin: auto">&copy; 2018 Minimise Limited </p>
+      </b-navbar>
     </div>
   </div>
 </template>
@@ -481,6 +488,7 @@ h2 {
   background-color:#383838;
   color:#FFC80B;
 }
+
 .nav-item {
   margin-right: 15px;
 }
@@ -588,7 +596,11 @@ li > i {
     word-wrap: normal;
     min-height: 500px;
   }
-  
+
+  #nav_collapse > ul{
+    background-color: #383838;
+  }
+
 /*small screens*/
 @media only screen and (max-width: 340px) {
   .navbar-brand {
@@ -638,6 +650,15 @@ li > i {
   }
   li > i {
     font-size:2.5rem;
+  }
+
+  .main-nav {
+    padding: 0;
+  }
+
+  #nav_collapse > ul{
+    padding-left: 25px;
+    padding-bottom: 25px;
   }
 }
 

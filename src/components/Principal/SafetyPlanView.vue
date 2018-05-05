@@ -241,6 +241,10 @@ export default {
     font-weight: bold;
   }
 
+  .togglebtn {
+    background-color: rgba(29,92,158,.89);
+  }
+
   .togglebtn:hover {
     background-color: rgba(155, 35, 53, 0.88);
   }

@@ -40,13 +40,13 @@ export default {
       sideNavItems: [
         {name: 'New Job', link: '/principal/newJob'},
         {name: 'Jobs In Progress', link: '/principal/jobs'},
-        {name: 'Incident Reports', link: '/principal/incidents'},
         {name: 'New Incident', link: '/principal/newIncident'}
       ],
       adminNav: [
         // {name: 'Contractor Management', link: '/principal/contractors'},
         // {name: 'Master Safety Plan', link: '/principal/master'},
         // {name: 'Administration', link: '/principal/admin'},
+        {name: 'Incident Reports', link: '/principal/incidents'},
         {name: 'Worker Management', link: '/principal/workers'}
       ]
     }

@@ -4,7 +4,7 @@
     <miniHeader></miniHeader>
     <b-container class="login-container">
       <h2>Reset Password</h2>
-      <b-form @submit="resetPassword" id="pwdreset">
+      <b-form id="pwdreset">
          <b-input-group>
            <b-input-group-addon>
              <i class="fa fa-envelope" aria-hidden="true"></i>
@@ -18,14 +18,9 @@
           </b-form-input>
          </b-input-group>
 
-        <b-button class="btn-block login-btn" type="submit">SUBMIT</b-button>
+        <b-button class="btn-block login-btn" @click="resetPassword" >SUBMIT</b-button>
         <b-row class="links">
-          <b-col class="leftcol">
-            <router-link to="signup">SIGN UP</router-link>
-          </b-col>
-          <b-col>
-            <router-link to="login">LOGIN</router-link>
-          </b-col>
+          <router-link to="login">LOGIN</router-link>
         </b-row>
       </b-form>
     </b-container>
@@ -48,9 +43,10 @@
       }
     },
     methods: {
-      resetPassword (evt) {
-        evt.preventDefault()
-        alert('A password reset has been emailed to you')
+      resetPassword () {
+        let email = this.entered.email
+        this.$store.dispatch('passwordReset', email)
+        this.$router.push('/login')
       }
     }
   }
@@ -93,12 +89,8 @@
     margin-top: 20px;
   }
   
-  .leftcol {
-    text-align: right;
-    border-right: 1px solid lightgrey;
-  }
-  
   a {
+    margin: auto;
     font-size: 0.9rem;
   }
   

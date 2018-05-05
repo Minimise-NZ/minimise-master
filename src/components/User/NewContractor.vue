@@ -130,7 +130,7 @@ export default {
       password: '',
       confirmPassword: '',
       userPhone: '',
-      userRole: ''
+      userRole: 'Business Administrator'
     }
   },
   methods: {

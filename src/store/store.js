@@ -146,6 +146,18 @@ export const store = new Vuex.Store({
     autoSignIn ({commit}, payload) {
       commit('setUID', payload)
     },
+    passwordReset ({state}, payload) {
+      console.log(payload)
+      firebase.auth().sendPasswordResetEmail(payload)
+        .then(() => {
+        // Email sent.
+          alert('A password reset email has been sent')
+        })
+        .catch(function (error) {
+          alert('Oops something went wrong', error)
+          console.log(error, error.message)
+        })
+    },
     newUserProfile ({commit, getters}, payload) {
       // add user profile to firestore after creating a user sign in
       let user = payload
@@ -1015,7 +1027,11 @@ export const store = new Vuex.Store({
     allHazards: (state) => state.allHazards,
     myHazards: (state) => state.myHazards,
     notMyHazards: (state) => state.notMyHazards,
-    incidents: (state) => state.myIncidents,
+    incidents (state) {
+      let incidents = state.myIncidents
+      incidents = Vue._.orderBy(incidents, ['open', 'actionOwner'], ['desc', 'asc'])
+      return incidents
+    },
     incident (state) {
       return (id) => {
         return state.myIncidents.find((incident) => {

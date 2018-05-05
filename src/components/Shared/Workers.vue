@@ -52,19 +52,6 @@
               <div class="alert alert-danger" v-show="error.phone">Please enter phone number</div>
             </b-col>
           </b-row>
-          <b-row class="inner-row">
-            <b-col md="6" lg="4">
-              <p>Admin User:</p>
-            </b-col>
-            <b-col md="6" lg="8">
-              <b-form-checkbox id="checkbox"
-                class="mt-1 mb-1"
-                v-model="admin"
-                value=true
-                unchecked-value=false>
-              </b-form-checkbox>
-            </b-col>
-          </b-row>
         </form>
       </div>
     </b-modal>
@@ -178,6 +165,9 @@ export default {
       if (this.phone === '') {
         this.error.phone = true
         return
+      }
+      if (this.role === 'Health and Safety Manager' || this.role === 'Health and Safety Administrator' || this.role === 'Business Administrator') {
+        this.admin = true
       } else {
         console.log('form ready to submit')
         this.handleSubmit()

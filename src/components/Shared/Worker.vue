@@ -65,23 +65,8 @@
               <p>Role:</p>
             </b-col>
             <b-col md="6" lg="8">
-              <!--<b-form-input type="text" :value="worker.role" :readonly="readonly"/>-->
-              <b-form-select v-model="worker.role" :options="userRoles" readonly/>
-            </b-col>
-          </b-row>
-            <b-row class="inner-row">
-            <b-col md="6" lg="4">
-              <p>Admin User:</p>
-            </b-col>
-            <b-col md="6" lg="8">
-              <b-form-checkbox id="checkbox"
-                disabled
-                class="mt-1 mb-1"
-                v-model="worker.admin"
-                value=true
-                unchecked-value=false>
-                <p v-if="worker.admin === true" class="mt-0"><span style="color:#007bff">This user has administration priviledges</span></p>
-              </b-form-checkbox>
+              <b-form-input type="text" :value="worker.role" readonly v-if="readonly"/>
+              <b-form-select v-model="worker.role" :options="userRoles" v-if="!readonly"/>
             </b-col>
           </b-row>
         </b-col>
@@ -249,6 +234,10 @@ export default {
     margin-top: 15px;
     margin-right: 0;
     padding-right: 10px;
+  }
+
+  form {
+    padding-bottom: 20px;
   }
 
   .training-col {

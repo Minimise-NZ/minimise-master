@@ -31,7 +31,7 @@
     </b-modal>
     <b-card>
       <div class=" incident card-header">{{headerText}}
-        <b-button class="editBtn" @click="edit" :disabled="disabled">Edit/Update Incident</b-button>
+        <b-button class="editBtn" @click="edit" :disabled="disabled" v-if="incident.open === true">Edit/Update Incident</b-button>
       </div>
       <div class="scroll-container">
         <b-form @submit.prevent="onSubmit">
@@ -118,7 +118,7 @@
               </b-form-textarea>
             </b-col>
           </b-row>
-          <b-row class="pt-3" v-if="!readonly">
+          <b-row class="pt-3" v-if="!readonly && notAdmin">
             <b-col sm="3" lg="2"></b-col>
             <b-col sm="9" lg="10">
               <b-form-checkbox v-model="incident.escalate" :value='true'>
@@ -128,14 +128,14 @@
           </b-row>
           <b-row class="pt-1" v-if="!readonly">
             <b-col sm="3" lg="2"></b-col>
-            <b-col sm="9" lg="10" v-if="incident.escalate === false">
+            <b-col sm="9" lg="10">
               <b-form-checkbox v-model="incident.open" :value='false'>
                 <p>Close this incident <em>(Close only if no further action is required)</em></p>
               </b-form-checkbox>
             </b-col>
           </b-row>
-          <div class="text-center">
-            <b-button-group class="pt-4 pb-4">
+          <div class="text-center" v-if="incident.open === true">
+            <b-button-group class="pb-4">
               <b-button class="buttons" variant="success" type="submit">Save</b-button>
               <b-button class="buttons" variant="danger" @click="cancel">Cancel</b-button>
             </b-button-group>
@@ -166,6 +166,14 @@ export default {
     }
   },
   computed: {
+    notAdmin () {
+      let user = this.$store.getters.user
+      if (user.role === 'Health and Safety Manager' || user.role === 'Business Administrator') {
+        return false
+      } else {
+        return true
+      }
+    },
     displayDate () {
       return moment(String(this.incident.date, 'YYYY-MM-DD')).format('DD-MM-YYYY')
     },

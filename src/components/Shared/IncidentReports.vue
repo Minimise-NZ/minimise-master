@@ -55,9 +55,7 @@ export default {
   },
   computed: {
     incidents () {
-      let incidents = this.$store.getters.incidents
-      this._.orderBy(incidents, ['open', 'actionOwner'], ['desc', 'asc'])
-      return incidents
+      return this.$store.getters.incidents
     }
   },
   methods: {
