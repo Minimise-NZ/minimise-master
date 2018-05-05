@@ -50,7 +50,9 @@
               </router-link>
           </b-col>
           <b-col class="second-col" lg="6">
-            <img src="../assets/Hero-1.png" class="hero-img">
+            <a href="https://minimisesafetyapp.com/" rel="nofollow">
+              <img src="../assets/Minimise.png" class="hero-img" alt="minimise safety app">
+            </a>
           </b-col>
         </b-row>
       </b-jumbotron>
@@ -117,10 +119,18 @@
               img-width="1024"
               img-height="480"
             >
-            <b-carousel-slide img-src='/static/Principal/Home.PNG' height="985" width="1480"></b-carousel-slide>
-            <b-carousel-slide img-src='/static/Principal/NewJob.PNG'></b-carousel-slide>
-            <b-carousel-slide img-src='/static/Principal/JobsInProgress.PNG'></b-carousel-slide>
-            <b-carousel-slide img-src='/static/Principal/Incident.PNG'></b-carousel-slide>
+            <b-carousel-slide img-src="/static/Principal/Home.PNG" height="985" width="1480" alt="Principal Contractor Homepage">
+              <a href="https://minimisesafetyapp.com/" rel="nofollow" title="Principal Contractor Homepage"></a>
+            </b-carousel-slide>
+            <b-carousel-slide img-src='/static/Principal/NewJob.PNG' alt="Principal Contractor New Job">
+              <a href="https://minimisesafetyapp.com/" rel="nofollow" title="Principal Contractor New Job"></a>
+            </b-carousel-slide>
+            <b-carousel-slide img-src='/static/Principal/JobsInProgress.PNG' alt="Principal Contractor Jobs In Progress">
+              <a href="https://minimisesafetyapp.com/" rel="nofollow" title="Principal Contractor Jobs In Progress"></a>
+            </b-carousel-slide>
+            <b-carousel-slide img-src='/static/Principal/Incident.PNG' alt="Principal Contractor Incident">
+              <a href="https://minimisesafetyapp.com/" rel="nofollow" title="Principal Contractor  Incident"></a>
+            </b-carousel-slide>
           </b-carousel>
           </b-col>
           <b-col lg="5" md="12" class="list-col">
@@ -190,10 +200,18 @@
               img-width="1024"
               img-height="480"
             >
-            <b-carousel-slide img-src='/static/Contractor/Home.PNG'></b-carousel-slide>
-            <b-carousel-slide img-src='/static/Contractor/Hazards.PNG'></b-carousel-slide>
-            <b-carousel-slide img-src='/static/Contractor/Task.PNG'></b-carousel-slide>
-            <b-carousel-slide img-src='/static/Contractor/Incident.PNG'></b-carousel-slide>
+            <b-carousel-slide img-src='/static/Contractor/Home.PNG' alt="Contractor Homepage">
+              <a href="https://minimisesafetyapp.com/" rel="nofollow" title="Contractor Homepage"></a>
+            </b-carousel-slide>
+            <b-carousel-slide img-src='/static/Contractor/Hazards.PNG' alt="Contractor Hazard Register">
+              <a href="https://minimisesafetyapp.com/" rel="nofollow" title="Contractor Hazard Register"></a>
+            </b-carousel-slide>
+            <b-carousel-slide img-src='/static/Contractor/Task.PNG' alt="Contractor Task Analysis">
+              <a href="https://minimisesafetyapp.com/" rel="nofollow" title="Contractor Task Analysis"></a>
+            </b-carousel-slide>
+            <b-carousel-slide img-src='/static/Contractor/Incident.PNG' alt="Contractor Incident">
+              <a href="https://minimisesafetyapp.com/" rel="nofollow" title="Contractor Incident"></a>
+            </b-carousel-slide>
           </b-carousel>
           </b-col>
 
@@ -210,7 +228,9 @@
       <b-container fluid data-aos="fade-zoom-in" data-aos-offset="200" data-aos-easing="ease-in-out-sine" data-aos-duration="500">
         <b-row class="flex-row">
          <b-col lg="7" md="12" sm="12">
-           <b-img src="/static/Worker/master.png" style="max-width: 100%"/>
+           <a href="https://minimisesafetyapp.com/" rel="nofollow">
+            <b-img src="/static/Worker/master.png" alt="Minimise worker app" style="max-width: 100%"/>
+           </a>
           </b-col>
           <b-col lg="5" md="12" class="list-col">
              <h3>Create site specific safety plans in minutes</h3>
