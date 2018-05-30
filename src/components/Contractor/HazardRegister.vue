@@ -79,8 +79,10 @@ export default {
     },
     hazards () {
       if (this.register) {
+        'getting my hazards'
         return this.$store.getters.myHazards
       } else {
+        'getting not my hazards'
         return this.$store.getters.notMyHazards
       }
     }
@@ -116,10 +118,6 @@ export default {
   },
   beforeMount () {
     this.$store.dispatch('getMyHazards')
-    .then((hazards) => {
-      console.log('getMyHazards', hazards)
-      this.$store.dispatch('getNotMyHazards', hazards)
-    })
   }
 }
 </script>

@@ -835,45 +835,53 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    getMyHazards ({commit, state}) {
+    getMyHazards ({commit, dispatch, state}) {
       let hazards = state.company.hazards
       console.log(hazards)
       if (hazards <= 0 || hazards === undefined || hazards === null) {
         console.log('this company has no hazards')
         hazards = []
-        return hazards
+        commit('setNotMyHazards', state.allHazards)
+        return
       } else {
         commit('setMyHazards', hazards)
-        return hazards
+        dispatch('getNotMyHazards')
+        return
       }
     },
-    getNotMyHazards ({commit, state}, payload) {
-      let myHazards = payload
+    getNotMyHazards ({commit, state}) {
+      let myHazards = state.myHazards.slice(0)
       console.log('My Hazards', myHazards)
       let allHazards = state.allHazards.slice(0)
+      console.log('ALL hazards', allHazards)
       if (myHazards.length !== 0) {
-        for (var i = 0; i < allHazards.length; i++) {
-          for (var j = 0; j < myHazards.length; j++) {
+        for (var i = allHazards.length - 1; i > -1; i--) {
+          for (var j = myHazards.length - 1; j > -1; j--) {
             if (allHazards[i].id === myHazards[j].id) {
               allHazards.splice(i, 1)
             }
           }
         }
+      } else {
+        console.log('myHazards length is 0')
       }
+      console.log('Not My Hazards', allHazards)
       commit('setNotMyHazards', allHazards)
       return
     },
-    addNewHazards ({commit, state}, payload) {
+    addNewHazards ({commit, dispatch, state}, payload) {
       let hazardUpdates = state.myHazards.concat(payload)
       console.log('hazardUpdates', hazardUpdates)
       firestore.collection('companies').doc(state.companyKey)
       .set({hazards: hazardUpdates}, {merge: true})
       commit('setMyHazards', hazardUpdates)
+      dispatch('getAllHazards')
+      dispatch('getNotMyHazards')
       console.log('My Hazards updates', state.myHazards)
     },
     removeHazard ({commit, dispatch, state}, payload) {
       let myHazards = payload
-      dispatch('getNotMyHazards', myHazards)
+      dispatch('getNotMyHazards')
       firestore.collection('companies').doc(state.companyKey)
       .set({hazards: payload}, {merge: true})
       commit('setMyHazards', myHazards)

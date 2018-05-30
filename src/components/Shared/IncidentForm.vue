@@ -146,7 +146,7 @@
           <b-row class="pt-3">
             <b-col sm="3" lg="2"></b-col>
             <b-col sm="9" lg="10">
-              <b-form-checkbox v-model="incident.escalate" :value='true'>
+              <b-form-checkbox v-model="incident.escalate" :value='true' v-if="this.user.admin === false">
                 Is further investigation required? <em>(Escalate to Health and Safety Manager)</em>
               </b-form-checkbox>
             </b-col>

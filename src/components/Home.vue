@@ -405,7 +405,7 @@ export default {
 h3 {
   padding-left: 40px;
   margin-bottom: 30px;
-  font-size: 2rem;
+  font-size: 1.6rem;
   color: #12807a;
 }
 .navbar {
