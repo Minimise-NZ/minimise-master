@@ -16,7 +16,7 @@
             <p>Incident Type</p>
           </b-col>
           <b-col>
-            <header>Reported By</header>
+            <header>Action Owner</header>
           </b-col>
           <b-col>
             <header>Date</header>
@@ -33,7 +33,7 @@
             <p>{{incident.type}}</p>
           </b-col>
           <b-col>
-            <p>{{incident.reportedBy}}</p>
+            <p>{{incident.actionOwner.name}}</p>
           </b-col>
           <b-col>
             <p>{{incident.date | formatDate}}</p>

@@ -41,10 +41,7 @@
             <h1 class="display-4">Simple Safety on Construction Sites</h1>
             <p class="lead mt-4">A fresh approach to managing health and safety on construction sites.</p>
             <hr class="my-4">
-              <p>Minimise takes the burden out of health and safety by eliminating paperwork, is fast, simple, effective and engaging.<br><br>
-              We connect all participants involved in site safety planning to produce a digital safety plan that exceeds current health and 
-              safety standards and minimises risk to workers and businesses.
-              </p>
+              <p>Work safer and smarter with our innovative health and safety app designed for construction sites.</p>
               <router-link to='/signup' tag="button" size="lg" class="btn signup-btn btn-lg">
                 Register your interest
               </router-link>

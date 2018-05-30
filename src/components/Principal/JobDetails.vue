@@ -185,6 +185,14 @@ export default {
       })
       return list
     },
+    admin () {
+      let user = this.$store.getters.user
+      if (user.admin === true) {
+        return true
+      } else {
+        return false
+      }
+    },
     disabled () {
       if (this.selected.length === 0) {
         return true
@@ -230,6 +238,13 @@ export default {
     },
     closeJob () {
       this.$store.dispatch('closeJob', this.job)
+      .then(() => {
+        if (this.admin === true) {
+          this.$store.dispatch('getAllJobs')
+        } else {
+          this.$store.dispatch('getMyJobs')
+        }
+      })
       .then(() => {
         this.$router.go(-1)
       })

@@ -488,14 +488,14 @@ export const store = new Vuex.Store({
       let promise = new Promise((resolve, reject) => {
         let contractors = payload.contractors
         let jobId = payload.id
+        let closedDate = moment().format('DD-MM-YYYY')
         firestore.collection('jobSites').doc(jobId)
-        .update({'open': false, 'closedDate': moment()})
+        .update({'open': false, 'closedDate': closedDate})
         .then(() => {
           contractors.forEach((val) => {
             firestore.collection('companies').doc(val.key).collection('jobSites').doc(jobId)
             .set({open: false}, {merge: true})
           })
-          dispatch('getJobs')
           resolve()
         })
         .catch((error) => {
