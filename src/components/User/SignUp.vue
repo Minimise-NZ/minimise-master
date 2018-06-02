@@ -69,8 +69,7 @@
   
 </script>
 
-<style scoped>
-  
+<style scoped>  
   .container-fluid {
     height: 980px;
     padding: 0;
@@ -178,7 +177,7 @@
    .signUp.user:hover{
     background-color: #884dff;
   }
-  
+
   @media only screen and (min-width: 770px) and (max-width: 1000px) {
     .card{
       height:  600px;

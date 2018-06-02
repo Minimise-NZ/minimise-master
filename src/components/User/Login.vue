@@ -25,6 +25,7 @@
               id="login-email"
               type="email"
               v-model="email"
+              :disabled = "disabled"
               placeholder="Email Address"
               required>
           </b-form-input>
@@ -38,12 +39,18 @@
               id="login-password"
               type="password"
               v-model="password"
+              :disabled = "disabled"
               placeholder="Password"
               required>
           </b-form-input> 
         </b-input-group>
 
-        <b-button class="btn-block" type="submit">LOGIN</b-button>
+        <b-button class="btn-block" type="submit" :disabled="disabled">
+          <p style="font-size: 1rem; margin-bottom: 0" v-if="loading===false">LOGIN</p>
+          <div class="loader">
+            <pulse-loader :loading="loading" ></pulse-loader>
+          </div>
+        </b-button>
         <b-row class="links">
           <router-link to="password">FORGOT PASSWORD</router-link>
         </b-row>
@@ -55,12 +62,16 @@
 
 <script>
   import MiniHeader from '@/components/Webpage/MiniHeader.vue'
+  import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
   export default {
     components: {
-      miniHeader: MiniHeader
+      miniHeader: MiniHeader,
+      PulseLoader
     },
     data () {
       return {
+        loading: false,
+        disabled: false,
         error: false,
         message: '',
         email: '',
@@ -69,16 +80,20 @@
     },
     methods: {
       loginUser () {
+        this.loading = true
+        this.disabled = true
         this.$store.dispatch('signIn', {email: this.email, password: this.password})
         .then(async() => {
           console.log('getting user info')
           let user = await this.$store.dispatch('getUser')
           console.log(user)
           if (user.webUser === true) {
+            this.loading = false
             this.$router.push('/dashboard')
           } else {
             this.message = 'You do not have access to the web portal. Please log in to the mobile app'
             this.error = true
+            this.loading = false
             this.$store.dispatch('logout')
           }
         })
@@ -97,7 +112,11 @@
 </script>
 
 <style scoped>
-  
+  .loader {
+    margin: auto;
+    width: 30%;
+  }
+
   .container-fluid {
     padding: 0;
   }
@@ -133,6 +152,11 @@
     background-color: #FFC80B;
     color: #383838;
     cursor: pointer;
+  }
+
+  .btn:disabled {
+    background-color: #666666;
+    cursor: progress;
   }
   
   .row {

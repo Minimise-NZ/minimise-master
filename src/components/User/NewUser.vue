@@ -47,6 +47,7 @@
             v-if="confirmUser"
             type="password"
             v-model="password"
+            :disabled = "disabled"
             data-vv-delay="2000"
             placeholder="Enter Password"
             :class="{'alert-border': errors.has('password')}">
@@ -57,13 +58,18 @@
             v-if="confirmUser"
             type="password"
             v-model="confirmPassword"
+            :disabled = "disabled"
             data-vv-delay="3000"
             placeholder="Confirm Password"
             data-vv-as="password"
             :class="{'alert-border': errors.has('confirmPassword')}">
           </b-form-input>
           <div class="alert alert-danger" v-show="errors.has('confirmPassword')">{{ errors.first('confirmPassword') }}</div>
-          <b-button class="btn btn-block mt-4" @click="onSubmit">Sign Up</b-button>
+          <b-button class="btn btn-block mt-4" @click="onSubmit">Sign Up
+            <div class="loader">
+              <pulse-loader :loading="loading" ></pulse-loader>
+            </div>
+          </b-button>
           <b-row class="links">
             <router-link to="login">EXISTING USER LOGIN</router-link>
           </b-row>
@@ -75,12 +81,16 @@
 
 <script>
   import MiniHeader from '@/components/Webpage/MiniHeader.vue'
+  import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
   export default {
     components: {
-      miniHeader: MiniHeader
+      miniHeader: MiniHeader,
+      PulseLoader
     },
     data () {
       return {
+        loading: false,
+        disabled: false,
         error: false,
         message: '',
         confirmUser: false,
@@ -109,6 +119,8 @@
         })
       },
       onSubmit () {
+        this.loading = true
+        this.disabled = true
         this.$validator.validateAll().then(async(valid) => {
           if (!valid) { return }
           try {
@@ -118,9 +130,11 @@
             this.user.uid = uid
             await this.$store.dispatch('updateCurrentUser', this.user)
             await this.$store.dispatch('getUser')
+            this.loading = false
             this.$router.push('/dashboard')
           } catch (err) {
-            console.log(err)
+            this.loading = false
+            alert(err.message)
           }
         })
       }
@@ -131,6 +145,10 @@
 
 
 <style scoped>
+  .loader {
+    margin: auto;
+    width: 30%;
+  }
   
   .container-fluid {
     padding: 0;
@@ -183,6 +201,10 @@
   
   .btn:hover {
     background-color: rgba(29, 92, 158, 0.75);
+  }
+
+  .btn:disabled {
+    cursor: progress;
   }
   
   a {

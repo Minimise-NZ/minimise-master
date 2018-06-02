@@ -13,6 +13,7 @@
             <b-form-input name="companyName"
                 v-validate="'required|alpha_spaces'"
                 autofocus="autofocus"
+                :disabled = "disabled"
                 v-model="companyName"
                 placeholder="Name of Company"
                 :class="{'alert-border': errors.has('address')}">
@@ -22,6 +23,7 @@
             <b-form-input name="address"
                 v-validate="'required'"
                 v-model="address"
+                :disabled = "disabled"
                 placeholder="Company Address"
                 :class="{'alert-border': errors.has('address')}">
             </b-form-input>
@@ -30,6 +32,7 @@
             <b-form-input name="city"
                 v-validate="'required|alpha_spaces'"
                 v-model="city"
+                :disabled = "disabled"
                 placeholder="City"
                 :class="{'alert-border': errors.has('city')}">
             </b-form-input>
@@ -38,6 +41,7 @@
             <b-form-input name="postcode"
                 v-validate="'required|numeric'"
                 type="number"
+                :disabled = "disabled"
                 class="no-spinners"
                 v-model="postcode"
                 placeholder="Postcode"
@@ -48,6 +52,7 @@
             <b-form-input name="Company Phone"
                 v-validate="'required|numeric'"
                 class="no-spinners"
+                :disabled = "disabled"
                 v-model="companyPhone"
                 placeholder="Phone Number"
                 :class="{'alert-border': errors.has('Company Phone')}">
@@ -59,6 +64,7 @@
           <h5>Administrator Information</h5>
             <b-form-input name="name"
                 v-validate="'required|alpha_spaces'"
+                :disabled = "disabled"
                 v-model="userName"
                 placeholder="Name"
                 :class="{'alert-border': errors.has('name')}">
@@ -68,6 +74,7 @@
             <b-form-input name="userPhone"
                 v-validate="'required|numeric'"
                 v-model="userPhone"
+                :disabled = "disabled"
                 class="no-spinners"
                 placeholder="Phone Number"
                 :class="{'alert-border': errors.has('userPhone')}">
@@ -77,6 +84,7 @@
             <b-form-input name="email"
                 v-validate="'required|email'"
                 v-model="userEmail"
+                :disabled = "disabled"
                 data-vv-delay="2000"
                 placeholder="Email Address"
                 :class="{'alert-border': errors.has('email')}">
@@ -87,6 +95,7 @@
                 v-validate="'required|min:6'"
                 type="password"
                 v-model="password"
+                :disabled = "disabled"
                 data-vv-delay="2000"
                 placeholder="Password"
                 :class="{'alert-border': errors.has('password')}">
@@ -97,6 +106,7 @@
               v-validate="'confirmed:password'"
               type="password"
               v-model="confirmPassword"
+              :disabled = "disabled"
               data-vv-delay="2000"
               placeholder="Confirm Password"
               data-vv-as="password"
@@ -104,7 +114,11 @@
             </b-form-input>
              <div class="alert alert-danger" v-show="errors.has('confirmPassword')">{{ errors.first('confirmPassword') }}</div>
           </div>
-          <button class="btn btn-block mt-4 mb-3" type="submit" :disabled="disabled">Submit</button>
+          <button class="btn btn-block mt-4 mb-3" type="submit" :disabled="disabled">Submit
+            <div class="loader">
+              <pulse-loader :loading="loading" ></pulse-loader>
+            </div>
+          </button>
           <router-link to="/">Cancel</router-link>
         </b-form> 
       </b-container>
@@ -114,9 +128,11 @@
 
 <script>
 import MiniHeader from '@/components/Webpage/MiniHeader.vue'
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 export default {
   components: {
-    miniHeader: MiniHeader
+    miniHeader: MiniHeader,
+    PulseLoader
   },
   data () {
     return {
@@ -176,6 +192,12 @@ export default {
 
 
 <style scoped>
+
+  .loader {
+    margin: auto;
+    width: 30%;
+  }
+
   .container-fluid {
     padding: 0;
   }
@@ -232,7 +254,7 @@ export default {
   }
 
   .btn:disabled {
-    cursor: not-allowed;
+    cursor: progress;
   }
   
    a {
