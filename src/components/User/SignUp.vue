@@ -7,17 +7,18 @@
         <b-card-group deck>
           <b-card>
             <div class="card-header contractor">
-              <h3>Contractor</h3>
+              <h3>Contractor / Small Business</h3>
               <p>$49 month<span> + GST</span></p>
             </div>
             <ul class="contractor-li">
                 <li>Unlimited Users</li>
                 <li>Manage Job Sites</li>
-                <li>Manage Hazards</li>
-                <li>Manage Workers</li>
-                <li>View live site information</li>
-                <li>Maintain Safety Plans</li>
-                <li>Manage incidents</li>
+                <li>Remotely View Safety Plans</li>
+                <li>Hazard Management</li>
+                <li>Hazardous Substance Management</li>
+                <li>Training Register</li>
+                <li>Maintain Task Analysis</li>
+                <li>Incident Reporting and Management</li>
               </ul>
               <b-button class="btn-block signUp contractor" @click="signUp('contractor')">Sign Up</b-button>
           </b-card>
@@ -33,6 +34,7 @@
               <li>Health and Safety Administrators</li>
             </ul>
             <p class="smaller">***Web user registration only.<br>Mobile users (workers) must register via mobile app</p><br>
+            <p class="smaller">Contractor/Small Business must be subscribed for <br>individual user sign up </p><br>
             <b-button class="btn-block signUp user" @click="signUp('user')">Sign Up</b-button>
           </b-card>
         </b-card-group>
@@ -56,7 +58,11 @@
         this.$router.push('/')
       },
       signUp (type) {
-        this.$router.push('newContractor')
+        if (type === 'contractor') {
+          this.$router.push('newCompany')
+        } else {
+          this.$router.push('newUser')
+        }
       }
     }
   }
@@ -101,12 +107,13 @@
 
   .card-header {
     text-align: center;
+    padding: 30px 0 15px 0;
   }
  
   .card-body {
     padding: 0;
     word-wrap: normal;
-    min-height: 500px;
+    min-height: 570px;
   }
   
   span {
@@ -116,10 +123,6 @@
     background-color: rgba(29, 92, 158, 0.75);
     color: white;
     font-family: 'Montserrat', sans-serif;
-  }
-
-  .card-header.contractor {
-    padding: 30px 0 15px 0;
   }
 
   .user {
@@ -155,10 +158,6 @@
     text-align: center;
   }
   
-  .smaller {
-    font-size: 0.9rem;
-  }
-  
   .signUp {
     height: 50px;
     position: absolute;
@@ -167,9 +166,8 @@
   }
   
   .smaller {
+    width: 100%;
     font-size: 0.9rem;
-    position: absolute;
-    bottom: 50px;;
   }
   
   .signUp.contractor:hover{
@@ -183,13 +181,13 @@
   
   @media only screen and (min-width: 770px) and (max-width: 1000px) {
     .card{
-      height: 550px;
+      height:  600px;
     }
   }
   
   @media only screen and (min-width: 575px) and (max-width: 770px) {
     .card{
-      height: 700px;
+      height: 750px;
     }
     h3 {
       font-size: 1.5rem;

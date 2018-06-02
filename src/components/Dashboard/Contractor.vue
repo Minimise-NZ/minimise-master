@@ -15,6 +15,9 @@
             <router-link v-if="user.admin" v-for="item in adminNav" :to='item.link' tag="li" class="list-group-item" :key = "item.name">
               <p>{{item.name}}</p>
             </router-link>
+            <router-link to='/dashboard/support' tag="li" class="list-group-item">
+              <p>Support/ Feedback</p>
+            </router-link>
           </b-list-group>
         </b-col>
         
@@ -45,8 +48,7 @@ export default {
         {name: 'Master Safety Plan', link: '/dashboard/master'},
         {name: 'New Incident', link: '/dashboard/newIncident'},
         {name: 'Incident Reports', link: '/dashboard/incidents'},
-        {name: 'Training Register', link: '/dashboard/TrainingRegister'},
-        {name: 'Support/ Feedback', link: '/dashboard/support'}
+        {name: 'Training Register', link: '/dashboard/TrainingRegister'}
       ],
       adminNav: [
         {name: 'User Management', link: '/dashboard/userManagement'},
@@ -96,10 +98,6 @@ export default {
     height: 100%;
     margin: 0;
     border: 1px solid #383838;
-  }
-
-  .col {
-    height: 880px;
   }
   
  .side-wrapper { 

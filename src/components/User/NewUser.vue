@@ -20,14 +20,15 @@
         </div>
 
         <b-form v-if="!confirmUser">
-          <label class="mt-4" for="email">Please enter your email address:</label>
           <b-form-input 
             id="email"
             v-model="email"
             data-vv-delay="2000"
             placeholder="Email Address"
+            style="margin-top: 50px"
             :class="{'alert-border': errors.has('email')}">
           </b-form-input>
+          <b-form-text style="padding-top: 15px; margin-bottom:50px">Please contact your administrator if you need to confirm your user details</b-form-text>
           <div class="alert alert-danger" v-show="errors.has('email')">Please enter a valid email address</div>
           <b-button class="btn btn-block mt-4" @click="getUser">Continue</b-button>
           <b-row class="links">
@@ -166,12 +167,7 @@
   .row.links {
     margin-top: 20px;
   }
-  
-  .leftcol {
-    text-align: right;
-    border-right: 1px solid lightgrey;
-  }
-  
+
   .form-control {
     margin-top: 10px;
   }

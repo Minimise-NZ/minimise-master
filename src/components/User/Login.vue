@@ -45,9 +45,6 @@
 
         <b-button class="btn-block" type="submit">LOGIN</b-button>
         <b-row class="links">
-          <b-col class="leftcol">
-            <router-link to="signup">SIGN UP</router-link>
-          </b-col>
           <router-link to="password">FORGOT PASSWORD</router-link>
         </b-row>
       </b-form>
@@ -141,10 +138,9 @@
   .row {
     margin-top: 20px;
   }
-  
-  .leftcol {
-    text-align: right;
-    border-right: 1px solid lightgrey;
+
+  .links {
+    text-align: center;
   }
   
   a {

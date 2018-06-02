@@ -56,7 +56,7 @@
           </div>
 
           <div class="user">
-          <h5>User Information</h5>
+          <h5>Administrator Information</h5>
             <b-form-input name="name"
                 v-validate="'required|alpha_spaces'"
                 v-model="userName"
@@ -104,7 +104,7 @@
             </b-form-input>
              <div class="alert alert-danger" v-show="errors.has('confirmPassword')">{{ errors.first('confirmPassword') }}</div>
           </div>
-          <button class="btn btn-block mt-4 mb-3" type="submit">Submit</button>
+          <button class="btn btn-block mt-4 mb-3" type="submit" :disabled="disabled">Submit</button>
           <router-link to="/">Cancel</router-link>
         </b-form> 
       </b-container>
@@ -120,6 +120,8 @@ export default {
   },
   data () {
     return {
+      loading: false,
+      disabled: false,
       companyName: '',
       address: '',
       city: '',
@@ -135,6 +137,8 @@ export default {
   },
   methods: {
     onSubmit () {
+      this.loading = true
+      this.disabled = true
       this.$validator.validateAll().then(async(valid) => {
         if (!valid) { return }
         try {
@@ -144,9 +148,7 @@ export default {
             address: this.address,
             city: this.city,
             phone: this.companyPhone,
-            postcode: this.postcode,
-            principal: false,
-            contractor: true
+            postcode: this.postcode
           })
           // add user to company user collection
           await this.$store.dispatch('newUserProfile', {
@@ -158,26 +160,10 @@ export default {
             companyName: this.companyName,
             admin: true,
             webUser: true,
-            company,
-            training: [
-              {
-                description: 'Company Induction',
-                ID: '',
-                expiry: ''
-              },
-              {
-                description: 'First Aid Certificate',
-                ID: '',
-                expiry: ''
-              },
-              {
-                description: 'Site Safe Passport',
-                ID: '',
-                expiry: ''
-              }
-            ]
+            companyKey: company
           })
           await this.$store.dispatch('createTaskAnalysis')
+          this.loading = false
           this.$router.push('/dashboard')
         } catch (err) {
           console.log(err)
@@ -243,6 +229,10 @@ export default {
   
   .btn:hover {
     background-color: rgba(18, 128, 122, 0.85);
+  }
+
+  .btn:disabled {
+    cursor: not-allowed;
   }
   
    a {

@@ -16,18 +16,6 @@
             <b-button class="editBtn pt-1 pb-1" @click="editJob(job.id)">View Job Details</b-button>
           </header>
           <b-row>
-            <b-col>
-              <header class="subheader">Approved Contractors</header>
-              <ul>
-                <li v-for="contractor in job.contractors" :key='contractor.key' v-if="contractor.approved">{{contractor.name}}</li>
-              </ul>
-            </b-col>
-            <b-col>
-              <header class="subheader">Pending Contractors</header>
-              <ul>
-                <li v-for="contractor in job.contractors" :key='contractor.key' v-if="!contractor.approved">{{contractor.name}}</li>
-              </ul>
-            </b-col>
             <b-col> 
               <header class="subheader">Signed In</header>
               <ul>
@@ -60,21 +48,15 @@ export default {
   computed: {
     jobSites () {
       return this.$store.getters.jobsInProgress
-    },
-    contractors () {
-      return this.jobSites.contractors
-    },
-    companyType () {
-      return this.$store.getters.user.companyType
     }
   },
   methods: {
     editJob (id) {
-      this.$router.push('/' + this.companyType + '/jobs/job/' + id)
+      this.$router.push('/dashboard/jobs/job/' + id)
     },
     viewSafetyPlan (jobid, safetyplanid) {
       console.log(jobid, safetyplanid)
-      this.$router.push('/' + this.companyType + '/jobs/' + jobid + '/' + safetyplanid)
+      this.$router.push('/dashboard/jobs/' + jobid + '/' + safetyplanid)
     }
   }
 }

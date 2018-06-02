@@ -16,7 +16,7 @@ export const store = new Vuex.Store({
     company: null,
     companyKey: '',
     companyIndex: [],
-    jobsInProgress: null,
+    jobsInProgress: [],
     myIncidents: [],
     allHazards: [],
     myHazards: [],
@@ -202,7 +202,7 @@ export const store = new Vuex.Store({
             let user = doc.data()
             commit('setUser', user)
             commit('setUserKey', doc.id)
-            commit('setCompanyKey', user.company)
+            commit('setCompanyKey', user.companyKey)
             console.log('User profile set')
             resolve(user)
           })

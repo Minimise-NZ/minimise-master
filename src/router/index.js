@@ -64,13 +64,9 @@ export default new Router({
       beforeEnter: (to, from, next) => {
         console.log('auth guard')
         if (store.getters.userKey !== '') {
-          if (store.getters.user.companyType === 'contractor') {
-            next()
-          } else {
-            alert('Access not allowed')
-            next('/login')
-          }
+          next()
         } else {
+          alert('Access not allowed')
           next('/login')
         }
       },

@@ -9,11 +9,9 @@
       <router-link to='/' size="lg" class="mr-3 nav-link">
         Home Page
       </router-link>
-      <!--
       <router-link to='signup' size="lg" class="mr-3 nav-link">
         Sign Up
       </router-link>
-      -->
       <router-link to='login' size="lg" class="mr-3 nav-link">
         Log In
       </router-link>
