@@ -3,7 +3,7 @@
     <b-navbar sticky toggleable="md" type="dark" class="my-primary-bg">
       <router-link to="/" style="text-decoration: none">
         <b-navbar-brand>
-          <img src='../assets/yellow-mini.png'>
+          <img src='../../assets/yellow-mini.png'>
           <span class="my-primary-accent brand-name" style="margin-left: 5px">minimise</span>
         </b-navbar-brand>
       </router-link>

@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import WorkerView from '@/components/Shared/Worker.vue'
+import WorkerView from '@/components/Dashboard/Worker.vue'
 export default {
   components: {
     'workerview': WorkerView

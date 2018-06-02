@@ -16,9 +16,7 @@ export const store = new Vuex.Store({
     company: null,
     companyKey: '',
     companyIndex: [],
-    projectManagers: [],
     jobsInProgress: null,
-    jobRequests: [],
     myIncidents: [],
     allHazards: [],
     myHazards: [],
@@ -73,13 +71,6 @@ export const store = new Vuex.Store({
     },
     setCompanyIndex (state, payload) {
       state.companyIndex = payload
-    },
-    setProjectManagers (state, payload) {
-      state.projectManagers = payload
-    },
-    setRequests (state, payload) {
-      state.jobRequests = payload
-      console.log('Job requests set')
     },
     setJobs (state, payload) {
       state.jobsInProgress = payload
@@ -239,7 +230,9 @@ export const store = new Vuex.Store({
       })
       return promise
     },
+    //
     // worker functions
+    //
     updateWorker ({dispatch}, payload) {
       // update worker training
       let promise = new Promise((resolve, reject) => {
@@ -287,7 +280,6 @@ export const store = new Vuex.Store({
           let user = payload.worker
           user.company = state.companyKey
           user.companyName = state.company.name
-          user.companyType = state.user.companyType
           console.log('inviting user', user)
           if (user.role !== 'Worker') {
             window.emailjs.send('my_service', 'invitation', {
@@ -339,7 +331,9 @@ export const store = new Vuex.Store({
         }
       })
     },
+    //
     // company functions
+    //
     getCompanyIndex ({commit}) {
       // must already have key in state
       let companies = []
@@ -390,55 +384,28 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    getProjectManagers ({commit, state}) {
-      let list = []
-      firestore.collection('users').where('company', '==', state.companyKey).where('role', '==', 'Project Manager')
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          list.push({value: doc.id, label: doc.data().name, phone: doc.data().phone})
-        })
-        commit('setProjectManagers', list)
-        return list
-      })
-    },
+    //
     // job site functions
+    //
     newJob ({state, commit, dispatch}, payload) {
       // create new job in firestore jobSites collection
       let promise = new Promise((resolve, reject) => {
-        let subcontractors = payload.subcontractors
-        let approved = {}
         let today = moment().format('DD-MM-YYYY')
-        subcontractors.forEach((val) => {
-          let key = val.key
-          approved[key] = false
-        })
         firestore.collection('jobSites').add({
-          principalKey: payload.principalKey,
-          principalName: payload.principalName,
+          companyKey: payload.companyKey,
+          companyName: payload.companyName,
           medical: payload.medical,
           medPhone: payload.medPhone,
-          pm: payload.pm,
-          pmPhone: payload.pmPhone,
-          pmKey: payload.pmKey,
-          hse: payload.hse,
-          hsePhone: payload.hsePhone,
+          supervisor: payload.supervisorName,
+          supervisorPhone: payload.supervisorPhone,
+          supervisorKey: payload.supervisorKey,
           address: payload.address,
           notifiable: payload.notifiable,
           info: payload.info,
-          approved: approved,
           open: true,
           date: today
         })
-        .then((doc) => {
-          let jobId = doc.id
-          subcontractors.forEach((val) => {
-            firestore.collection('companies').doc(val.key).collection('jobSites').doc(jobId)
-            .set({
-              approved: false,
-              open: true
-            })
-          })
+        .then(() => {
           if (state.user.admin === true) {
             dispatch('getAllJobs')
           } else {
@@ -453,49 +420,14 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    addSiteContractor ({dispatch}, payload) {
-      // update contractor information
-      let approved = {}
-      for (let index in payload.contractors) {
-        let key = payload.contractors[index].key
-        approved[key] = false
-      }
-      firestore.collection('jobSites').doc(payload.id)
-      .set({'approved': approved}, {merge: true})
-      .then(() => {
-        dispatch('getJobs')
-      })
-    },
-    approveContractor ({state, dispatch}, payload) {
-      // add agreement to job sites agreement collection
-      let approved = {}
-      let key = state.companyKey
-      approved[key] = true
-      firestore.collection('jobSites').doc(payload.job.id)
-      .collection('agreements').doc(key).set(payload.form)
-      // update job site contractorKey approved to true
-      firestore.collection('jobSites').doc(payload.job.id).set({'approved': approved}, {merge: true})
-      // update companies jobSites approved to true
-      firestore.collection('companies').doc(key)
-      .collection('jobSites').doc(payload.job.id).update({'approved': true})
-      .then(() => {
-        console.log('job updated')
-        dispatch('getJobRequests')
-      })
-    },
     closeJob ({dispatch}, payload) {
-      // close job in jobSites collection and close job in each comapnies jobSite list
+      // close job in jobSites collection
       let promise = new Promise((resolve, reject) => {
-        let contractors = payload.contractors
         let jobId = payload.id
         let closedDate = moment().format('DD-MM-YYYY')
         firestore.collection('jobSites').doc(jobId)
         .update({'open': false, 'closedDate': closedDate})
         .then(() => {
-          contractors.forEach((val) => {
-            firestore.collection('companies').doc(val.key).collection('jobSites').doc(jobId)
-            .set({open: false}, {merge: true})
-          })
           resolve()
         })
         .catch((error) => {
@@ -506,27 +438,13 @@ export const store = new Vuex.Store({
       return promise
     },
     getAllJobs ({commit, state}) {
-      // get all jobs in progress that are assigned to this company as principal
+      // get all jobs in progress that are assigned to this company
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('jobSites').where('principalKey', '==', state.companyKey).where('open', '==', true)
+        firestore.collection('jobSites').where('companyKey', '==', state.companyKey).where('open', '==', true)
         .get()
         .then((snapshot) => {
           var jobSites = []
           snapshot.forEach((doc) => {
-            let list = []
-            let contractors = doc.data().approved
-            // get the contractor name from companyIndex
-            for (let key in contractors) {
-              state.companyIndex.find((id) => {
-                if (id.value === key) {
-                  list.push({
-                    approved: contractors[key],
-                    name: id.label,
-                    key: id.value
-                  })
-                }
-              })
-            }
             // get the safety plans
             firestore.collection('jobSites').doc(doc.id).collection('safetyPlans')
             .get()
@@ -539,14 +457,11 @@ export const store = new Vuex.Store({
                 id: doc.id,
                 address: doc.data().address,
                 date: doc.data().date,
-                hse: doc.data().hse,
                 medical: doc.data().medical,
-                hsePhone: doc.data().hsePhone,
                 info: doc.data().info,
                 notifiable: doc.data().notifiable,
-                pm: doc.data().pm,
-                pmPhone: doc.data().pmPhone,
-                contractors: list,
+                supervisorName: doc.data().supervisorName,
+                supervisorPhone: doc.data().supervisorPhone,
                 safetyPlans: safetyPlans
               })
             })
@@ -563,27 +478,13 @@ export const store = new Vuex.Store({
       })
     },
     getMyJobs ({commit, state}) {
-      // get all jobs in progress that are assigned to this project manager
+      // get all jobs in progress that are assigned to this supervisor
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('jobSites').where('pmKey', '==', state.userKey).where('open', '==', true)
+        firestore.collection('jobSites').where('supervisorKey', '==', state.userKey).where('open', '==', true)
         .get()
         .then((snapshot) => {
           var jobSites = []
           snapshot.forEach((doc) => {
-            let list = []
-            let contractors = doc.data().approved
-            // get the contractor name from companyIndex
-            for (let key in contractors) {
-              state.companyIndex.find((id) => {
-                if (id.value === key) {
-                  list.push({
-                    approved: contractors[key],
-                    name: id.label,
-                    key: id.value
-                  })
-                }
-              })
-            }
             // get the safety plans
             firestore.collection('jobSites').doc(doc.id).collection('safetyPlans')
             .get()
@@ -596,14 +497,11 @@ export const store = new Vuex.Store({
                 id: doc.id,
                 address: doc.data().address,
                 date: doc.data().date,
-                hse: doc.data().hse,
                 medical: doc.data().medical,
-                hsePhone: doc.data().hsePhone,
                 info: doc.data().info,
                 notifiable: doc.data().notifiable,
-                pm: doc.data().pm,
-                pmPhone: doc.data().pmPhone,
-                contractors: list,
+                supervisor: doc.data().supervisorName,
+                supervisorPhone: doc.data().supervisorPhone,
                 safetyPlans: safetyPlans
               })
             })
@@ -616,39 +514,6 @@ export const store = new Vuex.Store({
           reject(error)
         })
         return promise
-      })
-    },
-    getJobRequests ({commit, state}, payload) {
-      // get all jobs in progress that are assigned to this company
-      firestore.collection('companies').doc(state.companyKey).collection('jobSites').where('approved', '==', false).where('open', '==', true)
-      .get()
-      .then((snapshot) => {
-        let jobRequests = []
-        snapshot.forEach((doc) => {
-          console.log(doc.data())
-          firestore.collection('jobSites').doc(doc.id).get()
-          .then((doc) => {
-            let job = doc.data()
-            jobRequests.push({
-              id: doc.id,
-              address: job.address,
-              principal: job.principalName,
-              projectManager: job.pm,
-              PMcontact: job.pmPhone,
-              HSEManager: job.hse,
-              HSEcontact: job.hsePhone,
-              date: job.date,
-              notifiable: job.notifiable,
-              info: job.info,
-              status: job.status,
-              medical: job.medical
-            })
-          })
-        })
-        commit('setRequests', jobRequests)
-      })
-      .catch((error) => {
-        console.log('Error getting documents: ', error)
       })
     },
     getTraining ({commit, state}) {
@@ -676,7 +541,9 @@ export const store = new Vuex.Store({
       }
       commit('setTrainingAlerts', trainingAlerts)
     },
+    //
     // incident functions
+    //
     newIncident ({commit, dispatch, state}, payload) {
       // create new incident in firestore
       let promise = new Promise((resolve, reject) => {
@@ -712,10 +579,10 @@ export const store = new Vuex.Store({
         plantDamage: payload.plantDamage,
         cause: payload.cause,
         corrective: payload.corrective,
-        escalate: payload.escalate,
         open: payload.open,
         loggedBy: payload.loggedBy,
-        actionOwner: payload.actionOwner
+        supervisorName: payload.supervisorName,
+        supervisorKey: payload.supervisorKey
       })
       if (state.user.admin === true) {
         dispatch('getAllIncidents')
@@ -746,10 +613,9 @@ export const store = new Vuex.Store({
               plantDamage: obj.plantDamage,
               cause: obj.cause,
               corrective: obj.corrective,
-              escalate: obj.escalate,
               open: obj.open,
-              loggedBy: obj.loggedBy,
-              actionOwner: obj.actionOwner
+              supervisorName: obj.supervisorName,
+              supervisorKey: obj.supervisorKey
             })
           })
           commit('setIncidents', incidents)
@@ -765,7 +631,7 @@ export const store = new Vuex.Store({
     getMyIncidents ({commit, state}) {
       let promise = new Promise((resolve, reject) => {
         let incidents = []
-        firestore.collection('incidents').where('actionOwner.key', '==', state.userKey)
+        firestore.collection('incidents').where('supervisor.key', '==', state.userKey)
         .get()
         .then((snapshot) => {
           console.log('incidents', snapshot)
@@ -776,9 +642,9 @@ export const store = new Vuex.Store({
               id: key,
               address: obj.address,
               date: obj.date,
+              company: obj.company,
               reportedBy: obj.reportedBy,
               type: obj.type,
-              company: obj.company,
               description: obj.description,
               injury: obj.injury,
               injuryDescription: obj.injuryDescription,
@@ -786,10 +652,9 @@ export const store = new Vuex.Store({
               plantDamage: obj.plantDamage,
               cause: obj.cause,
               corrective: obj.corrective,
-              escalate: obj.escalate,
               open: obj.open,
-              loggedBy: obj.loggedBy,
-              actionOwner: obj.actionOwner
+              supervisorName: obj.supervisorName,
+              supervisorKey: obj.supervisorKey
             })
           })
           commit('setIncidents', incidents)
@@ -802,7 +667,9 @@ export const store = new Vuex.Store({
       })
       return promise
     },
+    //
     // hazard functions
+    //
     getAllHazards ({commit, state}, payload) {
       const allHazards = []
       let promise = new Promise((resolve, reject) => {
@@ -887,7 +754,9 @@ export const store = new Vuex.Store({
       commit('setMyHazards', myHazards)
       return
     },
+    //
     // task analysis functions
+    //
     getTaskAnalysis ({commit, state}) {
       // get taskAnalysis from company
       firestore.collection('companies').doc(state.companyKey)
@@ -1031,7 +900,6 @@ export const store = new Vuex.Store({
     workers: (state) => state.workers,
     training: (state) => state.trainingAlerts,
     jobsInProgress: (state) => state.jobsInProgress,
-    jobRequests: (state) => state.jobRequests,
     allHazards: (state) => state.allHazards,
     myHazards: (state) => state.myHazards,
     notMyHazards: (state) => state.notMyHazards,
@@ -1061,8 +929,7 @@ export const store = new Vuex.Store({
         })
       }
     },
-    taskAnalysis: (state) => state.taskAnalysis,
-    projectManagers: (state) => state.projectManagers
+    taskAnalysis: (state) => state.taskAnalysis
   },
   plugins: [createPersistedState()]
 })

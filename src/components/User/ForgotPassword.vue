@@ -29,7 +29,7 @@
 </template>
 
 <script>
-  import MiniHeader from '@/components/MiniHeader.vue'
+  import MiniHeader from '@/components/Webpage/MiniHeader.vue'
   export default {
     components: {
       miniHeader: MiniHeader

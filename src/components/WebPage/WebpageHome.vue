@@ -11,18 +11,14 @@
           <b-nav-item v-scroll-to="'#home'">Home</b-nav-item>
           <b-nav-item v-scroll-to="'#about'">About</b-nav-item>
           <b-nav-item-dropdown text="Features" right>
-            <b-dropdown-item v-scroll-to="'#principal'">Principal Contractors</b-dropdown-item>
-            <b-dropdown-divider></b-dropdown-divider>
             <b-dropdown-item v-scroll-to="'#contractor'">Contractors</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
             <b-dropdown-item v-scroll-to="'#workers'">Workers</b-dropdown-item>
           </b-nav-item-dropdown>
           <b-nav-item v-scroll-to="'#contact'">Contact Us</b-nav-item>
-          <!--
-          <router-link to='signup' tag="button" size="sm" class="login-btn mr-3">
+          <router-link to='signup' tag="button" size="sm" class="login-btn mr-3" v-if="uid === ''">
             Sign Up
           </router-link>
-          -->
           <router-link to='login' tag="button" size="sm" class="login-btn mr-3" v-if="uid === ''">
             Log In
           </router-link>
@@ -43,12 +39,12 @@
             <hr class="my-4">
               <p>Work safer and smarter with our innovative health and safety app designed for construction sites.</p>
               <router-link to='/signup' tag="button" size="lg" class="btn signup-btn btn-lg">
-                Register your interest
+                Let's get started!
               </router-link>
           </b-col>
           <b-col class="second-col" lg="6">
             <a href="https://minimisesafetyapp.com/" rel="nofollow">
-              <img src="../assets/Minimise.png" class="hero-img" alt="minimise safety app">
+              <img src="../../assets/Minimise.png" class="hero-img" alt="minimise safety app">
             </a>
           </b-col>
         </b-row>
@@ -99,64 +95,6 @@
         </b-row>
       </b-container>
 
-      <!--Principal Section-->
-      <b-navbar class="my-primary-bg padding-side section-nav" id="principal">
-        <h4 class="my-primary-accent section-title">Principal Contractors</h4>
-        <b-nav>
-          <b-nav-item v-scroll-to="'#home'" ><p class="my-primary-accent" style="margin-bottom: 0">Back to Top</p></b-nav-item>
-        </b-nav>
-      </b-navbar>
-      <b-container fluid data-aos="fade-zoom-in" data-aos-offset="200" data-aos-easing="ease-in-out-sine" data-aos-duration="500">
-        <b-row class="flex-row">
-          <b-col lg="7" md="12" sm="12">
-            <b-carousel
-              controls
-              :data-wrap=false
-              :interval="5000"
-              img-width="1024"
-              img-height="480"
-            >
-            <b-carousel-slide img-src="/static/Principal/Home.PNG" height="985" width="1480" alt="Principal Contractor Homepage">
-              <a href="https://minimisesafetyapp.com/" rel="nofollow" title="Principal Contractor Homepage"></a>
-            </b-carousel-slide>
-            <b-carousel-slide img-src='/static/Principal/NewJob.PNG' alt="Principal Contractor New Job">
-              <a href="https://minimisesafetyapp.com/" rel="nofollow" title="Principal Contractor New Job"></a>
-            </b-carousel-slide>
-            <b-carousel-slide img-src='/static/Principal/JobsInProgress.PNG' alt="Principal Contractor Jobs In Progress">
-              <a href="https://minimisesafetyapp.com/" rel="nofollow" title="Principal Contractor Jobs In Progress"></a>
-            </b-carousel-slide>
-            <b-carousel-slide img-src='/static/Principal/Incident.PNG' alt="Principal Contractor Incident">
-              <a href="https://minimisesafetyapp.com/" rel="nofollow" title="Principal Contractor  Incident"></a>
-            </b-carousel-slide>
-          </b-carousel>
-          </b-col>
-          <b-col lg="5" md="12" class="list-col">
-            <h3>View all key safety information from one easy to use dashboard</h3>
-            <ul style="color:rgb(28, 118, 195)" class="feature-list">
-              <li>
-                <i class="fa fa-check"></i>
-                Manage multiple job sites from one view
-              </li>
-              <li>
-                <i class="fa fa-check"></i>
-                Request health and safety agreements</li>
-              <li>
-                <i class="fa fa-check"></i>
-                View signed in status on job sites</li>
-              <li>
-                <i class="fa fa-check"></i>
-                Manage incidents</li>
-              <li>
-                <i class="fa fa-check"></i>
-                Manage workers and training register</li>
-              <li>
-                <i class="fa fa-check"></i>
-                View site safety plans remotely</li>
-            </ul>
-          </b-col>
-        </b-row>
-      </b-container>
-
       <!--Contractor Section-->
       <b-navbar class="my-primary-bg padding-side section-nav" id="contractor">
         <h4 class="my-primary-accent section-title">Contractors</h4>
@@ -171,22 +109,26 @@
             <ul style="color:rgb(28, 118, 195); padding-left: 0" class="feature-list">
               <li>
                 <i class="fa fa-check"></i>
-                Receive job requests from Principal Contractors</li>
+                Manage multiple job sites from one view
+              </li>
               <li>
                 <i class="fa fa-check"></i>
-                Submit health and safety agreements</li>
+                View signed in status on job sites</li>
+              <li>
+                <i class="fa fa-check"></i>
+                Manage incidents</li>
+              <li>
+                <i class="fa fa-check"></i>
+                Manage workers and training register</li>
+              <li>
+                <i class="fa fa-check"></i>
+                View site safety plans remotely</li>
               <li>
                 <i class="fa fa-check"></i>
                 Maintain hazard register</li>
               <li>
                 <i class="fa fa-check"></i>
                 Prepare task analysis</li>
-              <li>
-                <i class="fa fa-check"></i>
-                Manage workers and training register</li>
-              <li>
-                <i class="fa fa-check"></i>
-                Manage incidents</li>
             </ul>
           </b-col>
            <b-col lg="7" md="12" sm="12">
@@ -289,15 +231,6 @@
               v-model="companyName"
               ></b-form-input>
 
-            <b-form-select 
-              name="companyType"
-              v-model="companyType">
-              <option :value="null">Please select company type</option>
-              <option value="principal">Principal</option>
-              <option value="contractor">Contractor</option>
-              <option value="other">Other</option>
-            </b-form-select>
-
             <b-form-input 
               name="email"
               required
@@ -344,7 +277,6 @@ export default {
       beta: '',
       name: '',
       companyName: '',
-      companyType: null,
       email: '',
       phone: '',
       text: ''
@@ -360,8 +292,7 @@ export default {
   },
   methods: {
     dashboard () {
-      let companyType = this.user.companyType
-      this.$router.push('/' + companyType)
+      this.$router.push('/dashboard')
     },
     register () {
       // register interest
@@ -372,7 +303,6 @@ export default {
           demo: this.name,
           notify: this.notify,
           companyName: this.companyName,
-          companyType: this.companyType,
           phone: this.phone,
           text: this.text
         })

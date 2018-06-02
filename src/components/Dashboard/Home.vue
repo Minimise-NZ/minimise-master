@@ -1,22 +1,19 @@
 <template>
   <b-container fluid>
-    <b-card header="Principal Home" header-tag="header">
+    <b-card header="Contractor Home" header-tag="header">
       <div class="scroll-container">
-        <!--<contractorActivity></contractorActivity>-->
         <incidentSummary></incidentSummary>
         <trainingAlerts></trainingAlerts>
-      </div>  
+      </div>
     </b-card>
   </b-container>
 </template>
 
 <script>
-import IncidentSummary from '@/components/Shared/IncidentSummary.vue'
-import TrainingAlerts from '@/components/Shared/TrainingAlerts.vue'
-// import ContractorActivity from '@/components/Principal/ContractorActivity.vue'
+import IncidentSummary from '@/components/Dashboard/IncidentSummary.vue'
+import TrainingAlerts from '@/components/Dashboard/TrainingAlerts.vue'
 export default {
   components: {
-    // 'contractorActivity': ContractorActivity,
     'incidentSummary': IncidentSummary,
     'trainingAlerts': TrainingAlerts
   },
@@ -32,7 +29,7 @@ export default {
     padding-top: 20px;
     padding-right: 30px;
   }
-
+  
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
     font-size: 1.4rem;

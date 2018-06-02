@@ -14,6 +14,11 @@ export default {
 #app {
   font-family: 'Raleway', Helvetica, Arial, sans-serif;
 }
+
+P {
+  font-size: 14px;
+}
+
 .btn {
   cursor: pointer;
 }

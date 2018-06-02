@@ -147,7 +147,7 @@
 </template>
 
 <script>
-import IncidentForm from '@/components/Shared/IncidentForm.vue'
+import IncidentForm from '@/components/Dashboard/IncidentForm.vue'
 import moment from 'moment'
 export default {
   props: ['id'],

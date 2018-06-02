@@ -45,11 +45,9 @@
 
         <b-button class="btn-block" type="submit">LOGIN</b-button>
         <b-row class="links">
-          <!--
           <b-col class="leftcol">
             <router-link to="signup">SIGN UP</router-link>
           </b-col>
-          -->
           <router-link to="password">FORGOT PASSWORD</router-link>
         </b-row>
       </b-form>
@@ -59,7 +57,7 @@
 </template>
 
 <script>
-  import MiniHeader from '@/components/MiniHeader.vue'
+  import MiniHeader from '@/components/Webpage/MiniHeader.vue'
   export default {
     components: {
       miniHeader: MiniHeader
@@ -80,8 +78,7 @@
           let user = await this.$store.dispatch('getUser')
           console.log(user)
           if (user.webUser === true) {
-            let companyType = user.companyType
-            this.$router.push('/' + companyType)
+            this.$router.push('/dashboard')
           } else {
             this.message = 'You do not have access to the web portal. Please log in to the mobile app'
             this.error = true

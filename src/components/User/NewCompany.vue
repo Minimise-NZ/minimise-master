@@ -1,114 +1,95 @@
 <template>
   <animated-fade-in>
-    <b-container fluid>
+    <b-container fluid> 
       <miniHeader></miniHeader>
       <b-container class="form-container">
-        <div class="principal-header">
-          <h3>Sign Up: New Company</h3>
-        </div>
-        <b-form @submit.prevent="onSubmit" id="form" autocomplete="on">
+         <div class="contractor-header">
+           <h3>Sign Up: New Company</h3>
+         </div>
+         <b-form @submit.prevent="onSubmit" id="form">
 
           <div class="company">
           <h5>Company Information</h5>
             <b-form-input name="companyName"
-              v-validate="'required|alpha_spaces'"
-              autofocus="autofocus"
-              autocomplete="company"
-              v-model="companyName"
-              placeholder="Name of Company"
-              :class="{'alert-border': errors.has('companyName')}">
+                v-validate="'required|alpha_spaces'"
+                autofocus="autofocus"
+                v-model="companyName"
+                placeholder="Name of Company"
+                :class="{'alert-border': errors.has('address')}">
             </b-form-input>
             <div class="alert alert-danger" v-show="errors.has('companyName')">Please enter company name</div>
 
             <b-form-input name="address"
-              v-validate="'required'"
-              v-model="address"
-              autocomplete="address"
-              placeholder="Company Address"
-              :class="{'alert-border': errors.has('address')}">
+                v-validate="'required'"
+                v-model="address"
+                placeholder="Company Address"
+                :class="{'alert-border': errors.has('address')}">
             </b-form-input>
             <div class="alert alert-danger" v-show="errors.has('address')">Please enter address</div>
 
             <b-form-input name="city"
-              v-validate="'required|alpha_spaces'"
-              autocomplete="city"
-              v-model="city"
-              placeholder="City"
-              :class="{'alert-border': errors.has('city')}">
+                v-validate="'required|alpha_spaces'"
+                v-model="city"
+                placeholder="City"
+                :class="{'alert-border': errors.has('city')}">
             </b-form-input>
             <div class="alert alert-danger" v-show="errors.has('city')">Please enter city</div>
 
             <b-form-input name="postcode"
-              v-validate="'required|numeric'"
-              type="number"
-              autocomplete="postcode"
-              class="no-spinners"
-              v-model="postcode"
-              placeholder="Postcode"
-              :class="{'alert-border': errors.has('postcode')}">
+                v-validate="'required|numeric'"
+                type="number"
+                class="no-spinners"
+                v-model="postcode"
+                placeholder="Postcode"
+                :class="{'alert-border': errors.has('postcode')}">
             </b-form-input>
             <div class="alert alert-danger" v-show="errors.has('postcode')">Please enter postcode</div>
 
             <b-form-input name="Company Phone"
-              v-validate="'required|numeric'"
-              autocomplete="phone"
-              class="no-spinners"
-              v-model="companyPhone"
-              placeholder="Phone Number"
-              :class="{'alert-border': errors.has('Company Phone')}">
+                v-validate="'required|numeric'"
+                class="no-spinners"
+                v-model="companyPhone"
+                placeholder="Phone Number"
+                :class="{'alert-border': errors.has('Company Phone')}">
             </b-form-input>
             <div class="alert alert-danger" v-show="errors.has('Company Phone')">Please enter company phone number</div>
           </div>
-          
+
           <div class="user">
           <h5>User Information</h5>
-            <v-select name="userRole"
-              v-validate="'required'"
-              v-model="userRole" 
-              :options="userRoles"
-              placeholder="Job Role"
-              class="mt-3"          
-              id="selectBox"
-              :class="{'alert-border': errors.has('userRole')}">
-            </v-select>
-            <div class="alert alert-danger" v-show="errors.has('userRole')">Please select your job role</div>
-
             <b-form-input name="name"
-              v-validate="'required|alpha_spaces'"
-              autocomplete="name"
-              v-model="userName"
-              placeholder="Name"
-              :class="{'alert-border': errors.has('name')}">
-            </b-form-input>
-            <div class="alert alert-danger" v-show="errors.has('name')">Please enter your name</div>
+                v-validate="'required|alpha_spaces'"
+                v-model="userName"
+                placeholder="Name"
+                :class="{'alert-border': errors.has('name')}">
+            </b-form-input><div class="alert alert-danger" v-show="errors.has('name')">Please enter your name</div>
+            
 
             <b-form-input name="userPhone"
-              v-validate="'required|numeric'"
-              autocomplete="phone"
-              v-model="userPhone"
-              class="no-spinners"
-              placeholder="Phone Number"
-              :class="{'alert-border': errors.has('userPhone')}">
+                v-validate="'required|numeric'"
+                v-model="userPhone"
+                class="no-spinners"
+                placeholder="Phone Number"
+                :class="{'alert-border': errors.has('userPhone')}">
             </b-form-input>
             <div class="alert alert-danger" v-show="errors.has('userPhone')">Please enter your phone number</div>
 
             <b-form-input name="email"
-              v-validate="'required|email'"
-              v-model="userEmail"
-              autocomplete="email"
-              data-vv-delay="2000"
-              placeholder="Email Address"
-              :class="{'alert-border': errors.has('email')}">
+                v-validate="'required|email'"
+                v-model="userEmail"
+                data-vv-delay="2000"
+                placeholder="Email Address"
+                :class="{'alert-border': errors.has('email')}">
             </b-form-input>
             <div class="alert alert-danger" v-show="errors.has('email')">Please enter a valid email address</div>
 
             <b-form-input name="password"
-              v-validate="'required|min:6'"
-              type="password"
-              v-model="password"
-              data-vv-delay="2000"
-              placeholder="Password"
-              :class="{'alert-border': errors.has('password')}">
+                v-validate="'required|min:6'"
+                type="password"
+                v-model="password"
+                data-vv-delay="2000"
+                placeholder="Password"
+                :class="{'alert-border': errors.has('password')}">
             </b-form-input>
             <div class="alert alert-danger" v-show="errors.has('password')">{{ errors.first('password') }}</div>
 
@@ -116,31 +97,29 @@
               v-validate="'confirmed:password'"
               type="password"
               v-model="confirmPassword"
+              data-vv-delay="2000"
               placeholder="Confirm Password"
-              data-vv-delay="3000"
               data-vv-as="password"
               :class="{'alert-border': errors.has('name')}">
             </b-form-input>
              <div class="alert alert-danger" v-show="errors.has('confirmPassword')">{{ errors.first('confirmPassword') }}</div>
           </div>
-
-          <button class="btn btn-block mt-4" type="submit">Sign up</button>
+          <button class="btn btn-block mt-4 mb-3" type="submit">Submit</button>
           <router-link to="/">Cancel</router-link>
-        </b-form>
+        </b-form> 
       </b-container>
     </b-container>
   </animated-fade-in>
 </template>
 
 <script>
-import MiniHeader from '@/components/MiniHeader.vue'
+import MiniHeader from '@/components/Webpage/MiniHeader.vue'
 export default {
   components: {
     miniHeader: MiniHeader
   },
   data () {
     return {
-      userRoles: ['Health and Safety Manager', 'Health and Safety Administrator', 'Business Administrator', 'Project Manager', 'Supervisor'],
       companyName: '',
       address: '',
       city: '',
@@ -151,7 +130,7 @@ export default {
       password: '',
       confirmPassword: '',
       userPhone: '',
-      userRole: ''
+      userRole: 'Business Administrator'
     }
   },
   methods: {
@@ -166,22 +145,20 @@ export default {
             city: this.city,
             phone: this.companyPhone,
             postcode: this.postcode,
-            principal: true,
-            contractor: false,
-            hseManager: this.userName,
-            hsePhone: this.userPhone
+            principal: false,
+            contractor: true
           })
+          // add user to company user collection
           await this.$store.dispatch('newUserProfile', {
             name: this.userName,
             uid: this.$store.getters.uid,
             email: this.userEmail,
             phone: this.userPhone,
             role: this.userRole,
+            companyName: this.companyName,
             admin: true,
             webUser: true,
-            company: company,
-            companyType: 'principal',
-            companyName: this.companyName,
+            company,
             training: [
               {
                 description: 'Company Induction',
@@ -200,7 +177,8 @@ export default {
               }
             ]
           })
-          this.$router.push('/principal')
+          await this.$store.dispatch('createTaskAnalysis')
+          this.$router.push('/dashboard')
         } catch (err) {
           console.log(err)
         }
@@ -209,6 +187,7 @@ export default {
   }
 }
 </script>
+
 
 <style scoped>
   .container-fluid {
@@ -221,13 +200,13 @@ export default {
     margin-bottom: 100px;
   }
   
-  .principal-header {
+  .contractor-header {
     max-width: 658px;
     border-radius: 5px;
-    padding: 10px 0 10px 0;
+    padding: 15px 0 10px 0;
     margin: auto;
     text-align: center;
-    background-color: rgba(18, 128, 122, 0.85);
+    background-color: rgba(29, 92, 158, 0.75);
     color: white;
     font-family: 'Montserrat', sans-serif;
   }
@@ -236,7 +215,7 @@ export default {
     margin-top: 20px;
     text-align: center;
     font-family: 'Montserrat', sans-serif;
-    color: rgba(18, 128, 122, 1);
+    color: rgba(29, 92, 158, 1);
   }
   
   form {
@@ -254,7 +233,7 @@ export default {
   }
   
   .btn {
-    background-color: rgba(29, 92, 158, 0.75);
+    background-color: rgba(111, 50, 130, 0.75);
     cursor: pointer;
     height: 50px;
     color: white;
@@ -263,37 +242,13 @@ export default {
   }
   
   .btn:hover {
-    background-color: rgba(111, 50, 130, 0.75);
-  }
-
-  .btn:hover:disabled {
-    cursor: not-allowed;
+    background-color: rgba(18, 128, 122, 0.85);
   }
   
-  a {
+   a {
     display: block;
     text-align: center;
-    margin-top: 15px;
-  }
-
-  .alert-danger {
-    margin-top:10px;
-    padding: 5px;
-    font-size: 0.9rem;
-  }
-
-  .alert-border {
-    border: 1px solid salmon;
-  }
-
-  .no-spinners {
-    -moz-appearance:textfield;
-  }
-
-  .no-spinners::-webkit-outer-spin-button,
-  .no-spinners::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+    text-decoration: none;
   }
 
 </style>

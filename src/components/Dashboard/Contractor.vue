@@ -6,17 +6,14 @@
       <b-row>
         <b-col sm="2" class="side-wrapper">
           <b-list-group>
-            <router-link to='/contractor' tag="li" class="list-group-item" exact>
-                <p>Home</p>
-              </router-link>
-              <router-link v-for="item in sideNavItems" :to='item.link' tag="li" class="list-group-item" :key = "item.name">
-                <p>{{item.name}}</p>
-              </router-link>
-              <router-link v-if="user.admin" v-for="item in adminNav" :to='item.link' tag="li" class="list-group-item" :key = "item.name">
-                <p>{{item.name}}</p>
-              </router-link>
-              <router-link to='/contractor/support' tag="li" class="list-group-item" exact>
-                <p>Support / Feedback</p>
+            <router-link to='/dashboard' tag="li" class="list-group-item" exact>
+              <p>Home</p>
+            </router-link>
+            <router-link v-for="item in sideNavItems" :to='item.link' tag="li" class="list-group-item" :key = "item.name">
+              <p>{{item.name}}</p>
+            </router-link>
+            <router-link v-if="user.admin" v-for="item in adminNav" :to='item.link' tag="li" class="list-group-item" :key = "item.name">
+              <p>{{item.name}}</p>
             </router-link>
           </b-list-group>
         </b-col>
@@ -33,7 +30,7 @@
 </template>
 
 <script>
-import DashboardHeader from '@/components/Header.vue'
+import DashboardHeader from '@/components/Dashboard/Header.vue'
 export default {
   components: {
     'dashboard-header': DashboardHeader
@@ -41,15 +38,19 @@ export default {
   data () {
     return {
       sideNavItems: [
-        {name: 'Hazard Register', link: '/contractor/hazards'},
-        // {name: 'Hazardous Substances', link: '/contractor/hazardousSubstances'},
-        {name: 'Task Analysis', link: '/contractor/taskAnalysis'},
-        {name: 'Incident Reports', link: '/contractor/incidents'},
-        {name: 'New Incident', link: '/contractor/newIncident'}
+        {name: 'Jobs In Progress', link: '/dashboard/jobs'},
+        {name: 'Hazard Register', link: '/dashboard/hazards'},
+        {name: 'Hazardous Substances', link: '/dashboard/hazardousSubstances'},
+        {name: 'Task Analysis', link: '/dashboard/taskAnalysis'},
+        {name: 'Master Safety Plan', link: '/dashboard/master'},
+        {name: 'New Incident', link: '/dashboard/newIncident'},
+        {name: 'Incident Reports', link: '/dashboard/incidents'},
+        {name: 'Training Register', link: '/dashboard/TrainingRegister'},
+        {name: 'Support/ Feedback', link: '/dashboard/support'}
       ],
       adminNav: [
-         {name: 'Worker Management', link: '/contractor/workers'}
-        // {name: 'Administration', link: '/contractor/admin'},
+        {name: 'User Management', link: '/dashboard/userManagement'},
+        {name: 'Payments/ Billing', link: '/dashboard/billing'}
       ]
     }
   },
@@ -64,7 +65,6 @@ export default {
     this.$store.dispatch('getTaskAnalysis')
   },
   beforeMount () {
-    this.$store.dispatch('getJobRequests')
     this.$store.dispatch('getWorkers')
   }
 }

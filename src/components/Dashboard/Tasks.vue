@@ -75,11 +75,11 @@ export default {
       // check there is nothing to be saved
       this.errors.clear()
       this.selectedIndex = index
-      this.$router.push('/contractor/taskAnalysis/task/' + this.selectedIndex)
+      this.$router.push('/dashboard/taskAnalysis/task/' + this.selectedIndex)
     }
   },
   beforeMount () {
-    this.$router.push('/contractor/taskAnalysis/task/' + this.selectedIndex)
+    this.$router.push('/dashboard/taskAnalysis/task/' + this.selectedIndex)
   }
 }
 </script>

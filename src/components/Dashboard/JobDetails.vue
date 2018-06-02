@@ -159,12 +159,8 @@
 </template>
 
 <script>
-import ContractorStatus from '@/components/Principal/ContractorStatus.vue'
 export default {
   props: ['id'],
-  components: {
-    'contractorStatus': ContractorStatus
-  },
   data () {
     return {
       confirmAction: false,

@@ -2,39 +2,32 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import {store} from '../store/store'
 
-import Home from '@/components/Home.vue'
+import Home from '@/components/Webpage/WebpageHome.vue'
 
 import Login from '@/components/User/Login.vue'
 import SignUp from '@/components/User/SignUp.vue'
 import Password from '@/components/User/ForgotPassword.vue'
-import NewContractor from '@/components/User/NewContractor.vue'
-import NewPrincipal from '@/components/User/NewPrincipal.vue'
+import NewCompany from '@/components/User/NewCompany.vue'
 import NewUser from '@/components/User/NewUser.vue'
 
-import Contractor from '@/components/Contractor/Contractor.vue'
-import ContractorHome from '@/components/Contractor/Home.vue'
-import JobForm from '@/components/Contractor/JobForm.vue'
-import Hazards from '@/components/Contractor/HazardRegister.vue'
-import HazardousSubstances from '@/components/Contractor/HazardousSubstances.vue'
-import Tasks from '@/components/Contractor/Tasks.vue'
-import Task from '@/components/Contractor/Task.vue'
-
-import Billing from '@/components/Shared/AdminBilling.vue'
-import AdminUsers from '@/components/Shared/AdminManageUsers.vue'
-import IncidentReports from '@/components/Shared/IncidentReports.vue'
-import NewIncident from '@/components/Shared/IncidentForm.vue'
-import IncidentView from '@/components/Shared/IncidentView.vue'
-import Workers from '@/components/Shared/Workers.vue'
-import Support from '@/components/Shared/SupportFeedback.vue'
-
-import Principal from '@/components/Principal/Principal.vue'
-import PrincipalHome from '@/components/Principal/Home.vue'
-import NewJob from '@/components/Principal/NewJob.vue'
-import Contractors from '@/components/Principal/ContractorManagement.vue'
-import JobDetails from '@/components/Principal/JobDetails.vue'
-import JobsInProgress from '@/components/Principal/JobsInProgress.vue'
-import SafetyPlan from '@/components/Principal/SafetyPlanView.vue'
-import Master from '@/components/Principal/MasterSafetyPlan.vue'
+import Dashboard from '@/components/Dashboard/Contractor.vue'
+import DashboardHome from '@/components/Dashboard/Home.vue'
+import Hazards from '@/components/Dashboard/HazardRegister.vue'
+import HazardousSubstances from '@/components/Dashboard/HazardousSubstances.vue'
+import Tasks from '@/components/Dashboard/Tasks.vue'
+import Task from '@/components/Dashboard/Task.vue'
+import AdminBilling from '@/components/Dashboard/AdminBilling.vue'
+import AdminUserManagement from '@/components/Dashboard/AdminUserManagement.vue'
+import IncidentReports from '@/components/Dashboard/IncidentReports.vue'
+import NewIncident from '@/components/Dashboard/IncidentForm.vue'
+import IncidentView from '@/components/Dashboard/IncidentView.vue'
+import TrainingRegister from '@/components/Dashboard/TrainingRegister.vue'
+import Support from '@/components/Dashboard/SupportFeedback.vue'
+import JobsInProgress from '@/components/Dashboard/JobsInProgress.vue'
+import JobDetails from '@/components/Dashboard/JobDetails.vue'
+import SafetyPlan from '@/components/Dashboard/SafetyPlanView.vue'
+import Master from '@/components/Dashboard/MasterSafetyPlan.vue'
+import NewJob from '@/components/Dashboard/NewJob.vue'
 
 Vue.use(Router)
 
@@ -62,16 +55,12 @@ export default new Router({
       component: NewUser
     },
     {
-      path: '/newContractor',
-      component: NewContractor
+      path: '/newCompany',
+      component: NewCompany
     },
     {
-      path: '/newPrincipal',
-      component: NewPrincipal
-    },
-    {
-      path: '/contractor',
-      component: Contractor,
+      path: '/dashboard',
+      component: Dashboard,
       beforeEnter: (to, from, next) => {
         console.log('auth guard')
         if (store.getters.userKey !== '') {
@@ -79,7 +68,7 @@ export default new Router({
             next()
           } else {
             alert('Access not allowed')
-            next('/principal')
+            next('/login')
           }
         } else {
           next('/login')
@@ -88,12 +77,7 @@ export default new Router({
       children: [
         {
           path: '',
-          component: ContractorHome
-        },
-        {
-          path: 'jobs/job/:id',
-          component: JobForm,
-          props: true
+          component: DashboardHome
         },
         {
           path: 'hazards',
@@ -116,32 +100,32 @@ export default new Router({
         },
         {
           path: 'billing',
-          component: Billing,
+          component: AdminBilling,
           beforeEnter: (to, from, next) => {
             if (store.getters.user.admin) {
               next()
             } else {
               alert('Access not allowed')
-              next('/contractor')
+              next('/dashboard')
             }
           }
         },
         {
-          path: 'admin',
-          component: AdminUsers,
+          path: 'userManagement',
+          component: AdminUserManagement,
           beforeEnter: (to, from, next) => {
             console.log('auth guard')
             if (store.getters.user.admin) {
               next()
             } else {
               alert('Access not allowed')
-              next('/contractor')
+              next('/dashboard')
             }
           }
         },
         {
-          path: 'workers',
-          component: Workers
+          path: 'trainingRegister',
+          component: TrainingRegister
         },
         {
           path: 'incidents',
@@ -159,32 +143,6 @@ export default new Router({
         {
           path: 'support',
           component: Support
-        }
-      ]
-    },
-    {
-      path: '/principal',
-      component: Principal,
-      beforeEnter: (to, from, next) => {
-        if (store.getters.userKey !== '') {
-          if (store.getters.user.companyType === 'principal') {
-            next()
-          } else {
-            alert('Access not allowed')
-            next('/contractor')
-          }
-        } else {
-          next('/login')
-        }
-      },
-      children: [
-        {
-          path: '',
-          component: PrincipalHome
-        },
-        {
-          path: 'contractors',
-          component: Contractors
         },
         {
           path: 'jobs',
@@ -209,66 +167,13 @@ export default new Router({
               next()
             } else {
               alert('Access not allowed')
-              next('/principal')
+              next('/dashboard')
             }
           }
         },
         {
           path: 'newJob',
           component: NewJob
-        },
-        {
-          path: 'billing',
-          component: Billing,
-          beforeEnter: (to, from, next) => {
-            if (store.getters.user.admin) {
-              next()
-            } else {
-              alert('Access not allowed')
-              next('/principal')
-            }
-          }
-        },
-        {
-          path: 'admin',
-          component: AdminUsers,
-          beforeEnter: (to, from, next) => {
-            if (store.getters.user.admin) {
-              next()
-            } else {
-              alert('Access not allowed')
-              next('/principal')
-            }
-          }
-        },
-        {
-          path: 'workers',
-          component: Workers,
-          beforeEnter: (to, from, next) => {
-            if (store.getters.user.admin) {
-              next()
-            } else {
-              alert('Access not allowed')
-              next('/principal')
-            }
-          }
-        },
-        {
-          path: 'incidents',
-          component: IncidentReports
-        },
-        {
-          path: 'newIncident',
-          component: NewIncident
-        },
-        {
-          path: 'incidents/incident/:id',
-          component: IncidentView,
-          props: true
-        },
-        {
-          path: 'support',
-          component: Support
         }
       ]
     }

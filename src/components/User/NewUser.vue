@@ -73,7 +73,7 @@
 </template>
 
 <script>
-  import MiniHeader from '@/components/MiniHeader.vue'
+  import MiniHeader from '@/components/Webpage/MiniHeader.vue'
   export default {
     components: {
       miniHeader: MiniHeader
@@ -117,8 +117,7 @@
             this.user.uid = uid
             await this.$store.dispatch('updateCurrentUser', this.user)
             await this.$store.dispatch('getUser')
-            let companyType = this.user.companyType
-            this.$router.push('/' + companyType)
+            this.$router.push('/dashboard')
           } catch (err) {
             console.log(err)
           }
