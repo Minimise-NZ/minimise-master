@@ -278,9 +278,10 @@ export const store = new Vuex.Store({
         if (snapshot.empty) {
           // create a user doc in firestore and send an email invitation to user email
           let user = payload.worker
-          user.company = state.companyKey
+          user.companyKey = state.companyKey
           user.companyName = state.company.name
           console.log('inviting user', user)
+          /*
           if (user.role !== 'Worker') {
             window.emailjs.send('my_service', 'invitation', {
               name: user.name,
@@ -296,6 +297,7 @@ export const store = new Vuex.Store({
               }
             )
           }
+          */
           let promise = new Promise((resolve, reject) => {
             firestore.collection('users').add(user)
             .then((doc) => {
@@ -319,16 +321,15 @@ export const store = new Vuex.Store({
     getWorkers ({commit, dispatch, state}) {
       // get all workers with company = this companyKey
       let workers = []
-      firestore.collection('users').where('company', '==', state.companyKey)
+      firestore.collection('users').where('companyKey', '==', state.companyKey)
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
-          workers.push({id: doc.id, worker: doc.data()})
+          let worker = doc.data()
+          worker.id = doc.id
+          workers.push({worker})
         })
         commit('setWorkers', workers)
-        if (state.user.admin === true) {
-          dispatch('getTraining')
-        }
       })
     },
     //

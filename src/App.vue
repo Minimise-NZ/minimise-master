@@ -53,7 +53,7 @@ body.modal-open {
 
 .alert-danger {
   margin-top:10px;
-  padding: 2px;
+  padding: 5px;
   font-size: 0.9rem;
   margin-bottom: 5px;
 }

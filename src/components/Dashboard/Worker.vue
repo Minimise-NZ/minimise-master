@@ -201,7 +201,7 @@ export default {
 
 <style scoped>
 
-.editBtn {
+  .editBtn {
     float: right;
     background-color:rgba(223, 233, 255, 0.83);
     color: black;

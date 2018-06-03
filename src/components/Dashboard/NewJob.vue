@@ -33,34 +33,18 @@
               </b-row>
               <b-row>
                 <b-col md="12" lg="4">
-                  <p>Project Manager:</p>
+                  <p>Supervisor:</p>
                 </b-col>
                 <b-col md="12" lg="7">
-                  <b-form-input type="text" v-model="user.name" readonly/>
+                  <b-form-input type="text" v-model="supervisorName" readonly/>
                 </b-col>
               </b-row>
               <b-row>
                 <b-col md="12" lg="4">
-                  <p>Project Manager Phone:</p>
+                  <p>Supervisor Phone:</p>
                 </b-col>
                 <b-col md="12" lg="7">
-                  <b-form-input type="text" v-model="user.phone" readonly/>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col md="12" lg="4">
-                  <p>HSE Manager:</p>
-                </b-col>
-                <b-col md="12" lg="7">
-                  <b-form-input type="text" v-model="company.hseManager" readonly/>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col md="12" lg="4">
-                  <p>HSE Phone:</p>
-                </b-col>
-                <b-col md="12" lg="7">
-                  <b-form-input type="text" v-model="company.hsePhone" readonly/>
+                  <b-form-input type="text" v-model="supervisorPhone" readonly/>
                 </b-col>
               </b-row>
               <b-row class="input-group search">
@@ -232,6 +216,8 @@ export default {
       selectError: false,
       mapRoot: 'https://www.google.com/maps/embed/v1/place?key=AIzaSyD7W7NiKKy0qZfRUsslzHOe-Hnkp-IncyU&q=Christchurch City',
       siteAddress: '',
+      supervisorName: '',
+      supervisorPhone: '',
       medical: '',
       medPhone: '',
       addressError: false,

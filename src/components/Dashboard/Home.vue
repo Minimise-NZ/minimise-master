@@ -1,7 +1,8 @@
 <template>
   <b-container fluid>
-    <b-card header="Contractor Home" header-tag="header">
+    <b-card header="Quick View" header-tag="header">
       <div class="scroll-container">
+        <workerActivity></workerActivity>
         <incidentSummary></incidentSummary>
         <trainingAlerts></trainingAlerts>
       </div>
@@ -12,10 +13,13 @@
 <script>
 import IncidentSummary from '@/components/Dashboard/IncidentSummary.vue'
 import TrainingAlerts from '@/components/Dashboard/TrainingAlerts.vue'
+import WorkerActivity from '@/components/Dashboard/WorkerActivity.vue'
+
 export default {
   components: {
     'incidentSummary': IncidentSummary,
-    'trainingAlerts': TrainingAlerts
+    'trainingAlerts': TrainingAlerts,
+    'workerActivity': WorkerActivity
   },
   data () {
     return {
