@@ -91,7 +91,7 @@
       </div>
       <div class="scroll-container">
         <b-card class="itemCard mt-2 mb-4" v-for="worker in workers" :key="worker.id">
-          <header class="card-header item">{{worker.worker.name}}
+          <header class="card-header item">{{worker.name}}
             <b-button class="editBtn pt-1 pb-1 ml-2" @click="confirm">Delete User</b-button>
           </header>
           <b-row class="outer-row">
@@ -101,7 +101,7 @@
                   <label>Name:</label>
                 </b-col>
                 <b-col>
-                  <b-form-input type="text" :value="worker.worker.name" readonly/>
+                  <b-form-input type="text" :value="worker.name" readonly/>
                 </b-col>
               </b-row>
                <b-row class="inner-row">
@@ -109,7 +109,7 @@
                   <label>Role:</label>
                 </b-col>
                 <b-col>
-                  <b-form-input type="text" :value="worker.worker.role" readonly/>
+                  <b-form-input type="text" :value="worker.role" readonly/>
                 </b-col>
               </b-row>
             </b-col>
@@ -119,7 +119,7 @@
                   <label>Email:</label>
                 </b-col>
                 <b-col>
-                  <b-form-input type="text" :value="worker.worker.email" readonly/>
+                  <b-form-input type="text" :value="worker.email" readonly/>
                 </b-col>
               </b-row>
               <b-row class="inner-row">
@@ -127,7 +127,7 @@
                   <label>Phone:</label>
                 </b-col>
                 <b-col>
-                  <b-form-input type="text" :value="worker.worker.phone" readonly/>
+                  <b-form-input type="text" :value="worker.phone" readonly/>
                 </b-col>
               </b-row>
             </b-col>

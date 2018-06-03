@@ -1,5 +1,6 @@
 <template>
   <b-container fluid class="outside-container">
+    <!--SUCCESS MESSAGE MODAL-->
     <b-modal 
       v-model="showModal" 
       v-if="showModal" 
@@ -13,41 +14,55 @@
         <h4 >Job site: {{siteAddress}} has been created</h4>
       </div>
     </b-modal>
+    
     <b-card>
       <div class="card-header">New Job Site</div>
       <div class="scroll-container">
         <b-form @submit.prevent="onSubmit">
           <b-row class="outer-row">
-            <b-col m="12" lg="6" class="outer-col">
-              <b-row class="input-group search">
+            <!-- input column -->
+            <b-col m="12" lg="7" class="outer-col" style="padding-top: 20px; padding-right: 20px">
+              <!--address row-->
+               <b-row>
+                <b-col md="12" lg="3">
+                  <label>Site Address:</label>
+                </b-col>
                 <b-col>
                   <b-input-group>
                     <b-form-input type="text" placeholder="Please enter site address" v-model="siteAddress" required/>
                   </b-input-group>
+                  <div class="alert alert-danger" v-if="addressError">Please enter site address</div>
                 </b-col>
               </b-row>
-              <b-row class="search mt-0">
+
+              <!--supervisor row-->
+              <b-row>
+                <b-col md="12" lg="3">
+                  <label>Supervisor:</label>
+                </b-col>
                 <b-col>
-                  <div class="alert alert-danger mt-0" v-if="addressError">Please enter Site Address</div>
+                  <b-form-select
+                    v-validate="'required'"
+                    v-model="supervisorIndex"
+                    :options="supervisorList"   
+                    :class="{'alert-border': supervisorError}">
+                  </b-form-select>
                 </b-col>
               </b-row>
               <b-row>
-                <b-col md="12" lg="4">
-                  <p>Supervisor:</p>
+                <b-col md="12" lg="3">
+                  <label>Supervisor Phone:</label>
                 </b-col>
-                <b-col md="12" lg="7">
-                  <b-form-input type="text" v-model="supervisorName" readonly/>
+                <b-col>
+                  <b-form-input type="text" :value="supervisorPhone"/>
                 </b-col>
               </b-row>
+
+              <!--medical centre row-->
               <b-row>
-                <b-col md="12" lg="4">
-                  <p>Supervisor Phone:</p>
+                <b-col md="12" lg="3">
+                  <label>Medical Centre:</label>
                 </b-col>
-                <b-col md="12" lg="7">
-                  <b-form-input type="text" v-model="supervisorPhone" readonly/>
-                </b-col>
-              </b-row>
-              <b-row class="input-group search">
                 <b-col>
                   <b-input-group>
                      <b-input-group-button>
@@ -57,24 +72,13 @@
                   </b-input-group>
                 </b-col>
               </b-row>
-               <b-row>
-                <b-col md="12" lg="4">
-                  <p>Medical Centre Phone:</p>
-                </b-col>
-                <b-col md="12" lg="7">
-                  <b-form-input type="text" class="no-spinners" v-model="medPhone"/>
-                </b-col>
-              </b-row>
-              <b-row class="search mt-0">
-                <b-col>
-                  <div class="alert alert-danger mt-0" v-if="medicalError">Please enter medical centre details</div>
-                </b-col>
-              </b-row>
             </b-col>
-            <b-col m="12" lg="6" class="map">
+
+            <!--map column-->
+            <b-col m="12" lg="5" class="map">
               <iframe
               width="100%"
-              height="320px"
+              height="300px"
               frameborder="0" style="border:0"
               :src="mapRoot"  
               allowfullscreen>
@@ -82,40 +86,10 @@
             </b-col>
           </b-row>
           <hr>
-          <b-row>
-            <b-col md="4" lg="6" xl="5">
-              <p>Do you have subcontractors?</p>
-            </b-col>
-            <b-col md="3" lg="4" xl="3">
-              <b-form-radio-group
-              class="mt-1"
-              id="radiocontractor" 
-              v-model="contractors.radioValue"
-              :options="contractors.radioOptions">
-              </b-form-radio-group>
-            </b-col>
-          </b-row>
-
-          <b-row v-if="showList">
-            <b-col lg="9" md="12">
-              <v-select
-                class="mb-4"
-                searchable
-                placeholder="Please select your contractors"
-                multiple
-                required
-                :value.sync="contractors.selected"
-                :options="contractorList">
-              </v-select>
-              <div class="alert alert-danger" v-if="contractorError">You have not selected any contractors</div>
-            </b-col>
-          </b-row>
-         
-          <hr>
           
           <b-row>
             <b-col md="4" lg="6" xl="5">
-              <p>Is there notifiable works associated with this project?</p>
+              <label>Is there notifiable works associated with this project?</label>
               <b-form-checkbox-group
                 class="mt-3 ml-2"
                 v-if="showNotifiable"
@@ -144,7 +118,7 @@
 
           <b-row>
             <b-col md="4" lg="6" xl="5">
-              <p>Is there any additional information you would like to add?</p>
+              <label>Is there any additional information you would like to add?</label>
             </b-col>
             <b-col md="3" lg="4" xl="3">
               <b-form-radio-group
@@ -184,16 +158,8 @@ export default {
   data () {
     return {
       placeholder: 'Search for nearby Medical Centre',
-      contractors: {
-        radioValue: 'yes',
-        radioOptions: [
-          {text: 'Yes', value: 'yes'},
-          {text: 'No', value: 'no'}
-        ],
-        selected: []
-      },
       notifiable: {
-        radioValue: 'no',
+        radioValue: 'yes',
         radioOptions: [
           {text: 'Yes', value: 'yes'},
           {text: 'No', value: 'no'}
@@ -206,7 +172,7 @@ export default {
         selected: []
       },
       addinfo: {
-        radioValue: 'no',
+        radioValue: 'yes',
         radioOptions: [
           {text: 'Yes', value: 'yes'},
           {text: 'No', value: 'no'}
@@ -216,21 +182,21 @@ export default {
       selectError: false,
       mapRoot: 'https://www.google.com/maps/embed/v1/place?key=AIzaSyD7W7NiKKy0qZfRUsslzHOe-Hnkp-IncyU&q=Christchurch City',
       siteAddress: '',
-      supervisorName: '',
-      supervisorPhone: '',
+      /*
+      supervisorList: [
+        { value: 'null', text: 'Please select supervisor' }
+      ],
+      */
+      supervisorIndex: 0,
       medical: '',
-      medPhone: '',
       addressError: false,
+      supervisorError: false,
       medicalError: false,
-      contractorError: false,
       notifiableError: false,
       showModal: false
     }
   },
   computed: {
-    showList () {
-      return (this.contractors.radioValue === 'yes')
-    },
     showNotifiable () {
       return (this.notifiable.radioValue === 'yes')
     },
@@ -240,24 +206,43 @@ export default {
     user () {
       return this.$store.getters.user
     },
-    contractorList () {
-      let list = this.$store.getters.companyIndex
-      // remove this user's company name from list
-      list.forEach((item, index, object) => {
-        if (item.value === this.user.company) {
-          object.splice(index, 1)
-        }
-      })
-      return list
-    },
     company () {
       return this.$store.getters.company
     },
-    subcontractors () {
-      var subcontractors = this.contractors.selected.map(contractor => ({
-        key: contractor.value
-      }))
-      return subcontractors
+    supervisors () {
+      return this.$store.getters.supervisors
+    },
+    supervisorList () {
+      let supervisorList = []
+      let list = this.supervisors
+      list.forEach((item, index, object) => {
+        console.log('item', item, 'index', index, 'object', object)
+        supervisorList.push({
+          value: index, text: item.name
+        })
+      })
+      return supervisorList
+    },
+    supervisorKey () {
+      if (this.supervisorIndex !== null) {
+        return this.supervisors[this.supervisorIndex].key
+      } else {
+        return ''
+      }
+    },
+    supervisorName () {
+      if (this.supervisorIndex !== null) {
+        return this.supervisors[this.supervisorIndex].name
+      } else {
+        return ''
+      }
+    },
+    supervisorPhone () {
+      if (this.supervisorIndex !== null) {
+        return this.supervisors[this.supervisorIndex].phone
+      } else {
+        return ''
+      }
     }
   },
   methods: {
@@ -287,20 +272,11 @@ export default {
       } else {
         this.addressError = false
       }
-      if (this.medical === '' || this.medPhone === '') {
+      if (this.medical === '') {
         this.medicalError = true
         return
       } else {
         this.medicalError = false
-      }
-      if (this.contractors.radioValue === 'yes' && this.contractors.selected <= 0) {
-        this.contractorError = true
-        return
-      } else {
-        this.contractorError = false
-      }
-      if (this.contractors.radioValue === 'no' && this.contractors.selected > 0) {
-        this.contractors.selected = []
       }
       if (this.notifiable.radioValue === 'yes' && this.notifiable.selected <= 0) {
         this.notifiableError = true
@@ -312,19 +288,15 @@ export default {
         this.notifiable.selected = []
       } else {
         this.$store.dispatch('newJob', {
-          principalKey: this.user.company,
-          principalName: this.company.name,
-          pm: this.user.name,
-          pmPhone: this.user.phone,
-          pmKey: this.$store.getters.userKey,
-          hse: this.company.hseManager,
-          hsePhone: this.company.hsePhone,
+          companyKey: this.user.companyKey,
+          companyName: this.company.name,
+          supervisorKey: '',
+          supervisorName: '',
+          supervisorPhone: '',
           address: this.siteAddress,
           notifiable: this.notifiable.selected,
           info: this.addinfo.infotext,
-          subcontractors: this.subcontractors,
-          medical: this.medical,
-          medPhone: this.medPhone
+          medical: this.medical
         })
         .then(() => {
           this.showModal = true
@@ -332,7 +304,7 @@ export default {
       }
     },
     route () {
-      this.$router.push('/principal/jobs')
+      this.$router.push('/dashboard/jobs')
     }
   }
 }
@@ -373,12 +345,6 @@ export default {
     height: 300px;
   }
 
-  .search {
-    margin-left: 2px;
-    padding-left: 5px;
-    width: 93%;
-  }
-  
   .btn-group {
     align-items: center;
     width: 40%;
@@ -405,17 +371,12 @@ export default {
     border: 1px solid salmon;
   }
 
-  p {
+  label {
     margin-top: 5px;
     margin-bottom: 0;
   }
 
   @media screen and (max-width : 992px) {
-    .search {
-      width: 100%;
-      margin-top: 25px;
-      margin-bottom: 20px;
-    }
     .map {
       display: none;
     }

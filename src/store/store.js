@@ -13,6 +13,7 @@ export const store = new Vuex.Store({
     user: {},
     uid: '',
     workers: [],
+    supervisors: [],
     company: null,
     companyKey: '',
     companyIndex: [],
@@ -30,6 +31,7 @@ export const store = new Vuex.Store({
       state.uid = ''
       state.user = {}
       state.workers = []
+      state.supervisors = []
       state.company = {}
       state.companyKey = ''
       state.companyIndex = []
@@ -56,6 +58,10 @@ export const store = new Vuex.Store({
     setWorkers (state, payload) {
       console.log('Workers set')
       state.workers = payload
+    },
+    setSupervisors (state, payload) {
+      console.log('Supervisors set')
+      state.supervisors = payload
     },
     setTrainingAlerts (state, payload) {
       console.log('Training alerts set')
@@ -101,7 +107,7 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
-    // user functions
+  // user functions
     signUp ({commit}, payload) {
       // create a new user in firebase
       let promise = new Promise((resolve, reject) => {
@@ -230,9 +236,8 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    //
-    // worker functions
-    //
+
+  // worker functions
     updateWorker ({dispatch}, payload) {
       // update worker training
       let promise = new Promise((resolve, reject) => {
@@ -321,20 +326,37 @@ export const store = new Vuex.Store({
     getWorkers ({commit, dispatch, state}) {
       // get all workers with company = this companyKey
       let workers = []
+      let supervisors = []
       firestore.collection('users').where('companyKey', '==', state.companyKey)
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
           let worker = doc.data()
-          worker.id = doc.id
-          workers.push({worker})
+          workers.push({
+            id: doc.id,
+            name: worker.name,
+            admin: worker.admin,
+            email: worker.email,
+            companyKey: worker.companyKey,
+            companyName: worker.companyName,
+            phone: worker.phone,
+            role: worker.role,
+            training: worker.training,
+            webUser: worker.webUser
+          })
+          if (worker.role === 'Supervisor') {
+            supervisors.push({
+              key: doc.id,
+              name: worker.name,
+              phone: worker.phone
+            })
+          }
         })
+        commit('setSupervisors', supervisors)
         commit('setWorkers', workers)
       })
     },
-    //
-    // company functions
-    //
+  // company functions
     getCompanyIndex ({commit}) {
       // must already have key in state
       let companies = []
@@ -385,9 +407,8 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    //
-    // job site functions
-    //
+
+  // job site functions
     newJob ({state, commit, dispatch}, payload) {
       // create new job in firestore jobSites collection
       let promise = new Promise((resolve, reject) => {
@@ -396,8 +417,7 @@ export const store = new Vuex.Store({
           companyKey: payload.companyKey,
           companyName: payload.companyName,
           medical: payload.medical,
-          medPhone: payload.medPhone,
-          supervisor: payload.supervisorName,
+          supervisorName: payload.supervisorName,
           supervisorPhone: payload.supervisorPhone,
           supervisorKey: payload.supervisorKey,
           address: payload.address,
@@ -455,14 +475,16 @@ export const store = new Vuex.Store({
                 safetyPlans.push(doc.data())
               })
               jobSites.push({
-                id: doc.id,
-                address: doc.data().address,
-                date: doc.data().date,
+                companyKey: doc.data().companyKey,
+                companyName: doc.data().companyName,
                 medical: doc.data().medical,
-                info: doc.data().info,
-                notifiable: doc.data().notifiable,
                 supervisorName: doc.data().supervisorName,
                 supervisorPhone: doc.data().supervisorPhone,
+                supervisorKey: doc.data().supervisorKey,
+                address: doc.data().address,
+                notifiable: doc.data().notifiable,
+                info: doc.data().info,
+                date: doc.data().date,
                 safetyPlans: safetyPlans
               })
             })
@@ -542,9 +564,8 @@ export const store = new Vuex.Store({
       }
       commit('setTrainingAlerts', trainingAlerts)
     },
-    //
-    // incident functions
-    //
+
+  // incident functions
     newIncident ({commit, dispatch, state}, payload) {
       // create new incident in firestore
       let promise = new Promise((resolve, reject) => {
@@ -668,9 +689,7 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    //
-    // hazard functions
-    //
+  // hazard functions
     getAllHazards ({commit, state}, payload) {
       const allHazards = []
       let promise = new Promise((resolve, reject) => {
@@ -755,9 +774,7 @@ export const store = new Vuex.Store({
       commit('setMyHazards', myHazards)
       return
     },
-    //
-    // task analysis functions
-    //
+  // task analysis functions
     getTaskAnalysis ({commit, state}) {
       // get taskAnalysis from company
       firestore.collection('companies').doc(state.companyKey)
@@ -899,6 +916,7 @@ export const store = new Vuex.Store({
     companyIndex: (state) => state.companyIndex,
     company: (state) => state.company,
     workers: (state) => state.workers,
+    supervisors: (state) => state.supervisors,
     training: (state) => state.trainingAlerts,
     jobsInProgress: (state) => state.jobsInProgress,
     allHazards: (state) => state.allHazards,

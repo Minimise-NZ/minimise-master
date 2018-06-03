@@ -80,11 +80,10 @@ export default {
     color: white;
     margin-bottom: 10px;
     cursor: pointer;
-    font-size: 1.2rem;
   }
   
   p {
-    font-size: 1.1rem;
+    font-size: 1rem;
     margin: 0;
   }
   
@@ -95,15 +94,19 @@ export default {
   
   .row {
     min-height: 900px;
-    height: 100%;
     margin: 0;
-    border: 1px solid #383838;
   }
   
  .side-wrapper { 
     background-color: #383838;
-    padding: 0 20px;
+    padding: 0 20px 10px 20px;
     min-width: 200px;
+  }
+
+  @media only screen and (orientation: portrait) {
+    .row {
+      height: 94vh;
+    }
   }
   
 </style>
