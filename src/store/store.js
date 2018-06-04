@@ -728,18 +728,21 @@ export const store = new Vuex.Store({
       return promise
     },
     getMyHazards ({commit, dispatch, state}) {
-      let hazards = state.company.hazards
-      console.log(hazards)
-      if (hazards <= 0 || hazards === undefined || hazards === null) {
-        console.log('this company has no hazards')
-        hazards = []
-        commit('setNotMyHazards', state.allHazards)
-        return
-      } else {
-        commit('setMyHazards', hazards)
-        dispatch('getNotMyHazards')
-        return
-      }
+      let promise = new Promise((resolve, reject) => {
+        let hazards = state.company.hazards
+        console.log(hazards)
+        if (hazards <= 0 || hazards === undefined || hazards === null) {
+          console.log('this company has no hazards')
+          hazards = []
+          commit('setNotMyHazards', state.allHazards)
+          resolve
+        } else {
+          commit('setMyHazards', hazards)
+          dispatch('getNotMyHazards')
+          resolve
+        }
+      })
+      return promise
     },
     getNotMyHazards ({commit, state}) {
       let myHazards = state.myHazards.slice(0)
@@ -762,22 +765,43 @@ export const store = new Vuex.Store({
       return
     },
     addNewHazards ({commit, dispatch, state}, payload) {
-      let hazardUpdates = state.myHazards.concat(payload)
-      console.log('hazardUpdates', hazardUpdates)
-      firestore.collection('companies').doc(state.companyKey)
-      .set({hazards: hazardUpdates}, {merge: true})
-      commit('setMyHazards', hazardUpdates)
-      dispatch('getAllHazards')
-      dispatch('getNotMyHazards')
-      console.log('My Hazards updates', state.myHazards)
+      console.log(payload)
+      const hazards = payload.map((obj) => { return Object.assign({}, obj) })
+      const myHazards = state.myHazards.map((obj) => { return Object.assign({}, obj) })
+      const newHazards = hazards.concat(myHazards)
+      let promise = new Promise((resolve, reject) => {
+        firestore.collection('companies').doc(state.companyKey)
+        .set({hazards: newHazards}, {merge: true})
+        .then(() => {
+          commit('setMyHazards', newHazards)
+          dispatch('getAllHazards')
+          dispatch('getNotMyHazards')
+          console.log('My Hazards updates', state.myHazards)
+          resolve()
+        })
+        .catch((error) => {
+          console.log(error)
+          reject(error)
+        })
+      })
+      return promise
     },
     removeHazard ({commit, dispatch, state}, payload) {
-      let myHazards = payload
-      dispatch('getNotMyHazards')
-      firestore.collection('companies').doc(state.companyKey)
-      .set({hazards: payload}, {merge: true})
-      commit('setMyHazards', myHazards)
-      return
+      let promise = new Promise((resolve, reject) => {
+        let myHazards = payload
+        dispatch('getNotMyHazards')
+        firestore.collection('companies').doc(state.companyKey)
+        .set({hazards: payload}, {merge: true})
+        .then(() => {
+          commit('setMyHazards', myHazards)
+          resolve()
+        })
+        .catch((error) => {
+          console.log(error)
+          reject(console.log('All Hazard Error'))
+        })
+      })
+      return promise
     },
   // task analysis functions
     getTaskAnalysis ({commit, state}) {
