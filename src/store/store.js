@@ -422,7 +422,8 @@ export const store = new Vuex.Store({
           supervisorKey: payload.supervisorKey,
           address: payload.address,
           notifiable: payload.notifiable,
-          info: payload.info,
+          environmental: payload.environmental,
+          resource: payload.resource,
           open: true,
           date: today
         })
@@ -475,6 +476,7 @@ export const store = new Vuex.Store({
                 safetyPlans.push(doc.data())
               })
               jobSites.push({
+                id: doc.id,
                 companyKey: doc.data().companyKey,
                 companyName: doc.data().companyName,
                 medical: doc.data().medical,
@@ -483,7 +485,8 @@ export const store = new Vuex.Store({
                 supervisorKey: doc.data().supervisorKey,
                 address: doc.data().address,
                 notifiable: doc.data().notifiable,
-                info: doc.data().info,
+                environmental: doc.data().environmental,
+                resource: doc.data().resource,
                 date: doc.data().date,
                 safetyPlans: safetyPlans
               })
@@ -521,9 +524,11 @@ export const store = new Vuex.Store({
                 address: doc.data().address,
                 date: doc.data().date,
                 medical: doc.data().medical,
-                info: doc.data().info,
                 notifiable: doc.data().notifiable,
-                supervisor: doc.data().supervisorName,
+                environmental: doc.data().environmental,
+                resource: doc.data().resource,
+                supervisorKey: doc.data().supervisorKey,
+                supervisorName: doc.data().supervisorName,
                 supervisorPhone: doc.data().supervisorPhone,
                 safetyPlans: safetyPlans
               })

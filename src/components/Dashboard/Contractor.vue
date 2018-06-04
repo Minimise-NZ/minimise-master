@@ -68,6 +68,13 @@ export default {
   },
   beforeMount () {
     this.$store.dispatch('getWorkers')
+    if (this.user.admin === true) {
+      this.$store.dispatch('getAllJobs')
+      this.$store.dispatch('getAllIncidents')
+    } else {
+      this.$store.dispatch('getMyJobs')
+      this.$store.dispatch('getMyIncidents')
+    }
   }
 }
 </script>

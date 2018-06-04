@@ -87,6 +87,7 @@
           </b-row>
           <hr>
           
+          <!--checkbox rows-->
           <b-row>
             <b-col md="4" lg="6" xl="5">
               <label>Is there notifiable works associated with this project?</label>
@@ -113,34 +114,37 @@
               <div class="alert alert-danger ml-2" v-if="notifiableError">Please select notifiable works</div>
             </b-col>
           </b-row>
-          
-          <hr>
 
           <b-row>
             <b-col md="4" lg="6" xl="5">
-              <label>Is there any additional information you would like to add?</label>
-            </b-col>
+              <label>Is an environmental plan required?</label>
+            </b-col>  
             <b-col md="3" lg="4" xl="3">
               <b-form-radio-group
                 class="mt-1"
-                id="addinfo" 
-                v-model="addinfo.radioValue"
-                :options="addinfo.radioOptions">
+                id="radioEnvironment" 
+                v-model="environmental.radioValue"
+                :options="environmental.radioOptions">
               </b-form-radio-group>
             </b-col>
           </b-row>
+
           <b-row>
-            <b-col xl="12">
-              <b-form-textarea 
-                v-if="showInfo"
-                required
-                id="info"
-                v-model="addinfo.infotext"
-                placeholder="Additional information"
-                :rows="6">
-            </b-form-textarea>
+            <b-col md="4" lg="6" xl="5">
+              <label>Is a resource consent required?</label>
+            </b-col>  
+            <b-col md="3" lg="4" xl="3">
+              <b-form-radio-group
+                class="mt-1"
+                id="radioResource" 
+                v-model="resource.radioValue"
+                :options="resource.radioOptions">
+              </b-form-radio-group>
             </b-col>
           </b-row>
+          
+          <hr>
+
           <div class="text-center">
             <b-button-group class="pt-4 pb-4">
               <b-button class="buttons" variant="success" @click="submit">Submit</b-button>
@@ -159,10 +163,10 @@ export default {
     return {
       placeholder: 'Search for nearby Medical Centre',
       notifiable: {
-        radioValue: 'yes',
+        radioValue: 'true',
         radioOptions: [
-          {text: 'Yes', value: 'yes'},
-          {text: 'No', value: 'no'}
+          {text: 'Yes', value: 'true'},
+          {text: 'No', value: 'false'}
         ],
         list: [
           'Working at heights > 5m',
@@ -171,22 +175,23 @@ export default {
         ],
         selected: []
       },
-      addinfo: {
-        radioValue: 'yes',
+      environmental: {
+        radioValue: 'false',
         radioOptions: [
-          {text: 'Yes', value: 'yes'},
-          {text: 'No', value: 'no'}
-        ],
-        infotext: ''
+          {text: 'Yes', value: 'true'},
+          {text: 'No', value: 'false'}
+        ]
+      },
+      resource: {
+        radioValue: 'false',
+        radioOptions: [
+          {text: 'Yes', value: 'true'},
+          {text: 'No', value: 'false'}
+        ]
       },
       selectError: false,
       mapRoot: 'https://www.google.com/maps/embed/v1/place?key=AIzaSyD7W7NiKKy0qZfRUsslzHOe-Hnkp-IncyU&q=Christchurch City',
       siteAddress: '',
-      /*
-      supervisorList: [
-        { value: 'null', text: 'Please select supervisor' }
-      ],
-      */
       supervisorIndex: 0,
       medical: '',
       addressError: false,
@@ -198,10 +203,7 @@ export default {
   },
   computed: {
     showNotifiable () {
-      return (this.notifiable.radioValue === 'yes')
-    },
-    showInfo () {
-      return (this.addinfo.radioValue === 'yes')
+      return (this.notifiable.radioValue === 'true')
     },
     user () {
       return this.$store.getters.user
@@ -278,24 +280,25 @@ export default {
       } else {
         this.medicalError = false
       }
-      if (this.notifiable.radioValue === 'yes' && this.notifiable.selected <= 0) {
+      if (this.notifiable.radioValue === 'true' && this.notifiable.selected <= 0) {
         this.notifiableError = true
         return
       } else {
         this.notifiableError = false
       }
-      if (this.notifiable.radioValue === 'no' && this.notifiable.selected > 0) {
+      if (this.notifiable.radioValue === 'false' && this.notifiable.selected > 0) {
         this.notifiable.selected = []
       } else {
         this.$store.dispatch('newJob', {
           companyKey: this.user.companyKey,
           companyName: this.company.name,
-          supervisorKey: '',
-          supervisorName: '',
-          supervisorPhone: '',
+          supervisorKey: this.supervisorKey,
+          supervisorName: this.supervisorName,
+          supervisorPhone: this.supervisorPhone,
           address: this.siteAddress,
           notifiable: this.notifiable.selected,
-          info: this.addinfo.infotext,
+          environmental: this.environmental.radioValue,
+          resource: this.resource.radioValue,
           medical: this.medical
         })
         .then(() => {
