@@ -15,8 +15,8 @@
     </b-modal>
     <b-card>
       <div class="card-header" :class="{ inverted: inverted }" >{{headerTitle}}
-        <b-button v-if="register" class="headerBtn" @click="register = !register, inverted = !inverted">Add New Hazard</b-button>
-        <b-button v-else class="headerBtn" @click="saveHazards()">Back to Hazard Register</b-button>
+        <b-button v-if="register" class="addBtn" @click="register = !register, inverted = !inverted">Add New Hazard</b-button>
+        <b-button v-else class="addBtn" @click="saveHazards()">Back to Hazard Register</b-button>
       </div>
       <div class="scroll-container">
         <b-card
@@ -24,7 +24,7 @@
           :key="index"
           class="hazardCard mt-2 mb-4">
           <header class="card-header hazard" :class="{ inverted: inverted }">{{hazard.name}}
-            <b-button v-if="register" class="editBtn pt-1 pb-1"  @click="confirm(hazard, index)" :disabled="disabled">
+            <b-button v-if="register" class="addBtn pt-1 pb-1"  @click="confirm(hazard, index)" :disabled="disabled">
               <p style="font-size: 1rem; margin-bottom: 0" v-if="loading===false">Remove Hazard</p>
               <div class="loader">
                 <pulse-loader :loading="loading" color="#ffc80b"></pulse-loader>
@@ -188,22 +188,17 @@ export default {
     background-color: rgba(111, 50, 130, 0.86);
   }
   
+  .card-header.hazard{
+    background-color: rgba(111, 50, 130, 0.86);
+    margin: 0;
+    color: white;
+    font-size: 1.2rem;
+    padding-left: 15px;
+  }
   .btn {
     float: right;
     margin-left: 10px;
     cursor:pointer;
-  }
-
-  .headerBtn {
-    float: right;
-    background-color: #ffc80b;
-    color: black;
-    cursor: pointer;
-  }
-  
-  .editBtn {
-    background-color:rgba(223, 233, 255, 0.83);
-    color: black;
   }
 
   .addBtn {
@@ -214,14 +209,6 @@ export default {
   .addBtn:hover {
     background-color: #ffc80b;
     color: black;
-  }
-  
-  .card-header.hazard{
-    background-color: rgba(111, 50, 130, 0.86);
-    margin: 0;
-    color: white;
-    font-size: 1.2rem;
-    padding-left: 15px;
   }
   
   .card-header.hazard.inverted {
