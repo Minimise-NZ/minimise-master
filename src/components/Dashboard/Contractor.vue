@@ -3,7 +3,7 @@
     <div>
       <dashboard-header></dashboard-header> 
       <b-row>
-        <b-col sm="2" class="side-wrapper">
+        <b-col sm="1" lg="2" class="side-wrapper">
           <b-list-group>
             <router-link to='/dashboard' tag="li" class="list-group-item" exact>
               <p>Home</p>
@@ -19,7 +19,6 @@
             </router-link>
           </b-list-group>
         </b-col>
-        
         <b-col>
           <animated-fade-in>
             <router-view></router-view>
@@ -104,7 +103,7 @@ export default {
     margin: 0;
   }
   
- .side-wrapper { 
+ .side-wrapper {
     background-color: #383838;
     padding: 0 20px 10px 20px;
     min-width: 200px;

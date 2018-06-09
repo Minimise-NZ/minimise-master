@@ -56,7 +56,7 @@
         </form>
       </div>
     </b-modal>
-    <!--SUCSESS MESSAGE MODAL-->
+    <!--SUCCESS MESSAGE MODAL-->
     <b-modal
       v-model="success"
       v-if="success" 

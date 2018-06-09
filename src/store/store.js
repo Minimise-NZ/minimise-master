@@ -22,6 +22,7 @@ export const store = new Vuex.Store({
     allHazards: [],
     myHazards: [],
     notMyHazards: [],
+    hazardousSubstances: [],
     taskAnalysis: [],
     trainingAlerts: []
   },
@@ -41,6 +42,7 @@ export const store = new Vuex.Store({
       state.allHazards = []
       state.myHazards = []
       state.notMyHazards = []
+      state.hazardousSubstances = []
       state.trainingAlerts = []
     },
     setUserKey (state, payload) {
@@ -100,6 +102,10 @@ export const store = new Vuex.Store({
     setNotMyHazards (state, payload) {
       console.log('Not my hazards set')
       state.notMyHazards = payload
+    },
+    setHazardousSubstances (state, payload) {
+      console.log('Hazardous Substances set')
+      state.hazardousSubstances = payload
     },
     setIncidents (state, payload) {
       console.log('Incidents set')
@@ -398,6 +404,7 @@ export const store = new Vuex.Store({
         .then((doc) => {
           let company = doc.data()
           commit('setCompany', company)
+          commit('setHazardousSubstances', company.hazardousSubstances)
           resolve(company)
         })
         .catch((error) => {
@@ -803,6 +810,22 @@ export const store = new Vuex.Store({
       })
       return promise
     },
+    newHazardousSubstance ({commit, dispatch, state}, payload) {
+      let promise = new Promise((resolve, reject) => {
+        firestore.collection('companies').doc(state.companyKey)
+        .set({hazardousSubstances: payload}, {merge: true})
+        .then(() => {
+          commit('setHazardousSubstances', payload)
+          console.log('My Hazardous substance updates', state.hazardousSubstances)
+          resolve()
+        })
+        .catch((error) => {
+          console.log(error)
+          reject(error)
+        })
+      })
+      return promise
+    },
   // task analysis functions
     getTaskAnalysis ({commit, state}) {
       // get taskAnalysis from company
@@ -951,6 +974,7 @@ export const store = new Vuex.Store({
     allHazards: (state) => state.allHazards,
     myHazards: (state) => state.myHazards,
     notMyHazards: (state) => state.notMyHazards,
+    hazardousSubstances: (state) => state.hazardousSubstances,
     incidents (state) {
       let incidents = state.myIncidents
       incidents = Vue._.orderBy(incidents, ['open', 'actionOwner'], ['desc', 'asc'])

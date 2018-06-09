@@ -20,8 +20,6 @@ import moment from 'moment'
 import VueScrollTo from 'vue-scrollto'
 import VueCarousel from 'vue-carousel'
 
-Vue.use(VueCarousel)
-
 const config = {
   errorBagName: 'errors', // change if property conflicts.
   fieldsBagName: 'inputs ', // Default is fields
@@ -43,6 +41,7 @@ const config = {
 }
 
 Vue.component('v-select', vSelect)
+Vue.use(VueCarousel)
 Vue.use(VueLodash, _)
 Vue.use(AOS)
 Vue.use(Vuebar)
