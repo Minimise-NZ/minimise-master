@@ -5,9 +5,9 @@
 </template>
 
 <script>
-export default {
-  name: 'app'
-}
+  export default {
+    name: 'app'
+  }
 </script>
 
 <style>
@@ -37,6 +37,11 @@ body.modal-open {
   padding-right: 10px;
   margin-top: 10px;
   overflow-x: hidden;
+}
+
+.addBtn {
+  float: right;
+  color: white;
 }
 
 .my-primary-bg {

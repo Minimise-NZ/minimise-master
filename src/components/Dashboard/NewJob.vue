@@ -119,7 +119,7 @@
             <b-col md="4" lg="6" xl="5">
               <label>Is an environmental plan required?</label>
             </b-col>  
-            <b-col md="3" lg="4" xl="3">
+            <b-col md="3" lg="4" xl="2">
               <b-form-radio-group
                 class="mt-1"
                 id="radioEnvironment" 
@@ -127,19 +127,25 @@
                 :options="environmental.radioOptions">
               </b-form-radio-group>
             </b-col>
+            <b-col xl="3" v-if="environmental.radioValue === true">
+              <b-form-file v-model="environmental.file" plain></b-form-file>
+            </b-col>
           </b-row>
 
           <b-row>
             <b-col md="4" lg="6" xl="5">
               <label>Is a resource consent required?</label>
             </b-col>  
-            <b-col md="3" lg="4" xl="3">
+            <b-col md="3" lg="4" xl="2">
               <b-form-radio-group
                 class="mt-1"
                 id="radioResource" 
                 v-model="resource.radioValue"
                 :options="resource.radioOptions">
               </b-form-radio-group>
+            </b-col>
+            <b-col xl="3" v-if="resource.radioValue === true">
+              <b-form-file v-model="resource.file" plain></b-form-file>
             </b-col>
           </b-row>
           
@@ -163,10 +169,10 @@ export default {
     return {
       placeholder: 'Search for nearby Medical Centre',
       notifiable: {
-        radioValue: 'true',
+        radioValue: false,
         radioOptions: [
-          {text: 'Yes', value: 'true'},
-          {text: 'No', value: 'false'}
+          {text: 'Yes', value: true},
+          {text: 'No', value: false}
         ],
         list: [
           'Working at heights > 5m',
@@ -176,18 +182,20 @@ export default {
         selected: []
       },
       environmental: {
-        radioValue: 'false',
+        radioValue: false,
         radioOptions: [
-          {text: 'Yes', value: 'true'},
-          {text: 'No', value: 'false'}
-        ]
+          {text: 'Yes', value: true},
+          {text: 'No', value: false}
+        ],
+        file: ''
       },
       resource: {
-        radioValue: 'false',
+        radioValue: false,
         radioOptions: [
-          {text: 'Yes', value: 'true'},
-          {text: 'No', value: 'false'}
-        ]
+          {text: 'Yes', value: true},
+          {text: 'No', value: false}
+        ],
+        file: ''
       },
       selectError: false,
       mapRoot: 'https://www.google.com/maps/embed/v1/place?key=AIzaSyD7W7NiKKy0qZfRUsslzHOe-Hnkp-IncyU&q=Christchurch City',
@@ -203,7 +211,7 @@ export default {
   },
   computed: {
     showNotifiable () {
-      return (this.notifiable.radioValue === 'true')
+      return (this.notifiable.radioValue === true)
     },
     user () {
       return this.$store.getters.user
@@ -218,7 +226,6 @@ export default {
       let supervisorList = []
       let list = this.supervisors
       list.forEach((item, index, object) => {
-        console.log('item', item, 'index', index, 'object', object)
         supervisorList.push({
           value: index, text: item.name
         })

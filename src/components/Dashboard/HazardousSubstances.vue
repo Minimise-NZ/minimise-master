@@ -122,7 +122,13 @@
     <b-card>
       <div class="card-header">
       Hazardous Substances
-        <b-button class="addBtn" @click="addNew">Add New Hazardous Substance</b-button>
+        <b-button  
+          class="addBtn"
+          variant="success"
+          @click="addNew" 
+          v-b-tooltip.hover title="Add New Substance">
+          <i class="fa fa-plus"></i>
+        </b-button> 
       </div>
       <div class="scroll-container">
         <div v-for="(hazSub, index) in hazSubs" :key="index">
@@ -205,9 +211,8 @@ export default {
       } else {
         console.log('adding new substance')
         let substance = Object.assign({}, this.newSubstance)
-        this.hazSubs.push(substance)
         let promise = new Promise((resolve, reject) => {
-          this.$store.dispatch('newHazardousSubstance', this.hazSubs)
+          this.$store.dispatch('newHazardousSubstance', substance)
           .then(() => {
             this.showModal = false
             this.loading = false
@@ -242,17 +247,6 @@ export default {
     background-color: rgba(111, 50, 130, 0.86);
     font-size: 1.4rem;
     color: white;
-  }
-
-  .addBtn {
-    float: right;
-    background-color:rgba(223, 233, 255, 0.83);
-    color: black;
-  }
-
-  .addBtn:hover {
-    background-color:#ffc80b;
-    color: black;
   }
 
   .inner-row {

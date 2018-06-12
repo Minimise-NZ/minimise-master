@@ -1,6 +1,18 @@
 <template>
   <b-container fluid>
     <b-modal 
+      v-model="success" 
+      v-if="success"
+      ok-only
+      centered 
+      header-bg-variant="success"
+      headerTextVariant= 'light'
+      title="Success">
+      <div class="d-block text-center">
+        <h4 class="mt-2">Your hazard register has been updated</h4>
+      </div>
+    </b-modal>
+    <b-modal 
       v-model="confirmAction" 
       v-if="confirmAction" 
       @ok="removeHazard"
@@ -15,27 +27,53 @@
     </b-modal>
     <b-card>
       <div class="card-header" :class="{ inverted: inverted }" >{{headerTitle}}
-        <b-button v-if="register" class="addBtn" @click="register = !register, inverted = !inverted">Add New Hazard</b-button>
-        <b-button v-else class="addBtn" @click="saveHazards()">Back to Hazard Register</b-button>
+        <b-button
+          v-if="register"
+          class="addBtn"
+          variant="warning"
+          @click="register = !register, inverted = !inverted"
+          v-b-tooltip.hover title="Add New Hazard">
+          <i class="fa fa-plus" style="color:#383838"></i>
+        </b-button> 
+        <b-button  
+          v-else
+          class="addBtn"
+          variant="warning"
+          @click="saveHazards()"
+          v-b-tooltip.hover title="Back to Hazard Register">
+          <i class="fa fa-undo" style="color:#383838"></i>
+        </b-button> 
       </div>
       <div class="scroll-container">
+        <b-row v-if="hazards.length === 0">
+          <b-col class="p-0">
+            <header class="subheader">Add hazards by clicking the add + button </header>
+          </b-col>
+        </b-row>
         <b-card
           v-for="(hazard, index) in hazards"
           :key="index"
           class="hazardCard mt-2 mb-4">
           <header class="card-header hazard" :class="{ inverted: inverted }">{{hazard.name}}
-            <b-button v-if="register" class="addBtn pt-1 pb-1"  @click="confirm(hazard, index)" :disabled="disabled">
-              <p style="font-size: 1rem; margin-bottom: 0" v-if="loading===false">Remove Hazard</p>
-              <div class="loader">
-                <pulse-loader :loading="loading" color="#ffc80b"></pulse-loader>
-              </div>
+            <b-button
+              v-if="register && !loading"
+              class="addBtn mini"
+              variant="danger"
+              @click="confirm(hazard, index)"
+              v-b-tooltip.hover title="Remove Hazard">
+              <i class="fa fa-minus"></i>
             </b-button>
-            <b-button v-if="!register" class="addBtn pt-1 pb-1"  @click="addHazard(hazard, index)" :disabled="disabled">
-              <p style="font-size: 1rem; margin-bottom: 0" v-if="loading===false">Add to my Hazard Register</p>
-              <div class="loader">
-                <pulse-loader :loading="loading" color="#ffc80b"></pulse-loader>
-              </div>
+            <b-button
+              v-if="!register  && !loading"
+              class="addBtn mini"
+              variant="warning"
+              @click="addHazard(hazard, index)"
+              v-b-tooltip.hover title="Add to my Hazard Register">
+              <i class="fa fa-plus" style="color:#383838"></i>
             </b-button>
+            <div class="loader mini" v-if="loading">
+              <pulse-loader :loading="loading"></pulse-loader>
+            </div>
           </header>
           <b-row>
             <b-col>
@@ -76,12 +114,11 @@ export default {
   data () {
     return {
       loading: false,
-      disabled: false,
       register: true,
       inverted: false,
       confirmAction: false,
       success: false,
-      newHazards: [],
+      changed: false,
       remove: {}
     }
   },
@@ -93,28 +130,31 @@ export default {
         return 'Hazard Database'
       }
     },
+    myHazards () {
+      return this.$store.getters.myHazards
+    },
+    notMyHazards () {
+      return this.$store.getters.notMyHazards
+    },
     hazards () {
       if (this.register) {
         'getting my hazards'
-        return this.$store.getters.myHazards
+        return this.myHazards
       } else {
         'getting not my hazards'
-        return this.$store.getters.notMyHazards
+        return this.notMyHazards
       }
     }
   },
   methods: {
     addHazard (hazard, index) {
-      this.loading = true
-      this.disabled = true
-      // remove selected hazard from hazard list
-      this.hazards.splice(index, 1)
       // add selected hazard to company hazard register
-      this.newHazards.push(hazard)
-      setTimeout(() => {
-        this.loading = false
-        this.disabled = false
-      }, 1000)
+      this.loading = true
+      this.changed = true
+      this.myHazards.push(hazard)
+      // remove selected hazard from hazard list
+      this.notMyHazards.splice(index, 1)
+      this.loading = false
     },
     confirm (hazard, index) {
       // confirm that user wants the hazard removed (modal popup)
@@ -123,47 +163,39 @@ export default {
     },
     removeHazard () {
       this.loading = true
-      this.disabled = true
       let hazard = this.remove
-      this.hazards.splice(hazard.index, 1)
-      this.$store.dispatch('removeHazard', this.hazards)
+      this.myHazards.splice(hazard.index, 1)
+      this.notMyHazards.push(hazard)
+      this.$store.dispatch('updateHazards', {myHazards: this.myHazards, notMyHazards: this.notMyHazards})
       .then(() => {
         this.clear()
-        this.loading = false
-        this.disabled = false
       })
       .catch((error) => {
-        console.log(error)
+        alert('Oops something went wrong', error.message)
+        this.loading = false
       })
     },
     saveHazards () {
-      if (this.newHazards.length !== 0) {
-        this.loading = true
-        this.disabled = true
-        this.$store.dispatch('addNewHazards', this.newHazards)
+      this.loading = true
+      if (this.changed === true) {
+        this.$store.dispatch('updateHazards', {myHazards: this.myHazards, notMyHazards: this.notMyHazards})
         .then(() => {
-          this.loading = false
-          this.disabled = false
           this.register = !this.register
           this.inverted = !this.inverted
+          this.success = true
           this.clear()
         })
         .catch((error) => {
+          alert('Oops something went wrong', error.message)
           this.loading = false
-          this.disabled = false
-          this.register = !this.register
-          this.inverted = !this.inverted
-          this.clear()
-          alert(error.message, error)
         })
       } else {
-        this.register = !this.register
-        this.inverted = !this.inverted
+        this.loading = false
       }
     },
     clear () {
       this.remove = {}
-      this.newHazards = []
+      this.loading = false
     }
   },
   beforeMount () {
@@ -188,6 +220,17 @@ export default {
     background-color: rgba(111, 50, 130, 0.86);
   }
   
+  .btn {
+    float: right;
+    margin-left: 10px;
+    cursor:pointer;
+  }
+
+  .addBtn.mini {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  
   .card-header.hazard{
     background-color: rgba(111, 50, 130, 0.86);
     margin: 0;
@@ -195,35 +238,22 @@ export default {
     font-size: 1.2rem;
     padding-left: 15px;
   }
-  .btn {
-    float: right;
-    margin-left: 10px;
-    cursor:pointer;
-  }
-
-  .addBtn {
-    background-color:rgba(223, 233, 255, 0.83);
-    color: black;
-  }
-
-  .addBtn:hover {
-    background-color: #ffc80b;
-    color: black;
-  }
   
   .card-header.hazard.inverted {
     background-color: #12807a;
   }
   
+  
+  .hazardCard > .card-body {
+    padding: 0;
+  }
+
+  
   .subheader {
     padding: 15px 0 15px 15px;
     border-bottom: 1px solid lightgrey;
     font-weight: bold;
-    color: black;
-  }
-  
-  .hazardCard > .card-body {
-    padding: 0;
+    color: #12807a;
   }
   
   .row {
@@ -235,15 +265,8 @@ export default {
     min-width: 240px;
   }
 
-  :disabled {
-    background-color: #ffffff00;
-    cursor: default;
-    border: none;
+  .loader {
+    float: right;
+    width: 80px;
   }
-
-   :disabled:hover{
-    background-color: #ffffff00;
-    border: none;
-  }
-  
 </style>

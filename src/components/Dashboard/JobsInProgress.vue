@@ -1,7 +1,16 @@
 <template>
   <b-container fluid class="outside-container">
     <b-card>
-      <div class="card-header">Jobs In Progress</div>
+      <div class="card-header">
+        Jobs In Progress
+        <b-button  
+          class="addBtn"
+          variant="success"
+          @click="newJob" 
+          v-b-tooltip.hover title="Create New Job Site">
+          <i class="fa fa-plus"></i>
+        </b-button> 
+      </div>
       <div class="scroll-container">
         <b-row v-if="jobSites.length === 0">
           <b-col>
@@ -49,20 +58,20 @@
                 <b-row v-if="job.notifiable.length > 0">
                   <b-col md="12" lg="3"></b-col>
                   <b-col>
-                    <b-form-file v-model="worksafefile" :state="Boolean(worksafefile)" placeholder="Worksafe Notification Required"></b-form-file>
+                    <b-form-file v-model="worksafefile" placeholder="Worksafe Notification Required"></b-form-file>
                     <b-form-text id="inputLiveHelp" style="margin-left: 15px">{{job.notifiable[0]}}</b-form-text>
                   </b-col>
                 </b-row>
                 <b-row v-if="job.environmental === 'true'">
                   <b-col md="12" lg="3"></b-col>
                   <b-col>
-                    <b-form-file v-model="environmentfile" :state="Boolean(environmentfile)" placeholder="An environmental plan is required"></b-form-file>
+                    <b-form-file v-model="environmentfile" placeholder="An environmental plan is required"></b-form-file>
                   </b-col>
                 </b-row>
                 <b-row v-if="job.resource === 'true'">
                   <b-col md="12" lg="3"></b-col>
                   <b-col>
-                    <b-form-file v-model="resourcefile" :state="Boolean(resourcefile)" placeholder="A resource consent is required"></b-form-file>
+                    <b-form-file v-model="resourcefile" placeholder="A resource consent is required"></b-form-file>
                   </b-col>
                 </b-row>
               </b-col>
@@ -132,6 +141,9 @@ export default {
     }
   },
   methods: {
+    newJob () {
+      this.$router.push('/dashboard/newJob')
+    },
     editJob (id) {
       this.readonly = false
     },
@@ -163,7 +175,7 @@ export default {
   }
 
   .card-header.plans {
-    background-color: #12807a;
+    background-color: #4950579e;
     margin: 0;
     color: white;
     font-size: 1.2rem;

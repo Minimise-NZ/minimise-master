@@ -16,7 +16,7 @@ import Hazards from '@/components/Dashboard/HazardRegister.vue'
 import HazardousSubstances from '@/components/Dashboard/HazardousSubstances.vue'
 import Tasks from '@/components/Dashboard/Tasks.vue'
 import Task from '@/components/Dashboard/Task.vue'
-import AdminBilling from '@/components/Dashboard/AdminBilling.vue'
+import AccountAdmin from '@/components/Dashboard/AccountAdmin.vue'
 import AdminUserManagement from '@/components/Dashboard/AdminUserManagement.vue'
 import IncidentReports from '@/components/Dashboard/IncidentReports.vue'
 import NewIncident from '@/components/Dashboard/IncidentForm.vue'
@@ -95,8 +95,8 @@ export default new Router({
           ]
         },
         {
-          path: 'billing',
-          component: AdminBilling,
+          path: 'admin',
+          component: AccountAdmin,
           beforeEnter: (to, from, next) => {
             if (store.getters.user.admin) {
               next()

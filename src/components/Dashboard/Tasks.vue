@@ -16,7 +16,14 @@
       </div>
     </b-modal>
     <b-card>
-     <div class="card-header">Task Analysis
+     <div class="card-header">Task Analysis/SWMS
+       <b-button  
+          variant="primary"
+          class="addBtn"
+          @click="newPopUp = true" 
+          v-b-tooltip.hover title="Add New Task Analysis">
+          <i class="fa fa-plus"></i>
+        </b-button> 
      </div>
      <div class="scroll-container">
 
@@ -30,7 +37,6 @@
               @click="changeTask(id)">
                 {{item.title}}
             </b-button>
-            <b-button class="mb-2" variant="primary" @click="newPopUp = true" v-b-tooltip.hover title="Add New Task Analysis"><i class="fa fa-plus"></i></b-button> 
           </b-col>
         </b-row>
 
@@ -107,7 +113,7 @@ export default {
     margin-right: 15px;
     cursor: pointer;
     font-size: 1.2rem;
-    padding: 5px 10px;
+    padding: 10px;
     background-color: grey;
     border: none;
   }

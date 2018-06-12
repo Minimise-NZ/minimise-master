@@ -43,7 +43,7 @@ export default {
         {name: 'Jobs In Progress', link: '/dashboard/jobs'},
         {name: 'Hazard Register', link: '/dashboard/hazards'},
         {name: 'Hazardous Substances', link: '/dashboard/hazardousSubstances'},
-        {name: 'Task Analysis', link: '/dashboard/taskAnalysis'},
+        {name: 'Task Analysis/SWMS', link: '/dashboard/taskAnalysis'},
         {name: 'Training Register', link: '/dashboard/TrainingRegister'},
         {name: 'Master Safety Plan', link: '/dashboard/master'},
         {name: 'New Incident', link: '/dashboard/newIncident'},
@@ -51,7 +51,7 @@ export default {
       ],
       adminNav: [
         {name: 'User Management', link: '/dashboard/userManagement'},
-        {name: 'Payments/ Billing', link: '/dashboard/billing'}
+        {name: 'Account Administration', link: '/dashboard/admin'}
       ]
     }
   },
@@ -64,6 +64,7 @@ export default {
     this.$store.dispatch('getCompany')
     this.$store.dispatch('getAllHazards')
     this.$store.dispatch('getTaskAnalysis')
+    this.$store.dispatch('getHazSubs')
   },
   beforeMount () {
     this.$store.dispatch('getWorkers')

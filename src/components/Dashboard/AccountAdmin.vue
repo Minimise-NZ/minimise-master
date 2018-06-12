@@ -1,6 +1,6 @@
 <template>
   <b-container fluid>
-    <b-card header="Admin - Billing" header-tag="header">
+    <b-card header="Account Adminstration" header-tag="header">
     </b-card>
   </b-container>
 </template>

@@ -64,16 +64,16 @@
           <b-col position: relative>
             <b-row class="right-btns">
               <b-button
-                @click="addStep"
+                @click="addStep(task)"
                 class="editBtn mb-2"
-                variant="primary">
+                style="background-color: #12807a">
                 Add Step
               </b-button>
               <b-button
                 @click="save"
                 class="editBtn mb-2 ml-2"
-                style="background-color: #12807a">
-                Save updates
+                variant="primary">
+                Save changes
               </b-button>
             </b-row>
           </b-col>
@@ -87,33 +87,43 @@
             <header class="subheader">Task Description</header>
           </b-col>
           <b-col> 
-            <header class="subheader">Potential Hazards</header>  
+            <header class="subheader">Potential Hazards</header>
           </b-col>
           <b-col>
             <header class="subheader">Hazard Controls</header>
           </b-col>
         </b-row>
           
-        <b-row v-for="(step, index) in task.steps" :key="index">
-          <b-col cols="1">
-            <h4>{{index + 1}}</h4>
-          </b-col>
-          <b-col>
-            <textarea class="form-control step" rows="3" v-model="step.description" placeholder="Please enter description of step"></textarea>
-          </b-col> 
-          <b-col>
-            <textarea class="form-control step" rows="3" v-model="step.hazards" placeholder="Please enter hazards"></textarea>
-          </b-col>
-          <b-col>
-            <textarea class="form-control step" rows="3" v-model="step.controls" placeholder="Please enter controls"></textarea>
-          </b-col>
-        </b-row>
+        <div v-for="(task, index) in task.steps" :key="index">
+          <b-row>
+            <b-col cols="1">
+              <h4>{{index + 1}}</h4>
+            </b-col>
+            <b-col>
+              <textarea class="form-control step" rows="2" v-model="task.description" placeholder="Please enter description of step"></textarea>
+            </b-col>
+            <b-col v-for="(hazard, count) in task.hazards" :key="count">
+              <b-row>
+                <textarea class="form-control step" rows="2" v-model="task.hazards[count]" placeholder="Please enter hazard"></textarea>
+              </b-row>
+            </b-col>
+            <b-col v-for="(control, count) in task.controls" :key="count">
+              <b-row>
+                <textarea class="form-control step" rows="2" v-model="task.controls[count]" placeholder="Please enter hazard controls"></textarea>
+              </b-row>
+            </b-col>
+          </b-row>
+          <b-row style="padding-right: 15px">
+            <b-btn @click="addHazard(index)" style="background-color: #12807a" class="ml-auto">Add a Hazard</b-btn>
+          </b-row>
+        </div>
       </b-form>
     </b-card>
   </b-container>
 </template>
 
 <script>
+import autosize from 'autosize'
 export default {
   props: ['task'],
   data () {
@@ -125,6 +135,9 @@ export default {
     stepCount () {
       return this.task.steps.length
     }
+  },
+  mounted () {
+    autosize(document.querySelectorAll('textarea'))
   },
   methods: {
     save () {
@@ -149,12 +162,20 @@ export default {
         }
       })
     },
-    addStep () {
-      this.task.steps.push({
+    addStep (task) {
+      task.steps.push({
         description: '',
-        hazards: '',
-        controls: ''
+        hazards: [''],
+        controls: ['']
       })
+      this.task = task
+      setTimeout(() => {
+        autosize(document.querySelectorAll('textarea'))
+      }, 1000)
+    },
+    addHazard (index) {
+      this.task.steps[index].hazards.push()
+      autosize(document.querySelectorAll('textarea'))
     }
   }
 }
@@ -170,7 +191,7 @@ export default {
   }
 
   .editBtn {
-    width: 120px;
+    width: 130px;
     color: white;
   }
 

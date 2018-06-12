@@ -120,7 +120,6 @@ export const store = new Vuex.Store({
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
         .then((user) => {
           commit('setUID', user.uid)
-          console.log('User registered')
           resolve(user.uid)
         })
         .catch((error) => {
@@ -150,7 +149,6 @@ export const store = new Vuex.Store({
       commit('setUID', payload)
     },
     passwordReset ({state}, payload) {
-      console.log(payload)
       firebase.auth().sendPasswordResetEmail(payload)
         .then(() => {
         // Email sent.
@@ -169,7 +167,6 @@ export const store = new Vuex.Store({
         firestore.collection('users').add(user)
         .then((doc) => {
           commit('setUserKey', doc.id)
-          console.log('User updated')
           resolve()
         })
         .catch((error) => {
@@ -215,7 +212,6 @@ export const store = new Vuex.Store({
             commit('setUser', user)
             commit('setUserKey', doc.id)
             commit('setCompanyKey', user.companyKey)
-            console.log('User profile set')
             resolve(user)
           })
         })
@@ -232,7 +228,6 @@ export const store = new Vuex.Store({
         .get()
         .then((doc) => {
           firestore.collection('users').doc(doc.id).set(payload, {merge: true})
-          console.log('User updated')
           resolve()
         })
         .catch((error) => {
@@ -251,7 +246,6 @@ export const store = new Vuex.Store({
         let training = payload.training
         firestore.collection('users').doc(workerId).set({training: training}, {merge: true})
         .then(() => {
-          console.log('Worker training updated')
           dispatch('getWorkers')
           resolve()
         })
@@ -265,12 +259,10 @@ export const store = new Vuex.Store({
     removeWorker ({dispatch}, payload) {
       // update worker training
       let promise = new Promise((resolve, reject) => {
-        console.log(payload)
         let workerId = payload.id
         let worker = payload.worker
         firestore.collection('users').doc(workerId).set(worker)
         .then(() => {
-          console.log('Worker removed')
           dispatch('getWorkers')
           resolve()
         })
@@ -312,7 +304,6 @@ export const store = new Vuex.Store({
           let promise = new Promise((resolve, reject) => {
             firestore.collection('users').add(user)
             .then((doc) => {
-              console.log('User updated', doc.id)
               dispatch('getWorkers')
               resolve()
             })
@@ -387,7 +378,6 @@ export const store = new Vuex.Store({
           firestore.collection('companyIndex').doc(doc.id).set({
             name: companyName
           })
-          console.log('company created')
           resolve(doc.id)
         })
         .catch((error) => {
@@ -404,7 +394,6 @@ export const store = new Vuex.Store({
         .then((doc) => {
           let company = doc.data()
           commit('setCompany', company)
-          commit('setHazardousSubstances', company.hazardousSubstances)
           resolve(company)
         })
         .catch((error) => {
@@ -500,7 +489,6 @@ export const store = new Vuex.Store({
             })
           })
           commit('setJobs', jobSites)
-          console.log(jobSites)
           resolve()
         })
         .catch((error) => {
@@ -599,7 +587,6 @@ export const store = new Vuex.Store({
       return promise
     },
     updateIncident ({state, dispatch}, payload) {
-      console.log(payload)
       firestore.collection('incidents').doc(payload.id).set({
         address: payload.address,
         date: payload.date,
@@ -668,7 +655,6 @@ export const store = new Vuex.Store({
         firestore.collection('incidents').where('supervisor.key', '==', state.userKey)
         .get()
         .then((snapshot) => {
-          console.log('incidents', snapshot)
           snapshot.forEach((doc) => {
             let obj = doc.data()
             let key = doc.id
@@ -729,7 +715,7 @@ export const store = new Vuex.Store({
         })
         .catch((error) => {
           console.log(error)
-          reject(console.log('All Hazard Error'))
+          reject(error)
         })
       })
       return promise
@@ -737,7 +723,6 @@ export const store = new Vuex.Store({
     getMyHazards ({commit, dispatch, state}) {
       let promise = new Promise((resolve, reject) => {
         let hazards = state.company.hazards
-        console.log(hazards)
         if (hazards <= 0 || hazards === undefined || hazards === null) {
           console.log('this company has no hazards')
           hazards = []
@@ -753,9 +738,7 @@ export const store = new Vuex.Store({
     },
     getNotMyHazards ({commit, state}) {
       let myHazards = state.myHazards.slice(0)
-      console.log('My Hazards', myHazards)
       let allHazards = state.allHazards.slice(0)
-      console.log('ALL hazards', allHazards)
       if (myHazards.length !== 0) {
         for (var i = allHazards.length - 1; i > -1; i--) {
           for (var j = myHazards.length - 1; j > -1; j--) {
@@ -767,23 +750,64 @@ export const store = new Vuex.Store({
       } else {
         console.log('myHazards length is 0')
       }
-      console.log('Not My Hazards', allHazards)
       commit('setNotMyHazards', allHazards)
       return
     },
-    addNewHazards ({commit, dispatch, state}, payload) {
-      console.log(payload)
-      const hazards = payload.map((obj) => { return Object.assign({}, obj) })
-      const myHazards = state.myHazards.map((obj) => { return Object.assign({}, obj) })
-      const newHazards = hazards.concat(myHazards)
+    updateHazards ({commit, dispatch, state}, payload) {
+      let myHazards = payload.myHazards
+      let notMyHazards = payload.notMyHazards
       let promise = new Promise((resolve, reject) => {
         firestore.collection('companies').doc(state.companyKey)
-        .set({hazards: newHazards}, {merge: true})
+        .set({hazards: myHazards}, {merge: true})
         .then(() => {
-          commit('setMyHazards', newHazards)
-          dispatch('getAllHazards')
-          dispatch('getNotMyHazards')
-          console.log('My Hazards updates', state.myHazards)
+          commit('setMyHazards', myHazards)
+          commit('setNotMyHazards', notMyHazards)
+          resolve()
+        })
+        .catch((error) => {
+          reject(error)
+        })
+      })
+      return promise
+    },
+  // hazardous Substance functions
+    getHazSubs ({commit, state}) {
+      // get taskAnalysis from company
+      firestore.collection('companies').doc(state.companyKey)
+      .collection('hazardousSubstances')
+      .get()
+      .then((snapshot) => {
+        let hazSubs = []
+        snapshot.forEach((doc) => {
+          hazSubs.push(doc.data())
+        })
+        commit('setHazardousSubstances', hazSubs)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    },
+    newHazardousSubstance ({commit, dispatch, state}, payload) {
+      let promise = new Promise((resolve, reject) => {
+        let newSubstance = firestore.collection('companies').doc(state.companyKey)
+        .collection('hazardousSubstances').doc()
+        newSubstance.set({
+          id: newSubstance.id,
+          PPE: payload.PPE,
+          SDS: payload.SDS,
+          UN: payload.UN,
+          group: payload.group,
+          hazClassification: payload.hazClassification,
+          hazStatements: payload.hazStatements,
+          hazTypes: payload.hazTypes,
+          location: payload.location,
+          maxQuantity: payload.maxQuantity,
+          name: payload.name,
+          storageRequirements: payload.storageRequirements,
+          subType: payload.subType
+        })
+        .then(() => {
+          dispatch('getHazSubs')
           resolve()
         })
         .catch((error) => {
@@ -793,34 +817,31 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    removeHazard ({commit, dispatch, state}, payload) {
+    updateSubstance ({dispatch, state}, payload) {
       let promise = new Promise((resolve, reject) => {
-        let myHazards = payload
-        dispatch('getNotMyHazards')
+        let key = payload.id
         firestore.collection('companies').doc(state.companyKey)
-        .set({hazards: payload}, {merge: true})
+        .collection('hazardousSubstances').doc(key).set({
+          id: key,
+          PPE: payload.PPE,
+          SDS: payload.SDS,
+          UN: payload.UN,
+          group: payload.group,
+          hazClassification: payload.hazClassification,
+          hazStatements: payload.hazStatements,
+          hazTypes: payload.hazTypes,
+          location: payload.location,
+          maxQuantity: payload.maxQuantity,
+          name: payload.name,
+          storageRequirements: payload.storageRequirements,
+          subType: payload.subType
+        })
         .then(() => {
-          commit('setMyHazards', myHazards)
+          dispatch('getHazSubs')
           resolve()
         })
         .catch((error) => {
-          console.log(error)
-          reject(console.log('All Hazard Error'))
-        })
-      })
-      return promise
-    },
-    newHazardousSubstance ({commit, dispatch, state}, payload) {
-      let promise = new Promise((resolve, reject) => {
-        firestore.collection('companies').doc(state.companyKey)
-        .set({hazardousSubstances: payload}, {merge: true})
-        .then(() => {
-          commit('setHazardousSubstances', payload)
-          console.log('My Hazardous substance updates', state.hazardousSubstances)
-          resolve()
-        })
-        .catch((error) => {
-          console.log(error)
+          dispatch('getHazSubs')
           reject(error)
         })
       })
@@ -849,7 +870,6 @@ export const store = new Vuex.Store({
         let title = payload
         let newTask = firestore.collection('companies').doc(state.companyKey)
         .collection('taskAnalysis').doc()
-        console.log('task Id is', newTask.id)
         newTask.set({
           title: title,
           worksafe: false,
@@ -860,8 +880,8 @@ export const store = new Vuex.Store({
           plant: '',
           steps: [{
             description: '',
-            hazards: '',
-            controls: ''
+            hazards: [''],
+            controls: ['']
           }],
           id: newTask.id
         })
@@ -871,7 +891,7 @@ export const store = new Vuex.Store({
         })
         .catch((error) => {
           console.log(error)
-          reject(console.log('New task analysis error'))
+          reject(error)
         })
       })
       return promise
@@ -880,10 +900,8 @@ export const store = new Vuex.Store({
       // create base Task Analysis in firestore
       let titles = ['Working at Heights > 5m', 'Work in confined spaces', 'Work in an excavation > 1.5m']
       for (let title of titles) {
-        console.log(title)
         let newTask = firestore.collection('companies').doc(state.companyKey)
         .collection('taskAnalysis').doc()
-        console.log('task Id is', newTask.id)
         newTask.set({
           title: title,
           worksafe: false,
@@ -923,7 +941,7 @@ export const store = new Vuex.Store({
           resolve()
         })
         .catch((error) => {
-          reject(console.log('Update task analysis error', error))
+          reject(error)
         })
       })
       return promise

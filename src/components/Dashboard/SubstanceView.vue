@@ -1,6 +1,6 @@
 <template>
   <b-card class="hazSubCard mt-2 mb-4">
-      <b-btn block v-b-toggle="'collapse' + index" class="text-left togglebtn card-header substance">
+    <b-btn block v-b-toggle="'collapse' + index" class="text-left togglebtn card-header substance">
         {{substance.name}}
       <p style="float:right; margin-bottom:0">Click to hide/show</p>
     </b-btn>
@@ -175,7 +175,6 @@ export default {
     },
     edit () {
       this.readonly = false
-      console.log('editing substance', this.substance)
       this._beforeEditingCache = Object.assign({}, this.substance)
       console.log(this._beforeEditingCache)
     },
@@ -184,21 +183,16 @@ export default {
       if (this._.isEqual(this._beforeEditingCache, this.substance)) {
         this.cancel()
       } else {
-        let promise = new Promise((resolve, reject) => {
-          let hazSubs = this.hazardousSubstances
-          hazSubs[this.index] = this.substance
-          this.$store.dispatch('newHazardousSubstance', hazSubs)
-          .then(() => {
-            this.readonly = true
-            this.itemLoading = false
-            resolve
-          })
-          .catch((error) => {
-            console.log(error)
-            reject(error)
-          })
+        this.$store.dispatch('updateSubstance', this.substance)
+        .then(() => {
+          this.readonly = true
+          this.itemLoading = false
         })
-        return promise
+        .catch(err => {
+          console.log(err.message)
+          this.readonly = true
+          this.itemLoading = false
+        })
       }
     },
     cancel () {
