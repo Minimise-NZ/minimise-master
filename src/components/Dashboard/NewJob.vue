@@ -1,25 +1,37 @@
 <template>
   <b-container fluid class="outside-container">
-    <!--SUCCESS MESSAGE MODAL-->
+    <!--MODALS-->
     <b-modal 
-      v-model="showModal" 
-      v-if="showModal" 
+      v-model="successModal" 
+      v-if="successModal" 
       @ok="route" 
-      ok-only 
-      centered 
-      header-bg-variant="info"
+      ok-only
+      header-bg-variant="success"
       headerTextVariant= 'light'
-      title="New Job Created">
+      title="Success!">
       <div class="d-block text-center">
         <h4 >Job site: {{siteAddress}} has been created</h4>
       </div>
     </b-modal>
-    
+
+    <b-modal
+      v-model="errorModal" 
+      v-if="errorModal" 
+      ok-only
+      header-bg-variant="danger"
+      headerTextVariant= 'light'
+      title="Oops..">
+      <div class="d-block text-center">
+        <h4>{{errorMessage}}</h4>
+      </div>
+    </b-modal>
+
     <b-card>
       <div class="card-header">New Job Site</div>
       <div class="scroll-container">
         <b-form @submit.prevent="onSubmit">
           <b-row class="outer-row">
+
             <!-- input column -->
             <b-col m="12" lg="7" class="outer-col" style="padding-top: 20px; padding-right: 20px">
               <!--address row-->
@@ -34,7 +46,6 @@
                   <div class="alert alert-danger" v-if="addressError">Please enter site address</div>
                 </b-col>
               </b-row>
-
               <!--supervisor row-->
               <b-row>
                 <b-col md="12" lg="3">
@@ -57,7 +68,6 @@
                   <b-form-input type="text" :value="supervisorPhone"/>
                 </b-col>
               </b-row>
-
               <!--medical centre row-->
               <b-row>
                 <b-col md="12" lg="3">
@@ -70,6 +80,7 @@
                       </b-input-group-button>
                     <b-form-input type="text" :placeholder='placeholder' v-model="medical" required></b-form-input>
                   </b-input-group>
+                  <div class="alert alert-danger" v-if="medicalError">Please enter medical centre</div>
                 </b-col>
               </b-row>
             </b-col>
@@ -100,13 +111,16 @@
                 :options="notifiable.list">
               </b-form-checkbox-group>
             </b-col>  
-            <b-col md="3" lg="4" xl="3">
+            <b-col md="3" lg="4" xl="2">
               <b-form-radio-group
                 class="mt-1"
                 id="radioNotifiable" 
                 v-model="notifiable.radioValue"
                 :options="notifiable.radioOptions">
               </b-form-radio-group>
+            </b-col>
+            <b-col v-if="notifiable.radioValue === 'true'">
+              <!--FILE UPLOAD COMPONENT-->
             </b-col>
           </b-row>
           <b-row class="search mt-0">
@@ -127,8 +141,8 @@
                 :options="environmental.radioOptions">
               </b-form-radio-group>
             </b-col>
-            <b-col xl="3" v-if="environmental.radioValue === true">
-              <b-form-file v-model="environmental.file" plain></b-form-file>
+            <b-col v-if="environmental.radioValue === 'true'">
+               <!--FILE UPLOAD COMPONENT-->
             </b-col>
           </b-row>
 
@@ -144,8 +158,8 @@
                 :options="resource.radioOptions">
               </b-form-radio-group>
             </b-col>
-            <b-col xl="3" v-if="resource.radioValue === true">
-              <b-form-file v-model="resource.file" plain></b-form-file>
+            <b-col v-if="resource.radioValue === 'true'">
+               <!--FILE UPLOAD COMPONENT-->
             </b-col>
           </b-row>
           
@@ -153,8 +167,13 @@
 
           <div class="text-center">
             <b-button-group class="pt-4 pb-4">
-              <b-button class="buttons" variant="success" @click="submit">Submit</b-button>
-              <b-button class="buttons" variant="danger" @click="cancel">Cancel</b-button>
+              <b-button class="buttons" variant="success" @click="submit">
+                <p style="font-size: 1rem; margin-bottom: 0" v-if="loading===false">Submit</p>
+                <div class="loader">
+                <pulse-loader :loading="loading" ></pulse-loader>
+              </div>
+              </b-button>
+              <b-button class="buttons" variant="danger" @click="cancel" :disabled="loading===true">Cancel</b-button>
             </b-button-group>
           </div>
         </b-form>
@@ -164,15 +183,20 @@
 </template>
 
 <script>
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 export default {
+  components: {
+    PulseLoader
+  },
   data () {
     return {
+      loading: false,
       placeholder: 'Search for nearby Medical Centre',
       notifiable: {
-        radioValue: false,
+        radioValue: 'false',
         radioOptions: [
-          {text: 'Yes', value: true},
-          {text: 'No', value: false}
+          {text: 'Yes', value: 'true'},
+          {text: 'No', value: 'false'}
         ],
         list: [
           'Working at heights > 5m',
@@ -182,21 +206,22 @@ export default {
         selected: []
       },
       environmental: {
-        radioValue: false,
+        radioValue: 'false',
         radioOptions: [
-          {text: 'Yes', value: true},
-          {text: 'No', value: false}
-        ],
-        file: ''
+          {text: 'Yes', value: 'true'},
+          {text: 'No', value: 'false'}
+        ]
       },
       resource: {
-        radioValue: false,
+        radioValue: 'false',
         radioOptions: [
-          {text: 'Yes', value: true},
-          {text: 'No', value: false}
-        ],
-        file: ''
+          {text: 'Yes', value: 'true'},
+          {text: 'No', value: 'false'}
+        ]
       },
+      notifiableFile: '',
+      environmentalFile: '',
+      resourceFile: '',
       selectError: false,
       mapRoot: 'https://www.google.com/maps/embed/v1/place?key=AIzaSyD7W7NiKKy0qZfRUsslzHOe-Hnkp-IncyU&q=Christchurch City',
       siteAddress: '',
@@ -206,12 +231,14 @@ export default {
       supervisorError: false,
       medicalError: false,
       notifiableError: false,
-      showModal: false
+      successModal: false,
+      errorModal: false,
+      errorMessage: ''
     }
   },
   computed: {
     showNotifiable () {
-      return (this.notifiable.radioValue === true)
+      return (this.notifiable.radioValue === 'true')
     },
     user () {
       return this.$store.getters.user
@@ -233,11 +260,7 @@ export default {
       return supervisorList
     },
     supervisorKey () {
-      if (this.supervisorIndex !== null) {
-        return this.supervisors[this.supervisorIndex].key
-      } else {
-        return ''
-      }
+      return this.supervisors[this.supervisorIndex].key
     },
     supervisorName () {
       if (this.supervisorIndex !== null) {
@@ -255,6 +278,10 @@ export default {
     }
   },
   methods: {
+    async uploadFile (file, type) {
+      let url = await this.$store.dispatch('uploadFile', {file: file, type: type, address: this.address})
+      console.log(url)
+    },
     searchMedical () {
       this.addressError = false
       if (this.siteAddress === '') {
@@ -265,7 +292,21 @@ export default {
       }
     },
     cancel () {
-      this.$router.go(-1)
+      this.siteAddress = ''
+      this.supervisorIndex = 0
+      this.notifiable.radioValue = 'false'
+      this.notifiable.selected = []
+      this.notifiableFile = ''
+      this.environmental.radioValue = 'false'
+      this.environmentalFile = ''
+      this.resource.radioValue = 'false'
+      this.resourceFile = ''
+      this.medical = ''
+      this.addressError = false
+      this.supervisorError = false
+      this.medicalError = false
+      this.notifiableError = false
+      this.selectError = false
     },
     onSubmit (e) {
       if (e.keyCode === 13) {
@@ -275,20 +316,24 @@ export default {
       }
     },
     submit () {
+      this.loading = true
       if (this.siteAddress === '') {
         this.addressError = true
+        this.loading = false
         return
       } else {
         this.addressError = false
       }
       if (this.medical === '') {
         this.medicalError = true
+        this.loading = false
         return
       } else {
         this.medicalError = false
       }
       if (this.notifiable.radioValue === 'true' && this.notifiable.selected <= 0) {
         this.notifiableError = true
+        this.loading = false
         return
       } else {
         this.notifiableError = false
@@ -304,12 +349,21 @@ export default {
           supervisorPhone: this.supervisorPhone,
           address: this.siteAddress,
           notifiable: this.notifiable.selected,
+          notifiableFile: this.notifiableFile,
           environmental: this.environmental.radioValue,
+          environmentalFile: this.environmentalFile,
           resource: this.resource.radioValue,
+          resourceFile: this.resourceFile,
           medical: this.medical
         })
         .then(() => {
-          this.showModal = true
+          this.loading = false
+          this.successModal = true
+        })
+        .catch((error) => {
+          this.loading = false
+          this.errorMessage = error.message
+          this.errorModal = true
         })
       }
     },

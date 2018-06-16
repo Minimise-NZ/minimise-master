@@ -4,6 +4,7 @@ import * as firebase from 'firebase'
 import {firestore} from '../firebase'
 import createPersistedState from 'vuex-persistedstate'
 import moment from 'moment'
+var storageRef = firebase.storage().ref()
 
 Vue.use(Vuex)
 
@@ -408,6 +409,13 @@ export const store = new Vuex.Store({
     newJob ({state, commit, dispatch}, payload) {
       // create new job in firestore jobSites collection
       let promise = new Promise((resolve, reject) => {
+        dispatch('uploadFile', payload)
+        .then((files) => {
+          console.log('received files', files)
+        })
+      })
+      return promise
+        /*
         let today = moment().format('DD-MM-YYYY')
         firestore.collection('jobSites').add({
           companyKey: payload.companyKey,
@@ -430,6 +438,27 @@ export const store = new Vuex.Store({
             dispatch('getMyJobs')
           }
           resolve()
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+      })
+      */
+    },
+    uploadFile ({state}, payload) {
+      console.log('uploading', payload)
+      let today = moment().format('DD-MM-YYYY')
+      var promise = new Promise((resolve, reject) => {
+        let type = payload.type
+        let file = payload.file
+        let address = payload.address
+        let filename = today + file.name + address + type
+        const task = storageRef.child('/docs/' + filename).put(file)
+        task.then((snapshot) => {
+          let URL = snapshot.downloadURL
+          console.log(URL)
+          resolve(URL)
         })
         .catch((error) => {
           console.log(error)
