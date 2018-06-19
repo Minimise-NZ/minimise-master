@@ -76,7 +76,7 @@
                 <b-col>
                   <b-input-group>
                      <b-input-group-button>
-                        <b-button @click="searchMedical" class="fa fa-search"></b-button>
+                        <b-button @click="searchMedical" class="fa fa-search" v-b-tooltip.hover title="Find nearest medical centre"></b-button>
                       </b-input-group-button>
                     <b-form-input type="text" :placeholder='placeholder' v-model="medical" required></b-form-input>
                   </b-input-group>
@@ -98,76 +98,132 @@
           </b-row>
           <hr>
           
-          <!--checkbox rows-->
+          <!--NOTIFIABLE ROW-->
           <b-row>
-            <b-col md="4" lg="6" xl="5">
-              <label>Is there notifiable works associated with this project?</label>
-              <b-form-checkbox-group
-                class="mt-3 ml-2"
-                v-if="showNotifiable"
-                stacked 
-                v-model="notifiable.selected" 
-                name="notifiables" 
-                :options="notifiable.list">
-              </b-form-checkbox-group>
-            </b-col>  
-            <b-col md="3" lg="4" xl="2">
-              <b-form-radio-group
-                class="mt-1"
-                id="radioNotifiable" 
-                v-model="notifiable.radioValue"
-                :options="notifiable.radioOptions">
-              </b-form-radio-group>
+            <!--column 1 notifiable-->
+            <b-col md="12" lg="7">
+              <b-row  class="pl-0">
+                <b-col lg="9">
+                  <label>Is there notifiable works associated with this project?</label>
+                  <b-form-checkbox-group
+                    class="mt-3 ml-2"
+                    v-if="showNotifiable"
+                    stacked 
+                    v-model="notifiable.selected" 
+                    name="notifiables" 
+                    :options="notifiable.list">
+                  </b-form-checkbox-group>
+                </b-col>  
+                <b-col >
+                  <b-form-radio-group
+                    class="mt-1"
+                    id="radioNotifiable" 
+                    v-model="notifiable.radioValue"
+                    :options="notifiable.radioOptions">
+                  </b-form-radio-group>
+                </b-col>
+              </b-row>
+              <b-row class="search mt-0">
+                <b-col>
+                  <div class="alert alert-danger ml-2" v-if="notifiableError">Please select notifiable works</div>
+                </b-col>
+              </b-row>
             </b-col>
-            <b-col v-if="notifiable.radioValue === 'true'">
-              <!--FILE UPLOAD COMPONENT-->
-            </b-col>
-          </b-row>
-          <b-row class="search mt-0">
+            <!--column 2 notifiable-->
             <b-col>
-              <div class="alert alert-danger ml-2" v-if="notifiableError">Please select notifiable works</div>
+              <b-row v-if="notifiable.radioValue === 'true'">
+                <b-col md="10" lg="9" xl="10">
+                  <b-form-file v-model="notifiable.file" placeholder="Choose a file..." :disabled="notifiable.disabled"></b-form-file>
+                </b-col>
+                <b-col>
+                  <b-btn v-if="notifiable.url === ''" @click="uploadFile('notifiable')" v-b-tooltip.hover title="Upload file">
+                    <i class="fa fa-cloud-upload"></i>
+                  </b-btn>
+                  <b-btn variant="success" v-else v-b-tooltip.hover title="File uploaded">
+                    <i class="fa fa-check"></i>
+                  </b-btn>
+                </b-col>
+              </b-row>
             </b-col>
           </b-row>
 
+          <!--ENVIRONMENTAL ROW-->
           <b-row>
-            <b-col md="4" lg="6" xl="5">
-              <label>Is an environmental plan required?</label>
-            </b-col>  
-            <b-col md="3" lg="4" xl="2">
-              <b-form-radio-group
-                class="mt-1"
-                id="radioEnvironment" 
-                v-model="environmental.radioValue"
-                :options="environmental.radioOptions">
-              </b-form-radio-group>
+            <!--column 1 environmental-->
+            <b-col md="12" lg="7">
+              <b-row  class="pl-0">
+                <b-col lg="9">
+                  <label>Is an environmental plan required?</label>
+                </b-col>  
+                <b-col >
+                  <b-form-radio-group
+                    class="mt-1"
+                    id="radioEnvironmental" 
+                    v-model="environmental.radioValue"
+                    :options="environmental.radioOptions">
+                  </b-form-radio-group>
+                </b-col>
+              </b-row>
             </b-col>
-            <b-col v-if="environmental.radioValue === 'true'">
-               <!--FILE UPLOAD COMPONENT-->
+            <!--column 2 environmental-->
+            <b-col>
+              <b-row v-if="environmental.radioValue === 'true'">
+                <b-col md="10" lg="9" xl="10">
+                  <b-form-file v-model="environmental.file" placeholder="Choose a file..." :disabled="environmental.disabled"></b-form-file>
+                </b-col>
+                <b-col>
+                  <b-btn v-if="environmental.url === ''" @click="uploadFile('environmental')" v-b-tooltip.hover title="Upload file">
+                    <i class="fa fa-cloud-upload"></i>
+                  </b-btn>
+                  <b-btn variant="success" v-else v-b-tooltip.hover title="File uploaded">
+                    <i class="fa fa-check"></i>
+                  </b-btn>
+                </b-col>
+              </b-row>
             </b-col>
           </b-row>
 
+          <!--RESOURCE ROW-->
           <b-row>
-            <b-col md="4" lg="6" xl="5">
-              <label>Is a resource consent required?</label>
-            </b-col>  
-            <b-col md="3" lg="4" xl="2">
-              <b-form-radio-group
-                class="mt-1"
-                id="radioResource" 
-                v-model="resource.radioValue"
-                :options="resource.radioOptions">
-              </b-form-radio-group>
+            <!--column 1 resource-->
+            <b-col md="12" lg="7">
+              <b-row  class="pl-0">
+                <b-col lg="9">
+                  <label>Is a resource consent required?</label>
+                </b-col>  
+                <b-col >
+                  <b-form-radio-group
+                    class="mt-1"
+                    id="radioResource" 
+                    v-model="resource.radioValue"
+                    :options="resource.radioOptions">
+                  </b-form-radio-group>
+                </b-col>
+              </b-row>
             </b-col>
-            <b-col v-if="resource.radioValue === 'true'">
-               <!--FILE UPLOAD COMPONENT-->
+            <!--column 2 resource-->
+            <b-col>
+              <b-row v-if="resource.radioValue === 'true'">
+                <b-col md="10" lg="9" xl="10">
+                  <b-form-file v-model="resource.file" placeholder="Choose a file..." :disabled="resource.disabled"></b-form-file>
+                </b-col>
+                <b-col>
+                  <b-btn v-if="resource.url === ''" @click="uploadFile('resource')" v-b-tooltip.hover title="Upload file">
+                    <i class="fa fa-cloud-upload"></i>
+                  </b-btn>
+                  <b-btn variant="success" v-else v-b-tooltip.hover title="File uploaded">
+                    <i class="fa fa-check"></i>
+                  </b-btn>
+                </b-col>
+              </b-row>
             </b-col>
           </b-row>
-          
+
           <hr>
 
           <div class="text-center">
             <b-button-group class="pt-4 pb-4">
-              <b-button class="buttons" variant="success" @click="submit">
+              <b-button class="buttons" variant="success" @click="submit" :disabled="loading===true">
                 <p style="font-size: 1rem; margin-bottom: 0" v-if="loading===false">Submit</p>
                 <div class="loader">
                 <pulse-loader :loading="loading" ></pulse-loader>
@@ -203,25 +259,29 @@ export default {
           'Work in confined spaces',
           'Work in an excavation > 1.5m'
         ],
-        selected: []
+        file: '',
+        url: '',
+        selected: [],
+        disabled: false
       },
       environmental: {
         radioValue: 'false',
         radioOptions: [
           {text: 'Yes', value: 'true'},
           {text: 'No', value: 'false'}
-        ]
+        ],
+        file: '',
+        url: ''
       },
       resource: {
         radioValue: 'false',
         radioOptions: [
           {text: 'Yes', value: 'true'},
           {text: 'No', value: 'false'}
-        ]
+        ],
+        file: '',
+        url: ''
       },
-      notifiableFile: '',
-      environmentalFile: '',
-      resourceFile: '',
       selectError: false,
       mapRoot: 'https://www.google.com/maps/embed/v1/place?key=AIzaSyD7W7NiKKy0qZfRUsslzHOe-Hnkp-IncyU&q=Christchurch City',
       siteAddress: '',
@@ -278,9 +338,28 @@ export default {
     }
   },
   methods: {
-    async uploadFile (file, type) {
-      let url = await this.$store.dispatch('uploadFile', {file: file, type: type, address: this.address})
-      console.log(url)
+    async uploadFile (type) {
+      this.loading = true
+      switch (type) {
+        case 'notifiable':
+          console.log('uploading notifiable')
+          this.notifiable.url = await this.$store.dispatch('uploadFile', {file: this.notifiable.file, type: 'notifiable'})
+          this.notifiable.disabled = true
+          this.loading = false
+          break
+        case 'environmental':
+          console.log('uploading environmental')
+          this.environmental.url = await this.$store.dispatch('uploadFile', {file: this.environmental.file, type: 'environmental'})
+          this.environmental.disabled = true
+          this.loading = false
+          break
+        case 'resource':
+          console.log('uploading resource')
+          this.resource.url = await this.$store.dispatch('uploadFile', {file: this.resource.file, type: 'resource'})
+          this.resource.disabled = true
+          this.loading = false
+          break
+      }
     },
     searchMedical () {
       this.addressError = false
@@ -296,11 +375,17 @@ export default {
       this.supervisorIndex = 0
       this.notifiable.radioValue = 'false'
       this.notifiable.selected = []
-      this.notifiableFile = ''
+      this.notifiable.file = ''
+      this.notifiable.url = ''
+      this.notifiable.disabled = false
       this.environmental.radioValue = 'false'
-      this.environmentalFile = ''
+      this.environmental.file = ''
+      this.environmental.url = ''
+      this.environmental.disabled = false
       this.resource.radioValue = 'false'
-      this.resourceFile = ''
+      this.resource.file = ''
+      this.resource.url = ''
+      this.resource.disabled = false
       this.medical = ''
       this.addressError = false
       this.supervisorError = false
@@ -340,6 +425,24 @@ export default {
       }
       if (this.notifiable.radioValue === 'false' && this.notifiable.selected > 0) {
         this.notifiable.selected = []
+      }
+      if (this.notifiable.file !== '' && this.notifiable.url === '') {
+        this.errorMessage = 'Please upload files'
+        this.errorModal = true
+        this.loading = false
+        return
+      }
+      if (this.environmental.file !== '' && this.environmental.url === '') {
+        this.errorMessage = 'Please upload files'
+        this.errorModal = true
+        this.loading = false
+        return
+      }
+      if (this.resource.file !== '' && this.resource.url === '') {
+        this.errorMessage = 'Please upload files'
+        this.errorModal = true
+        this.loading = false
+        return
       } else {
         this.$store.dispatch('newJob', {
           companyKey: this.user.companyKey,
@@ -349,11 +452,11 @@ export default {
           supervisorPhone: this.supervisorPhone,
           address: this.siteAddress,
           notifiable: this.notifiable.selected,
-          notifiableFile: this.notifiableFile,
+          notifiableurl: this.notifiable.url,
           environmental: this.environmental.radioValue,
-          environmentalFile: this.environmentalFile,
+          environmentalurl: this.environmental.url,
           resource: this.resource.radioValue,
-          resourceFile: this.resourceFile,
+          resourceurl: this.resource.url,
           medical: this.medical
         })
         .then(() => {
@@ -375,7 +478,6 @@ export default {
 </script>
 
 <style scoped>
-
   hr {
     background-color: #12807ad4;  
     margin-right: 20px;
@@ -438,6 +540,10 @@ export default {
   label {
     margin-top: 5px;
     margin-bottom: 0;
+  }
+
+  :disabled {
+    cursor: not-allowed;
   }
 
   @media screen and (max-width : 992px) {

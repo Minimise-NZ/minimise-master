@@ -354,6 +354,7 @@ export const store = new Vuex.Store({
         commit('setWorkers', workers)
       })
     },
+
   // company functions
     getCompanyIndex ({commit}) {
       // must already have key in state
@@ -409,13 +410,7 @@ export const store = new Vuex.Store({
     newJob ({state, commit, dispatch}, payload) {
       // create new job in firestore jobSites collection
       let promise = new Promise((resolve, reject) => {
-        dispatch('uploadFile', payload)
-        .then((files) => {
-          console.log('received files', files)
-        })
-      })
-      return promise
-        /*
+        console.log('Creating new job', payload)
         let today = moment().format('DD-MM-YYYY')
         firestore.collection('jobSites').add({
           companyKey: payload.companyKey,
@@ -425,18 +420,14 @@ export const store = new Vuex.Store({
           supervisorPhone: payload.supervisorPhone,
           supervisorKey: payload.supervisorKey,
           address: payload.address,
-          notifiable: payload.notifiable,
-          environmental: payload.environmental,
-          resource: payload.resource,
+          notifiable: payload.notifiableurl,
+          environmental: payload.environmentalurl,
+          resource: payload.resourceurl,
           open: true,
           date: today
         })
         .then(() => {
-          if (state.user.admin === true) {
-            dispatch('getAllJobs')
-          } else {
-            dispatch('getMyJobs')
-          }
+          dispatch('getAllJobs')
           resolve()
         })
         .catch((error) => {
@@ -444,16 +435,14 @@ export const store = new Vuex.Store({
           reject()
         })
       })
-      */
+      return promise
     },
     uploadFile ({state}, payload) {
       console.log('uploading', payload)
-      let today = moment().format('DD-MM-YYYY')
       var promise = new Promise((resolve, reject) => {
         let type = payload.type
         let file = payload.file
-        let address = payload.address
-        let filename = today + file.name + address + type
+        let filename = type + moment().unix()
         const task = storageRef.child('/docs/' + filename).put(file)
         task.then((snapshot) => {
           let URL = snapshot.downloadURL
@@ -519,47 +508,6 @@ export const store = new Vuex.Store({
           })
           commit('setJobs', jobSites)
           resolve()
-        })
-        .catch((error) => {
-          console.log('Error getting documents: ', error)
-          reject(error)
-        })
-        return promise
-      })
-    },
-    getMyJobs ({commit, state}) {
-      // get all jobs in progress that are assigned to this supervisor
-      let promise = new Promise((resolve, reject) => {
-        firestore.collection('jobSites').where('supervisorKey', '==', state.userKey).where('open', '==', true)
-        .get()
-        .then((snapshot) => {
-          var jobSites = []
-          snapshot.forEach((doc) => {
-            // get the safety plans
-            firestore.collection('jobSites').doc(doc.id).collection('safetyPlans')
-            .get()
-            .then((snapshot) => {
-              let safetyPlans = []
-              snapshot.forEach((doc) => {
-                safetyPlans.push(doc.data())
-              })
-              jobSites.push({
-                id: doc.id,
-                address: doc.data().address,
-                date: doc.data().date,
-                medical: doc.data().medical,
-                notifiable: doc.data().notifiable,
-                environmental: doc.data().environmental,
-                resource: doc.data().resource,
-                supervisorKey: doc.data().supervisorKey,
-                supervisorName: doc.data().supervisorName,
-                supervisorPhone: doc.data().supervisorPhone,
-                safetyPlans: safetyPlans
-              })
-            })
-          })
-          commit('setJobs', jobSites)
-          resolve(jobSites)
         })
         .catch((error) => {
           console.log('Error getting documents: ', error)
