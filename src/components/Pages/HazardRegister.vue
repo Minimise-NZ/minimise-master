@@ -198,9 +198,6 @@ export default {
       this.loading = false
       this.hazard = ''
     }
-  },
-  beforeMount () {
-    this.$store.dispatch('getMyHazards')
   }
 }
 </script>
