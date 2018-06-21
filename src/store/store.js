@@ -15,7 +15,7 @@ export const store = new Vuex.Store({
     uid: '',
     workers: [],
     supervisors: [],
-    company: null,
+    company: {},
     companyKey: '',
     companyIndex: [],
     jobsInProgress: [],
@@ -37,7 +37,7 @@ export const store = new Vuex.Store({
       state.company = {}
       state.companyKey = ''
       state.companyIndex = []
-      state.jobsInProgress = null
+      state.jobsInProgress = []
       state.jobRequests = []
       state.myIncidents = []
       state.allHazards = []
@@ -420,9 +420,12 @@ export const store = new Vuex.Store({
           supervisorPhone: payload.supervisorPhone,
           supervisorKey: payload.supervisorKey,
           address: payload.address,
-          notifiable: payload.notifiableurl,
-          environmental: payload.environmentalurl,
-          resource: payload.resourceurl,
+          notifiable: payload.notifiable,
+          notifiableurl: payload.notifiableurl,
+          environmental: payload.environmental,
+          environmentalurl: payload.environmentalurl,
+          resource: payload.resource,
+          resourceurl: payload.resourceurl,
           open: true,
           date: today
         })
@@ -456,6 +459,35 @@ export const store = new Vuex.Store({
       })
       return promise
     },
+    updateJob ({dispatch}, payload) {
+      let promise = new Promise((resolve, reject) => {
+        firestore.collection('jobSites').doc(payload.id).set({
+          companyKey: payload.companyKey,
+          companyName: payload.companyName,
+          medical: payload.medical,
+          supervisorName: payload.supervisorName,
+          supervisorPhone: payload.supervisorPhone,
+          supervisorKey: payload.supervisorKey,
+          address: payload.address,
+          notifiable: payload.notifiable,
+          notifiableurl: payload.notifiableurl,
+          environmental: payload.environmental,
+          environmentalurl: payload.environmentalurl,
+          resource: payload.resource,
+          resourceurl: payload.resourceurl,
+          open: true,
+          date: payload.date
+        })
+        .then(() => {
+          resolve()
+        })
+        .catch((err) => {
+          console.log(err)
+          reject()
+        })
+      })
+      return promise
+    },
     closeJob ({dispatch}, payload) {
       // close job in jobSites collection
       let promise = new Promise((resolve, reject) => {
@@ -476,6 +508,7 @@ export const store = new Vuex.Store({
     getAllJobs ({commit, state}) {
       // get all jobs in progress that are assigned to this company
       let promise = new Promise((resolve, reject) => {
+        console.log('getting jobs')
         firestore.collection('jobSites').where('companyKey', '==', state.companyKey).where('open', '==', true)
         .get()
         .then((snapshot) => {
@@ -499,8 +532,11 @@ export const store = new Vuex.Store({
                 supervisorKey: doc.data().supervisorKey,
                 address: doc.data().address,
                 notifiable: doc.data().notifiable,
+                notifiableurl: doc.data().notifiableurl,
                 environmental: doc.data().environmental,
+                environmentalurl: doc.data().environmentalurl,
                 resource: doc.data().resource,
+                resourceurl: doc.data().resourceurl,
                 date: doc.data().date,
                 safetyPlans: safetyPlans
               })
@@ -676,14 +712,14 @@ export const store = new Vuex.Store({
             let hazard = {
               id: doc.id,
               name: data.name,
-              image: data.imageURL,
+              imageURL: data.imageURL,
               thumb: data.thumb,
               IRA: data.IRA,
               RRA: data.RRA,
               controls: data.controls,
               risks: data.risks,
               taskAnalysis: data.taskAnalysis,
-              worksafe: data.worksafeNotification
+              worksafeNotification: data.worksafeNotification
             }
             allHazards.push(hazard)
           })
@@ -699,17 +735,29 @@ export const store = new Vuex.Store({
     },
     getMyHazards ({commit, dispatch, state}) {
       let promise = new Promise((resolve, reject) => {
-        let hazards = state.company.hazards
-        if (hazards <= 0 || hazards === undefined || hazards === null) {
-          console.log('this company has no hazards')
-          hazards = []
-          commit('setNotMyHazards', state.allHazards)
-          resolve
-        } else {
-          commit('setMyHazards', hazards)
-          dispatch('getNotMyHazards')
-          resolve
-        }
+        firestore.collection('companies').doc(state.companyKey)
+        .collection('hazards')
+        .get()
+        .then((snapshot) => {
+          let hazards = []
+          snapshot.forEach((doc) => {
+            hazards.push(doc.data())
+          })
+          if (hazards <= 0 || hazards === undefined || hazards === null) {
+            console.log('this company has no hazards')
+            hazards = []
+            commit('setNotMyHazards', state.allHazards)
+            resolve
+          } else {
+            commit('setMyHazards', hazards)
+            dispatch('getNotMyHazards')
+            resolve
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+          reject(error)
+        })
       })
       return promise
     },
@@ -730,15 +778,40 @@ export const store = new Vuex.Store({
       commit('setNotMyHazards', allHazards)
       return
     },
-    updateHazards ({commit, dispatch, state}, payload) {
-      let myHazards = payload.myHazards
-      let notMyHazards = payload.notMyHazards
+    addHazard ({dispatch, state}, payload) {
+      console.log('payload', payload)
+      let promise = new Promise((resolve, reject) => {
+        let newHazard = firestore.collection('companies').doc(state.companyKey)
+        .collection('hazards').doc(payload.id)
+        newHazard.set({
+          id: payload.id,
+          name: payload.name,
+          imageURL: payload.imageURL,
+          thumb: payload.thumb,
+          IRA: payload.IRA,
+          RRA: payload.RRA,
+          controls: payload.controls,
+          risks: payload.risks,
+          taskAnalysis: payload.taskAnalysis,
+          worksafeNotification: payload.worksafeNotification
+        })
+        .then(() => {
+          dispatch('getMyHazards')
+          resolve()
+        })
+        .catch((error) => {
+          reject(error)
+        })
+      })
+      return promise
+    },
+    removeHazard ({dispatch, state}, payload) {
+      console.log('payload', payload)
       let promise = new Promise((resolve, reject) => {
         firestore.collection('companies').doc(state.companyKey)
-        .set({hazards: myHazards}, {merge: true})
+        .collection('hazards').doc(payload.id).delete()
         .then(() => {
-          commit('setMyHazards', myHazards)
-          commit('setNotMyHazards', notMyHazards)
+          dispatch('getMyHazards')
           resolve()
         })
         .catch((error) => {

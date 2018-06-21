@@ -10,12 +10,24 @@
       title="Success">
       <div class="d-block text-center">
         <h4 class="mt-2">Your hazard register has been updated</h4>
+        <h5>{{errorMessage}}</h5>
+      </div>
+    </b-modal>
+    <b-modal
+      v-model="error" 
+      v-if="error" 
+      ok-only
+      header-bg-variant="danger"
+      headerTextVariant= 'light'
+      title="Oops..">
+      <div class="d-block text-center">
+        <h4>Something went wrong. Please try again</h4>
       </div>
     </b-modal>
     <b-modal 
       v-model="confirmAction" 
       v-if="confirmAction" 
-      @ok="removeHazard"
+      @ok="removeHazard()"
       @cancel="clear"
       centered 
       header-bg-variant="danger"
@@ -25,6 +37,7 @@
         <h4 class="mt-2">Remove this hazard<br>from your hazard register?</h4>
       </div>
     </b-modal>
+
     <b-card>
       <div class="card-header" :class="{ inverted: inverted }" >{{headerTitle}}
         <b-button
@@ -39,11 +52,12 @@
           v-else
           class="addBtn"
           variant="warning"
-          @click="saveHazards()"
+           @click="register = !register, inverted = !inverted"
           v-b-tooltip.hover title="Back to Hazard Register">
           <i class="fa fa-undo" style="color:#383838"></i>
         </b-button> 
       </div>
+
       <div class="scroll-container">
         <b-row v-if="hazards.length === 0">
           <b-col class="p-0">
@@ -59,7 +73,7 @@
               v-if="register && !loading"
               class="addBtn mini"
               variant="danger"
-              @click="confirm(hazard, index)"
+              @click="confirm(hazard)"
               v-b-tooltip.hover title="Remove Hazard">
               <i class="fa fa-minus"></i>
             </b-button>
@@ -67,7 +81,7 @@
               v-if="!register  && !loading"
               class="addBtn mini"
               variant="warning"
-              @click="addHazard(hazard, index)"
+              @click="addHazard(hazard)"
               v-b-tooltip.hover title="Add to my Hazard Register">
               <i class="fa fa-plus" style="color:#383838"></i>
             </b-button>
@@ -78,7 +92,7 @@
           <b-row>
             <b-col>
               <b-img
-                :src='hazard.image'
+                :src='hazard.imageURL'
                 class="ml-3 mb-2"
                 fluid>
               </b-img>
@@ -118,8 +132,9 @@ export default {
       inverted: false,
       confirmAction: false,
       success: false,
-      changed: false,
-      remove: {}
+      error: false,
+      errorMessage: '',
+      hazard: ''
     }
   },
   computed: {
@@ -147,55 +162,41 @@ export default {
     }
   },
   methods: {
-    addHazard (hazard, index) {
+    addHazard (hazard) {
       // add selected hazard to company hazard register
       this.loading = true
-      this.changed = true
-      this.myHazards.push(hazard)
-      // remove selected hazard from hazard list
-      this.notMyHazards.splice(index, 1)
-      this.loading = false
+      this.$store.dispatch('addHazard', hazard)
+      .then(() => {
+        this.success = true
+        this.loading = false
+      })
+      .catch((error) => {
+        this.error = true
+        this.errorMessage = error.message
+        this.loading = false
+      })
     },
-    confirm (hazard, index) {
+    confirm (hazard) {
       // confirm that user wants the hazard removed (modal popup)
-      this.remove = {hazard, index}
       this.confirmAction = true
+      this.hazard = hazard
     },
     removeHazard () {
       this.loading = true
-      let hazard = this.remove
-      this.myHazards.splice(hazard.index, 1)
-      this.notMyHazards.push(hazard)
-      this.$store.dispatch('updateHazards', {myHazards: this.myHazards, notMyHazards: this.notMyHazards})
+      this.$store.dispatch('removeHazard', this.hazard)
       .then(() => {
-        this.clear()
+        this.success = true
+        this.loading = false
       })
       .catch((error) => {
-        alert('Oops something went wrong', error.message)
+        this.errorMessage = error.message
+        this.error = true
         this.loading = false
       })
     },
-    saveHazards () {
-      this.loading = true
-      if (this.changed === true) {
-        this.$store.dispatch('updateHazards', {myHazards: this.myHazards, notMyHazards: this.notMyHazards})
-        .then(() => {
-          this.register = !this.register
-          this.inverted = !this.inverted
-          this.success = true
-          this.clear()
-        })
-        .catch((error) => {
-          alert('Oops something went wrong', error.message)
-          this.loading = false
-        })
-      } else {
-        this.loading = false
-      }
-    },
     clear () {
-      this.remove = {}
       this.loading = false
+      this.hazard = ''
     }
   },
   beforeMount () {

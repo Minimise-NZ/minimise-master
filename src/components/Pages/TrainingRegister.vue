@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import WorkerView from '@/components/Dashboard/Worker.vue'
+import WorkerView from '@/components/Components/Worker.vue'
 export default {
   components: {
     'workerview': WorkerView

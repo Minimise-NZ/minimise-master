@@ -140,7 +140,7 @@
 </template>
 
 <script>
-import SubstanceView from '@/components/Dashboard/SubstanceView.vue'
+import SubstanceView from '@/components/Components/SubstanceView.vue'
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 export default {
   components: {

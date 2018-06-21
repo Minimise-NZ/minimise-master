@@ -13,6 +13,7 @@
 <style>
 #app {
   font-family: 'Raleway', Helvetica, Arial, sans-serif;
+  height: 100vh;
 }
 
 P {

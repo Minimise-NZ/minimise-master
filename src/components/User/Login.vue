@@ -103,6 +103,8 @@
             this.error = true
             this.email = ''
             this.password = ''
+            this.loading = false
+            this.disabled = false
           }
         )
       }

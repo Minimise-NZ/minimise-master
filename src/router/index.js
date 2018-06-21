@@ -10,24 +10,24 @@ import Password from '@/components/User/ForgotPassword.vue'
 import NewCompany from '@/components/User/NewCompany.vue'
 import NewUser from '@/components/User/NewUser.vue'
 
-import Dashboard from '@/components/Dashboard/Contractor.vue'
-import DashboardHome from '@/components/Dashboard/Home.vue'
-import Hazards from '@/components/Dashboard/HazardRegister.vue'
-import HazardousSubstances from '@/components/Dashboard/HazardousSubstances.vue'
-import Tasks from '@/components/Dashboard/Tasks.vue'
-import Task from '@/components/Dashboard/Task.vue'
-import AccountAdmin from '@/components/Dashboard/AccountAdmin.vue'
-import AdminUserManagement from '@/components/Dashboard/AdminUserManagement.vue'
-import IncidentReports from '@/components/Dashboard/IncidentReports.vue'
-import NewIncident from '@/components/Dashboard/IncidentForm.vue'
-import IncidentView from '@/components/Dashboard/IncidentView.vue'
-import TrainingRegister from '@/components/Dashboard/TrainingRegister.vue'
-import Support from '@/components/Dashboard/SupportFeedback.vue'
-import JobsInProgress from '@/components/Dashboard/JobsInProgress.vue'
-import JobDetails from '@/components/Dashboard/JobDetails.vue'
-import SafetyPlan from '@/components/Dashboard/SafetyPlanView.vue'
-import Master from '@/components/Dashboard/MasterSafetyPlan.vue'
-import NewJob from '@/components/Dashboard/NewJob.vue'
+import Dashboard from '@/components/Pages/Dashboard.vue'
+import DashboardHome from '@/components/Pages/Home.vue'
+import Hazards from '@/components/Pages/HazardRegister.vue'
+import HazardousSubstances from '@/components/Pages/HazardousSubstances.vue'
+import Tasks from '@/components/Pages/Tasks.vue'
+import Task from '@/components/Components/Task.vue'
+import AccountAdmin from '@/components/Pages/AccountAdmin.vue'
+import AdminUserManagement from '@/components/Pages/AdminUserManagement.vue'
+import IncidentReports from '@/components/Pages/IncidentReports.vue'
+import NewIncident from '@/components/Pages/IncidentForm.vue'
+import IncidentView from '@/components/Components/IncidentView.vue'
+import TrainingRegister from '@/components/Pages/TrainingRegister.vue'
+import Support from '@/components/Pages/SupportFeedback.vue'
+import JobsInProgress from '@/components/Pages/JobsInProgress.vue'
+import JobDetails from '@/components/Components/JobDetails.vue'
+import SafetyPlan from '@/components/Components/SafetyPlanView.vue'
+import Master from '@/components/Pages/MasterSafetyPlan.vue'
+import NewJob from '@/components/Pages/NewJob.vue'
 
 Vue.use(Router)
 
@@ -35,12 +35,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Home',
       component: Home
-    },
-    {
-      path: '/login',
-      component: Login
     },
     {
       path: '/password',
@@ -57,6 +52,10 @@ export default new Router({
     {
       path: '/newCompany',
       component: NewCompany
+    },
+    {
+      path: '/login',
+      component: Login
     },
     {
       path: '/dashboard',
@@ -102,7 +101,7 @@ export default new Router({
               next()
             } else {
               alert('Access not allowed')
-              next('/dashboard')
+              next('/Pages')
             }
           }
         },
@@ -115,7 +114,7 @@ export default new Router({
               next()
             } else {
               alert('Access not allowed')
-              next('/dashboard')
+              next('/Pages')
             }
           }
         },
@@ -163,7 +162,7 @@ export default new Router({
               next()
             } else {
               alert('Access not allowed')
-              next('/dashboard')
+              next('/Pages')
             }
           }
         },

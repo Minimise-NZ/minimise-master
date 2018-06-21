@@ -33,7 +33,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     }),
     new PrerenderSPAPlugin({
       staticDir: path.join(__dirname, '../dist'), // LOOK AT THIS. LOOK AT THIS. LOOK AT THIS
-      routes: ['/'], // List of routes to prerender.
+      routes: ['/', '/login', '/signup', '/newUser', '/newCompany'], // List of routes to prerender.
       renderer: new PuppeteerRenderer({ //Yes, checkout the renderer option. It is oh so sweet.
         renderAfterElementExists: '#app'
         // Wait to render until a specified event is fired on the document.

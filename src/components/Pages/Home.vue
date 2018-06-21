@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import IncidentSummary from '@/components/Dashboard/IncidentSummary.vue'
-import TrainingAlerts from '@/components/Dashboard/TrainingAlerts.vue'
-import WorkerActivity from '@/components/Dashboard/WorkerActivity.vue'
+import IncidentSummary from '@/components/Components/IncidentSummary.vue'
+import TrainingAlerts from '@/components/Components/TrainingAlerts.vue'
+import WorkerActivity from '@/components/Components/WorkerActivity.vue'
 
 export default {
   components: {

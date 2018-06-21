@@ -427,7 +427,7 @@ export default {
         this.notifiable.selected = []
       }
       if (this.notifiable.file !== '' && this.notifiable.url === '') {
-        this.errorMessage = 'Please upload files'
+        this.errorMessage = 'You have files to be uploaded. Please upload files before saving'
         this.errorModal = true
         this.loading = false
         return
