@@ -15,7 +15,6 @@ import DashboardHome from '@/components/Pages/Home.vue'
 import Hazards from '@/components/Pages/HazardRegister.vue'
 import HazardousSubstances from '@/components/Pages/HazardousSubstances.vue'
 import Tasks from '@/components/Pages/Tasks.vue'
-import Task from '@/components/Components/Task.vue'
 import AccountAdmin from '@/components/Pages/AccountAdmin.vue'
 import AdminUserManagement from '@/components/Pages/AdminUserManagement.vue'
 import IncidentReports from '@/components/Pages/IncidentReports.vue'
@@ -85,13 +84,14 @@ export default new Router({
         {
           path: 'taskAnalysis',
           component: Tasks,
-          children: [
-            {
-              path: 'task/:index',
-              component: Task,
-              props: true
+          beforeLeave: (to, from, next) => {
+            if (store.getters.taskChanged === '') {
+              next()
+            } else {
+              alert('You have unsaved changes' + store.getters.taskChanged)
+              next(false)
             }
-          ]
+          }
         },
         {
           path: 'admin',

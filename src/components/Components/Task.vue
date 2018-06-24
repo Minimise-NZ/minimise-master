@@ -1,187 +1,338 @@
 <template>
-  <b-container fluid class="pt-0">
-    <b-modal 
-      v-model="showModal" 
-      v-if="showModal"
-      ok-only
-      centered 
-      header-bg-variant="success"
-      headerTextVariant= 'light'
-      title="Success">
-      <div class="d-block text-center">
-        <h4 class="mt-2" style="color: black">This task analysis has been updated</h4>
-      </div>
-    </b-modal>
-    <b-card class="taskAnalysis">
+    <b-card class="taskAnalysis mt-2">
+      <b-modal 
+        v-model="success" 
+        v-if="success"
+        ok-only
+        centered 
+        header-bg-variant="success"
+        headerTextVariant= 'light'
+        title="Success">
+        <div class="d-block text-center">
+          <h4 class="mt-2">Task Analysis has been updated</h4>
+        </div>
+      </b-modal>
+      <b-modal
+        v-model="error" 
+        v-if="error" 
+        ok-only
+        header-bg-variant="danger"
+        headerTextVariant= 'light'
+        title="Oops..">
+        <div class="d-block text-center">
+          <h4>Something went wrong. Please try again</h4>
+          <h5>{{errorMessage}}</h5>
+        </div>
+      </b-modal>
       <b-form @submit.prevent="save">
-        <b-row>
-          <b-col class="ml-0 pl-0">
-            <b-form-checkbox
-              id="notification"
-              v-model="task.worksafe"
-              value=true
-              class="mb-4">
-              Worksafe notification required
-            </b-form-checkbox><br>
-            <b-form-checkbox
-              id="signage"
-              v-model="task.signage"
-              value=true
-              class="mb-4">
-              Signage required
-            </b-form-checkbox><br>
-            <b-form-checkbox
-              v-model="task.ppeRequired"
-              value=true
-              class="mb-4">
-              PPE required
-            </b-form-checkbox><br>
-            <b-form-input
-              name="ppe"
-              class="mb-4"
-              v-validate="'required'" 
-              v-if="task.ppeRequired"
-              placeholder="Please enter required PPE"
-              :class="{'alert-border': errors.has('ppe')}"
-              v-model="task.ppe">
-            </b-form-input>
-            <b-form-checkbox
-              v-model="task.plantRequired"
-              value=true
-              class="mb-4">
-              Plant required
-            </b-form-checkbox><br>
-            <b-form-input
-              name="plant"
-              class="mb-4"
-              placeholder="Please enter required plant"
-              v-validate="'required'"
-              v-if="task.plantRequired"
-              :class="{'alert-border': errors.has('plant')}"
-              v-model="task.plant">
-            </b-form-input>
-          </b-col>
-          <b-col position: relative>
-            <b-row class="right-btns">
-              <b-button
-                @click="addStep(task)"
-                class="editBtn mb-2"
-                style="background-color: #12807a">
-                Add Step
-              </b-button>
-              <b-button
-                @click="save"
-                class="editBtn mb-2 ml-2"
-                variant="primary">
-                Save changes
-              </b-button>
-            </b-row>
-          </b-col>
-        </b-row>
+        <b-btn block v-b-toggle="'collapse' + this.index" 
+          class="text-left togglebtn card-header task">
+            {{task.title}}
+            <p style="float:right; margin-bottom:0">Click to hide/show</p>
+        </b-btn>
+        <b-collapse :id="'collapse' + this.index" accordion="my-accordion" visible>
+          <b-row class="outer-row">
+            <b-col class="ml-0 pl-0">
+              <b-form-checkbox
+                id="notification"
+                v-model="task.worksafe"
+                v-if="!readonly"
+                value=true
+                class="mb-4 mt-2">
+                Worksafe notification required
+              </b-form-checkbox>
+              <b-form-checkbox
+                id="notification"
+                v-model="task.worksafe"
+                onclick="return false"
+                v-if="readonly"
+                value=true
+                class="mb-4 mt-2">
+                Worksafe notification required
+              </b-form-checkbox>
+              <br>
 
-        <b-row class="mt-5">
-          <b-col lg="1" md="2">
-            <header class="subheader">Step</header>
-          </b-col>
-          <b-col>
-            <header class="subheader">Task Description</header>
-          </b-col>
-          <b-col> 
-            <header class="subheader">Potential Hazards</header>
-          </b-col>
-          <b-col>
-            <header class="subheader">Hazard Controls</header>
-          </b-col>
-        </b-row>
-          
-        <div v-for="(task, index) in task.steps" :key="index">
-          <b-row>
-            <b-col cols="1">
-              <h4>{{index + 1}}</h4>
+              <b-form-checkbox
+                id="signage"
+                v-if="!readonly"
+                v-model="task.signage"
+                value=true
+                class="mb-4">
+                Signage required
+              </b-form-checkbox>
+               <b-form-checkbox
+                id="signage"
+                v-if="readonly"
+                onclick="return false"
+                v-model="task.signage"
+                value=true
+                class="mb-4">
+                Signage required
+              </b-form-checkbox>
+              <br>
+
+              <b-form-checkbox
+                v-model="task.ppeRequired"
+                v-if="!readonly"
+                value=true
+                class="mb-4">
+                PPE required
+              </b-form-checkbox>
+              <b-form-checkbox
+                v-if="readonly"
+                onclick="return false"
+                v-model="task.ppeRequired"
+                value=true
+                class="mb-4">
+                PPE required
+              </b-form-checkbox>
+              <br>
+              <b-form-input
+                name="ppe"
+                class="mb-4"
+                :readonly = "readonly"
+                v-validate="'required'" 
+                v-if="task.ppeRequired"
+                placeholder="Please enter required PPE"
+                :class="{'alert-border': errors.has('ppe')}"
+                v-model="task.ppe">
+              </b-form-input>
+
+              <b-form-checkbox
+                v-if="!readonly"
+                v-model="task.plantRequired"
+                value=true
+                class="mb-4">
+                Plant required
+              </b-form-checkbox>
+              <b-form-checkbox
+                v-if="readonly"
+                onclick="return false"
+                v-model="task.plantRequired"
+                value=true
+                class="mb-4">
+                Plant required
+              </b-form-checkbox>
+              <br>
+              <b-form-input
+                name="plant"
+                class="mb-4"
+                :readonly = "readonly"
+                placeholder="Please enter required plant"
+                v-validate="'required'"
+                v-if="task.plantRequired"
+                :class="{'alert-border': errors.has('plant')}"
+                v-model="task.plant">
+              </b-form-input>
+            </b-col>
+
+            <b-col position: relative>
+              <b-row class="right-btns">
+                <b-button
+                  v-if="readonly"
+                  @click="readonly = false"
+                  class="editBtn mb-2"
+                  style="background-color: rgb(255, 106, 0)">
+                  Edit
+                </b-button>
+                <b-button
+                  v-if="!readonly && !loading"
+                  @click="cancel()"
+                  class="editBtn mb-2 ml-2"
+                  style="background-color: rgba(155,35,53,.88); width: 150px">
+                  Discard Changes
+                </b-button>
+                <b-button
+                  v-if="!readonly && !loading"
+                  @click="save"
+                  class="editBtn mb-2 ml-2"
+                  variant="primary">
+                  Save changes
+                </b-button>
+                <div class="loader" v-if="loading">
+                  <pulse-loader :loading="loading"></pulse-loader>
+                </div>
+              </b-row>
+            </b-col>
+          </b-row>
+
+          <b-row class="mt-5 steps">
+            <b-col lg="1" md="2">
+              <header class="subheader">Step</header>
             </b-col>
             <b-col>
-              <textarea class="form-control step" rows="2" v-model="task.description" placeholder="Please enter description of step"></textarea>
+              <header class="subheader">Task Description</header>
             </b-col>
-            <b-col v-for="(hazard, count) in task.hazards" :key="count">
-              <b-row>
-                <textarea class="form-control step" rows="2" v-model="task.hazards[count]" placeholder="Please enter hazard"></textarea>
-              </b-row>
+            <b-col> 
+              <header class="subheader">Potential Hazards</header>
             </b-col>
-            <b-col v-for="(control, count) in task.controls" :key="count">
-              <b-row>
-                <textarea class="form-control step" rows="2" v-model="task.controls[count]" placeholder="Please enter hazard controls"></textarea>
-              </b-row>
+            <b-col>
+              <header class="subheader">Hazard Controls</header>
             </b-col>
           </b-row>
-          <b-row style="padding-right: 15px">
-            <b-btn @click="addHazard(index)" style="background-color: #12807a" class="ml-auto">Add a Hazard</b-btn>
-          </b-row>
-        </div>
+            
+          <div v-for="(step, index) in task.steps" :key="index" class="steps">
+            <b-row class="inner-row">
+              <b-col cols="1">
+                <h4 class="index">{{index + 1}}</h4>
+              </b-col>
+              <b-col>
+                <b-form-textarea 
+                  class="form-control step" 
+                  rows="2" 
+                  v-model="step.description" 
+                  placeholder="Please enter description of step"
+                  :readonly="readonly">
+                </b-form-textarea>
+              </b-col>
+              <b-col>
+                <b-form-textarea 
+                  class="form-control step" 
+                  rows="2" 
+                  v-model="step.hazards" 
+                  placeholder="Please enter hazards"
+                  :readonly="readonly">
+                </b-form-textarea>
+              </b-col>
+              <b-col>
+                <b-row>
+                  <b-form-textarea 
+                    class="form-control step" 
+                    rows="2" 
+                    v-model="step.controls" 
+                    placeholder="Please enter hazard controls"
+                    :readonly="readonly">
+                  </b-form-textarea>
+                </b-row>
+              </b-col>
+            </b-row>
+          </div>
+          <b-button
+            v-if="!readonly"
+            :disabled = "loading"
+            @click="addStep()"
+            class="editBtn mb-2 mr-3"
+            style="background-color: rgba(40,26,101,.8); float: right">
+            Add Step
+          </b-button>
+        </b-collapse>
       </b-form>
     </b-card>
-  </b-container>
 </template>
 
 <script>
 import autosize from 'autosize'
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 export default {
-  props: ['task'],
+  props: ['taskAnalysis', 'index'],
+  components: {
+    PulseLoader
+  },
   data () {
     return {
-      showModal: false
+      success: false,
+      loading: false,
+      error: false,
+      errorMessage: '',
+      task: {},
+      readonly: true
     }
   },
   computed: {
     stepCount () {
       return this.task.steps.length
+    },
+    changed () {
+      if (this._.isEqual(this.task, this.taskAnalysis)) {
+        return false
+      } else {
+        return true
+      }
     }
   },
   mounted () {
     autosize(document.querySelectorAll('textarea'))
+    this.task = this._.cloneDeep(this.taskAnalysis)
   },
   methods: {
     save () {
-      // validate all fields are complete
-      this.$validator.validateAll().then(async(valid) => {
-        if (!valid) { return }
+      this.loading = true
+      if (this.changed === true) {
         try {
-          // check that steps are not empty
-          for (let i in this.task.steps) {
-            console.log(this.task.steps[i])
-            if (this.task.steps[i].description === '' && this.task.steps[i].hazards === '' && this.task.steps[i].controls === '') {
-              this.task.steps.splice(i, 1)
-              console.log('steps spliced')
-            }
-          }
           this.$store.dispatch('updateTaskAnalysis', {task: this.task})
-          .then(() => {
-            this.showModal = true
-          })
+          autosize(document.querySelectorAll('textarea'))
+          this.success = true
+          this.readonly = true
+          this.loading = false
         } catch (err) {
+          this.error = true
+          this.errorMessage = err.message
           console.log(err)
         }
-      })
+      } else {
+        this.readonly = true
+        this.loading = false
+        console.log('good to go')
+      }
     },
-    addStep (task) {
-      task.steps.push({
+    cancel () {
+      console.log('cancelling')
+      this.task = this._.cloneDeep(this.taskAnalysis)
+      autosize(document.querySelectorAll('textarea'))
+      this.readonly = true
+    },
+    addStep () {
+      this.task.steps.push({
         description: '',
-        hazards: [''],
-        controls: ['']
+        hazards: '',
+        controls: ''
       })
-      this.task = task
       setTimeout(() => {
         autosize(document.querySelectorAll('textarea'))
       }, 1000)
-    },
-    addHazard (index) {
-      this.task.steps[index].hazards.push()
-      autosize(document.querySelectorAll('textarea'))
     }
   }
 }
 </script>
 
 <style scoped>
+
+  .row{
+    margin: 0;
+    padding: 0;
+  }
+
+  [class*="col-"] {
+    margin: 0;
+    padding: 0;
+  }
+
+  .taskAnalysis {
+    width: 100%;
+    padding-bottom: 15px;
+    margin-bottom: 40px;
+  }
+
+  .card-header.task{
+    background-color: #12807a;
+    margin: 0;
+    color: white;
+    font-size: 1.2rem;
+    padding-left: 15px;
+  }
+
+  .card-body {
+    padding: 0;
+  }
+
+  .outer-row {
+    margin-top: 15px;
+    padding: 0px 15px;
+  }
+
+  .inner-row{
+    margin-bottom: 15px;
+  }
 
   .right-btns {
     margin-right: 15px;
@@ -194,10 +345,6 @@ export default {
     width: 130px;
     color: white;
   }
-
-  .taskAnalysis {
-    border: none;
-  }
   
   .subheader {
     padding-bottom: 10px;
@@ -207,11 +354,15 @@ export default {
     border-bottom: 2px solid rgba(155, 35, 53, 0.88);
   }
 
-  h4 {
+  .index {
     padding-top: 20px;
     text-align: center;
     color: rgba(155, 35, 53, 0.88);
     font-weight: bold;
+  }
+
+  .steps {
+    padding: 0 15px 15px 15px;
   }
 
   .form-control {
@@ -222,13 +373,4 @@ export default {
     text-align: center;
     border: 1px solid #7979792e;
   }
-  
-  .row {
-    padding: 5px;
-  }
-
-  [class*="col-"] {
-    padding: 2px;
-  }
-
 </style>

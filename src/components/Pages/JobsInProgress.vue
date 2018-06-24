@@ -69,7 +69,7 @@
             {{job.address}}
             <p style="float:right; margin-bottom:0">Click to hide/show</p>
           </b-btn>
-          <b-collapse :id="'collapse' + index">
+          <b-collapse :id="'collapse' + index" accordion="my-accordion" visible>
           <b-form @submit.prevent="onSubmit">
             <b-row class="outer-row">
               <b-col m="12" lg="7" class="outer-col" style="padding-top: 20px; padding-right: 20px">

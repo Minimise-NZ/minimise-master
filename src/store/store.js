@@ -24,6 +24,7 @@ export const store = new Vuex.Store({
     myHazards: [],
     notMyHazards: [],
     hazardousSubstances: [],
+    taskChanged: '',
     taskAnalysis: [],
     trainingAlerts: []
   },
@@ -42,6 +43,8 @@ export const store = new Vuex.Store({
       state.myIncidents = []
       state.allHazards = []
       state.myHazards = []
+      state.taskChanged = ''
+      state.taskAnalysis = []
       state.notMyHazards = []
       state.hazardousSubstances = []
       state.trainingAlerts = []
@@ -88,6 +91,9 @@ export const store = new Vuex.Store({
     setAllHazards (state, payload) {
       state.allHazards = payload
       console.log('All hazards set')
+    },
+    setTaskChanged (state, payload) {
+      state.taskChanged = payload
     },
     setTaskAnalysis (state, payload) {
       state.taskAnalysis = payload
@@ -930,8 +936,8 @@ export const store = new Vuex.Store({
           plant: '',
           steps: [{
             description: '',
-            hazards: [''],
-            controls: ['']
+            hazards: '',
+            controls: ''
           }],
           id: newTask.id
         })
@@ -987,7 +993,7 @@ export const store = new Vuex.Store({
           id: taskKey
         })
         .then(() => {
-          dispatch('getTaskAnalysis')
+          console.log('TA saved')
           resolve()
         })
         .catch((error) => {
@@ -1041,6 +1047,7 @@ export const store = new Vuex.Store({
     jobsInProgress: (state) => state.jobsInProgress,
     allHazards: (state) => state.allHazards,
     myHazards: (state) => state.myHazards,
+    taskChanged: (state) => state.taskChanged,
     notMyHazards: (state) => state.notMyHazards,
     hazardousSubstances: (state) => state.hazardousSubstances,
     incidents (state) {

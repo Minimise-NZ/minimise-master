@@ -26,44 +26,30 @@
         </b-button> 
      </div>
      <div class="scroll-container">
-
-        <b-row>
-          <b-col>
-            <b-button
-              class="taskBtn mb-2"
-              :class="{activeTaskBtn: selectedIndex === id}"
-              v-for="(item, id) in taskAnalysis" 
-              :key="id"
-              @click="changeTask(id)">
-                {{item.title}}
-            </b-button>
-          </b-col>
-        </b-row>
-
-        <b-row>
-          <router-view :task="task"></router-view>
-        </b-row>
-       
+        <b-row v-for="(task, index) in taskAnalysis" :key="index">
+          <taskView :taskAnalysis="task" :index="index"></taskView>
+        </b-row>      
       </div>
     </b-card>
   </b-container>
 </template>
 
 <script>
+import taskView from '@/components/Components/Task.vue'
 export default {
+  components: {
+    'taskView': taskView
+  },
   data () {
     return {
-      selectedIndex: 0,
       newPopUp: false,
-      title: ''
+      title: '',
+      changed: false
     }
   },
   computed: {
     taskAnalysis () {
       return this.$store.getters.taskAnalysis
-    },
-    task () {
-      return this.taskAnalysis[this.selectedIndex]
     }
   },
   methods: {
@@ -76,16 +62,7 @@ export default {
       .catch((error) => {
         console.log(error)
       })
-    },
-    changeTask (index) {
-      // check there is nothing to be saved
-      this.errors.clear()
-      this.selectedIndex = index
-      this.$router.push('/dashboard/taskAnalysis/task/' + this.selectedIndex)
     }
-  },
-  beforeMount () {
-    this.$router.push('/dashboard/taskAnalysis/task/' + this.selectedIndex)
   }
 }
 </script>
@@ -93,11 +70,11 @@ export default {
 <style scoped>
   .container-fluid {
     padding-top: 20px;
-    padding-right: 30px;
   }
   
-  .row {
-    padding: 5px;
+  .row{
+    margin: 0;
+    padding: 0;
   }
 
   .card-header {
@@ -105,21 +82,6 @@ export default {
     background-color: rgba(155, 35, 53, 0.88);
     font-size: 1.4rem;
     color: white;
-  }
-
-  .taskBtn {
-    border-radius: 5px;
-    color: white;
-    margin-right: 15px;
-    cursor: pointer;
-    font-size: 1.2rem;
-    padding: 10px;
-    background-color: grey;
-    border: none;
-  }
-  
-  .activeTaskBtn {
-    background-color: #12807a;
   }
 
 </style>
