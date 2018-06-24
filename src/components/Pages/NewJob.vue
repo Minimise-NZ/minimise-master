@@ -226,8 +226,8 @@
               <b-button class="buttons" variant="success" @click="submit" :disabled="loading===true">
                 <p style="font-size: 1rem; margin-bottom: 0" v-if="loading===false">Submit</p>
                 <div class="loader">
-                <pulse-loader :loading="loading" ></pulse-loader>
-              </div>
+                  <pulse-loader :loading="loading" ></pulse-loader>
+                </div>
               </b-button>
               <b-button class="buttons" variant="danger" @click="cancel" :disabled="loading===true">Cancel</b-button>
             </b-button-group>

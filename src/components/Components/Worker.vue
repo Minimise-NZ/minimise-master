@@ -1,11 +1,6 @@
 <template>
   <b-card
-    class="workerCard mt-2 mb-4" v-if="active">
-    <header class="card-header worker">{{worker.name}}
-      <b-button class="editBtn pt-1 pb-1 ml-2" @click="edit" v-if="editMode === false">Edit Worker</b-button>
-      <b-button class="editBtn pt-1 pb-1 ml-2" @click="confirm" v-if="editMode === false">Delete Worker</b-button>
-      <b-button class="editBtn pt-1 pb-1 ml-2" @click="save" v-if="editMode === true">Save Updates</b-button>
-    </header>
+    class="workerCard mt-2 mb-4">
     <b-modal 
       v-model="success" 
       v-if="success"
@@ -19,84 +14,91 @@
       </div>
     </b-modal>
     <b-modal
-      v-model="confirmAction"
-      v-if="confirmAction" 
-      @ok="remove" 
-      centered
+      v-model="catcherror" 
+      v-if="catcherror" 
+      ok-only
       header-bg-variant="danger"
       headerTextVariant= 'light'
-      title="Confirm Action">
+      title="Oops..">
       <div class="d-block text-center">
-        <h4 class="mt-2">Are you sure you want to remove <br>this worker?</h4>
-        <br>
-        <p>This action cannot be undone</p>
+        <h4>Something went wrong. Please try again</h4>
+        <h5>{{errorMessage}}</h5>
       </div>
     </b-modal>
 
-    <b-form  @submit.prevent="save" @change="dirty = true">
-      <b-row class="outer-row m-0">
-        <b-col m="12" lg="5" class="outer-col">
-          <b-row class="inner-row">
-            <b-col md="6" lg="4">
-              <p>Name:</p>
-            </b-col>
-            <b-col md="6" lg="8">
-              <b-form-input type="text" :value="worker.name" readonly/>
-            </b-col>
-          </b-row>
-          <b-row class="inner-row">
-            <b-col md="6" lg="4">
-              <p>Email Address:</p>
-            </b-col>
-            <b-col md="6" lg="8">
-              <b-form-input type="text" :value="worker.email" readonly/>
-            </b-col>
-          </b-row>
-          <b-row class="inner-row">
-            <b-col md="6" lg="4">
-              <p>Phone Number:</p>
-            </b-col>
-            <b-col md="6" lg="8">
-              <b-form-input type="text" :value="worker.phone" readonly/>
-            </b-col>
-          </b-row>
-          <b-row class="inner-row">
-            <b-col md="6" lg="4">
-              <p>Role:</p>
-            </b-col>
-            <b-col md="6" lg="8">
-              <b-form-input type="text" :value="worker.role" readonly v-if="readonly"/>
-              <b-form-select v-model="worker.role" :options="userRoles" v-if="!readonly"/>
-            </b-col>
-          </b-row>
+    <header class="card-header worker">{{worker.name}}
+      <b-button  
+        variant="warning"
+        style="color:#383838"
+        class="addBtn pt-1 pb-1"
+        @click="edit"
+        v-if="readonly && !loading"
+        v-b-tooltip.hover title="Edit training register">Edit
+        <i class="fa fa-edit" style="font-weight: bold"></i>
+      </b-button>
+      <b-button  
+        variant="danger"
+        class="addBtn pt-1 pb-1 ml-2"
+        @click="cancel"
+        v-if="!readonly && !loading"
+        v-b-tooltip.hover title="Discard changes">Cancel
+        <i class="fa fa-times ml-1"></i>
+      </b-button>
+      <b-button  
+        variant="success"
+        class="addBtn pt-1 pb-1"
+        @click="save"
+        v-if="!readonly && !loading"
+        v-b-tooltip.hover title="Save updates">Save
+        <i class="fa fa-save ml-2"></i>
+      </b-button>
+      <div class="loader" v-if="loading" style="float: right">
+        <pulse-loader :loading="loading" ></pulse-loader>
+      </div>
+    </header>
+
+    <b-form  @submit.prevent="save">
+      <b-row>
+        <b-col md="5" >
+          <header>Training Description</header>
         </b-col>
-        
-        <b-col m="12" lg="7" class="outer-col second-col">
-          <b-row class="inner-row">
-            <b-col md="5" class="training-col">
-              <b-form-input id="description" placeholder="Training Description" :readonly="readonly" v-model="training.description" :class="{error: error.description}"/>
-            </b-col>
-            <b-col md="3" class="training-col">
-              <b-form-input id="id" placeholder="ID# License#..." :readonly="readonly" type="text" v-model="training.ID"/>
-            </b-col>
-            <b-col md="3" class="training-col">
-              <b-form-input id="expiry" class="no-spinners" placeholder="Expiry Date" :readonly="readonly" type="text" onfocus="(this.type='date')" v-model="training.expiry" :class="{error: error.expiry}"/>
-            </b-col>
-            <b-col md="1" class="training-col">
-              <b-button variant="primary" :disabled="disabled" @click="addTraining"><i class="fa fa-plus"></i></b-button> 
-            </b-col>
-          </b-row>
-          <b-row class="inner-row" v-for="training in worker.training" :key="training.description">
-            <b-col md="5" class="training-col"> 
-              <b-form-input :readonly="readonly" :value="training.description"/>
-            </b-col>
-            <b-col md="3" class="training-col">
-              <b-form-input id="id" :readonly="readonly" type="text" v-model="training.ID"/>
-            </b-col>
-            <b-col md="4" class="training-col">
-              <b-form-input id="expiry" type="date" class="no-spinners" :value="training.expiry | formatDate" v-model="training.expiry" :readonly="readonly"/>
-            </b-col>
-          </b-row>
+        <b-col md="3" >
+          <header>ID/Licence No/Certificate</header>
+        </b-col>
+        <b-col md="3" >
+          <header>Expiry Date</header>
+        </b-col>
+        <b-col md="1" >
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col md="5" >
+          <b-form-input id="description" placeholder="Please enter training description" :readonly="readonly" v-model="newtraining.description" :class="{error: error.description}"/>
+        </b-col>
+        <b-col md="3" >
+          <b-form-input id="id" placeholder="ID#/Licence no/Certificate" :readonly="readonly" type="text" v-model="newtraining.ID"/>
+        </b-col>
+        <b-col md="3" >
+          <b-form-input id="expiry" class="no-spinners" placeholder="Please select expiry date" :readonly="readonly" type="text" onfocus="(this.type='date')" v-model="newtraining.expiry" :class="{error: error.expiry}"/>
+        </b-col>
+        <b-col md="1" >
+          <b-button variant="success" 
+            :disabled="readonly" 
+            @click="addTraining"
+            v-b-tooltip.hover title="Add Training"><i class="fa fa-plus"></i></b-button> 
+        </b-col>
+      </b-row>
+      <b-row v-for="training in worker.training" :key="training.description">
+        <b-col md="5" > 
+          <b-form-input :readonly="readonly" :value="training.description"/>
+        </b-col>
+        <b-col md="3" >
+          <b-form-input id="id" :readonly="readonly" type="text" v-model="training.ID"/>
+        </b-col>
+        <b-col md="3" >
+          <b-form-input id="expiry" type="date" class="no-spinners" :value="training.expiry | formatDate" v-model="training.expiry" :readonly="readonly"/>
+        </b-col>
+        <b-col md="1" >
         </b-col>
       </b-row>
     </b-form>
@@ -104,18 +106,22 @@
 </template> 
 
 <script>
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 export default {
-  props: ['id', 'worker'],
+  props: ['id', 'workers'],
+  components: {
+    PulseLoader
+  },
   data () {
     return {
-      dirty: false,
-      active: true,
+      loading: false,
       success: false,
-      confirmAction: false,
       readonly: true,
-      editMode: false,
-      disabled: true,
-      training: {
+      catcherror: false,
+      errorMessage: '',
+      original: {},
+      worker: {},
+      newtraining: {
         description: '',
         ID: '',
         expiry: ''
@@ -134,52 +140,61 @@ export default {
       ]
     }
   },
+  computed: {
+    changed () {
+      if (this._.isEqual(this.worker, this.original)) {
+        return false
+      } else {
+        return true
+      }
+    }
+  },
   methods: {
     edit () {
       this.readonly = false
-      this.editMode = true
-      this.disabled = false
+      this.original = this._.cloneDeep(this.worker)
       document.getElementById('expiry').type = 'date'
     },
     save () {
+      this.loading = true
       // save updates to user profile
-      if (this.dirty === true) {
-        this.$store.dispatch('updateWorker', {id: this.id, training: this.worker.training})
-        .then(() => {
+      if (this.changed === true) {
+        // save changes
+        try {
+          this.$store.dispatch('updateTraining', this.worker)
+          this.original = this._.cloneDeep(this.worker)
           this.success = true
           this.readonly = true
-          this.editMode = false
-          this.disabled = true
-        })
+          this.loading = false
+        } catch (error) {
+          this.catcherror = true
+          this.errorMessage = error.message
+          this.readonly = true
+          this.loading = false
+        }
       } else {
-        this.readonly = true
-        this.editMode = false
-        this.disabled = true
+        this.loading = false
+        this.cancel()
       }
+    },
+    cancel () {
+      this.worker = this._.cloneDeep(this.original)
+      this.clear()
+      this.readonly = true
     },
     clear () {
       // clear training fields
-      this.training.description = ''
-      this.training.ID = ''
-      this.training.expiry = ''
+      this.newtraining.description = ''
+      this.newtraining.ID = ''
+      this.newtraining.expiry = ''
       this.error.description = ''
       this.error.expiry = false
       document.getElementById('expiry').type = 'text'
     },
-    confirm () {
-      this.confirmAction = true
-    },
-    remove () {
-      // remove company details from this worker
-      this.worker.company = ''
-      this.worker.companyName = ''
-      this.worker.companyType = ''
-      this.$store.dispatch('removeWorker', {id: this.id, worker: this.worker})
-    },
     addTraining () {
       this.error.description = false
       this.error.expiry = false
-      let training = this.training
+      let training = this.newtraining
       if (training.description === '') {
         this.error.description = true
         return
@@ -195,18 +210,15 @@ export default {
         this.clear()
       }
     }
+  },
+  mounted () {
+    this.worker = this._.cloneDeep(this.workers)
   }
 }
 </script>
 
 <style scoped>
 
-  .editBtn {
-    float: right;
-    background-color:rgba(223, 233, 255, 0.83);
-    color: black;
-  }
-  
   .card-header.worker{
     background-color: rgba(111, 50, 130, 0.86);
     margin: 0;
@@ -215,33 +227,20 @@ export default {
     padding-left: 15px;
   }
   
-  .subheader {
-    padding: 15px 0 15px 15px;
-    border-bottom: 1px solid lightgrey;
-    font-weight: bold;
-    color: black;
-  }
-  
   .workerCard > .card-body {
     padding: 0;
   }
 
-  .outer-col {
-    padding-right: 0;
-  }
-
-  .inner-row {
-    margin-top: 15px;
-    margin-right: 0;
-    padding-right: 10px;
-  }
-
   form {
-    padding-bottom: 20px;
+    padding: 15px;
   }
 
-  .training-col {
-    padding: 0 5px 0 5px;
+  .row {
+    margin-bottom: 15px;
+  }
+
+  header {
+    padding-left: 5px;
   }
 
   #expiry {

@@ -246,7 +246,7 @@ export const store = new Vuex.Store({
     },
 
   // worker functions
-    updateWorker ({dispatch}, payload) {
+    updateTraining ({dispatch}, payload) {
       // update worker training
       let promise = new Promise((resolve, reject) => {
         let workerId = payload.id

@@ -5,7 +5,7 @@
       </div>
       <div class="scroll-container">
         <div v-for="worker in workers" :key="worker.id">
-          <workerview :id="worker.id" :worker="worker.worker"></workerview>
+          <workerview :id="worker.id" :workers="worker"></workerview>
         </div>
       </div>
     </b-card>
