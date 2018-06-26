@@ -28,24 +28,23 @@
 
     <header class="card-header worker">{{worker.name}}
       <b-button  
-        variant="warning"
-        style="color:#383838"
         class="addBtn pt-1 pb-1"
+        style="background-color: #ffc80b; color: black"
         @click="edit"
         v-if="readonly && !loading"
-        v-b-tooltip.hover title="Edit training register">Edit
-        <i class="fa fa-edit" style="font-weight: bold"></i>
+        v-b-tooltip.hover title="Edit training register">
+        <i class="fa fa-edit fa-lg"></i>
       </b-button>
       <b-button  
-        variant="danger"
         class="addBtn pt-1 pb-1 ml-2"
+        style="background-color: #dc3545"
         @click="cancel"
         v-if="!readonly && !loading"
         v-b-tooltip.hover title="Discard changes">Cancel
         <i class="fa fa-times ml-1"></i>
       </b-button>
-      <b-button  
-        variant="success"
+      <b-button
+        style="background-color: #28a745"
         class="addBtn pt-1 pb-1"
         @click="save"
         v-if="!readonly && !loading"
@@ -220,7 +219,7 @@ export default {
 <style scoped>
 
   .card-header.worker{
-    background-color: rgba(111, 50, 130, 0.86);
+    background-color: #8e4e74;
     margin: 0;
     color: white;
     font-size: 1.2rem;
@@ -237,6 +236,7 @@ export default {
 
   .row {
     margin-bottom: 15px;
+    padding-left: 15px;
   }
 
   header {

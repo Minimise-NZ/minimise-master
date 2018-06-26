@@ -314,7 +314,7 @@ export default {
   }
 
   .card-header.task{
-    background-color: #12807a;
+    background-color: #1c73a7;
     margin: 0;
     color: white;
     font-size: 1.2rem;

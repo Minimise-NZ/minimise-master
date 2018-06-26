@@ -62,8 +62,13 @@
         </b-row>
         <div class="text-center">
           <b-button-group class="pt-4 pb-4">
-            <b-button class="buttons" variant="success" @click="submit">Submit</b-button>
-            <b-button class="buttons" variant="danger" @click="clear">Clear</b-button>
+            <b-button class="buttons" variant="success" @click="submit">
+              <p style="font-size: 1rem; margin-bottom: 0" v-if="loading===false">Submit</p>
+              <div class="loader">
+                <pulse-loader :loading="loading" ></pulse-loader>
+              </div>
+            </b-button>
+            <b-button class="buttons" variant="danger" @click="clear" :disabled="loading">Clear</b-button>
           </b-button-group>
         </div>
       </b-form>
@@ -73,9 +78,14 @@
 </template>
 
 <script>
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 export default {
+  components: {
+    PulseLoader
+  },
   data () {
     return {
+      loading: false,
       subjectError: false,
       platformError: false,
       osError: false,
@@ -121,6 +131,7 @@ export default {
   methods: {
     submit () {
       // submit
+      this.loading = true
       this.subjectError = false
       this.platformError = false
       this.osError = false
@@ -129,22 +140,27 @@ export default {
       let form = this.form
       if (form.subject === '') {
         this.subjectError = true
+        this.loading = false
         return
       }
       if (form.platform === '') {
         this.platformError = true
+        this.loading = false
         return
       }
       if (form.platform === 'web' && form.os === '') {
         this.osError = true
+        this.loading = false
         return
       }
       if (form.platform === 'mobile' && form.mobile === '') {
         this.mobileError = true
+        this.loading = false
         return
       }
       if (form.details === '') {
         this.detailError = true
+        this.loading = false
         return
       } else {
         form.username = this.user.name
@@ -153,12 +169,15 @@ export default {
         .then((response) => {
           console.log(response)
           if (response.status === 200) {
+            this.loading = false
             this.success = true
           } else {
+            this.loading = false
             console.log('error')
           }
         })
         .catch((err) => {
+          this.loading = false
           console.log(err)
         })
       }
@@ -187,9 +206,6 @@ export default {
 
   .card-header {
     margin: -20px -20px 20px -20px;
-    background-color: rgba(111, 50, 130, 0.86);
-    font-size: 1.4rem;
-    color: white;
   }
   
    .card-header.item{

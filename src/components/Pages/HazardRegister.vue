@@ -46,7 +46,7 @@
           variant="warning"
           @click="register = !register, inverted = !inverted"
           v-b-tooltip.hover title="Add New Hazard">
-          <i class="fa fa-plus" style="color:#383838"></i>
+          <i class="fa fa-plus"></i>
         </b-button> 
         <b-button  
           v-else
@@ -54,7 +54,7 @@
           variant="warning"
            @click="register = !register, inverted = !inverted"
           v-b-tooltip.hover title="Back to Hazard Register">
-          <i class="fa fa-undo" style="color:#383838"></i>
+          <i class="fa fa-undo"></i>
         </b-button> 
       </div>
 
@@ -71,7 +71,7 @@
           <header class="card-header hazard" :class="{ inverted: inverted }">{{hazard.name}}
             <b-button
               v-if="register && !loading"
-              class="addBtn mini"
+              class="addBtn remove"
               variant="danger"
               @click="confirm(hazard)"
               v-b-tooltip.hover title="Remove Hazard">
@@ -79,11 +79,10 @@
             </b-button>
             <b-button
               v-if="!register  && !loading"
-              class="addBtn mini"
-              variant="warning"
+              class="addBtn add"
               @click="addHazard(hazard)"
               v-b-tooltip.hover title="Add to my Hazard Register">
-              <i class="fa fa-plus" style="color:#383838"></i>
+              <i class="fa fa-plus"></i>
             </b-button>
             <div class="loader mini" v-if="loading">
               <pulse-loader :loading="loading"></pulse-loader>
@@ -208,29 +207,23 @@ export default {
   }
   
   .card-header {
-    margin: -20px -20px 20px -20px;
-    background-color: #12807a;
-    font-size: 1.4rem;
-    color: white;
+    margin: -20px -20px 0px -20px;
   }
   
-  .card-header.inverted {
-    background-color: rgba(111, 50, 130, 0.86);
-  }
-  
-  .btn {
-    float: right;
-    margin-left: 10px;
-    cursor:pointer;
-  }
-
-  .addBtn.mini {
+  .addBtn.remove{
     padding-top: 5px;
     padding-bottom: 5px;
+    background-color: rgb(226, 57, 82);
+  }
+
+  .addBtn.add{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #22ab57;
   }
   
   .card-header.hazard{
-    background-color: rgba(111, 50, 130, 0.86);
+    background-color: #186ca7;
     margin: 0;
     color: white;
     font-size: 1.2rem;
@@ -238,7 +231,7 @@ export default {
   }
   
   .card-header.hazard.inverted {
-    background-color: #12807a;
+    background-color: #a8516e;
   }
   
   

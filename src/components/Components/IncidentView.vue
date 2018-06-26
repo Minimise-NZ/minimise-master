@@ -31,7 +31,15 @@
     </b-modal>
     <b-card>
       <div class=" incident card-header">{{headerText}}
-        <b-button class="editBtn" @click="edit" :disabled="disabled" v-if="incident.open === true">Edit/Update Incident</b-button>
+        <b-button  
+          class="addBtn"
+          variant="warning"
+          @click="edit"
+          :disabled="disabled"
+          v-if="incident.open === 'true'"
+          v-b-tooltip.hover title="Edit/Update this Incident">
+          <i class="fa fa-edit fa-lg" style="color: black"></i>
+        </b-button> 
       </div>
       <div class="scroll-container">
         <b-form @submit.prevent="onSubmit">
@@ -118,26 +126,23 @@
               </b-form-textarea>
             </b-col>
           </b-row>
-          <b-row class="pt-3" v-if="!readonly && notAdmin">
-            <b-col sm="3" lg="2"></b-col>
-            <b-col sm="9" lg="10">
-              <b-form-checkbox v-model="incident.escalate" :value='true'>
-                <p>Further investigation is required <em>(To be escalated to Health and Safety Manager)</em></p>
-              </b-form-checkbox>
-            </b-col>
-          </b-row>
           <b-row class="pt-1" v-if="!readonly">
             <b-col sm="3" lg="2"></b-col>
             <b-col sm="9" lg="10">
-              <b-form-checkbox v-model="incident.open" :value='false'>
+              <b-form-checkbox v-model="incident.open" value=false unchecked-value=true>
                 <p>Close this incident <em>(Close only if no further action is required)</em></p>
               </b-form-checkbox>
             </b-col>
           </b-row>
-          <div class="text-center" v-if="incident.open === true">
+          <div class="text-center" v-if="this.readonly === false">
             <b-button-group class="pb-4">
-              <b-button class="buttons" variant="success" type="submit">Save</b-button>
-              <b-button class="buttons" variant="danger" @click="cancel">Cancel</b-button>
+              <b-button class="buttons" variant="success" type="submit">
+                <p style="font-size: 1rem; margin-bottom: 0; font-weight: normal; margin-top: 0;color: white" v-if="loading===false">Save</p>
+                <div class="loader">
+                  <pulse-loader :loading="loading" ></pulse-loader>
+                </div>
+              </b-button>
+              <b-button class="buttons" variant="danger" @click="cancel" :disabled="loading">Cancel</b-button>
             </b-button-group>
           </div>
         </b-form>
@@ -147,15 +152,16 @@
 </template>
 
 <script>
-import IncidentForm from '@/components/Pages/IncidentForm.vue'
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import moment from 'moment'
 export default {
   props: ['id'],
   components: {
-    'incidentForm': IncidentForm
+    PulseLoader
   },
   data () {
     return {
+      loading: false,
       confirmAction: false,
       success: false,
       readonly: true,
@@ -177,9 +183,6 @@ export default {
     displayDate () {
       return moment(String(this.incident.date, 'YYYY-MM-DD')).format('DD-MM-YYYY')
     },
-    companyType () {
-      return this.$store.getters.user.companyType
-    },
     incident () {
       return this.$store.getters.incident(this.id)
     },
@@ -191,15 +194,6 @@ export default {
       if (this.incident.open === false) {
         this.disabled === true
       }
-    },
-    actionOwner () {
-      if (this.incident.status === 'closed') {
-        return null
-      } else if (this.incident.escalate === 'true') {
-        return {name: this.$store.getters.company.hseManager, key: this.$store.getters.companyKey}
-      } else {
-        return this.incident.loggedBy
-      }
     }
   },
   methods: {
@@ -208,11 +202,14 @@ export default {
       this.disabled = true
     },
     onSubmit () {
+      this.loading = true
       if (this.incident.type === '') {
         this.error = 'Please select incident type'
+        this.loading = false
         return this.error
       } else {
         if (this.incident.open === false) {
+          this.loading = false
           this.confirmAction = true
         } else {
           this.onConfirm()
@@ -225,11 +222,12 @@ export default {
       console.log('updating incident', this.incident)
       this.$store.dispatch('updateIncident', this.incident)
       .then(() => {
+        this.loading = false
         this.success = true
       })
     },
     route () {
-      this.$router.push('/' + this.companyType + '/incidents')
+      this.$router.push('/dashboard/incidents')
     },
     cancel () {
       this.readonly = true
@@ -240,6 +238,9 @@ export default {
 </script>
 
 <style scoped>
+  form {
+    padding-right: 15px;
+  }
 
   .card-header.incident {
     margin: -20px -20px 20px -20px;

@@ -63,8 +63,8 @@ export default {
         {name: 'Incident Reports', link: '/dashboard/incidents'}
       ],
       adminNav: [
-        {name: 'User Management', link: '/dashboard/userManagement'},
-        {name: 'Account Administration', link: '/dashboard/admin'}
+        {name: 'User Management', link: '/dashboard/userManagement'}
+        // {name: 'Account Administration', link: '/dashboard/admin'}
       ]
     }
   },

@@ -13,7 +13,7 @@
         <header>Incident Type</header>
       </b-col>
       <b-col>
-        <header>Action Owner</header>
+        <header>Supervisor</header>
       </b-col>
       <b-col>
         <header>Reported By</header>
@@ -34,7 +34,7 @@
         <p>{{incident.type}}</p>
       </b-col>
       <b-col>
-        <p>{{incident.actionOwner.name}}</p>
+        <p>{{incident.supervisorName}}</p>
       </b-col>
       <b-col>
         <p>{{incident.reportedBy}}</p>
@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     viewIncident (id) {
-      this.$router.push('/principal/incidents/incident/' + id)
+      this.$router.push('/dashboard/incidents/incident/' + id)
     }
   }
 }

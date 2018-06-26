@@ -58,7 +58,7 @@
       <div class="scroll-container">
         <b-row v-if="jobSites.length === 0">
           <b-col>
-            <header class="subheader" style="color: rgba(111, 50, 130, 0.86)">You currently have no jobs in progress</header>
+            <header class="subheader" style="color: #383838">You currently have no jobs in progress</header>
           </b-col>
         </b-row>  
         <b-card
@@ -285,29 +285,15 @@ export default {
 
 <style scoped>
   .card-header {
-    margin: -20px -20px 20px -20px;
-    background-color: rgba(111, 50, 130, 0.86);
-    font-size: 1.4rem;
-    color: white;
+    margin: -20px -20px 0 -20px;
   }
 
   .card-header.job {
-    background-color: rgba(29, 92, 158, 0.89);
+    background-color: #1e9577;
     margin: 0;
     color: white;
     font-size: 1.2rem;
     padding-left: 15px;
-  }
-
-   .editBtn {
-    float: right;
-    background-color:rgba(223, 233, 255, 0.83);
-    color: black;
-  }
-
-  .editBtn:hover {
-    background-color:#ffc80b;
-    color: black;
   }
 
   .uploadBtn {

@@ -40,9 +40,22 @@ body.modal-open {
   overflow-x: hidden;
 }
 
+.card-header {
+  background-color: rgba(56, 56, 56, 0.88);
+  font-size: 1.4rem;
+  color: white;
+}
+
 .addBtn {
   float: right;
+  background-color: #067cfb;
   color: white;
+  border: none;
+}
+
+.addBtn:hover {
+  background-color:#ffc80b;
+  color: black;
 }
 
 .my-primary-bg {

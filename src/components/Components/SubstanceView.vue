@@ -227,7 +227,7 @@ export default {
   }
 
   .card-header.substance {
-    background-color: rgba(29, 92, 158, 0.89);
+    background-color: #6b668e;
     margin: 0;
     color: white;
     font-size: 1.2rem;

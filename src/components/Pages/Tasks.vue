@@ -78,10 +78,7 @@ export default {
   }
 
   .card-header {
-    margin: -20px -20px 20px -20px;
-    background-color: rgba(155, 35, 53, 0.88);
-    font-size: 1.4rem;
-    color: white;
+    margin: -20px -20px 0px -20px;
   }
 
 </style>

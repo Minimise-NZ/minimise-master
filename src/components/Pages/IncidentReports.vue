@@ -9,36 +9,36 @@
           </b-col>
         </b-row>
         <b-row class="subheader" v-if="incidents.length !== 0">
-          <b-col>
-            <p>Site Address</p>
+          <b-col lg="3">
+            <header>Site Address</header>
           </b-col>
-          <b-col>
-            <p>Incident Type</p>
+          <b-col lg="2">
+            <header>Incident Type</header>
           </b-col>
-          <b-col>
-            <header>Action Owner</header>
+          <b-col lg="3">
+            <header>Supervisor</header>
           </b-col>
-          <b-col>
+          <b-col lg="2">
             <header>Date</header>
           </b-col>
-          <b-col>
+          <b-col lg="2">
             <header>Status</header>
           </b-col>
         </b-row>
         <b-row v-for="incident in incidents" :key="incident.address" class="content">
-          <b-col>
+          <b-col lg="3">
             <p style="text-decoration: underline; color: #178ac3; cursor: pointer"  @click="viewIncident(incident.id)">{{incident.address}}</p>
           </b-col>
-          <b-col>
+          <b-col lg="2">
             <p>{{incident.type}}</p>
           </b-col>
-          <b-col>
-            <p>{{incident.actionOwner.name}}</p>
+          <b-col lg="3">
+            <p>{{incident.supervisorName}}</p>
           </b-col>
-          <b-col>
+          <b-col lg="2">
             <p>{{incident.date | formatDate}}</p>
           </b-col>
-          <b-col>
+          <b-col lg="2">
             <p>{{status(incident.open)}}</p>
           </b-col>
         </b-row>
@@ -55,16 +55,17 @@ export default {
   },
   computed: {
     incidents () {
-      return this.$store.getters.incidents
+      let incidents = this.$store.getters.incidents
+      var data = this._.orderBy(incidents, ['open'], ['desc'])
+      return data
     }
   },
   methods: {
     viewIncident (id) {
-      let companyType = this.$store.getters.user.companyType
-      this.$router.push('/' + companyType + '/incidents/incident/' + id)
+      this.$router.push('/dashboard/incidents/incident/' + id)
     },
     status (open) {
-      if (open === true) {
+      if (open === 'true') {
         return 'open'
       } else {
         return 'closed'
@@ -78,13 +79,10 @@ export default {
 
   .card-header {
     margin: -20px -20px 0px -20px;
-    background-color: #12807a;
-    font-size: 1.4rem;
-    color: white;
   }
   
   .subheader {
-    padding: 10px 0 10px 15px;
+    padding: 15px 0 10px 15px;
     border-bottom: 1px solid lightgrey;
     font-weight: bold;
     color: #12807a;

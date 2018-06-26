@@ -488,9 +488,6 @@ export default {
 
   .card-header {
     margin: -20px -20px 0px -20px;
-    background-color: #12807a;
-    font-size: 1.4rem;
-    color: white;
   }
   
   .row {

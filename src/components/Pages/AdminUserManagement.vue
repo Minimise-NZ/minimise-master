@@ -87,12 +87,22 @@
 
     <b-card>
       <div class="card-header">User Management
-        <b-button class="addBtn" @click="createNew = true">Add New User</b-button>
+         <b-button  
+          class="addBtn"
+          @click="createNew = true"
+          v-b-tooltip.hover title="Add New User">
+          <i class="fa fa-plus fa-lg"></i>
+        </b-button> 
       </div>
       <div class="scroll-container">
         <b-card class="itemCard mt-2 mb-4" v-for="worker in workers" :key="worker.id">
           <header class="card-header item">{{worker.name}}
-            <b-button class="editBtn pt-1 pb-1 ml-2" @click="confirm">Delete User</b-button>
+             <b-button  
+                class="addBtn remove"
+                @click="confirm"
+                v-b-tooltip.hover title="Delete User">
+                <i class="fa fa-times fa-lg"></i>
+              </b-button> 
           </header>
           <b-row class="outer-row">
             <b-col sm="12" lg="6">
@@ -265,9 +275,6 @@ export default {
 
   .card-header {
     margin: -20px -20px 0px -20px;
-    background-color: rgba(155, 35, 53, 0.88);
-    font-size: 1.4rem;
-    color: white;
   }
   
   .card-header.item{
@@ -281,13 +288,6 @@ export default {
   .itemCard > .card-body {
     padding: 0;
     margin-bottom: 15px;
-  }
-
-  .addBtn {
-    float: right;
-    background-color: #ffc80b;
-    color: black;
-    cursor: pointer;
   }
 
   .outer-row {
@@ -304,10 +304,10 @@ export default {
     padding-top:6px;
   }
 
-  .editBtn {
-    float: right;
-    background-color:rgba(223, 233, 255, 0.83);
-    color: black;
+  .addBtn.remove{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: rgb(226, 57, 82);
   }
   
 </style>

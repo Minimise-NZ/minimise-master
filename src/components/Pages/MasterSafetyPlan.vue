@@ -24,9 +24,4 @@ export default {
     border: 1px solid grey;
   }
   
-  .card-header {
-    background-color: #027588;
-    font-size: 1.4rem;
-    color: white;
-  }
 </style>

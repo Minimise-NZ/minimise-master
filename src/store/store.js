@@ -258,7 +258,7 @@ export const store = new Vuex.Store({
         })
         .catch((error) => {
           console.log(error)
-          reject()
+          reject(error)
         })
       })
       return promise
@@ -620,7 +620,6 @@ export const store = new Vuex.Store({
         cause: payload.cause,
         corrective: payload.corrective,
         open: payload.open,
-        loggedBy: payload.loggedBy,
         supervisorName: payload.supervisorName,
         supervisorKey: payload.supervisorKey
       })

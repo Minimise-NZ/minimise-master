@@ -258,11 +258,8 @@ export default {
     padding-top: 20px;
   }
 
-   .card-header {
+  .card-header {
     margin: -20px -20px 0px -20px;
-    background-color: rgba(111, 50, 130, 0.86);
-    font-size: 1.4rem;
-    color: white;
   }
 
   .inner-row {

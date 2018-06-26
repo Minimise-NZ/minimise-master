@@ -34,10 +34,7 @@ export default {
 
 <style scoped>
   .card-header {
-    margin: -20px -20px 20px -20px;
-    background-color: rgba(29, 92, 158, 0.89);
-    font-size: 1.4rem;
-    color: white;
+    margin: -20px -20px 0px -20px;
   }
 
 </style>

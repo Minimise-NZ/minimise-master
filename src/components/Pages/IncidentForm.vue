@@ -143,26 +143,23 @@
               </b-form-textarea>
             </b-col>
           </b-row>
-          <b-row class="pt-3">
-            <b-col sm="3" lg="2"></b-col>
-            <b-col sm="9" lg="10">
-              <b-form-checkbox v-model="incident.escalate" :value='true' v-if="this.user.admin === false">
-                Is further investigation required? <em>(Escalate to Health and Safety Manager)</em>
-              </b-form-checkbox>
-            </b-col>
-          </b-row>
           <b-row class="pt-1">
             <b-col sm="3" lg="2"></b-col>
             <b-col sm="9" lg="10">
-              <b-form-checkbox v-model="incident.open" :value='false' v-if="incident.escalate === false">
+              <b-form-checkbox v-model="incident.open" :value='false'>
                 Close this incident <em>(Close only if no further action is required)</em>
               </b-form-checkbox>
             </b-col>
           </b-row>
           <div class="text-center">
             <b-button-group class="pt-4 pb-4">
-              <b-button class="buttons" variant="success" type="submit">Save</b-button>
-              <b-button class="buttons" variant="danger" @click="cancel">Cancel</b-button>
+              <b-button class="buttons" variant="success" type="submit">
+                <p style="font-size: 1rem; margin-bottom: 0; font-weight: normal; margin-top: 0;color: white" v-if="loading===false">Save</p>
+                <div class="loader">
+                  <pulse-loader :loading="loading" ></pulse-loader>
+                </div>
+              </b-button>
+              <b-button class="buttons" variant="danger" @click="cancel" :disabled="loading">Cancel</b-button>
             </b-button-group>
           </div>
         </b-form>
@@ -172,9 +169,14 @@
 </template>
 
 <script>
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 export default {
+  components: {
+    PulseLoader
+  },
   data () {
     return {
+      loading: false,
       confirmAction: false,
       success: false,
       incident: {
@@ -189,8 +191,7 @@ export default {
         plantDamage: '',
         cause: '',
         corrective: '',
-        escalate: false,
-        open: true,
+        open: 'true',
         loggedBy: {}
       },
       incidentTypes: ['Near Miss', 'Minor Harm', 'Serious Harm', 'Plant Damage'],
@@ -204,35 +205,23 @@ export default {
     },
     userKey () {
       return this.$store.getters.userKey
-    },
-    loggedBy () {
-      return {name: this.user.name, key: this.userKey}
-    },
-    actionOwner () {
-      if (this.incident.open === false) {
-        return ''
-      } else if (this.incident.escalate === true) {
-        return {name: this.$store.getters.company.hseManager}
-      } else {
-        return this.incident.loggedBy
-      }
-    },
-    companyType () {
-      return this.user.companyType
     }
   },
   methods: {
     onSubmit () {
+      this.loading = true
       this.error = ''
       this.dateerror = ''
       if (this.incident.date === '') {
         this.dateerror = 'Please select incident date'
         this.$refs.date.$el.focus()
+        this.loading = false
         return this.dateerror
       }
       if (this.incident.type === '') {
         this.error = 'Please select incident type'
         this.$refs.error.$el.focus()
+        this.loading = false
         return this.error
       } else {
         if (this.incident.open === false) {
@@ -245,19 +234,20 @@ export default {
     onConfirm () {
       this.error = ''
       this.dateerror = ''
-      this.incident.loggedBy = this.loggedBy
-      this.incident.actionOwner = this.actionOwner
+      this.incident.supervisorKey = this.userKey
+      this.incident.supervisorName = this.user.name
       this.incident.company = this.$store.getters.companyKey
       this.$store.dispatch('newIncident', this.incident)
       .then(() => {
+        this.loading = false
         this.success = true
       })
     },
     route () {
-      this.$router.push('/' + this.companyType + '/incidents')
+      this.$router.push('/dashboard/incidents')
     },
     cancel () {
-      this.$router.push('/' + this.companyType)
+      this.$router.push('/dashboard')
     }
   }
 }
@@ -267,12 +257,6 @@ export default {
   .container-fluid {
     padding-top: 20px;
     padding-right: 30px;
-  }
-  
-  .card-header {
-    background-color: rgba(155, 35, 53, 0.88);
-    font-size: 1.4rem;
-    color: white;
   }
   
   .col-sm-3 {
