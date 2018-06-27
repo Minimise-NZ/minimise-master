@@ -58,7 +58,7 @@ export default {
         {name: 'Hazardous Substances', link: '/dashboard/hazardousSubstances'},
         {name: 'Task Analysis/SWMS', link: '/dashboard/taskAnalysis'},
         {name: 'Training Register', link: '/dashboard/TrainingRegister'},
-        {name: 'Master Safety Plan', link: '/dashboard/master'},
+        // {name: 'Master Safety Plan', link: '/dashboard/master'},
         {name: 'New Incident', link: '/dashboard/newIncident'},
         {name: 'Incident Reports', link: '/dashboard/incidents'}
       ],

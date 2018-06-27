@@ -66,8 +66,21 @@
       header-bg-variant="info"
       headerTextVariant= 'light'
       title="Success!">
-      <h5>{{name}} has been added to your Minimise community.</h5>
-      <label>{{successMessage}}</label>
+      <h5>{{successMessage}}</h5>
+      <label>{{successMessage2}}</label>
+    </b-modal>
+    <!--ERROR MODAL-->
+     <b-modal
+      v-model="errorModal"
+      v-if="errorModal" 
+      ok-only
+      header-bg-variant="danger"
+      headerTextVariant= 'light'
+      title="Oops..">
+      <div class="d-block text-center">
+        <h4>Something went wrong. Please try again</h4>
+        <h5>{{errorMessage}}</h5>
+      </div>
     </b-modal>
     <!--CONFIRM ACTION MODAL-->
     <b-modal
@@ -97,12 +110,16 @@
       <div class="scroll-container">
         <b-card class="itemCard mt-2 mb-4" v-for="worker in workers" :key="worker.id">
           <header class="card-header item">{{worker.name}}
-             <b-button  
-                class="addBtn remove"
-                @click="confirm"
-                v-b-tooltip.hover title="Delete User">
-                <i class="fa fa-times fa-lg"></i>
-              </b-button> 
+            <b-button
+              v-if="!loading"
+              class="addBtn remove"
+              @click="confirm(worker)"
+              v-b-tooltip.hover title="Delete User">
+              <i class="fa fa-times fa-lg"></i>
+            </b-button>
+            <div class="loader" v-if="loading" style="float: right">
+              <pulse-loader :loading="loading" ></pulse-loader>
+            </div>
           </header>
           <b-row class="outer-row">
             <b-col sm="12" lg="6">
@@ -149,9 +166,14 @@
 </template>
 
 <script>
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 export default {
+  components: {
+    PulseLoader
+  },
   data () {
     return {
+      loading: false,
       error: {
         name: false,
         email: false,
@@ -160,7 +182,11 @@ export default {
       },
       success: false,
       successMessage: '',
+      successMessage2: '',
+      errorModal: false,
+      errorMessage: '',
       confirmAction: false,
+      removeWorker: {},
       userRoles: [
         { value: null, text: 'Please select an option' },
         { value: 'Administrator', text: 'Administrator' },
@@ -232,35 +258,54 @@ export default {
     },
     handleSubmit () {
       // create a new user and send an email invitation if the user is not a worker
-      this.$store.dispatch('inviteUser', {
-        worker: {
-          name: this.name,
-          email: this.email,
-          phone: this.phone,
-          role: this.role,
-          admin: this.admin,
-          webUser: this.webUser,
-          training: this.training
-        }
-      })
-      .then(() => {
-        if (this.role !== 'Worker') {
-          this.successMessage = 'An email invitation has been sent'
-          this.success = true
-        } else {
-          this.success = true
-        }
-      })
+      try {
+        this.$store.dispatch('inviteUser', {
+          worker: {
+            name: this.name,
+            email: this.email,
+            phone: this.phone,
+            role: this.role,
+            admin: this.admin,
+            webUser: this.webUser,
+            training: this.training
+          }
+        })
+        .then(() => {
+          this.successMessage = this.name + ' has been added to your Minimise community'
+          if (this.role !== 'Worker') {
+            this.successMessage2 = 'An email invitation has been sent'
+            this.success = true
+          } else {
+            this.success = true
+          }
+        })
+      } catch (error) {
+        this.errorMessage = error.message
+        this.errorModal = true
+      }
     },
-    confirm () {
+    confirm (worker) {
+      this.removeWorker = worker
       this.confirmAction = true
     },
     remove () {
       // remove company details from this worker
-      this.worker.company = ''
-      this.worker.companyName = ''
-      this.worker.companyType = ''
-      this.$store.dispatch('removeWorker', {id: this.id, worker: this.worker})
+      this.loading = true
+      let worker = this.removeWorker
+      worker.companyKey = ''
+      worker.companyName = ''
+      this.$store.dispatch('removeWorker', {id: worker.id, worker: worker})
+      .then(() => {
+        this.successMessage = worker.name + ' has been removed from your Minimise community'
+        this.success = true
+        this.removeWorker = {}
+        this.loading = false
+      })
+      .catch((error) => {
+        this.errorMessage = error.message
+        this.errorModal = true
+        this.loading = false
+      })
     }
   }
 }
