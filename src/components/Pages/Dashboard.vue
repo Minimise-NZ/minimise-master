@@ -92,7 +92,7 @@ export default {
     this.$store.dispatch('getTaskAnalysis')
     this.$store.dispatch('getHazSubs')
   },
-  beforeMount () {
+  created () {
     this.$store.dispatch('getWorkers')
     this.$store.dispatch('getAllJobs')
     this.$store.dispatch('getAllIncidents')

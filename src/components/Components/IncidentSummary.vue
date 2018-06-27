@@ -1,5 +1,5 @@
 <template>
-  <b-card header="Incidents Summary" header-tag="header">
+  <b-card header="Open Incidents" header-tag="header">
     <b-row v-if="incidents.length === 0">
       <b-col>
         <header class="subheader">You have no open incident reports</header>

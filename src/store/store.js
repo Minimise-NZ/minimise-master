@@ -358,9 +358,37 @@ export const store = new Vuex.Store({
         })
         commit('setSupervisors', supervisors)
         commit('setWorkers', workers)
+        dispatch('getTraining')
       })
     },
-
+    getTraining ({commit, state}) {
+      let workers = state.workers
+      console.log(workers)
+      let trainingAlerts = []
+      for (let worker of workers) {
+        console.log('worker', worker)
+        for (let training of worker.training) {
+          console.log('training', training)
+          if (training.expiry !== '') {
+            let alertDate = moment(training.expiry).subtract(14, 'days').format('YYYY-MM-DD')
+            if (moment().isAfter(training.expiry)) {
+              training.name = worker.name
+              training.status = 'Expired'
+              trainingAlerts.push(training)
+            } else if (moment().isAfter(alertDate)) {
+              training.name = worker.name
+              training.status = 'Due to expire'
+              trainingAlerts.push(training)
+            }
+          } else {
+            training.name = worker.name
+            training.status = 'Incomplete'
+            trainingAlerts.push(training)
+          }
+        }
+      }
+      commit('setTrainingAlerts', trainingAlerts)
+    },
   // company functions
     getCompanyIndex ({commit}) {
       // must already have key in state
@@ -558,32 +586,6 @@ export const store = new Vuex.Store({
         return promise
       })
     },
-    getTraining ({commit, state}) {
-      let workers = state.workers
-      let trainingAlerts = []
-      for (let i of workers) {
-        for (let training of i.worker.training) {
-          if (training.expiry !== '') {
-            let alertDate = moment(training.expiry).subtract(14, 'days').format('YYYY-MM-DD')
-            if (moment().isAfter(training.expiry)) {
-              training.name = i.worker.name
-              training.status = 'Expired'
-              trainingAlerts.push(training)
-            } else if (moment().isAfter(alertDate)) {
-              training.name = i.worker.name
-              training.status = 'Due to expire'
-              trainingAlerts.push(training)
-            }
-          } else {
-            training.name = i.worker.name
-            training.status = 'Incomplete'
-            trainingAlerts.push(training)
-          }
-        }
-      }
-      commit('setTrainingAlerts', trainingAlerts)
-    },
-
   // incident functions
     newIncident ({commit, dispatch, state}, payload) {
       // create new incident in firestore

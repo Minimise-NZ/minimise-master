@@ -176,6 +176,7 @@ export default {
             companyName: this.companyName,
             admin: true,
             webUser: true,
+            training: [],
             companyKey: company
           })
           await this.$store.dispatch('createTaskAnalysis')

@@ -59,8 +59,7 @@ export default {
   },
   methods: {
     workerView () {
-      let companyType = this.$store.getters.user.companyType
-      this.$router.push('/' + companyType + '/workers')
+      this.$router.push('/dashboard/TrainingRegister')
     }
   }
 }

@@ -33,12 +33,11 @@
       <div class=" incident card-header">{{headerText}}
         <b-button  
           class="addBtn"
-          variant="warning"
           @click="edit"
           :disabled="disabled"
           v-if="incident.open === 'true'"
           v-b-tooltip.hover title="Edit/Update this Incident">
-          <i class="fa fa-edit fa-lg" style="color: black"></i>
+          <i class="fa fa-edit fa-lg"></i>
         </b-button> 
       </div>
       <div class="scroll-container">
@@ -244,9 +243,6 @@ export default {
 
   .card-header.incident {
     margin: -20px -20px 20px -20px;
-    background-color: #027588;
-    font-size: 1.4rem;
-    color: white;
   }
 
   .col-sm-3 {
