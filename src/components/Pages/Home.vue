@@ -2,7 +2,7 @@
   <b-container fluid>
     <b-card header="Quick View" header-tag="header">
       <div class="scroll-container">
-        <workerActivity></workerActivity>
+        <safetyPlans></safetyPlans>
         <incidentSummary></incidentSummary>
         <trainingAlerts></trainingAlerts>
       </div>
@@ -13,13 +13,13 @@
 <script>
 import IncidentSummary from '@/components/Components/IncidentSummary.vue'
 import TrainingAlerts from '@/components/Components/TrainingAlerts.vue'
-import WorkerActivity from '@/components/Components/WorkerActivity.vue'
+import SafetyPlans from '@/components/Components/safetyPlans.vue'
 
 export default {
   components: {
     'incidentSummary': IncidentSummary,
     'trainingAlerts': TrainingAlerts,
-    'workerActivity': WorkerActivity
+    'safetyPlans': SafetyPlans
   },
   data () {
     return {

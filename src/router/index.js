@@ -23,7 +23,6 @@ import IncidentView from '@/components/Components/IncidentView.vue'
 import TrainingRegister from '@/components/Pages/TrainingRegister.vue'
 import Support from '@/components/Pages/SupportFeedback.vue'
 import JobsInProgress from '@/components/Pages/JobsInProgress.vue'
-import JobDetails from '@/components/Components/JobDetails.vue'
 import SafetyPlan from '@/components/Components/SafetyPlanView.vue'
 import Master from '@/components/Pages/MasterSafetyPlan.vue'
 import NewJob from '@/components/Pages/NewJob.vue'
@@ -144,12 +143,7 @@ export default new Router({
           component: JobsInProgress
         },
         {
-          path: 'jobs/job/:id',
-          component: JobDetails,
-          props: true
-        },
-        {
-          path: 'jobs/:jobid/:planid',
+          path: 'jobs/safetyplan/:id',
           name: 'safetyplan',
           component: SafetyPlan,
           props: true

@@ -1,8 +1,9 @@
 <template>
   <b-container fluid class="outside-container">
     <b-card>
-      <div class="safetyplan card-header">{{headerText}}<span class="expiry">Expires: {{safetyPlan.expiryDate}}</span></div>
+      <div class="safetyplan card-header">{{headerText}}<span class="expiry">Expires: {{plan.expiryDate}}</span></div>
         <div class="scroll-container">
+          <!--HAZARD CARD-->
           <b-card>
             <div class="section card-header">Hazard Register <span style="font-size: 0.9rem"> (click hazard name to hide/show details)</span></div>
             <div role="tablist">
@@ -14,11 +15,11 @@
                 <header class="card-header hazard">
                   <b-btn block v-b-toggle="'collapse' + index" class="text-left togglebtn">{{hazard.name}}</b-btn>
                 </header>
-                <b-collapse :id="'collapse' + index" visible>
+                <b-collapse :id="'collapse' + index">
                 <b-row>
                   <b-col>
                     <b-img
-                      :src='hazard.image'
+                      :src='hazard.imageURL'
                       class="ml-3 mb-2"
                       fluid>
                     </b-img>
@@ -27,44 +28,53 @@
                     <h5 class="mb-3"><strong>Risks</strong></h5>
                     <p v-for="(risk, index) in hazard.risks" :key="index">{{risk}}</p>
                   </b-col>
-                  <b-col cols="6">
+                  <b-col>
                     <h5 class="mb-3"><strong>Controls</strong></h5>
                     <div v-for="(control, index) in hazard.controls" :key="index">
                       <p><i :class="status(control.status)" class="mr-2"></i>{{control.desc}}</p>
                       <p v-if="control.status === 'Uncontrolled'">{{control.corrective}}</p>
                     </div>
                   </b-col>
+                  <b-col>
+                    <br>
+                    <p><strong>Risk before controls: </strong>{{hazard.IRA}}</p>
+                    <p><strong>Risk after controls: </strong>{{hazard.RRA}}</p>
+                    <p v-if="hazard.taskAnalysis === true" class="alert-text"><strong>Task Analysis Required</strong></p>
+                    <p v-if="hazard.worksafe === true" class="alert-text"><strong>Worksafe Notification Required</strong></p>
+                  </b-col>
                 </b-row>
                 </b-collapse>
               </b-card>
             </div>
           </b-card>
-          <b-card v-if="!_.isEmpty(safetyPlan.taskAnalysis)">
+
+          <!--TASK ANALYSIS CARD-->
+          <b-card v-if="!_.isEmpty(plan.taskAnalysis)">
             <div class="section card-header">Task Analysis <span style="font-size: 0.9rem"> (click task title to hide/show details)</span></div>
             <b-card class="taskAnalysis">
               <header class="card-header hazard">
                 <b-btn block v-b-toggle.collapseTask class="text-left togglebtn">{{task.title}}</b-btn>
               </header>
-              <b-collapse id="collapseTask" visible>
+              <b-collapse id="collapseTask">
                 <b-row class="pl-2">
                   <b-col class="ml-0 pl-0">
                     <b-form-checkbox
                       id="notification"
                       value="task.worksafe"
-                      disabled
+                       onclick="return false"
                       class="mb-4">
                       Worksafe notification required
                     </b-form-checkbox><br>
                     <b-form-checkbox
                       id="signage"
                       value="task.signage"
-                      disabled
+                       onclick="return false"
                       class="mb-4">
                       Signage required
                     </b-form-checkbox><br>
                     <b-form-checkbox
                       value="task.ppeRequired"
-                      disabled
+                       onclick="return false"
                       class="mb-4">
                       PPE required
                     </b-form-checkbox><br>
@@ -77,7 +87,7 @@
                     </b-form-input>
                     <b-form-checkbox
                       value="task.plantRequired"
-                      disabled
+                      onclick="return false"
                       class="mb-4">
                       Plant required
                     </b-form-checkbox><br>
@@ -86,7 +96,7 @@
                       readonly
                       class="mb-4"
                       v-if="task.plantRequired"
-                      value="task.plant">
+                      :value="task.plant">
                     </b-form-input>
                   </b-col>
                 </b-row>
@@ -104,49 +114,60 @@
                     <header class="task-subheader">Hazard Controls</header>
                   </b-col>
                 </b-row>
-                
-              <b-row v-for="(step, index) in task.steps" :key="index">
-                <b-col cols="1">
-                  <h4>{{index + 1}}</h4>
-                </b-col>
-                <b-col>
-                  <textarea class="form-control step" rows="3" value="step.description" readonly></textarea>
-                </b-col> 
-                <b-col>
-                  <textarea class="form-control step" rows="3" value="step.hazards" readonly></textarea>
-                </b-col>
-                <b-col>
-                  <textarea class="form-control step" rows="3" value="step.controls" readonly></textarea>
-                </b-col>
-              </b-row>
-            </b-collapse>
+                <b-row v-for="(step, index) in task.steps" :key="index" class="steps">
+                  <b-col cols="1">
+                    <h4>{{index + 1}}</h4>
+                  </b-col>
+                  <b-col>
+                    <textarea class="form-control step" rows="3" :value="step.description" readonly></textarea>
+                  </b-col> 
+                  <b-col>
+                    <textarea class="form-control step" rows="3" :value="step.hazards" readonly></textarea>
+                  </b-col>
+                  <b-col>
+                    <textarea class="form-control step" rows="3" :value="step.controls" readonly></textarea>
+                  </b-col>
+                </b-row>
+              </b-collapse>
+            </b-card>
           </b-card>
 
-          </b-card>
+          <!--TRAINING CARD-->
           <b-card>
-            <div class="section card-header">Training Register</div>
-            <b-row class="inner-row mb-2">
-              <b-col md="5" class="training-col">
-                <header class="card-header subheader bg-secondary text-white">Description</header>
-              </b-col>
-               <b-col md="3" class="training-col">
-                <header class="card-header subheader bg-secondary text-white">Training ID</header>
-              </b-col>
-              <b-col md="4" class="training-col">
-                <header class="card-header subheader bg-secondary text-white">Expiry Date</header>
-              </b-col>
-            </b-row>
-            <b-row class="inner-row mb-2" v-for="(training, index) in safetyPlan.trainingRegister" :key="index">
-              <b-col md="5" class="training-col"> 
-                <b-form-input readonly :value="training.description"/>
-              </b-col>
-              <b-col md="3" class="training-col">
-                <b-form-input id="id" readonly type="text" v-model="training.ID"/>
-              </b-col>
-              <b-col md="4" class="training-col">
-                <b-form-input id="expiry" type="date" class="no-spinners" :value="training.expiry | formatDate" v-model="training.expiry" readonly/>
-              </b-col>
-            </b-row>
+            <div class="section card-header">Training Register<span style="font-size: 0.9rem"> (click worker name to hide/show details)</span></div>
+            <b-card v-for="(worker, index) in workers" :key="worker.id">
+              <header class="card-header hazard">
+                <b-btn block v-b-toggle="'worker' + index" class="text-left togglebtn">{{worker.name}}</b-btn>
+              </header>
+              <b-collapse :id="'worker' + index">
+                <b-row class="mb-2">
+                  <b-col md="5" >
+                    <header>Training Description</header>
+                  </b-col>
+                  <b-col md="3" >
+                    <header>ID/Licence No/Certificate</header>
+                  </b-col>
+                  <b-col md="3" >
+                    <header>Expiry Date</header>
+                  </b-col>
+                  <b-col md="1" >
+                  </b-col>
+                </b-row>
+                <b-row v-for="training in worker.training" :key="training.description" class="mb-1">
+                  <b-col md="5" > 
+                    <b-form-input readonly :value="training.description"/>
+                  </b-col>
+                  <b-col md="3" >
+                    <b-form-input id="id" type="text" :value="training.ID" readony/>
+                  </b-col>
+                  <b-col md="3" >
+                    <b-form-input id="expiry" type="date" class="no-spinners" :value="training.expiry" readonly/>
+                  </b-col>
+                  <b-col md="1" >
+                  </b-col>
+                </b-row>
+              </b-collapse>
+            </b-card>
           </b-card>
         </div>
     </b-card>
@@ -154,34 +175,37 @@
 </template>
 
 <script>
+import autosize from 'autosize'
+import WorkerView from '@/components/Components/Worker.vue'
 export default {
-  props: ['jobid', 'planid'],
+  props: ['id'],
+  components: {
+    'workerview': WorkerView
+  },
   data () {
     return {
-      job: null,
-      safetyPlan: null
+      plan: {}
     }
   },
-  created () {
-    console.log('jobid', this.jobid, 'planid', this.planid)
-    let job = this.$store.getters.jobSite(this.jobid)
-    if (job === undefined) {
-      this.$router.go(-1)
-    } else {
-      this.job = job
-      this.safetyPlan = this.job.safetyPlans[this.planid]
-    }
+  beforeMount () {
+    this.plan = this.$store.getters.plan(this.id)
+  },
+  mounted () {
+    autosize(document.querySelectorAll('textarea'))
   },
   computed: {
+    workers () {
+      return this.$store.getters.workers
+    },
     headerText () {
-      let text = this.safetyPlan.workerName + ' Safety Plan : ' + this.job.address
+      let text = 'Safety Plan: ' + this.plan.jobAddress
       return text
     },
     hazards () {
-      return this.safetyPlan.hazardRegister
+      return this.plan.hazardRegister
     },
     task () {
-      return this.safetyPlan.taskAnalysis
+      return this.plan.taskAnalysis
     }
   },
   methods: {
@@ -208,7 +232,7 @@ export default {
 
   .card-header.section {
     margin: -20px -20px 20px -20px;
-    background-color: rgba(111, 50, 130, 0.86);
+    background-color: rgba(29,92,158,.89);
     font-size: 1.2rem;
     color: white;
   }
@@ -216,10 +240,6 @@ export default {
   .card-header.hazard {
     margin: -20px -20px 20px -20px;
     padding: 0;
-  }
-  
-  .card-header.subheader{
-    padding: 6px 20px;
   }
 
   .expiry {
@@ -242,11 +262,19 @@ export default {
   }
 
   .togglebtn {
-    background-color: rgba(29,92,158,.89);
+    background-color: #737373;
   }
 
   .togglebtn:hover {
-    background-color: rgba(155, 35, 53, 0.88);
+    background-color: #8f4c9aa8;
+  }
+
+  .steps {
+    padding: 0 15px 15px 15px;
+  }
+
+  header {
+    padding-left: 5px;
   }
 
 </style>

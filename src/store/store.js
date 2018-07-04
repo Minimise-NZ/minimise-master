@@ -6,6 +6,8 @@ import createPersistedState from 'vuex-persistedstate'
 import moment from 'moment'
 var storageRef = firebase.storage().ref()
 
+const today = moment().format('DD-MM-YYYY')
+// const now = moment().format('DD-MM-YYYY hh:mm')
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
@@ -19,6 +21,7 @@ export const store = new Vuex.Store({
     companyKey: '',
     companyIndex: [],
     jobsInProgress: [],
+    safetyPlans: [],
     myIncidents: [],
     allHazards: [],
     myHazards: [],
@@ -39,6 +42,7 @@ export const store = new Vuex.Store({
       state.companyKey = ''
       state.companyIndex = []
       state.jobsInProgress = []
+      state.safetyPlans = []
       state.jobRequests = []
       state.myIncidents = []
       state.allHazards = []
@@ -87,6 +91,9 @@ export const store = new Vuex.Store({
     setJobs (state, payload) {
       state.jobsInProgress = payload
       console.log('Jobs in progress set')
+    },
+    setSafetyPlans (state, payload) {
+      state.safetyPlans = payload
     },
     setAllHazards (state, payload) {
       state.allHazards = payload
@@ -445,7 +452,6 @@ export const store = new Vuex.Store({
       // create new job in firestore jobSites collection
       let promise = new Promise((resolve, reject) => {
         console.log('Creating new job', payload)
-        let today = moment().format('DD-MM-YYYY')
         firestore.collection('jobSites').add({
           companyKey: payload.companyKey,
           companyName: payload.companyName,
@@ -526,7 +532,7 @@ export const store = new Vuex.Store({
       // close job in jobSites collection
       let promise = new Promise((resolve, reject) => {
         let jobId = payload.id
-        let closedDate = moment().format('DD-MM-YYYY')
+        let closedDate = today
         firestore.collection('jobSites').doc(jobId)
         .update({'open': false, 'closedDate': closedDate})
         .then(() => {
@@ -585,6 +591,48 @@ export const store = new Vuex.Store({
         })
         return promise
       })
+    },
+    getSafetyPlans ({state, commit}) {
+      console.log('getting')
+      let promise = new Promise((resolve, reject) => {
+        firestore.collection('safetyPlans').where('companyKey', '==', state.companyKey)
+        .get()
+        .then((snapshot) => {
+          console.log(snapshot)
+          let safetyPlans = []
+          snapshot.forEach((doc) => {
+            console.log(doc.data())
+            let plan = doc.data()
+            let expiry = moment(plan.expiryDate).format('DD-MM-YYYY')
+            if (today < expiry) {
+              console.log('Plan current', today, expiry)
+              safetyPlans.push({
+                id: doc.id,
+                companyKey: plan.companyKey,
+                createdDate: plan.createdDate,
+                expiryDate: plan.expiryDate,
+                hazardRegister: plan.hazardRegister,
+                jobAddress: plan.jobAddress,
+                jobId: plan.jobId,
+                signedIn: plan.signedIn,
+                taskAnalysis: plan.taskAnalysis,
+                trainingRegister: plan.trainingRegister,
+                workerKey: plan.workerKey,
+                workerName: plan.workerName
+              })
+            } else {
+              console.log('Plan expired', today, expiry)
+            }
+          })
+          commit('setSafetyPlans', safetyPlans)
+          resolve()
+        })
+          .catch((error) => {
+            console.log('Error getting documents: ', error)
+            reject(error)
+          })
+      })
+      return promise
     },
   // incident functions
     newIncident ({commit, dispatch, state}, payload) {
@@ -1046,6 +1094,7 @@ export const store = new Vuex.Store({
     supervisors: (state) => state.supervisors,
     training: (state) => state.trainingAlerts,
     jobsInProgress: (state) => state.jobsInProgress,
+    safetyPlans: (state) => state.safetyPlans,
     allHazards: (state) => state.allHazards,
     myHazards: (state) => state.myHazards,
     taskChanged: (state) => state.taskChanged,
@@ -1060,6 +1109,13 @@ export const store = new Vuex.Store({
       return (id) => {
         return state.myIncidents.find((incident) => {
           return incident.id === id
+        })
+      }
+    },
+    plan (state) {
+      return (id) => {
+        return state.safetyPlans.find((plan) => {
+          return plan.id === id
         })
       }
     },

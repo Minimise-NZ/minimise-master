@@ -34,7 +34,7 @@
         <p>{{training.description}}</p>
       </b-col>
       <b-col v-if="training.expiry !== ''">
-       <p>{{training.expiry | formatDate}}</p>
+       <p>{{training.expiry}}</p>
       </b-col>
       <b-col v-else>
        <p>Not entered</p>

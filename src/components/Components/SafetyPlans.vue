@@ -1,43 +1,41 @@
 <template>
-  <b-card header="Worker Activity" header-tag="header">
-    <b-row>
+  <b-card header="Current Safety Plans" header-tag="header">
+    <b-row v-if="safetyPlans.length === 0">
       <b-col>
-        <header class="subheader">There is no recent worker activity</header>
+        <header class="subheader">There are no current safety plans</header>
       </b-col>
     </b-row>
-    <!--
-    <b-row class="subheader" v-if="signedIn.length !== 0">
+    <b-row class="subheader" v-if="safetyPlans.length !== 0">
       <b-col cols="3">
         <header>Site Address</header>
+      </b-col>
+      <b-col cols="2">
+        <header>Created By</header>
+      </b-col>
+      <b-col>
+        <header>Expiry Date</header>
       </b-col>
       <b-col>
         <header>Signed In</header>
       </b-col>
-      <b-col>
-        <header>Date/Time</header>
-      </b-col>
-      <b-col cols="2">
-        <header>Safety Plan</header>
-      </b-col>
     </b-row>
     <b-row 
       class="content"
-      v-for="worker in signedIn"
-      :key="worker.id">
-      <b-col cols="2">
-        <p></p>
-      </b-col>
-      <b-col>
-        <p>{{worker.name}}</p>
-      </b-col>
-      <b-col>
-        <p>{{incident.reportedBy}}</p>
+      v-for="plan in safetyPlans"
+      :key="plan.id">
+      <b-col cols="3">
+        <p style="text-decoration: underline; color: #178ac3; cursor: pointer" @click="viewPlan(plan)">{{plan.jobAddress}}</p>
       </b-col>
       <b-col cols="2">
-        <p>{{incident.date | formatDate}}</p>
+        <p>{{plan.workerName}}</p>
+      </b-col>
+      <b-col>
+        <p>{{plan.expiryDate}}</p>
+      </b-col>
+      <b-col>
+        <p>{{plan.signedIn}}</p>
       </b-col>
     </b-row>
-    -->
   </b-card>
 </template>
 
@@ -48,14 +46,14 @@ export default {
     }
   },
   computed: {
-    jobSites () {
-      return this.$store.getters.jobsInProgress
+    safetyPlans () {
+      return this.$store.getters.safetyPlans
     }
   },
   methods: {
-    viewSafetyPlan (jobid, safetyplanid) {
-      console.log(jobid, safetyplanid)
-      this.$router.push('/dashboard/jobs/' + jobid + '/' + safetyplanid)
+    viewPlan (plan) {
+      console.log(plan)
+      this.$router.push('/dashboard/jobs/safetyplan/' + plan.id)
     }
   }
 }

@@ -97,6 +97,7 @@ export default {
     this.$store.dispatch('getAllJobs')
     this.$store.dispatch('getAllIncidents')
     this.$store.dispatch('getMyHazards')
+    this.$store.dispatch('getSafetyPlans')
   }
 }
 </script>

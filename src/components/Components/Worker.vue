@@ -95,7 +95,7 @@
           <b-form-input id="id" :readonly="readonly" type="text" v-model="training.ID"/>
         </b-col>
         <b-col md="3" >
-          <b-form-input id="expiry" type="date" class="no-spinners" :value="training.expiry | formatDate" v-model="training.expiry" :readonly="readonly"/>
+          <b-form-input id="expiry" type="date" class="no-spinners" :value="training.expiry" v-model="training.expiry" :readonly="readonly"/>
         </b-col>
         <b-col md="1" >
         </b-col>

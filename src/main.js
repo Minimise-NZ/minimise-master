@@ -16,7 +16,6 @@ import _ from 'lodash'
 import VueLodash from 'vue-lodash'
 import VeeValidate from 'vee-validate'
 import vSelect from 'vue-select'
-import moment from 'moment'
 import VueScrollTo from 'vue-scrollto'
 import VueCarousel from 'vue-carousel'
 
@@ -61,12 +60,6 @@ Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(AnimatedVue)
 Vue.use(VeeValidate, config)
-
-Vue.filter('formatDate', function (value) {
-  if (value) {
-    return moment(String(value)).format('DD-MM-YYYY')
-  }
-})
 
 /* eslint-disable no-new */
 new Vue({

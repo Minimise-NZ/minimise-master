@@ -36,7 +36,7 @@
             <p>{{incident.supervisorName}}</p>
           </b-col>
           <b-col lg="2">
-            <p>{{incident.date | formatDate}}</p>
+            <p>{{incident.date}}</p>
           </b-col>
           <b-col lg="2">
             <p>{{status(incident.open)}}</p>

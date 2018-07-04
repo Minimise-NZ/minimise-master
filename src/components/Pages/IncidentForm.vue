@@ -191,8 +191,7 @@ export default {
         plantDamage: '',
         cause: '',
         corrective: '',
-        open: 'true',
-        loggedBy: {}
+        open: 'true'
       },
       incidentTypes: ['Near Miss', 'Minor Harm', 'Serious Harm', 'Plant Damage'],
       dateerror: '',

@@ -104,7 +104,7 @@
               <h5 class="mb-3"><strong>Controls</strong></h5>
               <p v-for="(control, index) in hazard.controls" :key="index">{{control.desc}}</p>
             </b-col>
-             <b-col>
+            <b-col>
               <br>
               <p><strong>Risk before controls: </strong>{{hazard.IRA}}</p>
               <p><strong>Risk after controls: </strong>{{hazard.RRA}}</p>

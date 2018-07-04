@@ -40,7 +40,7 @@
         <p>{{incident.reportedBy}}</p>
       </b-col>
       <b-col cols="2">
-        <p>{{incident.date | formatDate}}</p>
+        <p>{{incident.date}}</p>
       </b-col>
     </b-row>
   </b-card>
