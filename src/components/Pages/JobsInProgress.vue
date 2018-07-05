@@ -173,34 +173,20 @@
           
           <hr>
           <b-row>
-            <b-col>
-              <header class="subheader">Safety Plan</header>
-              <ul>
-                <li v-for="(plan, index) in job.safetyPlans" :key='index'>
-                  <router-link
-                  :to="{ name: 'safetyplan', params: { jobid: job.id, planid: index} }"
-                  >{{plan.workerName}}</router-link>
-                </li>
-              </ul>
+            <b-col cols="3"><header class="subheader">Safety Plan</header></b-col>
+            <b-col cols="3"><header class="subheader">Created By:</header></b-col>
+            <b-col cols="3"><header class="subheader">Expiry Date:</header></b-col>
+            <b-col cols="3"><header class="subheader">Signed In:</header></b-col>
+          </b-row>
+          <b-row v-for="plan in safetyPlans" v-if="plan.jobId === job.id" :key='plan.jobId'>
+            <b-col cols="3">
+              <router-link style="padding-left: 15px"
+              :to="'/dashboard/jobs/safetyplan/' + plan.id"
+              >{{plan.workerName}}</router-link>
             </b-col>
-            <b-col> 
-              <header class="subheader">Created By:</header>
-              <ul>
-                plan.createdBy
-              </ul>
-            </b-col>
-            <b-col> 
-              <header class="subheader">Expiry Date:</header>
-              <ul>
-                plan.expiryDate
-              </ul>
-            </b-col>
-            <b-col> 
-              <header class="subheader">Signed In:</header>
-              <ul>
-                plan.signedIn
-              </ul>
-            </b-col>
+            <b-col cols="3"><p style="padding-left: 15px">{{plan.createdDate}}</p></b-col>
+            <b-col cols="3"><p style="padding-left: 15px">{{plan.expiryDate}}</p></b-col>
+            <b-col cols="3" v-if="plan.signedIn === true"><p style="padding-left: 15px">{{plan.workerName}}</p></b-col>
           </b-row>
           </b-form>
           <b-button class="button" variant="danger" @click="confirmAction = true, jobToClose = job">Close job</b-button>
@@ -229,6 +215,9 @@ export default {
   computed: {
     jobSites () {
       return this.$store.getters.jobsInProgress
+    },
+    safetyPlans () {
+      return this.$store.getters.safetyPlans
     }
   },
   methods: {
@@ -318,6 +307,10 @@ export default {
   }
   
   .col {
+    padding: 0;
+  }
+
+  .col-3 {
     padding: 0;
   }
 

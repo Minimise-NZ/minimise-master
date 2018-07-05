@@ -45,7 +45,7 @@
           <b-row>
             <b-col sm="3" lg="2">Date of Incident:</b-col>
             <b-col sm="9" lg="10">
-              <b-form-input type="text" :value="displayDate" readonly></b-form-input>
+              <b-form-input type="text" :value="incident.date" readonly></b-form-input>
             </b-col>
           </b-row>
           <b-row>
@@ -152,7 +152,6 @@
 
 <script>
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
-import moment from 'moment'
 export default {
   props: ['id'],
   components: {
@@ -179,14 +178,11 @@ export default {
         return true
       }
     },
-    displayDate () {
-      return moment(String(this.incident.date, 'YYYY-MM-DD')).format('DD-MM-YYYY')
-    },
     incident () {
       return this.$store.getters.incident(this.id)
     },
     headerText () {
-      let text = this.incident.address + ' : ' + this.displayDate
+      let text = this.incident.address + ' : ' + this.incident.date
       return text
     },
     status () {

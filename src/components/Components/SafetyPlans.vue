@@ -9,8 +9,8 @@
       <b-col cols="3">
         <header>Site Address</header>
       </b-col>
-      <b-col cols="2">
-        <header>Created By</header>
+       <b-col>
+        <header>Created Date</header>
       </b-col>
       <b-col>
         <header>Expiry Date</header>
@@ -26,14 +26,14 @@
       <b-col cols="3">
         <p style="text-decoration: underline; color: #178ac3; cursor: pointer" @click="viewPlan(plan)">{{plan.jobAddress}}</p>
       </b-col>
-      <b-col cols="2">
-        <p>{{plan.workerName}}</p>
+       <b-col>
+        <p>{{plan.createdDate}}</p>
       </b-col>
       <b-col>
         <p>{{plan.expiryDate}}</p>
       </b-col>
       <b-col>
-        <p>{{plan.signedIn}}</p>
+        <p v-if="plan.signedIn === true">{{plan.workerName}}</p>
       </b-col>
     </b-row>
   </b-card>

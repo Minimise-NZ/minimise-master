@@ -24,7 +24,7 @@
        v-for="training in training"
        :key="training.name">
       <b-col>
-        <a style="text-decoration: underline; color:#178ac3; cursor: pointer" @click="workerView"
+        <a style="text-decoration: underline; color:#178ac3; cursor: pointer; font-size: 14px" @click="workerView"
           >{{training.name}}</a>
       </b-col>
       <b-col>
@@ -34,7 +34,7 @@
         <p>{{training.description}}</p>
       </b-col>
       <b-col v-if="training.expiry !== ''">
-       <p>{{training.expiry}}</p>
+       <p>{{formattedDate(training.expiry)}}</p>
       </b-col>
       <b-col v-else>
        <p>Not entered</p>
@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   data () {
     return {
@@ -58,6 +60,9 @@ export default {
     }
   },
   methods: {
+    formattedDate (date) {
+      return moment(date).format('DD-MM-YYYY')
+    },
     workerView () {
       this.$router.push('/dashboard/TrainingRegister')
     }

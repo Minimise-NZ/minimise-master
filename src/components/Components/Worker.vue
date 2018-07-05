@@ -72,19 +72,19 @@
       </b-row>
       <b-row>
         <b-col md="5" >
-          <b-form-input id="description" placeholder="Please enter training description" :readonly="readonly" v-model="newtraining.description" :class="{error: error.description}"/>
+          <b-form-input id="description" placeholder="Please enter training description" :readonly="readonly" v-model="newtraining.description"/>
         </b-col>
         <b-col md="3" >
           <b-form-input id="id" placeholder="ID#/Licence no/Certificate" :readonly="readonly" type="text" v-model="newtraining.ID"/>
         </b-col>
         <b-col md="3" >
-          <b-form-input id="expiry" class="no-spinners" placeholder="Please select expiry date" :readonly="readonly" type="text" onfocus="(this.type='date')" v-model="newtraining.expiry" :class="{error: error.expiry}"/>
+          <b-form-input id="expiry" class="no-spinners" placeholder="Please select expiry date" :readonly="readonly" type="text" onfocus="(this.type='date')" v-model="newtraining.expiry"/>
         </b-col>
         <b-col md="1" >
           <b-button variant="success" 
             :disabled="readonly" 
             @click="addTraining"
-            v-b-tooltip.hover title="Add Training"><i class="fa fa-plus"></i></b-button> 
+            v-b-tooltip.hover title="Add New Training"><i class="fa fa-plus"></i></b-button> 
         </b-col>
       </b-row>
       <b-row v-for="training in worker.training" :key="training.description">
@@ -125,10 +125,6 @@ export default {
         ID: '',
         expiry: ''
       },
-      error: {
-        description: false,
-        expiry: false
-      },
       userRoles: [
         { value: 'Health and Safety Manager', text: 'Health and Safety Manager' },
         { value: 'Health and Safety Administrator', text: 'Health and Safety Administrator' },
@@ -157,6 +153,10 @@ export default {
     save () {
       this.loading = true
       // save updates to user profile
+      if (this.newtraining.description !== '') {
+        console.log('adding training')
+        this.addTraining()
+      }
       if (this.changed === true) {
         // save changes
         try {
@@ -186,28 +186,16 @@ export default {
       this.newtraining.description = ''
       this.newtraining.ID = ''
       this.newtraining.expiry = ''
-      this.error.description = ''
-      this.error.expiry = false
       document.getElementById('expiry').type = 'text'
     },
     addTraining () {
-      this.error.description = false
-      this.error.expiry = false
       let training = this.newtraining
-      if (training.description === '') {
-        this.error.description = true
-        return
-      } else if (training.expiry === '') {
-        this.error.expiry = true
-        return
-      } else {
-        this.worker.training.push({
-          description: training.description,
-          ID: training.ID,
-          expiry: training.expiry
-        })
-        this.clear()
-      }
+      this.worker.training.push({
+        description: training.description,
+        ID: training.ID,
+        expiry: training.expiry
+      })
+      this.clear()
     }
   },
   mounted () {
