@@ -205,6 +205,7 @@ export default {
   }
 
   .card-header {
+    background-color: rgba(56, 56, 56, 0.88);
     margin: -20px -20px 20px -20px;
   }
   

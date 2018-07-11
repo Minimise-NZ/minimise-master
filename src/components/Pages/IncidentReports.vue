@@ -78,6 +78,7 @@ export default {
 <style scoped>
 
   .card-header {
+    background-color: rgba(56, 56, 56, 0.88);
     margin: -20px -20px 0px -20px;
   }
   
@@ -96,6 +97,10 @@ export default {
   .content {
     margin-left: 0;
     margin-top: 20px;
+  }
+
+  p {
+    font-size: 1rem;
   }
 
 </style>

@@ -34,6 +34,7 @@ export default {
 
 <style scoped>
   .card-header {
+    background-color: rgba(56, 56, 56, 0.88);
     margin: -20px -20px 0px -20px;
   }
 

@@ -11,7 +11,7 @@
       headerTextVariant= 'light'
       title="Add New Worker">
       <div>
-        <form @submit.prevent="handleSubmit">
+        <form>
           <b-row class="inner-row">
             <b-col md="6" lg="4">
               <label>Name:</label>
@@ -229,6 +229,9 @@ export default {
       if (this.role !== 'Worker') {
         this.webUser = true
       }
+      if (this.role === 'Administrator') {
+        this.admin = true
+      }
       if (this.email === '') {
         this.error.email = true
         return
@@ -236,9 +239,6 @@ export default {
       if (this.phone === '') {
         this.error.phone = true
         return
-      }
-      if (this.role === 'Administrator') {
-        this.admin = true
       } else {
         console.log('form ready to submit')
         this.handleSubmit()
@@ -319,6 +319,7 @@ export default {
   }
 
   .card-header {
+    background-color: rgba(56, 56, 56, 0.88);
     margin: -20px -20px 0px -20px;
   }
   

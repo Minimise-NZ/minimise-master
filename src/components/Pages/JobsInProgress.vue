@@ -65,11 +65,11 @@
           v-for="(job, index) in jobSites"
           :key="job.id"
           class="siteCard mt-2 mb-4">
-          <b-btn block v-b-toggle="'collapse' + index" class="text-left togglebtn card-header job">
+          <b-btn block v-b-toggle="'collapse' + index" class="text-left togglebtn card-header job" v-b-tooltip.hover title="Click to show/hide job details">
             {{job.address}}
-            <p style="float:right; margin-bottom:0">Click to hide/show</p>
+            <i class="fa fa-chevron-down" style="float:right"></i>
           </b-btn>
-          <b-collapse :id="'collapse' + index" accordion="my-accordion" visible>
+          <b-collapse :id="'collapse' + index" accordion="my-accordion">
           <b-form @submit.prevent="onSubmit">
             <b-row class="outer-row">
               <b-col m="12" lg="7" class="outer-col" style="padding-top: 20px; padding-right: 20px">
@@ -274,6 +274,7 @@ export default {
 
 <style scoped>
   .card-header {
+    background-color: rgba(56, 56, 56, 0.88);
     margin: -20px -20px 0 -20px;
   }
 

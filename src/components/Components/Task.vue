@@ -26,9 +26,10 @@
       </b-modal>
       <b-form @submit.prevent="save">
         <b-btn block v-b-toggle="'collapse' + this.index" 
-          class="text-left togglebtn card-header task">
+          class="text-left togglebtn card-header task"
+          v-b-tooltip.hover title="Click to show/hide task details">
             {{task.title}}
-            <p style="float:right; margin-bottom:0">Click to hide/show</p>
+            <i style="float:right" class="fa fa-chevron-down"></i>
         </b-btn>
         <b-collapse :id="'collapse' + this.index" accordion="my-accordion" visible>
           <b-row class="outer-row">

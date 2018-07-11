@@ -1,8 +1,8 @@
 <template>
   <b-card class="hazSubCard mt-2 mb-4">
-    <b-btn block v-b-toggle="'collapse' + index" class="text-left togglebtn card-header substance">
+    <b-btn block v-b-toggle="'collapse' + index" class="text-left togglebtn card-header substance" v-b-tooltip.hover title="Click to show/hide substance details">
         {{substance.name}}
-      <p style="float:right; margin-bottom:0">Click to hide/show</p>
+      <i class="fa fa-chevron-down" style="float:right"></i>
     </b-btn>
     <b-collapse :id="'collapse' + this.index" accordion="my-accordion" visible>
     <b-form @submit.prevent="onSubmit">
