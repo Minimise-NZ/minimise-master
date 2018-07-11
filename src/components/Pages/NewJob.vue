@@ -10,7 +10,7 @@
       headerTextVariant= 'light'
       title="Success!">
       <div class="d-block text-center">
-        <h4 >Job site: {{siteAddress}} has been created</h4>
+        <h4>Job site: {{siteAddress}} has been created</h4>
       </div>
     </b-modal>
 

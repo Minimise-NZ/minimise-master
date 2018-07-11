@@ -110,11 +110,11 @@ export const store = new Vuex.Store({
       state.taskAnalysis.push(payload)
     },
     setMyHazards (state, payload) {
-      console.log('My hazards set')
+      console.log('My hazards set', payload)
       state.myHazards = payload
     },
     setNotMyHazards (state, payload) {
-      console.log('Not my hazards set')
+      console.log('Not my hazards set', payload)
       state.notMyHazards = payload
     },
     setHazardousSubstances (state, payload) {
@@ -370,12 +370,9 @@ export const store = new Vuex.Store({
     },
     getTraining ({commit, state}) {
       let workers = state.workers
-      console.log(workers)
       let trainingAlerts = []
       for (let worker of workers) {
-        console.log('worker', worker)
         for (let training of worker.training) {
-          console.log('training', training)
           if (training.expiry !== '') {
             let alertDate = moment(training.expiry).subtract(14, 'days').format('YYYY-MM-DD')
             if (moment().isAfter(training.expiry)) {
@@ -593,19 +590,16 @@ export const store = new Vuex.Store({
       })
     },
     getSafetyPlans ({state, commit}) {
-      console.log('getting')
       let promise = new Promise((resolve, reject) => {
         firestore.collection('safetyPlans').where('companyKey', '==', state.companyKey)
         .get()
         .then((snapshot) => {
-          console.log(snapshot)
           let safetyPlans = []
           snapshot.forEach((doc) => {
             console.log(doc.data())
             let plan = doc.data()
             let expiry = moment(plan.expiryDate).format('DD-MM-YYYY')
             if (today < expiry) {
-              console.log('Plan current', today, expiry)
               safetyPlans.push({
                 id: doc.id,
                 companyKey: plan.companyKey,
@@ -824,6 +818,7 @@ export const store = new Vuex.Store({
           for (var j = myHazards.length - 1; j > -1; j--) {
             if (allHazards[i].id === myHazards[j].id) {
               allHazards.splice(i, 1)
+              break
             }
           }
         }

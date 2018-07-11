@@ -11,12 +11,12 @@
                 v-for="(hazard, index) in hazards"
                 :key="index"
                 role="tab"
-                class="hazardCard mt-2 mb-4">
+                class="hazardCard">
                 <header class="card-header hazard">
                   <b-btn block v-b-toggle="'collapse' + index" class="text-left togglebtn">{{hazard.name}}</b-btn>
                 </header>
                 <b-collapse :id="'collapse' + index">
-                <b-row>
+                <b-row style="margin-top: 15px">
                   <b-col>
                     <b-img
                       :src='hazard.imageURL'
@@ -56,7 +56,7 @@
                 <b-btn block v-b-toggle.collapseTask class="text-left togglebtn">{{task.title}}</b-btn>
               </header>
               <b-collapse id="collapseTask">
-                <b-row class="pl-2">
+                <b-row class="pl-2" style="margin-top: 15px">
                   <b-col class="ml-0 pl-0">
                     <b-form-checkbox
                       id="notification"
@@ -79,6 +79,7 @@
                       PPE required
                     </b-form-checkbox><br>
                     <b-form-input
+                      style="max-width: 500px"
                       name="ppe"
                       class="mb-4"
                       readonly
@@ -93,6 +94,7 @@
                     </b-form-checkbox><br>
                     <b-form-input
                       name="plant"
+                      style="max-width: 500px"
                       readonly
                       class="mb-4"
                       v-if="task.plantRequired"
@@ -100,7 +102,7 @@
                     </b-form-input>
                   </b-col>
                 </b-row>
-                <b-row class="mt-5">
+                <b-row class="mt-2 mb-2">
                   <b-col lg="1" md="2">
                     <header class="task-subheader">Step</header>
                   </b-col>
@@ -114,20 +116,39 @@
                     <header class="task-subheader">Hazard Controls</header>
                   </b-col>
                 </b-row>
-                <b-row v-for="(step, index) in task.steps" :key="index" class="steps">
-                  <b-col cols="1">
-                    <h4>{{index + 1}}</h4>
-                  </b-col>
-                  <b-col>
-                    <textarea class="form-control step" rows="3" :value="step.description" readonly></textarea>
-                  </b-col> 
-                  <b-col>
-                    <textarea class="form-control step" rows="3" :value="step.hazards" readonly></textarea>
-                  </b-col>
-                  <b-col>
-                    <textarea class="form-control step" rows="3" :value="step.controls" readonly></textarea>
-                  </b-col>
-                </b-row>
+                <div v-for="(step, index) in task.steps" :key="index" class="steps">
+                  <b-row class="inner-row">
+                    <b-col cols="1">
+                      <h4 class="index">{{index + 1}}</h4>
+                    </b-col>
+                    <b-col>
+                      <b-form-textarea 
+                        class="form-control step" 
+                        rows="2" 
+                        v-model="step.description" 
+                        readonly>
+                      </b-form-textarea>
+                    </b-col>
+                    <b-col>
+                      <b-form-textarea 
+                        class="form-control step" 
+                        rows="2" 
+                        v-model="step.hazards" 
+                        readonly>
+                      </b-form-textarea>
+                    </b-col>
+                    <b-col>
+                      <b-row style="margin: 0">
+                        <b-form-textarea 
+                          class="form-control step"
+                          rows="2" 
+                          v-model="step.controls" 
+                          readonly>
+                        </b-form-textarea>
+                      </b-row>
+                    </b-col>
+                  </b-row>
+                </div>
               </b-collapse>
             </b-card>
           </b-card>
@@ -140,7 +161,7 @@
                 <b-btn block v-b-toggle="'worker' + index" class="text-left togglebtn">{{worker.name}}</b-btn>
               </header>
               <b-collapse :id="'worker' + index">
-                <b-row class="mb-2">
+                <b-row class="mb-2" style="margin-top: 15px">
                   <b-col md="5" >
                     <header>Training Description</header>
                   </b-col>
@@ -238,7 +259,7 @@ export default {
   }
 
   .card-header.hazard {
-    margin: -20px -20px 20px -20px;
+    margin: -20px -20px 0px -20px;
     padding: 0;
   }
 
@@ -262,19 +283,26 @@ export default {
   }
 
   .togglebtn {
-    background-color: #737373;
+    background-color: #8e8e8e;
   }
 
   .togglebtn:hover {
     background-color: #8f4c9aa8;
   }
 
-  .steps {
-    padding: 0 15px 15px 15px;
-  }
-
   header {
     padding-left: 5px;
+  }
+
+  .inner-row{
+    margin-bottom: 15px;
+  }
+
+  .index {
+    padding-top: 20px;
+    text-align: center;
+    color: rgba(155, 35, 53, 0.88);
+    font-weight: bold;
   }
 
 </style>
