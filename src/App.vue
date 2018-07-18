@@ -99,4 +99,11 @@ body.modal-open {
   margin: 0;
 }
 
+  @media (max-width: 992px) {
+    body {
+      font-size: 0.9rem;
+      line-height: 1.0;
+    }
+  }
+
 </style>

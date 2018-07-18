@@ -182,9 +182,9 @@
             <b-col cols="3">
               <router-link style="padding-left: 15px"
               :to="'/dashboard/jobs/safetyplan/' + plan.id"
-              >{{plan.workerName}}</router-link>
+              >{{plan.jobAddress}}</router-link>
             </b-col>
-            <b-col cols="3"><p style="padding-left: 15px">{{plan.createdDate}}</p></b-col>
+            <b-col cols="3"><p style="padding-left: 15px">{{plan.workerName}}</p></b-col>
             <b-col cols="3"><p style="padding-left: 15px">{{plan.expiryDate}}</p></b-col>
             <b-col cols="3" v-if="plan.signedIn === true"><p style="padding-left: 15px">{{plan.workerName}}</p></b-col>
           </b-row>
@@ -218,6 +218,11 @@ export default {
     },
     safetyPlans () {
       return this.$store.getters.safetyPlans
+    }
+  },
+  beforeCreate () {
+    if (this.$store.getters.jobsInProgress.length < 1) {
+      this.$store.dispatch('getAllJobs')
     }
   },
   methods: {

@@ -123,9 +123,6 @@ export default {
   }
   
   .row {
-    height: -moz-calc(100vh - 86px); /* Firefox */
-    height: -webkit-calc(100vh - 86px); /* Chrome, Safari */
-    height: calc(100vh - 86px);
     margin: 0;
   }
   
@@ -168,6 +165,14 @@ export default {
     font-size: 2rem;
   }
 
+  @media (min-width: 992px) {
+    .row {
+      height: -moz-calc(100vh - 86px); /* Firefox */
+      height: -webkit-calc(100vh - 86px); /* Chrome, Safari */
+      height: calc(100vh - 86px)
+    }
+  }
+
   @media only screen and (max-width: 440px) {
     .navbar-brand {
       display: none;
@@ -180,7 +185,4 @@ export default {
     }
   }
 
-  @media only screen and (orientation: portrait) {
-  }
-  
 </style>
