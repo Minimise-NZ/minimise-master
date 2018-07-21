@@ -234,7 +234,7 @@ export default {
   
   span {
     font-family: 'Montserrat', sans-serif;
-    font-size: 0.9rem;
+    font-size: 0.9em;
   }
   
   .form-control {
@@ -247,7 +247,7 @@ export default {
     height: 50px;
     color: white;
     font-family: 'Montserrat', sans-serif;
-    font-size: 1.2rem;
+    font-size: 1.2em;
   }
   
   .btn:hover {

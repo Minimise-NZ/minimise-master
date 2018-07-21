@@ -22,7 +22,7 @@
   }
 
   h1 {
-    font-size: 4rem;
+    font-size: 4em;
     font-weight: bold;
   }
   

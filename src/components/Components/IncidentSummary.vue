@@ -73,7 +73,7 @@ export default {
   
   .card-header {
     background-color: #12807a;
-    font-size: 1.2rem;
+    font-size: 1em;
     color: white;
   }
   

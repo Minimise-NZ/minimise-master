@@ -136,7 +136,7 @@
           <div class="text-center" v-if="this.readonly === false">
             <b-button-group class="pb-4">
               <b-button class="buttons" variant="success" type="submit">
-                <p style="font-size: 1rem; margin-bottom: 0; font-weight: normal; margin-top: 0;color: white" v-if="loading===false">Save</p>
+                <p style="font-size: 1em; margin-bottom: 0; font-weight: normal; margin-top: 0;color: white" v-if="loading===false">Save</p>
                 <div class="loader">
                   <pulse-loader :loading="loading" ></pulse-loader>
                 </div>

@@ -327,7 +327,7 @@ export default {
     background-color: #12807a;
     margin: 0;
     color: white;
-    font-size: 1.2rem;
+    font-size: 1.2em;
     padding-left: 15px;
   }
   

@@ -85,7 +85,7 @@
     height: 50px;
     color: white;
     font-family: 'Montserrat', sans-serif;
-    font-size: 1.2rem;
+    font-size: 1.2em;
   }
 
   .registerBtn:hover {
@@ -116,7 +116,7 @@
   }
   
   span {
-    font-size: 0.8rem;
+    font-size: 0.8em;
   }
   .contractor {
     background-color: rgba(29, 92, 158, 0.75);
@@ -139,7 +139,7 @@
     padding: 0 10px;
     text-align: center;
     margin-top: 20px;
-    font-size: 1.1rem;
+    font-size: 1.1em;
     font-weight: bold;
   }
   
@@ -166,7 +166,7 @@
   
   .smaller {
     width: 100%;
-    font-size: 0.9rem;
+    font-size: 0.9em;
   }
   
   .signUp.contractor:hover{
@@ -189,7 +189,7 @@
       height: 750px;
     }
     h3 {
-      font-size: 1.5rem;
+      font-size: 1.5em;
     }
     .card-header {
       height: 140px;

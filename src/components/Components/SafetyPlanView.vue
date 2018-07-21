@@ -5,7 +5,7 @@
         <div class="scroll-container">
           <!--HAZARD CARD-->
           <b-card>
-            <div class="section card-header">Hazard Register <span style="font-size: 0.9rem"> (click hazard name to hide/show details)</span></div>
+            <div class="section card-header">Hazard Register <span style="font-size: 0.9em"> (click hazard name to hide/show details)</span></div>
             <div role="tablist">
               <b-card
                 v-for="(hazard, index) in hazards"
@@ -50,7 +50,7 @@
 
           <!--TASK ANALYSIS CARD-->
           <b-card v-if="!_.isEmpty(plan.taskAnalysis)">
-            <div class="section card-header">Task Analysis <span style="font-size: 0.9rem"> (click task title to hide/show details)</span></div>
+            <div class="section card-header">Task Analysis <span style="font-size: 0.9em"> (click task title to hide/show details)</span></div>
             <b-card class="taskAnalysis">
               <header class="card-header hazard">
                 <b-btn block v-b-toggle.collapseTask class="text-left togglebtn">{{task.title}}</b-btn>
@@ -155,7 +155,7 @@
 
           <!--TRAINING CARD-->
           <b-card>
-            <div class="section card-header">Training Register<span style="font-size: 0.9rem"> (click worker name to hide/show details)</span></div>
+            <div class="section card-header">Training Register<span style="font-size: 0.9em"> (click worker name to hide/show details)</span></div>
             <b-card v-for="(worker, index) in workers" :key="worker.id">
               <header class="card-header hazard">
                 <b-btn block v-b-toggle="'worker' + index" class="text-left togglebtn">{{worker.name}}</b-btn>
@@ -247,14 +247,14 @@ export default {
   .card-header.safetyplan {
     margin: -20px -20px 20px -20px;
     background-color: #027588;
-    font-size: 1.4rem;
+    font-size: 1.2em;
     color: white;
   }
 
   .card-header.section {
     margin: -20px -20px 20px -20px;
     background-color: rgba(29,92,158,.89);
-    font-size: 1.2rem;
+    font-size: 1em;
     color: white;
   }
 

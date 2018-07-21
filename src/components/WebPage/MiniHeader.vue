@@ -40,7 +40,7 @@ export default {
   
   .navbar-brand > a {
     color: #FFC80B;
-    font-size: 1.6rem;
+    font-size: 1.6em;
     text-decoration: none;
   }
   

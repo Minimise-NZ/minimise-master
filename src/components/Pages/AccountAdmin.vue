@@ -23,7 +23,7 @@ export default {
   
   .card-header {
     background-color: #616161;
-    font-size: 1.4rem;
+    font-size: 1.2em;
     color: white;
   }
 </style>

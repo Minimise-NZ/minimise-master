@@ -42,7 +42,7 @@ body.modal-open {
 
 .card-header {
   background-color: rgba(56, 56, 56, 0.88);
-  font-size: 1.4rem;
+  font-size: 1.2em;
   color: white;
 }
 
@@ -73,7 +73,7 @@ body.modal-open {
 .alert-danger {
   margin-top:10px;
   padding: 5px;
-  font-size: 0.9rem;
+  font-size: 0.9em;
   margin-bottom: 5px;
 }
 
@@ -99,9 +99,9 @@ body.modal-open {
   margin: 0;
 }
 
-  @media (max-width: 992px) {
+  @media (max-width: 1200px) {
     body {
-      font-size: 0.9rem;
+      font-size: 0.9em;
       line-height: 1.0;
     }
   }

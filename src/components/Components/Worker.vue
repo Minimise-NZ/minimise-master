@@ -210,7 +210,7 @@ export default {
     background-color: #8e4e74;
     margin: 0;
     color: white;
-    font-size: 1.2rem;
+    font-size: 1.2em;
     padding-left: 15px;
   }
   

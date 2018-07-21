@@ -97,6 +97,8 @@ export default {
     this.$store.dispatch('getAllJobs')
     this.$store.dispatch('getAllIncidents')
     this.$store.dispatch('getMyHazards')
+  },
+  beforeMount () {
     this.$store.dispatch('getSafetyPlans')
   }
 }
@@ -105,7 +107,7 @@ export default {
 <style scoped>
 
   .list-group-item {
-    border-radius: 0.25rem;
+    border-radius: 0.25em;
     background-color: rgba(221, 221, 221, 0.2);
     color: white;
     margin-bottom: 10px;
@@ -113,7 +115,7 @@ export default {
   }
   
   p {
-    font-size: 1rem;
+    font-size: 1em;
     margin: 0;
   }
   
@@ -123,6 +125,9 @@ export default {
   }
   
   .row {
+    height: calc(100vh - 95px);
+    height: -moz-calc(100vh - 95px);
+    height: -webkit-calc(100vh - 95px);
     margin: 0;
   }
   
@@ -162,15 +167,7 @@ export default {
   }
 
   .brand-name {
-    font-size: 2rem;
-  }
-
-  @media (min-width: 992px) {
-    .row {
-      height: -moz-calc(100vh - 86px); /* Firefox */
-      height: -webkit-calc(100vh - 86px); /* Chrome, Safari */
-      height: calc(100vh - 86px)
-    }
+    font-size: 2em;
   }
 
   @media only screen and (max-width: 440px) {

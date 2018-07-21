@@ -335,7 +335,7 @@ export default {
 h3 {
   padding-left: 40px;
   margin-bottom: 30px;
-  font-size: 1.6rem;
+  font-size: 1.6em;
   color: #12807a;
 }
 .navbar {
@@ -343,7 +343,7 @@ h3 {
 }
   
 .brand-name {
-  font-size: 2rem;
+  font-size: 2em;
 }
   
 button {
@@ -511,7 +511,7 @@ li > i {
     height: 50px;
     color: white;
     font-family: 'Montserrat', sans-serif;
-    font-size: 1.2rem;
+    font-size: 1.2em;
   }
 
   .registerBtn:hover {
@@ -590,13 +590,13 @@ li > i {
   }
   .feature-list {
     padding-left: 0;
-    font-size:1.4rem;
+    font-size:1.2em;
   }
   .feature-list > li {
     padding-bottom: 10px;
   }
   li > i {
-    font-size:2.5rem;
+    font-size:2.5em;
   }
 
   .main-nav {
@@ -612,30 +612,30 @@ li > i {
 /*large screens*/
 @media only screen and (min-width: 992px) {
   .feature-list {
-    font-size:1.1rem;
+    font-size:1.1em;
   }
   .feature-list > li {
     padding-bottom: 15px;
   }
   li > i {
-    font-size:1.6rem;
+    font-size:1.6em;
   }
 }
 
 @media only screen and (min-width: 1100px) {
   .feature-list {
-    font-size:1.2rem;
+    font-size:1.2em;
   }
 }
 
 /*extra large screens*/
 @media only screen and (min-width: 1400px) {
   .feature-list {
-    font-size:1.4rem;
+    font-size:1.2em;
   }
 
   li > i {
-    font-size:2.5rem;
+    font-size:2.5em;
   }
 }
 

@@ -65,7 +65,7 @@
                   <label>Supervisor Phone:</label>
                 </b-col>
                 <b-col>
-                  <b-form-input type="text" :value="supervisorPhone"/>
+                  <b-form-input type="text" :value="supervisorPhone" disabled/>
                 </b-col>
               </b-row>
               <!--medical centre row-->
@@ -102,20 +102,13 @@
           <b-row>
             <!--column 1 notifiable-->
             <b-col md="12" lg="7">
-              <b-row  class="pl-0">
+              <b-row class="pl-0 pb-0 pt-0">
                 <b-col lg="9">
                   <label>Is there notifiable works associated with this project?</label>
-                  <b-form-checkbox-group
-                    class="mt-3 ml-2"
-                    v-if="showNotifiable"
-                    stacked 
-                    v-model="notifiable.selected" 
-                    name="notifiables" 
-                    :options="notifiable.list">
-                  </b-form-checkbox-group>
                 </b-col>  
-                <b-col >
+                <b-col>
                   <b-form-radio-group
+                    :disabled="notifiable.disabled"
                     class="mt-1"
                     id="radioNotifiable" 
                     v-model="notifiable.radioValue"
@@ -123,26 +116,21 @@
                   </b-form-radio-group>
                 </b-col>
               </b-row>
-              <b-row class="search mt-0">
-                <b-col>
-                  <div class="alert alert-danger ml-2" v-if="notifiableError">Please select notifiable works</div>
-                </b-col>
-              </b-row>
             </b-col>
             <!--column 2 notifiable-->
             <b-col>
-              <b-row v-if="notifiable.radioValue === 'true'">
+              <b-row v-if="notifiable.radioValue === 'true' && notifiable.url === ''" class="pt-0">
                 <b-col md="10" lg="9" xl="10">
                   <b-form-file v-model="notifiable.file" placeholder="Choose a file..." :disabled="notifiable.disabled"></b-form-file>
                 </b-col>
                 <b-col>
-                  <b-btn v-if="notifiable.url === ''" @click="uploadFile('notifiable')" v-b-tooltip.hover title="Upload file">
+                  <b-btn v-if="notifiable.file !== ''" @click="uploadFile('notifiable')" v-b-tooltip.hover title="Upload file">
                     <i class="fa fa-cloud-upload"></i>
                   </b-btn>
-                  <b-btn variant="success" v-else v-b-tooltip.hover title="File uploaded">
-                    <i class="fa fa-check"></i>
-                  </b-btn>
                 </b-col>
+              </b-row>
+              <b-row v-if="notifiable.radioValue === 'true' && notifiable.url !== ''" class="pt-0">
+                <a target="_blank" :href="notifiable.url">Worksafe Notification</a>
               </b-row>
             </b-col>
           </b-row>
@@ -151,7 +139,7 @@
           <b-row>
             <!--column 1 environmental-->
             <b-col md="12" lg="7">
-              <b-row  class="pl-0">
+              <b-row  class="pl-0 pb-0">
                 <b-col lg="9">
                   <label>Is an environmental plan required?</label>
                 </b-col>  
@@ -167,7 +155,7 @@
             </b-col>
             <!--column 2 environmental-->
             <b-col>
-              <b-row v-if="environmental.radioValue === 'true'">
+              <b-row v-if="environmental.radioValue === 'true'" class="pt-0">
                 <b-col md="10" lg="9" xl="10">
                   <b-form-file v-model="environmental.file" placeholder="Choose a file..." :disabled="environmental.disabled"></b-form-file>
                 </b-col>
@@ -187,7 +175,7 @@
           <b-row>
             <!--column 1 resource-->
             <b-col md="12" lg="7">
-              <b-row  class="pl-0">
+              <b-row  class="pl-0 pb-0">
                 <b-col lg="9">
                   <label>Is a resource consent required?</label>
                 </b-col>  
@@ -203,7 +191,7 @@
             </b-col>
             <!--column 2 resource-->
             <b-col>
-              <b-row v-if="resource.radioValue === 'true'">
+              <b-row v-if="resource.radioValue === 'true'" class="pt-0">
                 <b-col md="10" lg="9" xl="10">
                   <b-form-file v-model="resource.file" placeholder="Choose a file..." :disabled="resource.disabled"></b-form-file>
                 </b-col>
@@ -219,12 +207,47 @@
             </b-col>
           </b-row>
 
+          <!--OTHER DOCS ROW-->
+          <b-row>
+            <!--column 1 docs-->
+            <b-col md="12" lg="7">
+              <b-row  class="pl-0 pb-0">
+                <b-col lg="9">
+                  <label>Would you like to add additional documents?</label>
+                </b-col>  
+                <b-col >
+                  <b-form-radio-group
+                    class="mt-1"
+                    id="radioDocs" 
+                    v-model="docs.radioValue"
+                    :options="docs.radioOptions">
+                  </b-form-radio-group>
+                </b-col>
+              </b-row>
+            </b-col>
+            <!--column 2 docs-->
+            <b-col>
+              <b-row v-if="docs.radioValue === 'true'" class="pt-0">
+                <b-col md="10" lg="9" xl="10">
+                  <b-form-file v-model="docs.files" placeholder="Choose files or drag and drop..." multiple></b-form-file>
+                </b-col>
+                <b-col>
+                  <b-btn v-if="docs.urls.length < 1" @click="uploadFile('docs')" v-b-tooltip.hover title="Upload file">
+                    <i class="fa fa-cloud-upload"></i>
+                  </b-btn>
+                  <b-btn variant="success" v-else v-b-tooltip.hover title="File uploaded">
+                    <i class="fa fa-check"></i>
+                  </b-btn>
+                </b-col>
+              </b-row>
+            </b-col>
+          </b-row>
           <hr>
 
           <div class="text-center">
             <b-button-group class="pt-4 pb-4">
               <b-button class="buttons" variant="success" @click="submit" :disabled="loading===true">
-                <p style="font-size: 1rem; margin-bottom: 0" v-if="loading===false">Submit</p>
+                <p style="font-size: 1em; margin-bottom: 0" v-if="loading===false">Submit</p>
                 <div class="loader">
                   <pulse-loader :loading="loading" ></pulse-loader>
                 </div>
@@ -254,14 +277,8 @@ export default {
           {text: 'Yes', value: 'true'},
           {text: 'No', value: 'false'}
         ],
-        list: [
-          'Working at heights > 5m',
-          'Work in confined spaces',
-          'Work in an excavation > 1.5m'
-        ],
         file: '',
         url: '',
-        selected: [],
         disabled: false
       },
       environmental: {
@@ -271,7 +288,8 @@ export default {
           {text: 'No', value: 'false'}
         ],
         file: '',
-        url: ''
+        url: '',
+        disabled: false
       },
       resource: {
         radioValue: 'false',
@@ -280,9 +298,18 @@ export default {
           {text: 'No', value: 'false'}
         ],
         file: '',
-        url: ''
+        url: '',
+        disabled: false
       },
-      selectError: false,
+      docs: {
+        radioValue: 'false',
+        radioOptions: [
+          {text: 'Yes', value: 'true'},
+          {text: 'No', value: 'false'}
+        ],
+        files: [],
+        urls: []
+      },
       mapRoot: 'https://www.google.com/maps/embed/v1/place?key=AIzaSyD7W7NiKKy0qZfRUsslzHOe-Hnkp-IncyU&q=Christchurch City',
       siteAddress: '',
       supervisorIndex: 0,
@@ -290,16 +317,12 @@ export default {
       addressError: false,
       supervisorError: false,
       medicalError: false,
-      notifiableError: false,
       successModal: false,
       errorModal: false,
       errorMessage: ''
     }
   },
   computed: {
-    showNotifiable () {
-      return (this.notifiable.radioValue === 'true')
-    },
     user () {
       return this.$store.getters.user
     },
@@ -340,25 +363,37 @@ export default {
   methods: {
     async uploadFile (type) {
       this.loading = true
-      switch (type) {
-        case 'notifiable':
-          console.log('uploading notifiable')
-          this.notifiable.url = await this.$store.dispatch('uploadFile', {file: this.notifiable.file, type: 'notifiable'})
-          this.notifiable.disabled = true
-          this.loading = false
-          break
-        case 'environmental':
-          console.log('uploading environmental')
-          this.environmental.url = await this.$store.dispatch('uploadFile', {file: this.environmental.file, type: 'environmental'})
-          this.environmental.disabled = true
-          this.loading = false
-          break
-        case 'resource':
-          console.log('uploading resource')
-          this.resource.url = await this.$store.dispatch('uploadFile', {file: this.resource.file, type: 'resource'})
-          this.resource.disabled = true
-          this.loading = false
-          break
+      try {
+        switch (type) {
+          case 'notifiable':
+            console.log('uploading notifiable')
+            this.notifiable.url = await this.$store.dispatch('uploadFile', {file: this.notifiable.file, type: 'notifiable'})
+            this.notifiable.disabled = true
+            this.loading = false
+            break
+          case 'environmental':
+            console.log('uploading environmental')
+            this.environmental.url = await this.$store.dispatch('uploadFile', {file: this.environmental.file, type: 'environmental'})
+            this.environmental.disabled = true
+            this.loading = false
+            break
+          case 'resource':
+            console.log('uploading resource')
+            this.resource.url = await this.$store.dispatch('uploadFile', {file: this.resource.file, type: 'resource'})
+            this.resource.disabled = true
+            this.loading = false
+            break
+          case 'docs':
+            this.docs.files.forEach((file) => {
+              let url = this.$store.dispatch('uploadFile', {file: file, type: file.name})
+              this.docs.urls.push(url)
+            })
+            this.loading = false
+            break
+        }
+      } catch (err) {
+        this.loading = false
+        console.log(err)
       }
     },
     searchMedical () {
@@ -374,7 +409,6 @@ export default {
       this.siteAddress = ''
       this.supervisorIndex = 0
       this.notifiable.radioValue = 'false'
-      this.notifiable.selected = []
       this.notifiable.file = ''
       this.notifiable.url = ''
       this.notifiable.disabled = false
@@ -390,8 +424,6 @@ export default {
       this.addressError = false
       this.supervisorError = false
       this.medicalError = false
-      this.notifiableError = false
-      this.selectError = false
     },
     onSubmit (e) {
       if (e.keyCode === 13) {
@@ -528,7 +560,7 @@ export default {
   .alert-danger {
     margin-top:10px;
     padding: 5px;
-    font-size: 0.9rem;
+    font-size: 0.9em;
   }
 
   .alert-border {

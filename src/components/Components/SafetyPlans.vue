@@ -61,13 +61,13 @@ export default {
 
 <style scoped>
   .card {
-    border: 1px solid #12807a;
+    border: 1px solid rgba(29, 92, 158, 0.89);
     margin-bottom: 30px;
   }
   
   .card-header {
     background-color: rgba(29, 92, 158, 0.89);
-    font-size: 1.2rem;
+    font-size: 1em;
     color: white;
   }
   

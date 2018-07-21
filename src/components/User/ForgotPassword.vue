@@ -91,7 +91,7 @@
   
   a {
     margin: auto;
-    font-size: 0.9rem;
+    font-size: 0.9em;
   }
   
   .login-btn {

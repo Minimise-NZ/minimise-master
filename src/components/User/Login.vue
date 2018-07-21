@@ -46,7 +46,7 @@
         </b-input-group>
 
         <b-button class="btn-block" type="submit" :disabled="disabled">
-          <p style="font-size: 1rem; margin-bottom: 0" v-if="loading===false">LOGIN</p>
+          <p style="font-size: 1em; margin-bottom: 0" v-if="loading===false">LOGIN</p>
           <div class="loader">
             <pulse-loader :loading="loading" ></pulse-loader>
           </div>
@@ -170,7 +170,7 @@
   }
   
   a {
-    font-size: 0.9rem;
+    font-size: 0.9em;
     margin:auto;
   }
   

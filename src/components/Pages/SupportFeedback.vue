@@ -18,7 +18,7 @@
     <div class="card-header">Support/Feedback
     </div>
     <b-card class="itemCard mt-2 mb-4">
-      <header class="card-header item">Please enter feedback details below<br><span style="font-size: 0.8rem">We will typically respond via email within 24 hours</span></header>
+      <header class="card-header item">Please enter feedback details below<br><span style="font-size: 0.8em">We will typically respond via email within 24 hours</span></header>
       <b-form @submit.prevent="onSubmit">
         <b-row>
           <b-col sm="3"><label>Feedback Type:</label></b-col>
@@ -63,7 +63,7 @@
         <div class="text-center">
           <b-button-group class="pt-4 pb-4">
             <b-button class="buttons" variant="success" @click="submit">
-              <p style="font-size: 1rem; margin-bottom: 0" v-if="loading===false">Submit</p>
+              <p style="font-size: 1em; margin-bottom: 0" v-if="loading===false">Submit</p>
               <div class="loader">
                 <pulse-loader :loading="loading" ></pulse-loader>
               </div>
@@ -213,7 +213,7 @@ export default {
     background-color: rgba(29, 92, 158, 0.89);
     margin: 0;
     color: white;
-    font-size: 1.2rem;
+    font-size: 1.2em;
     padding-left: 15px;
     margin-bottom: 20px;
   }
