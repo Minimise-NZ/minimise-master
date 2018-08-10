@@ -16,15 +16,12 @@
   height: 100vh;
 }
 
-P {
-  font-size: 14px;
+body {
+  font-size: 0.9em;
 }
 
 .btn {
   cursor: pointer;
-}
-.outside-container {
-  padding-top: 20px;
 }
 
 body.modal-open {
@@ -32,7 +29,7 @@ body.modal-open {
 }
 
 .scroll-container {
-  height: 765px;
+  height: 80vh;
   overflow: scroll;
   padding-bottom: 20px;
   padding-right: 10px;

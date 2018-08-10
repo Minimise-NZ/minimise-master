@@ -33,8 +33,12 @@ export default {
 </script>
 
 <style scoped>
+
+  .container-fluid {
+    padding-top: 20px;
+  }
+  
   .card-header {
-    background-color: rgba(56, 56, 56, 0.88);
     margin: -20px -20px 0px -20px;
   }
 

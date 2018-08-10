@@ -450,21 +450,33 @@ export const store = new Vuex.Store({
       let promise = new Promise((resolve, reject) => {
         console.log('Creating new job', payload)
         firestore.collection('jobSites').add({
+          address: payload.address,
+          medical: payload.medical,
           companyKey: payload.companyKey,
           companyName: payload.companyName,
-          medical: payload.medical,
+          supervisorKey: payload.supervisorKey,
           supervisorName: payload.supervisorName,
           supervisorPhone: payload.supervisorPhone,
-          supervisorKey: payload.supervisorKey,
-          address: payload.address,
           notifiable: payload.notifiable,
           notifiableurl: payload.notifiableurl,
           environmental: payload.environmental,
           environmentalurl: payload.environmentalurl,
           resource: payload.resource,
           resourceurl: payload.resourceurl,
+          nzhpt: payload.nzhpt,
+          nzhpturl: payload.nzhpturl,
+          docs: payload.docs,
+          firstAiders: payload.firstAiders,
+          firstAidKit: payload.firstAidKit,
+          fireExtinguisher: payload.fireExtinguisher,
+          emergencyPlanURL: payload.emergencyPlanURL,
+          emergencyInfo: payload.emergencyInfo,
+          task: payload.task,
+          toolboxFrequency: payload.toolboxFrequency,
+          inspectionFrequency: payload.inspectionFrequency,
+          additionalInfo: payload.additionalInfo,
           open: true,
-          date: today
+          date: Date.now()
         })
         .then(() => {
           dispatch('getAllJobs')
@@ -499,20 +511,32 @@ export const store = new Vuex.Store({
     updateJob ({dispatch}, payload) {
       let promise = new Promise((resolve, reject) => {
         firestore.collection('jobSites').doc(payload.id).set({
+          address: payload.address,
+          medical: payload.medical,
           companyKey: payload.companyKey,
           companyName: payload.companyName,
-          medical: payload.medical,
+          supervisorKey: payload.supervisorKey,
           supervisorName: payload.supervisorName,
           supervisorPhone: payload.supervisorPhone,
-          supervisorKey: payload.supervisorKey,
-          address: payload.address,
           notifiable: payload.notifiable,
           notifiableurl: payload.notifiableurl,
           environmental: payload.environmental,
           environmentalurl: payload.environmentalurl,
           resource: payload.resource,
           resourceurl: payload.resourceurl,
-          open: true,
+          nzhpt: payload.nzhpt,
+          nzhpturl: payload.nzhpturl,
+          docs: payload.docs,
+          firstAiders: payload.firstAiders,
+          firstAidKit: payload.firstAidKit,
+          fireExtinguisher: payload.fireExtinguisher,
+          emergencyPlanURL: payload.emergencyPlanURL,
+          emergencyInfo: payload.emergencyInfo,
+          task: payload.task,
+          toolboxFrequency: payload.toolboxFrequency,
+          inspectionFrequency: payload.inspectionFrequency,
+          additionalInfo: payload.additionalInfo,
+          open: payload.open,
           date: payload.date
         })
         .then(() => {
@@ -551,32 +575,9 @@ export const store = new Vuex.Store({
         .then((snapshot) => {
           var jobSites = []
           snapshot.forEach((doc) => {
-            // get the safety plans
-            firestore.collection('jobSites').doc(doc.id).collection('safetyPlans')
-            .get()
-            .then((snapshot) => {
-              let safetyPlans = []
-              snapshot.forEach((doc) => {
-                safetyPlans.push(doc.data())
-              })
-              jobSites.push({
-                id: doc.id,
-                companyKey: doc.data().companyKey,
-                companyName: doc.data().companyName,
-                medical: doc.data().medical,
-                supervisorName: doc.data().supervisorName,
-                supervisorPhone: doc.data().supervisorPhone,
-                supervisorKey: doc.data().supervisorKey,
-                address: doc.data().address,
-                notifiable: doc.data().notifiable,
-                notifiableurl: doc.data().notifiableurl,
-                environmental: doc.data().environmental,
-                environmentalurl: doc.data().environmentalurl,
-                resource: doc.data().resource,
-                resourceurl: doc.data().resourceurl,
-                date: doc.data().date,
-                safetyPlans: safetyPlans
-              })
+            jobSites.push({
+              jobId: doc.id,
+              job: doc.data()
             })
           })
           commit('setJobs', jobSites)
@@ -588,45 +589,6 @@ export const store = new Vuex.Store({
         })
         return promise
       })
-    },
-    getSafetyPlans ({state, commit}) {
-      let promise = new Promise((resolve, reject) => {
-        firestore.collection('safetyPlans').where('companyKey', '==', state.companyKey)
-        .get()
-        .then((snapshot) => {
-          let safetyPlans = []
-          snapshot.forEach((doc) => {
-            console.log(doc.data())
-            let plan = doc.data()
-            let expiry = moment(plan.expiryDate).format('DD-MM-YYYY')
-            if (today < expiry) {
-              safetyPlans.push({
-                id: doc.id,
-                companyKey: plan.companyKey,
-                createdDate: plan.createdDate,
-                expiryDate: plan.expiryDate,
-                hazardRegister: plan.hazardRegister,
-                jobAddress: plan.jobAddress,
-                jobId: plan.jobId,
-                signedIn: plan.signedIn,
-                taskAnalysis: plan.taskAnalysis,
-                trainingRegister: plan.trainingRegister,
-                workerKey: plan.workerKey,
-                workerName: plan.workerName
-              })
-            } else {
-              console.log('Plan expired', today, expiry)
-            }
-          })
-          commit('setSafetyPlans', safetyPlans)
-          resolve()
-        })
-          .catch((error) => {
-            console.log('Error getting documents: ', error)
-            reject(error)
-          })
-      })
-      return promise
     },
   // incident functions
     newIncident ({commit, dispatch, state}, payload) {
@@ -1089,7 +1051,6 @@ export const store = new Vuex.Store({
     supervisors: (state) => state.supervisors,
     training: (state) => state.trainingAlerts,
     jobsInProgress: (state) => state.jobsInProgress,
-    safetyPlans: (state) => state.safetyPlans,
     allHazards: (state) => state.allHazards,
     myHazards: (state) => state.myHazards,
     taskChanged: (state) => state.taskChanged,

@@ -15,8 +15,7 @@ import DashboardHome from '@/components/Pages/Home.vue'
 import Hazards from '@/components/Pages/HazardRegister.vue'
 import HazardousSubstances from '@/components/Pages/HazardousSubstances.vue'
 import Tasks from '@/components/Pages/Tasks.vue'
-import AccountAdmin from '@/components/Pages/AccountAdmin.vue'
-import AdminUserManagement from '@/components/Pages/AdminUserManagement.vue'
+import UserManagement from '@/components/Pages/UserManagement.vue'
 import IncidentReports from '@/components/Pages/IncidentReports.vue'
 import NewIncident from '@/components/Pages/IncidentForm.vue'
 import IncidentView from '@/components/Components/IncidentView.vue'
@@ -24,7 +23,6 @@ import TrainingRegister from '@/components/Pages/TrainingRegister.vue'
 import Support from '@/components/Pages/SupportFeedback.vue'
 import JobsInProgress from '@/components/Pages/JobsInProgress.vue'
 import SafetyPlan from '@/components/Components/SafetyPlanView.vue'
-import Master from '@/components/Pages/MasterSafetyPlan.vue'
 import NewJob from '@/components/Pages/NewJob.vue'
 
 Vue.use(Router)
@@ -93,20 +91,8 @@ export default new Router({
           }
         },
         {
-          path: 'admin',
-          component: AccountAdmin,
-          beforeEnter: (to, from, next) => {
-            if (store.getters.user.admin) {
-              next()
-            } else {
-              alert('Access not allowed')
-              next('/Pages')
-            }
-          }
-        },
-        {
           path: 'userManagement',
-          component: AdminUserManagement,
+          component: UserManagement,
           beforeEnter: (to, from, next) => {
             console.log('auth guard')
             if (store.getters.user.admin) {
@@ -147,18 +133,6 @@ export default new Router({
           name: 'safetyplan',
           component: SafetyPlan,
           props: true
-        },
-        {
-          path: 'master',
-          component: Master,
-          beforeEnter: (to, from, next) => {
-            if (store.getters.user.admin) {
-              next()
-            } else {
-              alert('Access not allowed')
-              next('/Pages')
-            }
-          }
         },
         {
           path: 'newJob',

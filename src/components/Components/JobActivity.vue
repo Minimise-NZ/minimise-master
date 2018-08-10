@@ -1,19 +1,14 @@
 <template>
-  <b-card header="Current Safety Plans" header-tag="header">
-    <b-row v-if="safetyPlans.length === 0">
-      <b-col>
-        <header class="subheader">There are no current safety plans</header>
-      </b-col>
-    </b-row>
-    <b-row class="subheader" v-if="safetyPlans.length !== 0">
+  <b-card header="Job Site Activity" header-tag="header">
+    <b-row class="subheader" >
       <b-col cols="3">
         <header>Site Address</header>
       </b-col>
        <b-col>
-        <header>Created Date</header>
+        <header>Safety Plan</header>
       </b-col>
       <b-col>
-        <header>Expiry Date</header>
+        <header>Toolbox Talk</header>
       </b-col>
       <b-col>
         <header>Signed In</header>
@@ -21,19 +16,19 @@
     </b-row>
     <b-row 
       class="content"
-      v-for="plan in safetyPlans"
-      :key="plan.id">
+      v-for="job in jobs"
+      :key="job.id">
       <b-col cols="3">
-        <p style="text-decoration: underline; color: #178ac3; cursor: pointer" @click="viewPlan(plan)">{{plan.jobAddress}}</p>
+        <p>{{job.address}}</p>
       </b-col>
        <b-col>
-        <p>{{plan.createdDate}}</p>
+        <p>link to plan</p>
       </b-col>
       <b-col>
-        <p>{{plan.expiryDate}}</p>
+        <p>link to toolbox</p>
       </b-col>
       <b-col>
-        <p v-if="plan.signedIn === true">{{plan.workerName}}</p>
+        <p>Name:timestamp</p>
       </b-col>
     </b-row>
   </b-card>
@@ -46,8 +41,8 @@ export default {
     }
   },
   computed: {
-    safetyPlans () {
-      return this.$store.getters.safetyPlans
+    jobs () {
+      return this.$store.getters.jobsInProgress
     }
   },
   methods: {

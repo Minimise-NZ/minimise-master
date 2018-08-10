@@ -56,9 +56,8 @@ export default {
         {name: 'Jobs In Progress', link: '/dashboard/jobs'},
         {name: 'Hazard Register', link: '/dashboard/hazards'},
         {name: 'Hazardous Substances', link: '/dashboard/hazardousSubstances'},
-        {name: 'Task Analysis/SWMS', link: '/dashboard/taskAnalysis'},
+        /* {name: 'Task Analysis/SWMS', link: '/dashboard/taskAnalysis'}, */
         {name: 'Training Register', link: '/dashboard/TrainingRegister'},
-        // {name: 'Master Safety Plan', link: '/dashboard/master'},
         {name: 'New Incident', link: '/dashboard/newIncident'},
         {name: 'Incident Reports', link: '/dashboard/incidents'}
       ],
@@ -97,9 +96,6 @@ export default {
     this.$store.dispatch('getAllJobs')
     this.$store.dispatch('getAllIncidents')
     this.$store.dispatch('getMyHazards')
-  },
-  beforeMount () {
-    this.$store.dispatch('getSafetyPlans')
   }
 }
 </script>
@@ -125,9 +121,9 @@ export default {
   }
   
   .row {
-    height: calc(100vh - 95px);
-    height: -moz-calc(100vh - 95px);
-    height: -webkit-calc(100vh - 95px);
+    height: calc(100vh - 93px);
+    height: -moz-calc(100vh - 93px);
+    height: -webkit-calc(100vh - 93px);
     margin: 0;
   }
   
@@ -139,13 +135,11 @@ export default {
 
   .navbar {
     padding-left: 30px;
-    padding-top: 10px;
-    padding-bottom: 8px;
   }
 
   .btn {
     background-color: #383838;
-    border: 0.5px solid #FFC80B;
+    border: 1px solid #FFC80B;
     color: #FFC80B;
     cursor: pointer;
     border-radius: 5px;

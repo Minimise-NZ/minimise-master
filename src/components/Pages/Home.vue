@@ -2,7 +2,7 @@
   <b-container fluid>
     <b-card header="Quick View" header-tag="header">
       <div class="scroll-container">
-        <safetyPlans></safetyPlans>
+        <jobActivity></jobActivity>
         <incidentSummary></incidentSummary>
         <trainingAlerts></trainingAlerts>
       </div>
@@ -13,13 +13,13 @@
 <script>
 import IncidentSummary from '@/components/Components/IncidentSummary.vue'
 import TrainingAlerts from '@/components/Components/TrainingAlerts.vue'
-import SafetyPlans from '@/components/Components/safetyPlans.vue'
+import JobActivity from '@/components/Components/JobActivity.vue'
 
 export default {
   components: {
+    'jobActivity': JobActivity,
     'incidentSummary': IncidentSummary,
-    'trainingAlerts': TrainingAlerts,
-    'safetyPlans': SafetyPlans
+    'trainingAlerts': TrainingAlerts
   },
   data () {
     return {
@@ -38,5 +38,9 @@ export default {
     background-color: rgba(56, 56, 56, 0.88);
     font-size: 1.2em;
     color: white;
+  }
+
+  .card-body {
+    padding-bottom: 0;
   }
 </style>

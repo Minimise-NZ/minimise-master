@@ -314,12 +314,10 @@ export default {
 <style scoped>
   .container-fluid {
     padding-top: 20px;
-    margin-bottom: 100px;
     padding-right: 30px;
   }
 
   .card-header {
-    background-color: rgba(56, 56, 56, 0.88);
     margin: -20px -20px 0px -20px;
   }
   
