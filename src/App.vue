@@ -21,7 +21,7 @@ body {
 }
 
 .form-control {
-  font-size: 0.9em;
+  font-size: 1em;
 }
 
 .btn {

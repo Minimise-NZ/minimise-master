@@ -549,6 +549,51 @@ export const store = new Vuex.Store({
       })
       return promise
     },
+    newToolbox ({commit}, payload) {
+      console.log(payload)
+      let promise = new Promise((resolve, reject) => {
+        firestore.collection('toolbox').add({
+          supervisorName: payload.supervisorName,
+          timestamp: payload.timestamp,
+          jobKey: payload.jobKey,
+          topics: payload.topics,
+          issues: payload.issues,
+          observations: payload.observations,
+          jobsCompleted: payload.jobsCompleted,
+          attendees: []
+        })
+        .then(() => {
+          resolve()
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+      })
+      return promise
+    },
+    getToolbox ({commit}, payload) {
+      // from firestore sorted by timestamp desc limit 1
+      let promise = new Promise((resolve, reject) => {
+        console.log(payload)
+        firestore.collection('toolbox').where('jobKey', '==', payload).orderBy('timestamp', 'desc').limit(1)
+        .get()
+        .then((snapshot) => {
+          if (snapshot.empty) {
+            resolve(null)
+          } else {
+            snapshot.forEach((doc) => {
+              resolve(doc)
+            })
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+      })
+      return promise
+    },
     closeJob ({dispatch}, payload) {
       // close job in jobSites collection
       let promise = new Promise((resolve, reject) => {

@@ -1,6 +1,70 @@
 <template>
   <b-container fluid class="outside-container">
     <!--MODALS-->
+     <b-modal
+      size="lg"
+      v-model="showToolbox"
+      v-if="showToolbox" 
+      @ok="saveToolbox"
+      :no-close-on-backdrop="true"
+      @cancel="handleCancel"
+      header-bg-variant="info"
+      headerTextVariant= 'light'
+      title="Toolbox Talk">
+      <b-form @submit.prevent="handleOk">
+        <b-row>
+          <b-col cols="3">
+            <label>Supervisor:</label>
+          </b-col>
+          <b-col>
+            <b-form-input :value="user.name" readonly></b-form-input>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="3">
+            <label>Date/Time:</label>
+          </b-col>
+          <b-col>
+            <b-form-input :value="new Date().toLocaleString()" readonly></b-form-input>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="3">
+            <label>Topics discussed:</label>
+          </b-col>
+          <b-col>
+            <b-form-textarea rows="6" v-model="toolbox.topics"></b-form-textarea>
+          </b-col>
+        </b-row>
+         <b-row>
+          <b-col cols="3">
+            <label>Employee issues raised:</label>
+          </b-col>
+          <b-col>
+            <b-form-textarea rows="6" v-model="toolbox.issues"></b-form-textarea>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="3">
+            <label>Safe observations reviewed/discussed:</label>
+          </b-col>
+          <b-col>
+            <b-form-textarea rows="6" v-model="toolbox.observations"></b-form-textarea>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="3">
+            <label>Jobs completed/reviewed</label>
+          </b-col>
+          <b-col>
+            <b-form-textarea rows="6" v-model="toolbox.jobsCompleted"></b-form-textarea>
+          </b-col>
+        </b-row>
+      </b-form>
+      <div slot="modal-footer" v-if="loading">
+        <pulse-loader :loading="loading"></pulse-loader>
+      </div>
+    </b-modal>
     <b-modal 
       v-model="confirmAction" 
       v-if="confirmAction" 
@@ -13,8 +77,8 @@
       <div class="d-block text-center">
         <h4 class="mt-2">Are you sure you want to close <br>this job site?</h4>
         <br>
-        <h5>This will prevent any further activity on this job site</h5>
-        <h5>This action cannot be undone</h5>
+        <h5 style="color:grey">This will prevent any further activity on this job site</h5>
+        <h5 style="color:grey">This action cannot be undone</h5>
       </div>
     </b-modal>
     <b-modal 
@@ -31,6 +95,18 @@
         <h5>This job has been closed</h5>
       </div>
     </b-modal>
+    <b-modal 
+      v-model="toolboxSuccess" 
+      v-if="toolboxSuccess"
+      ok-only
+      centered 
+      header-bg-variant="success"
+      headerTextVariant= 'light'
+      title="Success">
+      <div class="d-block text-center">
+        <h4>This toolbox talk has been saved</h4>
+      </div>
+    </b-modal>
     <b-modal
       v-model="error" 
       v-if="error" 
@@ -42,6 +118,7 @@
         <h4>{{errorMessage}}</h4>
       </div>
     </b-modal>
+    
     
     <!--JOBSITE CARD-->
     <b-card>
@@ -178,23 +255,26 @@
                     </b-row>
                  </b-col>
                 </b-row>
+
                 <b-row class="mb-0 pb-0">
                   <b-col md="12" lg="3">
                     <label>Site Safety Plan:</label>
                   </b-col>
                   <b-col sm="12" lg="9">
-                    <a target="_blank" href="#" class="ml-2">SSSP - {{obj.job.address}}</a>
+                    <router-link :to="'/dashboard/jobs/safetyplan/' + obj.job.id" class="ml-2">SSSP - {{obj.job.address}}</router-link>
                   </b-col>
                 </b-row>
+                <!--
                 <b-row>
                   <b-col md="12" lg="3">
                     <label>Toolbox Talk:</label>
                   </b-col>
                   <b-col sm="12" lg="9">
-                    <a target="_blank" href="#" class="ml-2">Toolbox talk - {{new Date().toLocaleDateString()}}</a>
+                    <a class="ml-2" href="javascript:void(0)" @click="showToolbox = true">toolbox</a>
                   </b-col>
                 </b-row>
               </b-col>
+              -->
               <div class="vl"></div>
               <!--SITE DOCS COLUMN-->
               <b-col class="outer-col" style="padding-top: 20px; padding-right: 20px">
@@ -214,10 +294,10 @@
                     </b-col>
                   </b-row>
                   <b-row>
-                    <b-btn variant="success" v-b-tooltip.hover title="Sign In"><i class="fas fa-pen-alt fa-lg"></i></b-btn>
-                    <b-btn variant="primary" v-b-tooltip.hover title="New Toolbox Talk"><i class="fas fa-toolbox fa-lg"></i></b-btn>
-                    <b-btn variant="primary" v-b-tooltip.hover title="New Site Inspection"><i class="far fa-eye fa-lg"></i></b-btn>
-                    <b-btn variant="danger" @click="confirmAction = true, jobToClose = job" v-b-tooltip.hover title="Close Job">
+                    <b-btn variant="success" v-b-tooltip.hover title="Sign In" @click="signIn"><i class="fas fa-pen-alt fa-lg"></i></b-btn>
+                    <b-btn variant="primary" v-b-tooltip.hover title="New Toolbox Talk" @click="newToolbox(obj.job.id)"><i class="fas fa-toolbox fa-lg"></i></b-btn>
+                    <b-btn style="background-color: #673ab7" v-b-tooltip.hover title="New Site Inspection" @click="newInspection = true"><i class="far fa-eye fa-lg"></i></b-btn>
+                    <b-btn variant="danger" @click="confirmAction = true, jobToClose = obj.job.id" v-b-tooltip.hover title="Close Job">
                       <i class="fas fa-times-circle fa-lg"></i>
                     </b-btn>
                   </b-row>
@@ -232,9 +312,24 @@
 </template>
 
 <script>
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 export default {
+  components: {
+    PulseLoader
+  },
   data () {
     return {
+      loading: false,
+      showToolbox: false,
+      toolbox: {
+        jobKey: '',
+        topics: '',
+        issues: '',
+        observations: '',
+        jobsCompleted: ''
+      },
+      toolboxSuccess: false,
+      newInspection: false,
       confirmAction: false,
       confirmed: false,
       success: false,
@@ -251,9 +346,18 @@ export default {
   computed: {
     jobSites () {
       return this.$store.getters.jobsInProgress
+    },
+    user () {
+      return this.$store.getters.user
     }
   },
   methods: {
+    toolBoxLink (jobKey) {
+      this.$store.dispatch('getToolbox', jobKey)
+      .then((toolbox) => {
+        return toolbox.jobKey
+      })
+    },
     newJob () {
       this.$router.push('/dashboard/newJob')
     },
@@ -270,6 +374,9 @@ export default {
         this.errorMessage = error.message
         this.errorModal = true
       })
+    },
+    signIn () {
+      console.log('signing in')
     },
     async uploadFile (job, type) {
       console.log(job, type)
@@ -308,6 +415,34 @@ export default {
           })
           break
       }
+    },
+    newToolbox (jobKey) {
+      this.toolbox.jobKey = jobKey
+      this.showToolbox = true
+    },
+    saveToolbox () {
+      this.$store.dispatch('newToolbox', {
+        supervisorName: this.user.name,
+        timestamp: Date.now(),
+        jobKey: this.toolbox.jobKey,
+        topics: this.toolbox.topics,
+        issues: this.toolbox.issues,
+        observations: this.toolbox.observations,
+        jobsCompleted: this.toolbox.jobsCompleted
+      })
+      .then(() => {
+        this.showToolbox = false
+        this.toolboxSuccess = true
+      })
+    },
+    handleCancel () {
+      this.newToolbox = false
+      this.toolbox.jobKey = ''
+      this.toolbox.topics = ''
+      this.toolbox.issues = ''
+      this.toolbox.observations = ''
+      this.toolbox.jobsCompleted = ''
+      this.toolbox.attendees = []
     }
   }
 }
