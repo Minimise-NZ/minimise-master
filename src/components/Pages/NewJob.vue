@@ -122,7 +122,7 @@
                 </b-col>
                 <b-col sm="1">
                   <b-btn v-if="notifiable.file !== ''" @click="uploadFile('notifiable')" v-b-tooltip.hover title="Upload file">
-                    <i class="fa fa-cloud-upload"></i>
+                    <i class="fas fa-cloud-upload-alt"></i>
                   </b-btn>
                 </b-col>
               </b-row>
@@ -150,7 +150,7 @@
                 </b-col>
                 <b-col sm="1">
                   <b-btn v-if="environmental.file !== ''" @click="uploadFile('environmental')" v-b-tooltip.hover title="Upload file">
-                    <i class="fa fa-cloud-upload"></i>
+                    <i class="fas fa-cloud-upload-alt"></i>
                   </b-btn>
                 </b-col>
               </b-row>
@@ -178,7 +178,7 @@
                 </b-col>
                 <b-col sm="1">
                   <b-btn v-if="resource.file !== ''" @click="uploadFile('resource')" v-b-tooltip.hover title="Upload file">
-                    <i class="fa fa-cloud-upload"></i>
+                    <i class="fas fa-cloud-upload-alt"></i>
                   </b-btn>
                 </b-col>
                 </b-row>
@@ -206,7 +206,7 @@
                 </b-col>
                 <b-col sm="1">
                   <b-btn v-if="nzhpt.file !== ''" @click="uploadFile('nzhpt')" v-b-tooltip.hover title="Upload file">
-                    <i class="fa fa-cloud-upload"></i>
+                    <i class="fas fa-cloud-upload-alt"></i>
                   </b-btn>
                 </b-col>
                 </b-row>
@@ -231,7 +231,7 @@
                 </b-col>
                 <b-col sm="1" >
                   <b-btn v-if="docs.files.length > 0" @click="uploadFile('docs')" v-b-tooltip.hover title="Upload file">
-                    <i class="fa fa-cloud-upload"></i>
+                    <i class="fas fa-cloud-upload-alt"></i>
                   </b-btn>
                 </b-col>
               </b-row>
@@ -264,7 +264,7 @@
                   </b-col>
                   <b-col sm="1">
                     <b-btn v-if="emergencyPlanFile !== ''" @click="uploadFile('emergencyPlan')" v-b-tooltip.hover title="Upload file">
-                      <i class="fa fa-cloud-upload"></i>
+                      <i class="fas fa-cloud-upload-alt"></i>
                     </b-btn>
                   </b-col>
                 </b-row>
@@ -448,7 +448,6 @@ export default {
     taskSelect () {
       let options = [{value: null, text: 'None'}]
       let tasks = this.$store.getters.taskAnalysis
-      console.log(tasks)
       tasks.forEach((item, index, object) => {
         options.push({
           value: index, text: item.title

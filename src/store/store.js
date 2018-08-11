@@ -575,9 +575,10 @@ export const store = new Vuex.Store({
         .then((snapshot) => {
           var jobSites = []
           snapshot.forEach((doc) => {
+            let job = doc.data()
+            job.id = doc.id
             jobSites.push({
-              jobId: doc.id,
-              job: doc.data()
+              job
             })
           })
           commit('setJobs', jobSites)

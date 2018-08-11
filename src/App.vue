@@ -20,6 +20,10 @@ body {
   font-size: 0.9em;
 }
 
+.form-control {
+  font-size: 0.9em;
+}
+
 .btn {
   cursor: pointer;
 }
@@ -96,11 +100,12 @@ body.modal-open {
   margin: 0;
 }
 
-  @media (max-width: 1200px) {
-    body {
-      font-size: 0.9em;
-      line-height: 1.0;
-    }
+
+@media (max-width: 1200px) {
+  body {
+    font-size: 0.9em;
+    line-height: 1.0;
   }
+}
 
 </style>

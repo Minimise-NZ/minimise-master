@@ -89,16 +89,15 @@
             </div>
           </header>
           <b-row>
-            <b-col>
+            <b-col sm="6" md="4" lg="3" > 
               <b-img
                 :src='hazard.imageURL'
-                class="ml-3 mb-2"
                 fluid>
               </b-img>
             </b-col>
             <b-col>
               <h5 class="mb-3"><strong>Risks</strong></h5>
-              <p v-for="(risk, index) in hazard.risks" :key="index">{{risk}}</p>
+              <b-form-input v-for="(risk, index) in hazard.risks" :key="index" :value="risk" readonly></b-form-input>
             </b-col>
             <b-col>
               <h5 class="mb-3"><strong>Controls</strong></h5>
