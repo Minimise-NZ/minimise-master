@@ -1,7 +1,7 @@
 <template>
   <b-container fluid class="outside-container">
     <!--MODALS-->
-     <b-modal
+    <b-modal
       size="lg"
       v-model="showToolbox"
       v-if="showToolbox" 
@@ -273,8 +273,8 @@
                     <a class="ml-2" href="javascript:void(0)" @click="showToolbox = true">toolbox</a>
                   </b-col>
                 </b-row>
+                -->
               </b-col>
-              -->
               <div class="vl"></div>
               <!--SITE DOCS COLUMN-->
               <b-col class="outer-col" style="padding-top: 20px; padding-right: 20px">

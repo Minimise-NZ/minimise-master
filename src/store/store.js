@@ -775,8 +775,7 @@ export const store = new Vuex.Store({
               RRA: data.RRA,
               controls: data.controls,
               risks: data.risks,
-              taskAnalysis: data.taskAnalysis,
-              worksafeNotification: data.worksafeNotification
+              controlLevel: data.controlLevel
             }
             allHazards.push(hazard)
           })
@@ -850,8 +849,7 @@ export const store = new Vuex.Store({
           RRA: payload.RRA,
           controls: payload.controls,
           risks: payload.risks,
-          taskAnalysis: payload.taskAnalysis,
-          worksafeNotification: payload.worksafeNotification
+          controlLevel: payload.controlLevel
         })
         .then(() => {
           dispatch('getMyHazards')
