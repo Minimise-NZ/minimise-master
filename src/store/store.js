@@ -260,7 +260,6 @@ export const store = new Vuex.Store({
         let training = payload.training
         firestore.collection('users').doc(workerId).set({training: training}, {merge: true})
         .then(() => {
-          dispatch('getWorkers')
           resolve()
         })
         .catch((error) => {
@@ -336,45 +335,61 @@ export const store = new Vuex.Store({
     },
     getWorkers ({commit, dispatch, state}) {
       // get all workers with company = this companyKey
-      let workers = []
-      let supervisors = []
-      firestore.collection('users').where('companyKey', '==', state.companyKey)
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          let worker = doc.data()
-          workers.push({
-            id: doc.id,
-            name: worker.name,
-            admin: worker.admin,
-            email: worker.email,
-            companyKey: worker.companyKey,
-            companyName: worker.companyName,
-            phone: worker.phone,
-            role: worker.role,
-            training: worker.training,
-            webUser: worker.webUser
+      let promise = new Promise((resolve, reject) => {
+        let workers = []
+        let supervisors = []
+        firestore.collection('users').where('companyKey', '==', state.companyKey).orderBy('name')
+        .get()
+        .then((snapshot) => {
+          console.log('worker snapshot', snapshot)
+          snapshot.forEach((doc) => {
+            let worker = doc.data()
+            if (worker.addTraining !== false) {
+              workers.push({
+                id: doc.id,
+                name: worker.name,
+                admin: worker.admin,
+                email: worker.email,
+                companyKey: worker.companyKey,
+                companyName: worker.companyName,
+                phone: worker.phone,
+                role: worker.role,
+                training: worker.training,
+                webUser: worker.webUser
+              })
+              if (worker.role === 'Supervisor') {
+                supervisors.push({
+                  key: doc.id,
+                  name: worker.name,
+                  phone: worker.phone
+                })
+              }
+            }
           })
-          if (worker.role === 'Supervisor') {
-            supervisors.push({
-              key: doc.id,
-              name: worker.name,
-              phone: worker.phone
-            })
-          }
         })
-        commit('setSupervisors', supervisors)
-        commit('setWorkers', workers)
-        dispatch('getTraining')
+        .then(() => {
+          commit('setSupervisors', supervisors)
+          commit('setWorkers', workers)
+          dispatch('getTraining')
+          resolve()
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
       })
+      return promise
     },
     getTraining ({commit, state}) {
-      let workers = state.workers
+      console.log('getting training')
       let trainingAlerts = []
+      let workers = state.workers
       for (let worker of workers) {
         for (let training of worker.training) {
+          console.log('training', training)
           if (training.expiry !== '') {
-            let alertDate = moment(training.expiry).subtract(14, 'days').format('YYYY-MM-DD')
+            let alertDate = moment(training.expiry).subtract(14, 'days')
+            console.log(alertDate)
             if (moment().isAfter(training.expiry)) {
               training.name = worker.name
               training.status = 'Expired'
@@ -383,6 +398,8 @@ export const store = new Vuex.Store({
               training.name = worker.name
               training.status = 'Due to expire'
               trainingAlerts.push(training)
+            } else {
+              console.log('Not expired', alertDate)
             }
           } else {
             training.name = worker.name

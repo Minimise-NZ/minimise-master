@@ -77,7 +77,8 @@
                   <b-col>
                     <b-input-group>
                       <b-input-group-button>
-                          <b-button @click="searchMedical" class="fa fa-search" v-b-tooltip.hover title="Find nearest medical centre"></b-button>
+                          <b-button @click="searchMedical" v-b-tooltip.hover title="Find nearest medical centre">
+                            <i class="fas fa-search"></i></b-button>
                         </b-input-group-button>
                       <b-form-input type="text" :placeholder='placeholder' v-model="medical" required></b-form-input>
                     </b-input-group>

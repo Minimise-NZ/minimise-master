@@ -148,7 +148,7 @@ export default {
       password: '',
       confirmPassword: '',
       userPhone: '',
-      userRole: 'Business Administrator'
+      userRole: 'Administrator'
     }
   },
   methods: {

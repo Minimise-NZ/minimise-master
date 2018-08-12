@@ -70,15 +70,15 @@
         <b-col md="1" >
         </b-col>
       </b-row>
-      <b-row>
+      <b-row v-if="!readonly">
         <b-col md="5" >
-          <b-form-input id="description" placeholder="Please enter training description" :readonly="readonly" v-model="newtraining.description"/>
+          <b-form-select id="description"  :options="trainingOptions" :disabled="readonly" v-model="newtraining.description"/>
         </b-col>
         <b-col md="3" >
           <b-form-input id="id" placeholder="ID#/Licence no/Certificate" :readonly="readonly" type="text" v-model="newtraining.ID"/>
         </b-col>
         <b-col md="3" >
-          <b-form-input id="expiry" class="no-spinners" placeholder="Please select expiry date" :readonly="readonly" type="text" onfocus="(this.type='date')" v-model="newtraining.expiry"/>
+          <b-form-input id="expiry" class="no-spinners" :readonly="readonly" type="text" onfocus="(this.type='date')" v-model="newtraining.expiry"/>
         </b-col>
         <b-col md="1" >
           <b-button variant="success" 
@@ -89,7 +89,7 @@
       </b-row>
       <b-row v-for="training in worker.training" :key="training.description">
         <b-col md="5" > 
-          <b-form-input :readonly="readonly" :value="training.description"/>
+          <b-form-select id="description"  :options="trainingOptions" :disabled="readonly" v-model="training.description"/>
         </b-col>
         <b-col md="3" >
           <b-form-input id="id" :readonly="readonly" type="text" v-model="training.ID"/>
@@ -106,6 +106,7 @@
 
 <script>
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
+
 export default {
   props: ['id', 'workers'],
   components: {
@@ -121,10 +122,23 @@ export default {
       original: {},
       worker: {},
       newtraining: {
-        description: '',
+        description: null,
         ID: '',
         expiry: ''
       },
+      trainingOptions: [
+        {value: null, text: 'Please enter training Description'},
+        {value: 'Induction', text: 'Company Induction'},
+        {value: 'Site Safe Passport', text: 'Site Safe Passport'},
+        {value: 'Site Safe Supervisor Gold Card', text: 'Site Safe Supervisor Gold Card'},
+        {value: 'License', text: 'License'},
+        {value: 'Fall Arrest', text: 'Fall Arrest'},
+        {value: 'Hiab', text: 'Hiab'},
+        {value: 'Forklift', text: 'Forklift'},
+        {value: 'First Aid', text: 'First Aid'},
+        {value: 'LBP', text: 'LBP'},
+        {value: 'Heights', text: 'Heights'}
+      ],
       userRoles: [
         { value: 'Health and Safety Manager', text: 'Health and Safety Manager' },
         { value: 'Health and Safety Administrator', text: 'Health and Safety Administrator' },
@@ -153,27 +167,32 @@ export default {
     save () {
       this.loading = true
       // save updates to user profile
-      if (this.newtraining.description !== '') {
-        console.log('adding training')
-        this.addTraining()
-      }
-      if (this.changed === true) {
-        // save changes
-        try {
-          this.$store.dispatch('updateTraining', this.worker)
-          this.original = this._.cloneDeep(this.worker)
-          this.success = true
-          this.readonly = true
-          this.loading = false
-        } catch (error) {
-          this.catcherror = true
-          this.errorMessage = error.message
-          this.readonly = true
-          this.loading = false
+      try {
+        if (this.newtraining.description !== '' && this.newtraining.description !== null) {
+          console.log('adding training')
+          this.addTraining()
         }
-      } else {
+        if (this.changed === true) {
+          // save changes
+          try {
+            this.$store.dispatch('updateTraining', this.worker)
+            this.original = this._.cloneDeep(this.worker)
+            this.success = true
+            this.readonly = true
+            this.loading = false
+          } catch (error) {
+            this.catcherror = true
+            this.errorMessage = error.message
+            this.readonly = true
+            this.loading = false
+          }
+        } else {
+          this.loading = false
+          this.cancel()
+        }
+      } catch (err) {
+        console.log('ERROR', err.message)
         this.loading = false
-        this.cancel()
       }
     },
     cancel () {
@@ -183,7 +202,7 @@ export default {
     },
     clear () {
       // clear training fields
-      this.newtraining.description = ''
+      this.newtraining.description = null
       this.newtraining.ID = ''
       this.newtraining.expiry = ''
       document.getElementById('expiry').type = 'text'
@@ -200,6 +219,9 @@ export default {
   },
   mounted () {
     this.worker = this._.cloneDeep(this.workers)
+  },
+  beforeRouteLeave (to, from, next) {
+    this.$store.dispatch('getWorkers')
   }
 }
 </script>

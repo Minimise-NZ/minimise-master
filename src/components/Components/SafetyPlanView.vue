@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid class="outside-container">
+  <b-container fluid id="safetyPlan">
     <b-card>
         <b-row class="card-header" >
           <b-col>
@@ -193,6 +193,7 @@
                 <tr>
                   <th scope="col">Name</th>
                   <th scope="col">Description</th>
+                  <th scope="col">ID/License No</th>
                   <th scope="col">Expiry</th>
                 </tr>
               </thead>
@@ -202,6 +203,11 @@
                   <td>
                     <ul v-for="(training, index) in worker.training" :key="index">
                       <li>{{training.description}}</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul v-for="(training, index) in worker.training" :key="index">
+                      <li>{{training.ID}}</li>
                     </ul>
                   </td>
                   <td>
@@ -230,6 +236,8 @@
 
 <script>
 import moment from 'moment'
+import * as Pdf from 'jspdf'
+import html2canvas from 'html2canvas'
 
 export default {
   props: ['jobKey'],
@@ -281,16 +289,22 @@ export default {
       }
     },
     createPdf () {
+      html2canvas(document.getElementById('safetyPlan')).then(function (canvas) {
+        var img = canvas.toDataURL('image/png')
+        var pdf = new Pdf('landscape')
+        pdf.addImage(img, 'JPEG', 10, 10, 280, 180)
+        pdf.save('test.pdf')
+      })
     }
   }
 }
 </script>
 
 <style scoped>
-  .container-fluid {
-    padding-top: 20px;
-  }
 
+  .card {
+    margin-top: 20px;
+  }
   .card-header {
     margin: -20px -20px 0 -20px;
     background-color: #0d539a;
@@ -325,6 +339,12 @@ export default {
     list-style: none;
     padding-left:0;
     margin-bottom: 10px;
+  }
+
+  @media screen and (min-width: 992px) {
+    .scroll-container {
+      height: 750px;
+    }
   }
 
 </style>
