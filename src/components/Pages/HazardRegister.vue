@@ -223,6 +223,10 @@ export default {
     margin: -20px -20px 0 -20px;
   }
 
+  .card-body {
+    padding-bottom: 0;
+  }
+
   header {
     line-height: 2em;
   }

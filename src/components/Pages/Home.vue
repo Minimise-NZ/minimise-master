@@ -2,7 +2,7 @@
   <b-container fluid>
     <b-card header="Quick View" header-tag="header">
       <div class="scroll-container">
-        <jobActivity></jobActivity>
+        <jobActivity class="mt-3"></jobActivity>
         <incidentSummary></incidentSummary>
         <trainingAlerts></trainingAlerts>
       </div>
@@ -41,6 +41,6 @@ export default {
   }
 
   .card-body {
-    padding-bottom: 0;
+    padding-top: 0;
   }
 </style>

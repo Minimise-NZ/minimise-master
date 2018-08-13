@@ -1,13 +1,11 @@
 <template>
-  <b-container fluid class="outside-container">
+  <b-container fluid>
     <!--MODALS-->
     <b-modal
       size="lg"
       v-model="showToolbox"
       v-if="showToolbox" 
-      @ok="saveToolbox"
       :no-close-on-backdrop="true"
-      @cancel="handleCancel"
       header-bg-variant="info"
       headerTextVariant= 'light'
       title="Toolbox Talk">
@@ -61,7 +59,9 @@
           </b-col>
         </b-row>
       </b-form>
-      <div slot="modal-footer" v-if="loading">
+      <div slot="modal-footer">
+        <b-btn class="float-right" variant="primary" @click="saveToolbox">Save</b-btn>
+        <b-btn class="float-right" variant="danger" @click="handleCancel">Cancel</b-btn>
         <pulse-loader :loading="loading"></pulse-loader>
       </div>
     </b-modal>
@@ -435,8 +435,9 @@ export default {
           break
       }
     },
-    newToolbox () {
-      this.showMessage = true
+    newToolbox (jobkey) {
+      this.toolbox.jobKey = jobkey
+      this.showToolbox = true
     },
     saveToolbox () {
       this.$store.dispatch('newToolbox', {
@@ -461,7 +462,7 @@ export default {
       */
     },
     handleCancel () {
-      this.newToolbox = false
+      this.showToolbox = false
       this.toolbox.jobKey = ''
       this.toolbox.topics = ''
       this.toolbox.issues = ''
@@ -477,8 +478,7 @@ export default {
   .container-fluid {
     padding-top: 20px;
   }
-
-    
+ 
   .row {
     padding: 0px 10px 20px 15px;
     margin-right: 0;
@@ -486,13 +486,14 @@ export default {
 
 
   .card-header {
-    margin: -20px 0 0 -20px;
+    margin: -20px -20px 0px -20px;
     padding-top: 10px;
     padding-bottom: 10px;
   }
 
   .card-body {
     padding-right: 0;
+    padding-bottom: 0;
   }
 
   header {

@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid id="safetyPlan">
+  <b-container fluid>
     <b-modal 
       v-model="showMessage" 
       v-if="showMessage" 
@@ -127,8 +127,8 @@
           
         </div>
         <!--HAZARD SECTION-->
-        <div>
           <hr class="mt-5"><h5 class="mb-4">Hazard Register</h5>
+          <div class="table-responsive">
           <table class="table table-striped">
             <thead>
               <tr>

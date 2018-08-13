@@ -33,9 +33,9 @@ body.modal-open {
 }
 
 .scroll-container {
-  height: 80vh;
+  height: 78vh;
   overflow: scroll;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   padding-right: 10px;
   margin-top: 10px;
   overflow-x: hidden;
@@ -45,6 +45,10 @@ body.modal-open {
   background-color: rgba(56, 56, 56, 0.88);
   font-size: 1.2em;
   color: white;
+}
+
+.card-body {
+  padding-bottom: 0;
 }
 
 .addBtn {

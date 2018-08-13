@@ -7,75 +7,17 @@
     <b-collapse :id="'collapse' + this.index" accordion="my-accordion" visible>
     <b-form @submit.prevent="onSubmit">
       <b-row class="outer-row">
-        <b-col m="12" lg="6">
+        <b-col sm="12" lg="6">
           <b-row class="inner-row">
-            <b-col md="12" lg="4">
+            <b-col sm="12" >
               <label>Product/Substance Name:</label>
             </b-col>
             <b-col>
               <b-form-input v-model="substance.name" :readonly="readonly"/>
             </b-col>
-          </b-row>               
+          </b-row> 
           <b-row class="inner-row">
-            <b-col md="12" lg="4">
-              <label>Approval Number/Group Standard:</label>
-            </b-col>
-            <b-col>
-              <b-form-textarea rows="2" v-model="substance.group" :readonly="readonly"/>
-            </b-col>
-          </b-row>
-          <b-row class="inner-row">
-            <b-col md="12" lg="4" style="margin-bottom: 10px">
-              <label>Storage and Segregation Requirements:</label>
-            </b-col>
-            <b-col>
-              <b-form-textarea rows="2" v-model="substance.storageRequirements" :readonly="readonly" style="white-space: pre-wrap"/>
-            </b-col>
-          </b-row>
-          <b-row class="inner-row">
-            <b-col md="12" lg="4" style="margin-bottom: 10px">
-              <label>Max Quantity on Site:</label>
-            </b-col>
-            <b-col>
-              <b-form-input v-model="substance.maxQuantity" :readonly="readonly"/>
-            </b-col>
-          </b-row>
-          <b-row class="inner-row">
-            <b-col md="12" lg="4" style="margin-bottom: 10px">
-              <label>Site Storage Location:</label>
-            </b-col>
-            <b-col>
-              <b-form-input v-model="substance.location" :readonly="readonly"/>
-            </b-col>
-          </b-row>
-           <b-row class="inner-row">
-            <b-col md="12" lg="4" style="margin-bottom: 10px">
-              <label>PPE required:</label>
-            </b-col>
-            <b-col>
-              <b-form-textarea rows="5" v-model="substance.PPE" :readonly="readonly" style="white-space: pre-wrap" spellcheck="false"/>
-            </b-col>
-          </b-row>
-          <b-row class="inner-row">
-            <b-col md="12" lg="4"></b-col>
-            <b-col>
-              <label style="margin-right: 15px">Is current SDS available?</label>
-              <b-btn style="width: 75px" :style="{backgroundColor: btnColor(substance.SDS)}" @click="substance.SDS = !substance.SDS" :disabled="readonly">{{SDSText(substance.SDS)}}</b-btn>
-            </b-col>
-          </b-row>
-        </b-col>
-        <!--Second column-->
-        <b-col>
-          <b-row class="inner-row">
-            <b-col md="12" lg="3">
-              <label>UN number:</label>
-            </b-col>
-            <b-col>
-              <b-form-input v-model="substance.UN" :readonly="readonly"/>
-            </b-col>
-          </b-row>
-           <b-row class="inner-row">
-            <b-col lg="3">
+            <b-col sm="12" style="margin-bottom: 6px">
               <label>Hazard Types:</label>
             </b-col>
             <b-col>
@@ -86,35 +28,57 @@
             </b-col>
           </b-row>
           <b-row class="inner-row">
-            <b-col md="12" lg="3">
-              <label>Hazard Classification:</label>
+            <b-col sm="12">
+              <label>Storage Requirements:</label>
             </b-col>
             <b-col>
-              <b-form-input v-model="substance.hazClassification" :readonly="readonly"/>
+              <b-form-textarea rows="3" v-model="substance.storage" :readonly="readonly" style="white-space: pre-wrap"/>
+            </b-col>
+          </b-row>
+           <b-row class="inner-row">
+            <b-col sm="12" >
+              <label>PPE required:</label>
+            </b-col>
+            <b-col>
+              <b-form-textarea rows="5" v-model="substance.PPE" :readonly="readonly" style="white-space: pre-wrap" spellcheck="false"/>
+            </b-col>
+          </b-row>
+        </b-col>
+        <!--Second column-->
+        <b-col class="second-col">
+          <b-row class="inner-row">
+           <b-col sm="12" lg="3">
+              <label>Safety Data Sheet:</label>
+            </b-col>
+            <b-col v-if="substance.sds === ''">
+              <b-form-file v-model="sdsFile" placeholder="Safety Data Sheet"></b-form-file>
+            </b-col>
+            <b-col sm="1" class="pl-0" v-if="sdsFile !== ''">
+              <b-btn variant="primary" @click="uploadFile()" v-b-tooltip.hover title="Upload file">
+                <i class="fa fa-cloud-upload-alt"></i>
+              </b-btn>
+            </b-col>
+            <b-col v-if="substance.sds !== ''">
+              <a :href="substance.sds" target="_blank">{{substance.name}}</a>
             </b-col>
           </b-row>
           <b-row class="inner-row">
-            <b-col lg="3">
-              <label>Substance Type:</label>
+            <b-col sm="12">
+              <label>Potential Harm:</label>
             </b-col>
             <b-col>
-              <b-form-select v-model="substance.subType" :disabled="readonly">
-                <option :value="null">Please select an option</option>
-                <option value="solid">Solid</option>
-                <option value="liquid">Liquid</option>
-                <option value="gas">Gas</option>
-              </b-form-select>
+              <b-form-textarea rows="8" v-model="substance.potentialHarm" :readonly="readonly" style="white-space: pre-wrap" spellcheck="false"></b-form-textarea>
             </b-col>
           </b-row>
           <b-row class="inner-row">
-            <b-col md="12" lg="3">
-              <label>Hazard Statements:</label>
+            <b-col sm="12">
+              <label>Recommended Actions:</label>
             </b-col>
             <b-col>
-              <b-form-textarea rows="8" v-model="substance.hazStatements" :readonly="readonly" style="white-space: pre-wrap" spellcheck="false"></b-form-textarea>
+              <b-form-textarea rows="8" v-model="substance.actions" :readonly="readonly" style="white-space: pre-wrap" spellcheck="false"></b-form-textarea>
             </b-col>
           </b-row>
-          <div class="text-right">
+          <div class="text-right mb-2">
             <div v-if="!readonly">
               <b-button class="button" variant="success" @click="save" v-if="!itemLoading">Save</b-button>
               <b-button class="button" variant="danger" @click="cancel" v-if="!itemLoading">Cancel</b-button>
@@ -142,6 +106,7 @@ export default {
     return {
       itemLoading: false,
       readonly: true,
+      sdsFile: '',
       hazOptions: [
         { text: 'Explosive', value: 'Explosive' },
         { text: 'Flammable', value: 'Flammable' },
@@ -159,20 +124,6 @@ export default {
     }
   },
   methods: {
-    btnColor (SDS) {
-      if (SDS === true) {
-        return '#12807a'
-      } else {
-        return '#b70011e3'
-      }
-    },
-    SDSText (SDS) {
-      if (SDS === true) {
-        return 'Yes'
-      } else {
-        return 'No'
-      }
-    },
     edit () {
       this.readonly = false
       this._beforeEditingCache = Object.assign({}, this.substance)
@@ -224,6 +175,11 @@ export default {
   .col {
     margin: 0;
     padding-right: 0;
+    padding-left: 0;
+  }
+
+  label {
+    font-weight: bold;
   }
 
   .card-header.substance {
@@ -243,10 +199,6 @@ export default {
   .addBtn:hover {
     background-color:#ffc80b;
     color: black;
-  }
-
-  label {
-    padding-top: 5px;
   }
 
   .hazSubCard > .card-body {
@@ -270,6 +222,18 @@ export default {
     margin-top: 30px;
     cursor: pointer;
     width: 125px;
+  }
+
+  @media screen and (max-width: 992px) {
+    .inner-row {
+      margin-top: 15px;
+    }
+  }
+
+  @media screen and (min-width: 992px) {
+    .second-col {
+      padding-left: 20px;
+    }
   }
 
 </style>

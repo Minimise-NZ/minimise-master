@@ -912,18 +912,13 @@ export const store = new Vuex.Store({
         .collection('hazardousSubstances').doc()
         newSubstance.set({
           id: newSubstance.id,
-          PPE: payload.PPE,
-          SDS: payload.SDS,
-          UN: payload.UN,
-          group: payload.group,
-          hazClassification: payload.hazClassification,
-          hazStatements: payload.hazStatements,
-          hazTypes: payload.hazTypes,
-          location: payload.location,
-          maxQuantity: payload.maxQuantity,
           name: payload.name,
-          storageRequirements: payload.storageRequirements,
-          subType: payload.subType
+          hazTypes: payload.hazTypes,
+          potentialHarm: payload.potentialHarm,
+          storage: payload.storage,
+          PPE: payload.PPE,
+          actions: payload.actions,
+          sds: payload.sds
         })
         .then(() => {
           dispatch('getHazSubs')
@@ -942,18 +937,13 @@ export const store = new Vuex.Store({
         firestore.collection('companies').doc(state.companyKey)
         .collection('hazardousSubstances').doc(key).set({
           id: key,
-          PPE: payload.PPE,
-          SDS: payload.SDS,
-          UN: payload.UN,
-          group: payload.group,
-          hazClassification: payload.hazClassification,
-          hazStatements: payload.hazStatements,
-          hazTypes: payload.hazTypes,
-          location: payload.location,
-          maxQuantity: payload.maxQuantity,
           name: payload.name,
-          storageRequirements: payload.storageRequirements,
-          subType: payload.subType
+          hazTypes: payload.hazTypes,
+          potentialHarm: payload.potentialHarm,
+          storage: payload.storage,
+          PPE: payload.PPE,
+          actions: payload.actions,
+          sds: payload.sds
         })
         .then(() => {
           dispatch('getHazSubs')

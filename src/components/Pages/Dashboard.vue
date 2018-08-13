@@ -62,7 +62,7 @@ export default {
         {name: 'Incident Reports', link: '/dashboard/incidents'}
       ],
       adminNav: [
-        {name: 'User Management', link: '/dashboard/userManagement'}
+        // {name: 'User Management', link: '/dashboard/userManagement'}
         // {name: 'Account Administration', link: '/dashboard/admin'}
       ]
     }
@@ -125,7 +125,7 @@ export default {
     height: -moz-calc(100vh - 93px);
     height: -webkit-calc(100vh - 93px);
     margin: 0;
-    min-width: 990px;
+    /* min-width: 990px; */
   }
   
  .side-wrapper {
@@ -183,6 +183,9 @@ export default {
     height: -moz-calc(100vh - 83px);
     height: -webkit-calc(100vh - 83px);
     margin: 0;
+    }
+    .side-wrapper {
+      display: none;
     }
   }
 

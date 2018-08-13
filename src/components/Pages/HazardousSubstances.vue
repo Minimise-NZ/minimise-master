@@ -4,9 +4,7 @@
       size="lg"
       v-model="showModal"
       v-if="showModal" 
-      @ok="handleOk"
-      data-backdrop="static"
-      @cancel="handleCancel"
+      :no-close-on-backdrop="true"
       header-bg-variant="info"
       headerTextVariant= 'light'
       title="Add New Substance">
@@ -20,28 +18,22 @@
             <b-alert :show="alert" variant="danger">This field is required</b-alert>
           </b-col>
         </b-row>
-         <b-row class="inner-row">
-          <b-col cols="4">
-            <label>UN number:</label>
-          </b-col>
-          <b-col>
-            <b-form-input v-model="newSubstance.UN"/>
-          </b-col>
-        </b-row>            
         <b-row class="inner-row">
-          <b-col  cols="4">
-            <label>Approval No./Group Standard:</label>
+          <b-col cols="4">
+            <label>Hazard Types:</label>
           </b-col>
           <b-col>
-            <b-form-textarea v-model="newSubstance.group"/>
+            <b-form-group>
+              <b-form-checkbox-group v-model="newSubstance.hazTypes" :options="hazOptions" class="mb-0"></b-form-checkbox-group>
+            </b-form-group>
           </b-col>
         </b-row>
         <b-row class="inner-row">
-          <b-col  cols="4">
-            <label>Hazard Classification:</label>
+          <b-col cols="4">
+            <label>Potential Harm:</label>
           </b-col>
           <b-col>
-            <b-form-input v-model="newSubstance.hazClassification"/>
+            <b-form-textarea v-model="newSubstance.potentialHarm" rows="4"/>
           </b-col>
         </b-row>
         <b-row class="inner-row">
@@ -49,23 +41,7 @@
             <label>Storage Requirements:</label>
           </b-col>
           <b-col>
-            <b-form-textarea v-model="newSubstance.storageRequirements"/>
-          </b-col>
-        </b-row>
-        <b-row class="inner-row">
-          <b-col cols="4">
-            <label>Max Quantity on Site:</label>
-          </b-col>
-          <b-col>
-            <b-form-input v-model="newSubstance.maxQuantity"/>
-          </b-col>
-        </b-row>
-        <b-row class="inner-row">
-          <b-col cols="4">
-            <label>Site Storage Location:</label>
-          </b-col>
-          <b-col>
-            <b-form-input v-model="newSubstance.location"/>
+            <b-form-textarea v-model="newSubstance.storage" rows="4"/>
           </b-col>
         </b-row>
         <b-row class="inner-row">
@@ -73,49 +49,35 @@
             <label>PPE required:</label>
           </b-col>
           <b-col>
-            <b-form-textarea v-model="newSubstance.PPE"/>
+            <b-form-textarea v-model="newSubstance.PPE" rows="4"/>
           </b-col>
         </b-row>
          <b-row class="inner-row">
           <b-col cols="4">
-            <label>Substance Type:</label>
+            <label>Actions:</label>
           </b-col>
           <b-col>
-            <b-form-select v-model="newSubstance.subType">
-              <option :value="null">Please select an option</option>
-              <option value="solid">Solid</option>
-              <option value="liquid">Liquid</option>
-              <option value="gas">Gas</option>
-            </b-form-select>
-          </b-col>
-        </b-row>
-         <b-row class="inner-row">
-          <b-col cols="4">
-            <label>Hazard Statements:</label>
-          </b-col>
-          <b-col>
-            <b-form-textarea v-model="newSubstance.hazStatements"/>
-          </b-col>
-        </b-row>
-        <b-row class="inner-row">
-          <b-col cols="4">
-            <label>Hazard Types:</label>
-          </b-col>
-          <b-col>
-            <b-form-group>
-              <b-form-checkbox-group v-model="newSubstance.hazTypes" :options="hazOptions" style="padding: 5px"></b-form-checkbox-group>
-            </b-form-group>
+            <b-form-textarea v-model="newSubstance.actions" rows="4"/>
           </b-col>
         </b-row>
         <b-row class="inner-row">
           <b-col cols="4"></b-col>
-          <b-col>
-            <label style="margin-right: 15px">Is current SDS available?</label>
-            <b-btn style="width: 75px" :style="{backgroundColor: btnColor(newSubstance.SDS)}" @click="newSubstance.SDS = !newSubstance.SDS">{{SDSText(newSubstance.SDS)}}</b-btn>
+          <b-col v-if="newSubstance.sds === ''">
+            <b-form-file v-model="sdsFile" placeholder="Safety Data Sheet"></b-form-file>
+          </b-col>
+          <b-col sm="1" class="pl-0" v-if="sdsFile !== ''">
+            <b-btn variant="primary" @click="uploadFile()" v-b-tooltip.hover title="Upload file">
+              <i class="fa fa-cloud-upload-alt"></i>
+            </b-btn>
+          </b-col>
+          <b-col v-if="newSubstance.sds !== ''">
+            <a :href="newSubstance.sds" target="_blank">{{newSubstance.name}}</a>
           </b-col>
         </b-row>
       </b-form>
-      <div slot="modal-footer" v-if="loading">
+      <div slot="modal-footer">
+        <b-btn class="float-right" variant="primary" @click="handleOk" v-if="loading === false">Save</b-btn>
+        <b-btn class="float-right mr-2" variant="danger" @click="handleCancel" v-if="loading === false">Cancel </b-btn>
         <pulse-loader :loading="loading"></pulse-loader>
       </div>
     </b-modal>
@@ -168,18 +130,14 @@ export default {
       errorMessage: '',
       newSubstance: {
         name: '',
-        UN: '',
-        group: '',
-        hazClassification: '',
-        SDS: false,
-        storageRequirements: '',
-        maxQuantity: '',
-        location: '',
-        subType: '',
         hazTypes: [],
+        potentialHarm: '',
+        storage: '',
         PPE: '',
-        hazStatements: ''
+        actions: '',
+        sds: ''
       },
+      sdsFile: '',
       hazOptions: [
         { text: 'Explosive', value: 'Explosive' },
         { text: 'Flammable', value: 'Flammable' },
@@ -197,20 +155,6 @@ export default {
     }
   },
   methods: {
-    btnColor (SDS) {
-      if (SDS === true) {
-        return '#12807a'
-      } else {
-        return '#b70011e3'
-      }
-    },
-    SDSText (SDS) {
-      if (SDS === true) {
-        return 'Yes'
-      } else {
-        return 'No'
-      }
-    },
     addNew () {
       this.showModal = true
       this._beforeEditingCache = Object.assign({}, this.newSubstance)
@@ -244,9 +188,18 @@ export default {
       }
     },
     handleCancel () {
-      this.alert = false
+      this.showModal = false
       Object.assign(this.newSubstance, this._beforeEditingCache)
       this._beforeEditingCache = null
+    },
+    uploadFile () {
+      this.loading = true
+      this.$store.dispatch('uploadFile', {file: this.sdsFile, type: this.newSubstance.name})
+      .then((url) => {
+        this.newSubstance.sds = url
+        this.sdsFile = ''
+        this.loading = false
+      })
     }
   }
 }
@@ -265,6 +218,10 @@ export default {
 
   .inner-row {
     margin-bottom: 15px;
+  }
+
+  label {
+    padding-top: 5px;
   }
 
 </style>
