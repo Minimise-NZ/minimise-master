@@ -39,8 +39,12 @@
     </b-modal>
 
     <b-card>
-      <div class="card-header" :class="{ inverted: inverted }" >{{headerTitle}}
-        <b-button
+      <b-row class="card-header" :class="{ inverted: inverted }" >
+        <b-col>
+          <header>{{headerTitle}}</header>
+        </b-col>
+        <b-col>
+          <b-button
           v-if="register"
           class="addBtn"
           variant="warning"
@@ -56,10 +60,11 @@
           v-b-tooltip.hover title="Back to Hazard Register">
           <i class="fa fa-undo"></i>
         </b-button> 
-      </div>
+        </b-col>
+      </b-row>
 
       <div class="scroll-container">
-        <b-row v-if="hazards.length === 0">
+        <b-row v-if="hazards.length === 0" >
           <b-col class="p-0">
             <header class="subheader">Add hazards by clicking the add + button </header>
           </b-col>
@@ -88,27 +93,35 @@
               <pulse-loader :loading="loading"></pulse-loader>
             </div>
           </header>
-          <b-row>
-            <b-col sm="6" md="4" lg="3" > 
+          <b-row class="hazard-row">
+            <b-col md="3" class="img-col"> 
               <b-img
+                thumbnail
                 :src='hazard.imageURL'
                 fluid>
               </b-img>
             </b-col>
-            <b-col>
+            <b-col sm="12" md="3" class="hazard-col">
               <h5 class="mb-3"><strong>Risks</strong></h5>
-              <b-form-input v-for="(risk, index) in hazard.risks" :key="index" :value="risk" readonly></b-form-input>
+              <ul v-for="(risk, index) in hazard.risks" :key="index">
+                <li>{{risk}}</li>
+              </ul>
+              <!--<b-form-input v-for="(risk, index) in hazard.risks" :key="index" :value="risk" class="mb-1"></b-form-input>-->
             </b-col>
-            <b-col>
+            <b-col sm="12" md="3" class="hazard-col">
               <h5 class="mb-3"><strong>Controls</strong></h5>
-              <p v-for="(control, index) in hazard.controls" :key="index">{{control.desc}}</p>
+              <ul v-for="(control, index) in hazard.controls" :key="index">
+                <li>{{control}}</li>
+              </ul>
+              <!--<b-form-input v-for="(control, index) in hazard.controls" :key="index" :value="control" readonly class="mb-1"></b-form-input>-->
             </b-col>
-            <b-col>
-              <br>
-              <p><strong>Risk before controls: </strong>{{hazard.IRA}}</p>
-              <p><strong>Risk after controls: </strong>{{hazard.RRA}}</p>
-              <p v-if="hazard.taskAnalysis === true" class="alert-text"><strong>Task Analysis Required</strong></p>
-              <p v-if="hazard.worksafe === true" class="alert-text"><strong>Worksafe Notification Required</strong></p>
+            <b-col sm="12" md="3" class="hazard-col">
+              <p class="mb-1"><strong>Risk before controls: </strong></p>
+              <div :class="hazard.IRA" class="heat-div">{{hazard.IRA}}</div>
+              <p class="mb-1"><strong>Risk after controls: </strong></p>
+              <div :class="hazard.RRA" class="heat-div">{{hazard.RRA}}</div>
+              <p class="mb-1"><strong>Level of control: </strong></p>
+              <div style="background-color: #928e8e" class="heat-div">{{hazard.controlLevel}}</div>
             </b-col>
           </b-row>
         </b-card>
@@ -201,13 +214,23 @@ export default {
 </script>
 
 <style scoped>
+
   .container-fluid {
     padding-top: 20px;
   }
-  
+
   .card-header {
-    background-color: rgba(56, 56, 56, 0.88);
-    margin: -20px -20px 0px -20px;
+    margin: -20px -20px 0 -20px;
+  }
+
+  header {
+    line-height: 2em;
+  }
+
+  .subheader {
+    margin-left: 15px;
+    font-weight: bold;
+    color: #186ca7;
   }
   
   .addBtn.remove{
@@ -221,43 +244,80 @@ export default {
     padding-bottom: 5px;
     background-color: #22ab57;
   }
-  
+
   .card-header.hazard{
     background-color: #186ca7;
-    margin: 0;
     color: white;
     font-size: 1em;
     padding-left: 15px;
   }
   
   .card-header.hazard.inverted {
-    background-color: #a8516e;
-  }
-  
-  
-  .hazardCard > .card-body {
-    padding: 0;
-  }
-
-  
-  .subheader {
-    padding: 15px 0 15px 15px;
-    border-bottom: 1px solid lightgrey;
-    font-weight: bold;
-    color: #12807a;
-  }
-  
-  .row {
-    margin:auto;
-  }
-  
-  .col {
-    padding-top: 20px;
-    min-width: 240px;
+    background-color: #07635a;
   }
 
   .loader {
     float: right;
     width: 80px;
+  }
+
+  img {
+    max-height: 210px;
+  }
+
+  .hazard-row {
+    padding-top: 15px;
+  }
+
+  ul {
+    padding-left: 15px;
+    margin-bottom: 5px;
+  }
+
+  .heat-div {
+    width: 80%;
+    margin-bottom: 15px;
+    padding: 8px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    line-height: 1.5em;
+  }
+
+  .Very-Low {
+    background-color: #8bc34a9c;
+  }
+
+  .Low {
+    background-color: #4caf50;
+  }
+
+  .Moderate {
+    background-color: #ff5722bf;
+  }
+
+  .High {
+    background-color: #f44336;
+  }
+
+  .Critical {
+    background-color:#e91e63bf;
+  }
+
+  @media screen and (max-width: 768px) {
+    .img-col {
+      display: none;
+    }
+    .hazard-col {
+      margin-top: 10px;
+      margin-bottom: 15px;
+    }
+  }
+
+  @media screen and (max-width: 992px) {
+    .heat-div {
+      line-height: 1em;
+      width: 100%;
+    }
   }
 </style>

@@ -118,20 +118,35 @@
         <h4>{{errorMessage}}</h4>
       </div>
     </b-modal>
+    <b-modal 
+      v-model="showMessage" 
+      v-if="showMessage" 
+      ok-only
+      header-bg-variant="primary"
+      headerTextVariant= 'light'
+      title="Work in progress">
+      <div class="d-block text-center">
+        <h4>Coming Soon!</h4>
+      </div>
+    </b-modal>
     
     
     <!--JOBSITE CARD-->
     <b-card>
-      <div class="card-header">
-        Jobs In Progress
-        <b-button  
+      <b-row class="card-header" >
+        <b-col>
+          <header>Jobs In Progress</header>
+        </b-col>
+        <b-col>
+         <b-button  
           class="addBtn"
           variant="success"
           @click="newJob" 
           v-b-tooltip.hover title="Create New Job Site">
           <i class="fa fa-plus"></i>
         </b-button> 
-      </div>
+        </b-col>
+      </b-row>
       <div class="scroll-container">
         <b-row v-if="jobSites.length === 0">
           <b-col>
@@ -296,7 +311,7 @@
                   <b-row>
                     <b-btn variant="success" v-b-tooltip.hover title="Sign In" @click="signIn"><i class="fas fa-pen-alt fa-lg"></i></b-btn>
                     <b-btn variant="primary" v-b-tooltip.hover title="New Toolbox Talk" @click="newToolbox(obj.job.id)"><i class="fas fa-toolbox fa-lg"></i></b-btn>
-                    <b-btn style="background-color: #673ab7" v-b-tooltip.hover title="New Site Inspection" @click="newInspection = true"><i class="far fa-eye fa-lg"></i></b-btn>
+                    <b-btn style="background-color: #673ab7" v-b-tooltip.hover title="New Site Inspection" @click="newInspection(obj.job.id)"><i class="far fa-eye fa-lg"></i></b-btn>
                     <b-btn variant="danger" @click="confirmAction = true, jobToClose = obj.job.id" v-b-tooltip.hover title="Close Job">
                       <i class="fas fa-times-circle fa-lg"></i>
                     </b-btn>
@@ -329,7 +344,10 @@ export default {
         jobsCompleted: ''
       },
       toolboxSuccess: false,
-      newInspection: false,
+      inspection: {
+        jobKey: ''
+      },
+      showInspection: false,
       confirmAction: false,
       confirmed: false,
       success: false,
@@ -340,7 +358,8 @@ export default {
       resourcefile: '',
       nzhptfile: '',
       docsfile: '',
-      jobToClose: ''
+      jobToClose: '',
+      showMessage: false
     }
   },
   computed: {
@@ -376,7 +395,7 @@ export default {
       })
     },
     signIn () {
-      console.log('signing in')
+      this.showMessage = true
     },
     async uploadFile (job, type) {
       console.log(job, type)
@@ -416,9 +435,8 @@ export default {
           break
       }
     },
-    newToolbox (jobKey) {
-      this.toolbox.jobKey = jobKey
-      this.showToolbox = true
+    newToolbox () {
+      this.showMessage = true
     },
     saveToolbox () {
       this.$store.dispatch('newToolbox', {
@@ -434,6 +452,13 @@ export default {
         this.showToolbox = false
         this.toolboxSuccess = true
       })
+    },
+    newInspection (jobKey) {
+      this.showMessage = true
+      /*
+      this.inspection.jobKey = jobKey
+      this.showInspection = true
+      */
     },
     handleCancel () {
       this.newToolbox = false
@@ -453,8 +478,25 @@ export default {
     padding-top: 20px;
   }
 
+    
+  .row {
+    padding: 0px 10px 20px 15px;
+    margin-right: 0;
+  }
+
+
   .card-header {
-    margin: -20px -20px 0 -20px;
+    margin: -20px 0 0 -20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .card-body {
+    padding-right: 0;
+  }
+
+  header {
+    line-height: 2em;
   }
 
   .card-header.job {
@@ -497,11 +539,6 @@ export default {
     font-weight: bold;
     margin-top: 8px;
     text-align: center;
-  }
-  
-  .row {
-    padding: 0px 10px 20px 15px;
-    margin-right: 0;
   }
 
   .outer-col {

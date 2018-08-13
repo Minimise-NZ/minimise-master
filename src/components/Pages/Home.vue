@@ -2,7 +2,7 @@
   <b-container fluid>
     <b-card header="Quick View" header-tag="header">
       <div class="scroll-container">
-        <!--<jobActivity></jobActivity>-->
+        <jobActivity></jobActivity>
         <incidentSummary></incidentSummary>
         <trainingAlerts></trainingAlerts>
       </div>

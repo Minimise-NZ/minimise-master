@@ -1,5 +1,11 @@
 <template>
   <b-card header="Job Site Activity" header-tag="header">
+    <b-row>
+      <b-col>
+        <header class="subheader">What would you like to see here?</header>
+      </b-col>
+    </b-row>
+    <!--
     <b-row class="subheader" >
       <b-col cols="3">
         <header>Site Address</header>
@@ -31,6 +37,7 @@
         <p>Name:timestamp</p>
       </b-col>
     </b-row>
+    -->
   </b-card>
 </template>
 

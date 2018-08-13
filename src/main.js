@@ -18,8 +18,6 @@ import VeeValidate from 'vee-validate'
 import vSelect from 'vue-select'
 import VueScrollTo from 'vue-scrollto'
 import VueCarousel from 'vue-carousel'
-import * as Pdf from 'jspdf'
-import * as Canvas from 'html2canvas'
 
 const config = {
   errorBagName: 'errors', // change if property conflicts.
@@ -46,8 +44,6 @@ Vue.use(VueCarousel)
 Vue.use(VueLodash, _)
 Vue.use(AOS)
 Vue.use(Vuebar)
-Vue.use(Pdf)
-Vue.use(Canvas)
 Vue.use(VueScrollTo, {
   container: 'body',
   duration: 500,

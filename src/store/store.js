@@ -814,6 +814,7 @@ export const store = new Vuex.Store({
           if (hazards <= 0 || hazards === undefined || hazards === null) {
             console.log('this company has no hazards')
             hazards = []
+            commit('setMyHazards', hazards)
             commit('setNotMyHazards', state.allHazards)
             resolve
           } else {

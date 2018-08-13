@@ -19,7 +19,7 @@
             </b-nav>
         </b-navbar>
       </div>
-      <b-row>
+      <b-row class="master-row">
         <b-col sm="1" lg="2" class="side-wrapper">
           <b-list-group>
             <router-link to='/dashboard' tag="li" class="list-group-item" exact>
@@ -120,11 +120,12 @@ export default {
     color: black;
   }
   
-  .row {
+  .master-row {
     height: calc(100vh - 93px);
     height: -moz-calc(100vh - 93px);
     height: -webkit-calc(100vh - 93px);
     margin: 0;
+    min-width: 990px;
   }
   
  .side-wrapper {
