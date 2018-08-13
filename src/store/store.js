@@ -297,7 +297,6 @@ export const store = new Vuex.Store({
           user.companyKey = state.companyKey
           user.companyName = state.company.name
           console.log('inviting user', user)
-          /*
           if (user.role !== 'Worker') {
             window.emailjs.send('my_service', 'invitation', {
               name: user.name,
@@ -313,7 +312,7 @@ export const store = new Vuex.Store({
               }
             )
           }
-          */
+          /*
           let promise = new Promise((resolve, reject) => {
             firestore.collection('users').add(user)
             .then((doc) => {
@@ -326,6 +325,7 @@ export const store = new Vuex.Store({
             })
           })
           return promise
+          */
         } else {
           // user already exists
           console.log('User already exists')
@@ -384,27 +384,22 @@ export const store = new Vuex.Store({
       console.log('getting training')
       let trainingAlerts = []
       let workers = state.workers
+      let alertDate = moment().add(14, 'days')
+      console.log('alert date', alertDate)
       for (let worker of workers) {
         for (let training of worker.training) {
-          console.log('training', training)
           if (training.expiry !== '') {
-            let alertDate = moment(training.expiry).subtract(14, 'days')
-            console.log(alertDate)
             if (moment().isAfter(training.expiry)) {
               training.name = worker.name
               training.status = 'Expired'
               trainingAlerts.push(training)
-            } else if (moment().isAfter(alertDate)) {
+              console.log('expired')
+            } else if (moment(training.expiry).isBefore(alertDate)) {
+              console.log('due to expire')
               training.name = worker.name
               training.status = 'Due to expire'
               trainingAlerts.push(training)
-            } else {
-              console.log('Not expired', alertDate)
             }
-          } else {
-            training.name = worker.name
-            training.status = 'Incomplete'
-            trainingAlerts.push(training)
           }
         }
       }

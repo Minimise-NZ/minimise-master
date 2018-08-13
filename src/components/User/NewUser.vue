@@ -21,7 +21,6 @@
 
         <b-form v-if="!confirmUser">
           <b-form-input 
-            id="email"
             v-model="email"
             data-vv-delay="2000"
             placeholder="Email Address"
@@ -125,7 +124,7 @@
           if (!valid) { return }
           try {
             // create new user in firebase
-            let uid = await this.$store.dispatch('signUp', {email: this.email, password: this.password})
+            let uid = await this.$store.dispatch('signUp', {email: this.user.email, password: this.password})
             // update userProfile with uid
             this.user.uid = uid
             await this.$store.dispatch('updateCurrentUser', this.user)
@@ -134,7 +133,7 @@
             this.$router.push('/dashboard')
           } catch (err) {
             this.loading = false
-            alert(err.message)
+            alert(err)
           }
         })
       }
