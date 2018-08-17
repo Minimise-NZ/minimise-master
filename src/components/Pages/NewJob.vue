@@ -391,7 +391,7 @@ export default {
         files: [],
         urls: []
       },
-      firstAiders: ['Teddy Flood - 021478965'],
+      firstAiders: [],
       firstAidKit: 'On Site and in vehicles',
       fireExtinguisher: 'On Site and in vehicles',
       emergencyPlanURL: '',
@@ -656,6 +656,7 @@ export default {
   }
 
   .card-header {
+    background-color: rgba(56, 56, 56, 0.88);
     margin: -20px -20px 0px -20px;
   }
   

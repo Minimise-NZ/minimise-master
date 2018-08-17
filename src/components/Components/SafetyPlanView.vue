@@ -250,20 +250,22 @@ import moment from 'moment'
 // import * as Pdf from 'jspdf'
 
 export default {
-  props: ['jobKey'],
   data () {
     return {
-      jobSite: '',
       jobId: '',
       showMessage: false
     }
   },
-  beforeMount (jobKey) {
-    let jobSite = this.$store.getters.jobSite(jobKey)
+  /*
+  beforeMount () {
+    let jobSite = this.$store.getters.safetyPlan
     this.jobSite = jobSite.job
-    this.jobId = jobSite.jobId
   },
+  */
   computed: {
+    jobSite () {
+      return this.$store.getters.safetyPlan
+    },
     workers () {
       return this.$store.getters.workers
     },
@@ -345,12 +347,6 @@ export default {
     list-style: none;
     padding-left:0;
     margin-bottom: 10px;
-  }
-
-  @media screen and (min-width: 992px) {
-    .scroll-container {
-      height: 750px;
-    }
   }
 
 </style>

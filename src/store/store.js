@@ -21,7 +21,7 @@ export const store = new Vuex.Store({
     companyKey: '',
     companyIndex: [],
     jobsInProgress: [],
-    safetyPlans: [],
+    safetyPlan: {},
     myIncidents: [],
     allHazards: [],
     myHazards: [],
@@ -42,7 +42,7 @@ export const store = new Vuex.Store({
       state.companyKey = ''
       state.companyIndex = []
       state.jobsInProgress = []
-      state.safetyPlans = []
+      state.safetyPlan = {}
       state.jobRequests = []
       state.myIncidents = []
       state.allHazards = []
@@ -92,8 +92,9 @@ export const store = new Vuex.Store({
       state.jobsInProgress = payload
       console.log('Jobs in progress set')
     },
-    setSafetyPlans (state, payload) {
-      state.safetyPlans = payload
+    setSafetyPlan (state, payload) {
+      console.log('setting safety plan', payload)
+      state.safetyPlan = payload
     },
     setAllHazards (state, payload) {
       state.allHazards = payload
@@ -560,6 +561,9 @@ export const store = new Vuex.Store({
         })
       })
       return promise
+    },
+    storeSafetyPlan ({commit}, payload) {
+      commit('setSafetyPlan', payload)
     },
     newToolbox ({commit}, payload) {
       console.log(payload)
@@ -1098,6 +1102,7 @@ export const store = new Vuex.Store({
     supervisors: (state) => state.supervisors,
     training: (state) => state.trainingAlerts,
     jobsInProgress: (state) => state.jobsInProgress,
+    safetyPlan: (state) => state.safetyPlan,
     allHazards: (state) => state.allHazards,
     myHazards: (state) => state.myHazards,
     taskChanged: (state) => state.taskChanged,
@@ -1130,8 +1135,10 @@ export const store = new Vuex.Store({
       }
     },
     jobSite (state) {
+      console.log('finding job')
       return (id) => {
         return state.jobsInProgress.find((job) => {
+          console.log('job found', job)
           return job.id === id
         })
       }

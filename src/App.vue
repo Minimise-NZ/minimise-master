@@ -33,7 +33,7 @@ body.modal-open {
 }
 
 .scroll-container {
-  height: 78vh;
+  height: 80vh;
   overflow: scroll;
   padding-bottom: 10px;
   padding-right: 10px;
@@ -42,7 +42,6 @@ body.modal-open {
 }
 
 .card-header {
-  background-color: rgba(56, 56, 56, 0.88);
   font-size: 1.2em;
   color: white;
 }

@@ -129,10 +129,9 @@ export default new Router({
           component: JobsInProgress
         },
         {
-          path: 'jobs/safetyplan/:id',
+          path: 'jobs/safetyplan',
           name: 'safetyplan',
-          component: SafetyPlan,
-          props: true
+          component: SafetyPlan
         },
         {
           path: 'newJob',

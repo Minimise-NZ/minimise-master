@@ -121,9 +121,7 @@ export default {
   }
   
   .master-row {
-    height: calc(100vh - 93px);
-    height: -moz-calc(100vh - 93px);
-    height: -webkit-calc(100vh - 93px);
+    height: 100vh;
     margin: 0;
     /* min-width: 990px; */
   }
@@ -179,10 +177,7 @@ export default {
 
   @media only screen and (max-width: 1200px) {
     .row {
-    height: calc(100vh - 83px);
-    height: -moz-calc(100vh - 83px);
-    height: -webkit-calc(100vh - 83px);
-    margin: 0;
+      margin: 0;
     }
     .side-wrapper {
       display: none;

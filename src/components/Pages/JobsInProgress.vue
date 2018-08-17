@@ -31,7 +31,7 @@
             <label>Topics discussed:</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="6" v-model="toolbox.topics"></b-form-textarea>
+            <b-form-textarea rows="4" v-model="toolbox.topics"></b-form-textarea>
           </b-col>
         </b-row>
          <b-row>
@@ -39,7 +39,7 @@
             <label>Employee issues raised:</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="6" v-model="toolbox.issues"></b-form-textarea>
+            <b-form-textarea rows="4" v-model="toolbox.issues"></b-form-textarea>
           </b-col>
         </b-row>
         <b-row>
@@ -47,7 +47,7 @@
             <label>Safe observations reviewed/discussed:</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="6" v-model="toolbox.observations"></b-form-textarea>
+            <b-form-textarea rows="4" v-model="toolbox.observations"></b-form-textarea>
           </b-col>
         </b-row>
         <b-row>
@@ -55,7 +55,7 @@
             <label>Jobs completed/reviewed</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="6" v-model="toolbox.jobsCompleted"></b-form-textarea>
+            <b-form-textarea rows="4" v-model="toolbox.jobsCompleted"></b-form-textarea>
           </b-col>
         </b-row>
       </b-form>
@@ -203,10 +203,10 @@
                   <b-col sm="12" lg="9">
                     <b-row v-if="obj.job.notifiableurl === ''">
                       <b-col class="outer-col" sm="10">
-                        <b-form-file v-model="notifiablefile" placeholder="Worksafe Notification Required"></b-form-file>
+                        <b-form-file v-model="notifiablefile" placeholder="Worksafe Notification"></b-form-file>
                       </b-col>
                       <b-col sm="1">
-                        <b-btn variant="primary" v-if="notifiablefile !== ''" @click="uploadFile(obj.job, 'notifiable')" v-b-tooltip.hover title="Upload file" class="uploadBtn">
+                        <b-btn variant="primary" v-if="notifiablefile !== ''" @click="uploadFile(obj.job, 'notifiable')" v-b-tooltip.hover title="Upload file">
                           <i class="fa fa-cloud-upload-alt"></i>
                         </b-btn>
                       </b-col>
@@ -221,7 +221,7 @@
                   <b-col sm="12" lg="9">
                     <b-row v-if="obj.job.environmentalurl === ''">
                       <b-col class="outer-col" sm="10">
-                        <b-form-file v-model="environmentalfile" placeholder="Environmental Plan Required"></b-form-file>
+                        <b-form-file v-model="environmentalfile" placeholder="Environmental Plan"></b-form-file>
                       </b-col>
                       <b-col sm="1">
                         <b-btn variant="primary" v-if="environmentalfile !== ''" @click="uploadFile(obj.job, 'environmental')" v-b-tooltip.hover title="Upload file">
@@ -239,7 +239,7 @@
                  <b-col sm="12" lg="9">
                     <b-row v-if="obj.job.resourceurl === ''">
                       <b-col sm="10" class="outer-col">
-                        <b-form-file v-model="resourcefile" placeholder="Resource Consent Required"></b-form-file>
+                        <b-form-file v-model="resourcefile" placeholder="Resource Consent"></b-form-file>
                       </b-col>
                       <b-col sm="1">
                         <b-btn variant="primary" v-if="resourcefile !== ''" @click="uploadFile(obj.job, 'resource')" v-b-tooltip.hover title="Upload file" >
@@ -257,7 +257,7 @@
                  <b-col sm="12" lg="9">
                     <b-row v-if="obj.job.nzhpturl === ''">
                       <b-col sm="10" class="outer-col">
-                        <b-form-file v-model="nzhptfile" placeholder="NZHPT Clearance Required"></b-form-file>
+                        <b-form-file v-model="nzhptfile" placeholder="NZHPT Clearance"></b-form-file>
                       </b-col>
                       <b-col sm="1">
                         <b-btn variant="primary" v-if="nzhptfile !== ''" @click="uploadFile(obj.job, 'nzhpt')" v-b-tooltip.hover title="Upload file">
@@ -276,7 +276,7 @@
                     <label>Site Safety Plan:</label>
                   </b-col>
                   <b-col sm="12" lg="9">
-                    <router-link :to="'/dashboard/jobs/safetyplan/' + obj.job.id" class="ml-2">SSSP - {{obj.job.address}}</router-link>
+                    <router-link v-on:click.native="setSafetyPlan(obj.job)" to='/dashboard/jobs/safetyplan/' class="ml-2">SSSP - {{obj.job.address}}</router-link >
                   </b-col>
                 </b-row>
                 <!--
@@ -371,6 +371,9 @@ export default {
     }
   },
   methods: {
+    setSafetyPlan (job) {
+      this.$store.dispatch('storeSafetyPlan', job)
+    },
     toolBoxLink (jobKey) {
       this.$store.dispatch('getToolbox', jobKey)
       .then((toolbox) => {
@@ -486,6 +489,7 @@ export default {
 
 
   .card-header {
+    background-color: rgba(56, 56, 56, 0.88);
     margin: -20px -20px 0px -20px;
     padding-top: 10px;
     padding-bottom: 10px;
