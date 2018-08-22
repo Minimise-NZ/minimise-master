@@ -22,7 +22,7 @@
           <router-link to='login' tag="button" size="sm" class="login-btn mr-3" v-if="uid === ''">
             Log In
           </router-link>
-          <button @click='dashboard()' size="sm" class="dashboard-btn mr-3 ml-5" v-else>
+          <button @click='dashboard()' size="sm" class="dashboard-btn" v-else>
             My Dashboard
           </button>
         </b-nav>
@@ -54,8 +54,8 @@
       <b-navbar class="my-primary-bg padding-side section-nav" id="about">
         <h4 class="my-primary-accent section-title">About minimise</h4>
         <b-nav>
-          <b-nav-item href="https://www.facebook.com/MinimiseNZ/" target="_blank"><i class="fa fa-facebook-square fa-3x social-icon" aria-hidden="true"></i></b-nav-item>
-          <b-nav-item href="https://twitter.com/MinimiseNZ?lang=en" target="_blank" ><i class="fa fa-twitter-square fa-3x social-icon" aria-hidden="true"></i></b-nav-item>
+          <b-nav-item href="https://www.facebook.com/MinimiseNZ/" target="_blank"><i class="fab fa-facebook-square fa-3x social-icon" aria-hidden="true"></i></b-nav-item>
+          <b-nav-item href="https://twitter.com/MinimiseNZ?lang=en" target="_blank" ><i class="fab fa-twitter-square fa-3x social-icon" aria-hidden="true"></i></b-nav-item>
         </b-nav>
       </b-navbar>
       <b-container fluid class="flex-grid" data-aos="fade-zoom-in" data-aos-offset="200" data-aos-easing="ease-in-out-sine" data-aos-duration="500">
@@ -568,9 +568,7 @@ li > i {
   .second-col {
     display: none;
   }
-  .login-btn {
-    margin-top: 10px;
-  }
+
   .flex-row {
     margin: 20px;
   }
@@ -597,6 +595,18 @@ li > i {
   }
   li > i {
     font-size:2.5em;
+  }
+
+  .login-btn {
+    margin-top: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .dashboard-btn {
+    margin-top: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
   }
 
   .main-nav {

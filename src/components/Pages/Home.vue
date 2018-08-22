@@ -29,9 +29,10 @@ export default {
 </script>
 
 <style scoped>
+
   .container-fluid {
     padding-top: 20px;
-    padding-right: 30px;
+    padding-right: 20px;
   }
   
   .card-header {
@@ -42,5 +43,11 @@ export default {
 
   .card-body {
     padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .scroll-container {
+    height: 80vh;
+    overflow-y: scroll;
   }
 </style>

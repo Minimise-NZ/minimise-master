@@ -121,9 +121,7 @@ export default {
   }
   
   .master-row {
-    height: 100vh;
     margin: 0;
-    /* min-width: 990px; */
   }
   
  .side-wrapper {
@@ -172,6 +170,19 @@ export default {
   @media only screen and (max-width: 768px) {
     .btn{
       margin-top: 10px;
+    }
+    .master-row {
+      height: -moz-calc(100vh - 112px);
+      height: -webkit-calc(100vh - 112px);
+      height: calc(100vh - 112px);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .master-row {
+      height: -moz-calc(100vh - 83px);
+      height: -webkit-calc(100vh - 83px);
+      height: calc(100vh - 83px);
     }
   }
 

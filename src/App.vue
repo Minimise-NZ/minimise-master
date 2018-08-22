@@ -18,6 +18,7 @@
 
 body {
   font-size: 0.9em;
+  line-height: 1.0;
 }
 
 .form-control {
@@ -32,6 +33,7 @@ body.modal-open {
   padding-right: 0;
 }
 
+/*
 .scroll-container {
   height: 80vh;
   overflow: scroll;
@@ -43,7 +45,6 @@ body.modal-open {
 
 .card-header {
   font-size: 1.2em;
-  color: white;
 }
 
 .card-body {
@@ -61,6 +62,7 @@ body.modal-open {
   background-color:#ffc80b;
   color: black;
 }
+*/
 
 .my-primary-bg {
   background-color: #383838;
@@ -101,14 +103,6 @@ body.modal-open {
 .no-spinners::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
-}
-
-
-@media (max-width: 1200px) {
-  body {
-    font-size: 0.9em;
-    line-height: 1.0;
-  }
 }
 
 </style>

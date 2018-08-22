@@ -64,7 +64,7 @@ export default {
 <style scoped>
   .card {
     border: 1px solid rgba(29, 92, 158, 0.89);
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
   
   .card-header {

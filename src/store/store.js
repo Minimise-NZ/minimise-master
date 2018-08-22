@@ -394,14 +394,17 @@ export const store = new Vuex.Store({
               training.name = worker.name
               training.status = 'Expired'
               trainingAlerts.push(training)
-              console.log('expired')
             } else if (moment(training.expiry).isBefore(alertDate)) {
-              console.log('due to expire')
               training.name = worker.name
               training.status = 'Due to expire'
               trainingAlerts.push(training)
             }
+          } /* else {
+            training.name = worker.name
+            training.status = 'Incomplete'
+            trainingAlerts.push(training)
           }
+          */
         }
       }
       commit('setTrainingAlerts', trainingAlerts)
