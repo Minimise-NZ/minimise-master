@@ -276,7 +276,7 @@
                     <label>Site Safety Plan:</label>
                   </b-col>
                   <b-col sm="12" lg="9">
-                    <router-link v-on:click.native="setSafetyPlan(obj.job)" to='/dashboard/jobs/safetyplan/' class="ml-2">SSSP - {{obj.job.address}}</router-link >
+                    <router-link v-on:click.native="setSafetyPlan(obj.job)" to="#" class="ml-2">SSSP - {{obj.job.address}}</router-link >
                   </b-col>
                 </b-row>
                 <!--
@@ -371,8 +371,12 @@ export default {
     }
   },
   methods: {
-    setSafetyPlan (job) {
-      this.$store.dispatch('storeSafetyPlan', job)
+    async setSafetyPlan (job) {
+      this.loading = true
+      let res = await this.$store.dispatch('storeSafetyPlan', job)
+      console.log(res)
+      this.$router.push('/dashboard/jobs/safetyplan')
+      this.loading = false
     },
     toolBoxLink (jobKey) {
       this.$store.dispatch('getToolbox', jobKey)
