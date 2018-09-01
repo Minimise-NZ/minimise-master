@@ -21,28 +21,32 @@
       </b-navbar>
       <b-row class="master-row">
         <b-col xl="2" id="fixedSidenav" class="sidenav">
-          <router-link to='/dashboard' exact id="sideNavItem"><p>Home</p></router-link>
-          <router-link v-for="item in sideNavItems" :to='item.link' :key = "item.name">
-            <p>{{item.name}}</p>
-          </router-link>
-          <router-link v-if="user.admin" v-for="item in adminNav" :to='item.link' :key = "item.name">
-            <p>{{item.name}}</p>
-          </router-link>
-          <router-link to='/dashboard/support'>
-            <p>Support/ Feedback</p>
-          </router-link>
+          <b-list-group>
+            <router-link to='/dashboard' exact id="sideNavItem" tag="li" class="list-group-item"><p>Home</p></router-link>
+            <router-link v-for="item in sideNavItems" :to='item.link' :key = "item.name" tag="li" class="list-group-item">
+              <p>{{item.name}}</p>
+            </router-link>
+            <router-link v-if="user.admin" v-for="item in adminNav" :to='item.link' :key = "item.name" tag="li" class="list-group-item">
+              <p>{{item.name}}</p>
+            </router-link>
+            <router-link to='/dashboard/support' tag="li" class="list-group-item">
+              <p>Support/ Feedback</p>
+            </router-link>
+          </b-list-group>
         </b-col>
         <b-col id="mySidenav" class="sidenav" xl="2">
-          <router-link to='/dashboard' exact id="sideNavItem"><p>Home</p></router-link>
-          <router-link v-for="item in sideNavItems" :to='item.link' :key = "item.name">
-            <p>{{item.name}}</p>
-          </router-link>
-          <router-link v-if="user.admin" v-for="item in adminNav" :to='item.link' :key = "item.name">
-            <p>{{item.name}}</p>
-          </router-link>
-          <router-link to='/dashboard/support'>
-            <p>Support/ Feedback</p>
-          </router-link>
+          <b-list-group>
+            <router-link to='/dashboard' exact id="sideNavItem" tag="li" class="list-group-item"><p>Home</p></router-link>
+            <router-link v-for="item in sideNavItems" :to='item.link' :key = "item.name" tag="li" class="list-group-item">
+              <p>{{item.name}}</p>
+            </router-link>
+            <router-link v-if="user.admin" v-for="item in adminNav" :to='item.link' :key = "item.name" tag="li" class="list-group-item">
+              <p>{{item.name}}</p>
+            </router-link>
+            <router-link to='/dashboard/support' tag="li" class="list-group-item">
+              <p>Support/ Feedback</p>
+            </router-link>
+          </b-list-group>
         </b-col>
         <b-col id="main" sm="12" xl="10">
           <animated-fade-in>
@@ -124,6 +128,18 @@ export default {
   p {
     font-size: 1em;
     margin: 0;
+  }
+
+  .list-group {
+    padding: 5px 15px;
+  }
+
+  .list-group-item {
+    border-radius: 0.25em;
+    background-color: rgba(221, 221, 221, 0.2);
+    color: white;
+    margin-bottom: 10px;
+    cursor: pointer;
   }
   
   .router-link-active {
@@ -218,6 +234,12 @@ export default {
     }
     .sidenav {
       padding-top: 112px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .list-group {
+      margin-top: 55px;
     }
   }
   @media (min-width: 768px) {

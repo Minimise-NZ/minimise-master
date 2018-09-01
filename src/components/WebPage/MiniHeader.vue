@@ -33,7 +33,6 @@ export default {
 <style scoped>
   
   .navbar {
-    height: 50px;
     padding: 10px 40px;
     background-color: #383838;
   }
