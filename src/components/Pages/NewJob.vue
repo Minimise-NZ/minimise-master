@@ -26,15 +26,14 @@
       </div>
     </b-modal>
 
-    <b-card>
-      <div class="card-header">New Job Site</div>
+    <b-card header="New Job Site" header-tag="header">
       <div class="scroll-container">
         <b-form @submit.prevent="onSubmit">
           <!--JOB SITE GENERAL-->
           <div>
-            <b-row class="outer-row">
+            <b-row>
               <!-- input column -->
-              <b-col class="outer-col" style="padding-top: 20px; padding-right: 20px">
+              <b-col>
                 <!--address row-->
                 <b-row id="address">
                   <b-col sm="12" md="4">
@@ -116,9 +115,9 @@
                   :options="radioOptions">
                 </b-form-radio-group>
               </b-col>
-              <b-col sm="12" lg="5">
+              <b-col sm="12" lg="4">
                 <b-row v-if="notifiable.radioValue === 'true' && notifiable.url === ''" class="pt-0 pb-0">
-                <b-col sm="10" class="pl-0">
+                <b-col sclass="pl-0">
                   <b-form-file v-model="notifiable.file" placeholder="Choose a file..." :disabled="notifiable.disabled"></b-form-file>
                 </b-col>
                 <b-col sm="1">
@@ -144,9 +143,9 @@
                   :options="radioOptions">
                 </b-form-radio-group>
               </b-col>
-              <b-col sm="12" lg="5">
+              <b-col sm="12" lg="4">
                 <b-row v-if="environmental.radioValue === 'true' && environmental.url === ''" class="pt-0 pb-0">
-                <b-col sm="10" class="pl-0">
+                <b-col class="pl-0">
                   <b-form-file v-model="environmental.file" placeholder="Choose a file..." :disabled="environmental.disabled"></b-form-file>
                 </b-col>
                 <b-col sm="1">
@@ -172,9 +171,9 @@
                   :options="radioOptions">
                 </b-form-radio-group>
               </b-col>
-              <b-col sm="12" lg="5">
+              <b-col sm="12" lg="4">
                 <b-row v-if="resource.radioValue === 'true' && resource.url === ''" class="pt-0 pb-0">
-                <b-col sm="10" class="pl-0">
+                <b-col class="pl-0">
                   <b-form-file v-model="resource.file" placeholder="Choose a file..." :disabled="resource.disabled"></b-form-file>
                 </b-col>
                 <b-col sm="1">
@@ -200,9 +199,9 @@
                   :options="radioOptions">
                 </b-form-radio-group>
               </b-col>
-              <b-col sm="12" lg="5">
+              <b-col sm="12" lg="4">
                 <b-row v-if="nzhpt.radioValue === 'true' && nzhpt.url === ''" class="pt-0 pb-0">
-                <b-col sm="10" class="pl-0">
+                <b-col class="pl-0">
                   <b-form-file v-model="nzhpt.file" placeholder="Choose a file..." :disabled="nzhpt.disabled"></b-form-file>
                 </b-col>
                 <b-col sm="1">
@@ -217,17 +216,15 @@
               </b-col>
             </b-row>
             <b-row>
-              <b-col sm="8" lg="5">
+              <b-col sm="12" lg="4">
                 <label>Additional documents:</label>
                 <b-row v-for="(item, index) in docs.urls" :key="index">
                   <a target="_blank" :href="item.url" class="ml-2">{{item.name}}</a>
                 </b-row>
               </b-col> 
-              <b-col sm="4" lg="2">
-              </b-col>
               <b-col sm="12" lg="5">
               <b-row class="pt-0">
-                <b-col sm="10" class="pl-0">
+                <b-col class="pl-0">
                   <b-form-file v-model="docs.files" placeholder="Choose files..." multiple></b-form-file>
                 </b-col>
                 <b-col sm="1" >
@@ -243,22 +240,34 @@
           <div>
             <hr><h5>Emergency Information</h5><hr>
             <b-row>
-              <b-col sm="6" lg="4">First Aiders</b-col>
-              <b-col v-for="name in firstAiders" :key="name" lg="5"><b-form-input :value="name" readonly></b-form-input></b-col>
+              <b-col sm="12" lg="4">
+                <label>First Aiders</label>
+              </b-col>
+              <b-col v-for="name in firstAiders" :key="name" sm="12" class="pb-1">
+                <b-form-input :value="name" readonly></b-form-input>
+              </b-col>
             </b-row>
             <b-row>
-              <b-col sm="6" lg="4">First Aid Kit Location</b-col>
-              <b-col lg="5"><b-form-input v-model="firstAidKit"></b-form-input></b-col>
+              <b-col sm="12" lg="4">
+                <label>First Aid Kit Location</label>
+              </b-col>
+              <b-col>
+                <b-form-input v-model="firstAidKit"></b-form-input>
+              </b-col>
             </b-row>
             <b-row>
-              <b-col sm="6" lg="4">Fire Extinguisher Location</b-col>
-              <b-col lg="5"><b-form-input v-model="fireExtinguisher"></b-form-input></b-col>
+              <b-col sm="12" lg="4">
+                <label>Fire Extinguisher Location</label>
+              </b-col>
+              <b-col>
+                <b-form-input v-model="fireExtinguisher"></b-form-input>
+              </b-col>
             </b-row>
             <b-row>
-              <b-col sm="6" lg="4">
+              <b-col sm="12" lg="4">
                 <label>Emergency Plan</label>
               </b-col>
-              <b-col lg="5">
+              <b-col>
                 <b-row v-if="emergencyPlanURL === ''" class="pt-0 pb-0">
                   <b-col >
                     <b-form-file v-model="emergencyPlanFile" placeholder="Choose a file..."></b-form-file>
@@ -284,23 +293,33 @@
           <div>
             <hr><h5>Safety Planning and Communication</h5><hr>
             <b-row class="mb-2">
-              <b-col sm="4" lg="3">Safety Plan Review</b-col>
-              <b-col lg="7" class="ml-1">Workers must review safety plan before commencing work on job site</b-col>
+              <b-col sm="12" lg="3">
+                <label>Safety Plan Review</label>
+              </b-col>
+              <b-col>
+                <b-form-textarea value="Workers must review safety plan before commencing work on job site" readonly rows="2"></b-form-textarea>
+              </b-col>
             </b-row>
             <b-row>
-              <b-col sm="4" lg="3">Task Analyis Required</b-col>
+              <b-col sm="4" lg="3">
+                <label>Task Analyis Required</label>
+              </b-col>
               <b-col lg="7" xl="5">
                 <b-form-select :options="taskSelect" v-model="task"></b-form-select>
               </b-col>
             </b-row>
             <b-row>
-              <b-col sm="4" lg="3">Site Inspection Frequency</b-col>
+              <b-col sm="4" lg="3">
+                <label>Site Inspection Frequency</label>
+              </b-col>
               <b-col lg="7" xl="5">
                 <b-form-select :options="frequencyOptions" v-model="inspectionFrequency"></b-form-select>
               </b-col>
             </b-row>
             <b-row>
-              <b-col sm="4" lg="3">Toolbox Talk Frequency</b-col>
+              <b-col sm="4" lg="3">
+                <label>Toolbox Talk Frequency</label>
+              </b-col>
               <b-col lg="7" xl="5">
                 <b-form-select :options="frequencyOptions" v-model="toolboxFrequency"></b-form-select>
               </b-col>
@@ -391,7 +410,7 @@ export default {
         files: [],
         urls: []
       },
-      firstAiders: [],
+      firstAiders: ['Name one', 'Name 2'],
       firstAidKit: 'On Site and in vehicles',
       fireExtinguisher: 'On Site and in vehicles',
       emergencyPlanURL: '',
@@ -524,39 +543,7 @@ export default {
       }
     },
     cancel () {
-      this.siteAddress = ''
-      this.supervisorIndex = 0
-      this.medical = ''
-      this.notifiable.radioValue = 'false'
-      this.notifiable.file = ''
-      this.notifiable.url = ''
-      this.notifiable.disabled = false
-      this.environmental.radioValue = 'false'
-      this.environmental.file = ''
-      this.environmental.url = ''
-      this.environmental.disabled = false
-      this.resource.radioValue = 'false'
-      this.resource.file = ''
-      this.resource.url = ''
-      this.resource.disabled = false
-      this.nzhpt.radioValue = 'false'
-      this.nzhpt.file = ''
-      this.nzhpt.url = ''
-      this.nzhpt.disabled = false
-      this.docs.files = []
-      this.docs = []
-      this.firstAidKit = 'On Site and in vehicles'
-      this.fireExtinguisher = 'On Site and in vehicles'
-      this.emergencyPlanFile = ''
-      this.emergencyPlanURL = ''
-      this.emergencyInfo = ''
-      this.task = null
-      this.toolboxFrequency = 60 * 60 * 24
-      this.inspectionFrequency = 60 * 60 * 24 * 7
-      this.additionalInfo = ''
-      this.addressError = false
-      this.supervisorError = false
-      this.medicalError = false
+      this.$router.push('/dashboard')
     },
     onSubmit (e) {
       if (e.keyCode === 13) {
@@ -645,9 +632,25 @@ export default {
 </script>
 
 <style scoped>
-
-  .container-fluid {
+   .container-fluid {
     padding-top: 20px;
+    padding-right: 20px;
+  }
+  
+  .card-header {
+    background-color: rgba(56, 56, 56, 0.88);
+    font-size: 1.2em;
+    color: white;
+  }
+
+  .card-body {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .scroll-container {
+    height: 80vh;
+    overflow-y: scroll;
   }
   
   hr {
@@ -655,25 +658,16 @@ export default {
     margin-right: 20px;
   }
 
-  .card-header {
-    background-color: rgba(56, 56, 56, 0.88);
-    margin: -20px -20px 0px -20px;
-  }
-  
   .row {
     padding: 10px 10px 10px 10px;
   }
+
 
   .col {
     padding: 0;
     margin: 0;
   }
 
-  .outer-row, .outer-col {
-    padding: 0;
-    margin: 0;
-  }
-  
   .map {
     height: 300px;
   }
@@ -726,6 +720,14 @@ export default {
     }
     .scroll-container {
       padding-left: 10px;
+      padding-right: 20px;
+    }
+    [class*='col-'] {
+      padding-left: 5px;
+    }
+    .col {
+      padding-left: 5px;
+      padding-right: 15px;
     }
   }
 

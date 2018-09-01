@@ -387,6 +387,7 @@ export default {
       this.readonly = false
     },
     closeJob () {
+      console.log('closing job', this.jobToClose)
       this.$store.dispatch('closeJob', this.jobToClose)
       .then(() => {
         this.success = true

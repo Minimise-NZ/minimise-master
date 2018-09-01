@@ -399,12 +399,11 @@ export const store = new Vuex.Store({
               training.status = 'Due to expire'
               trainingAlerts.push(training)
             }
-          } /* else {
+          } else {
             training.name = worker.name
             training.status = 'Incomplete'
             trainingAlerts.push(training)
           }
-          */
         }
       }
       commit('setTrainingAlerts', trainingAlerts)
@@ -616,7 +615,7 @@ export const store = new Vuex.Store({
     closeJob ({dispatch}, payload) {
       // close job in jobSites collection
       let promise = new Promise((resolve, reject) => {
-        let jobId = payload.id
+        let jobId = payload
         let closedDate = today
         firestore.collection('jobSites').doc(jobId)
         .update({'open': false, 'closedDate': closedDate})

@@ -11,6 +11,7 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
     "animate.css": "^3.5.2",
     "animated-vue": "^0.5.3",
     "aos": "^2.2.0",
