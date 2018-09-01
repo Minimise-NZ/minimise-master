@@ -3,8 +3,8 @@
     <div>
       <b-navbar sticky toggleable="md" type="dark" class="my-primary-bg">
         <div class="toggle">
-          <span style="font-size:25px;cursor:pointer;color:#FFC80B" @click="toggleNav()" class="menubtn" v-if="menu === 'menu'">&#9776; Menu</span>
-          <span style="font-size:25px;cursor:pointer;color:#FFC80B" @click="toggleNav()" class="menubtn" v-if="menu === 'close'">&times; Close</span>
+          <span style="font-size:25px;cursor:pointer;color:#FFC80B" @click="showNav = !showNav" class="menubtn" v-if="showNav === false">&#9776; Menu</span>
+          <span style="font-size:25px;cursor:pointer;color:#FFC80B" @click="showNav = !showNav" class="menubtn" v-if="showNav === true">&times; Close</span>
         </div>
         <b-navbar-brand id="brand" >
           <img src='../../assets/yellow-mini.png'>
@@ -34,9 +34,9 @@
             </router-link>
           </b-list-group>
         </b-col>
-        <b-col id="mySidenav" class="sidenav" xl="2">
-          <b-list-group>
-            <router-link to='/dashboard' exact id="sideNavItem" tag="li" class="list-group-item"><p>Home</p></router-link>
+        <b-col id="mySidenav" class="sidenav" xl="2" :class="{showNav: showNav}">
+          <b-list-group @click="showNav = false">
+            <router-link  to='/dashboard' exact id="sideNavItem" tag="li" class="list-group-item"><p>Home</p></router-link>
             <router-link v-for="item in sideNavItems" :to='item.link' :key = "item.name" tag="li" class="list-group-item">
               <p>{{item.name}}</p>
             </router-link>
@@ -63,7 +63,7 @@ import * as firebase from 'firebase'
 export default {
   data () {
     return {
-      menu: 'menu',
+      showNav: true,
       sideNavItems: [
         {name: 'New Job', link: '/dashboard/newJob'},
         {name: 'Jobs In Progress', link: '/dashboard/jobs'},
@@ -96,17 +96,6 @@ export default {
       this.$router.push('/')
     },
     userDetails () {
-    },
-    toggleNav () {
-      if (this.menu === 'menu') {
-        document.getElementById('mySidenav').style.width = '250px'
-        document.getElementById('main').style.marginLeft = '250px'
-        this.menu = 'close'
-      } else {
-        document.getElementById('mySidenav').style.width = '0'
-        document.getElementById('main').style.marginLeft = '0px'
-        this.menu = 'menu'
-      }
     }
   },
   beforeCreate () {
@@ -128,6 +117,23 @@ export default {
   p {
     font-size: 1em;
     margin: 0;
+  }
+
+  #mySidenav {
+    margin-top: 50px;
+    width: 0;
+  }
+
+  #main {
+    margin-left: 0;
+  }
+  
+  #mySidenav.showNav {
+    width: 250px;
+  }
+
+  #main.showNav {
+    margin-left: 250px;
   }
 
   .list-group {
@@ -215,9 +221,6 @@ export default {
     color: #383838;
   }
 
-  #mySidenav {
-    margin-top: 50px;
-  }
   @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
