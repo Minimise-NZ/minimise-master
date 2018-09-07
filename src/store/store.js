@@ -399,12 +399,11 @@ export const store = new Vuex.Store({
               training.status = 'Due to expire'
               trainingAlerts.push(training)
             }
-          } /* else {
+          } else {
             training.name = worker.name
             training.status = 'Incomplete'
             trainingAlerts.push(training)
           }
-          */
         }
       }
       commit('setTrainingAlerts', trainingAlerts)
@@ -567,7 +566,6 @@ export const store = new Vuex.Store({
     },
     storeSafetyPlan ({commit}, payload) {
       commit('setSafetyPlan', payload)
-      return ('safety plan set')
     },
     newToolbox ({commit}, payload) {
       console.log(payload)
