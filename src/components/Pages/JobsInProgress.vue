@@ -133,20 +133,18 @@
     
     <!--JOBSITE CARD-->
     <b-card>
-      <b-row class="card-header" >
-        <b-col>
-          <header>Jobs In Progress</header>
-        </b-col>
-        <b-col>
-         <b-button  
-          class="addBtn"
-          variant="success"
-          @click="newJob" 
-          v-b-tooltip.hover title="Create New Job Site">
-          <i class="fa fa-plus"></i>
-        </b-button> 
-        </b-col>
-      </b-row>
+      <header slot="header" class="header">Jobs In Progress
+        <b-button
+        style="float: right"
+        slot="header"
+        class="addBtn"
+        variant="success"
+        @click="newJob" 
+        v-b-tooltip.hover title="Create New Job Site">
+        <i class="fa fa-plus"></i>
+      </b-button> 
+      </header>
+      
       <div class="scroll-container">
         <b-row v-if="jobSites.length === 0">
           <b-col>
@@ -157,8 +155,7 @@
           v-for="(obj, index) in jobSites"
           :key="index"
           class="siteCard mt-2 mb-4">
-          <div class="text-left card-header job">{{obj.job.address}}</div>
-
+          <header slot="header" class="subheader">{{obj.job.address}}</header>
           <b-form @submit.prevent="onSubmit">
             <b-row class="outer-row">
               <!--SITE INFORMATION COLUMN-->
@@ -485,53 +482,27 @@ export default {
 <style scoped>
   .container-fluid {
     padding-top: 20px;
+    padding-right: 20px;
   }
- 
-  .row {
-    padding: 0px 10px 20px 15px;
-    margin-right: 0;
-  }
-
 
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
-    margin: -20px -20px 0px -20px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    font-size: 1.2em;
+    color: white;
+    line-height: 2em;
   }
+
 
   .card-body {
     padding-right: 0;
     padding-bottom: 0;
   }
 
-  header {
-    line-height: 2em;
+  .scroll-container {
+    height: 80vh;
+    overflow-y: scroll;
+    padding-right: 20px;
   }
-
-  .card-header.job {
-    background-color: #1e9577;
-    margin: 0;
-    color: white;
-    font-size: 1.2em;
-    padding-left: 15px;
-  }
-
-  .uploadBtn {
-    display: block;
-    float: right;
-  }
-
-  .subheader {
-    padding: 5px 0 10px 15px;
-    font-weight: bold;
-    color: #383838;
-  }
-  
-  .siteCard > .card-body {
-    padding: 0;
-  }
-
   .vl {
     border-left: 2px solid #12807a;
     margin: 20px 15px;
@@ -551,48 +522,19 @@ export default {
     text-align: center;
   }
 
-  .outer-col {
-    padding-left:0;
-  }
-
-  ul {
-    list-style: none;
-    padding-left: 15px;
-    margin-top: 10px;
-  }
-  
-  label {
-    padding-top:5px;
-  }
-
-  .alert {
-    margin-bottom: 0;
-  }
-
-  a {
-    text-decoration-line: underline;
-  }
-
-  .btn {
-    margin-left: 10px;
-  }
-
   .uploadInput {
     padding-top: 0;
     position: absolute; 
     bottom: 0;
   }
 
-  .subheader-col {
-    text-align: center;
-    padding-left: 0;
-    padding-right: 0;
+  .uploadBtn {
+    display: block;
+    float: right;
   }
 
+
   @media screen and (max-width: 992px) {
-    .col {
-      padding-left: 15px;
-    }
     .uploadInput {
       position: relative;
     }

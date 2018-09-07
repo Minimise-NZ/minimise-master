@@ -63,13 +63,13 @@ import * as firebase from 'firebase'
 export default {
   data () {
     return {
-      showNav: true,
+      showNav: false,
       sideNavItems: [
         {name: 'New Job', link: '/dashboard/newJob'},
         {name: 'Jobs In Progress', link: '/dashboard/jobs'},
         {name: 'Hazard Register', link: '/dashboard/hazards'},
         {name: 'Hazardous Substances', link: '/dashboard/hazardousSubstances'},
-        /* {name: 'Task Analysis/SWMS', link: '/dashboard/taskAnalysis'}, */
+        {name: 'Task Analysis/SWMS', link: '/dashboard/taskAnalysis'},
         {name: 'Training Register', link: '/dashboard/TrainingRegister'},
         {name: 'New Incident', link: '/dashboard/newIncident'},
         {name: 'Incident Reports', link: '/dashboard/incidents'}
