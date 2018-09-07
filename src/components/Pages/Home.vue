@@ -50,5 +50,7 @@ export default {
   .scroll-container {
     height: 80vh;
     overflow-y: scroll;
+    margin-top: 10px;
+    padding-right: 10px;
   }
 </style>
