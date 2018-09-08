@@ -227,11 +227,7 @@ export default {
   .card-body {
     padding-bottom: 0;
   }
-
-  header {
-    line-height: 2em;
-  }
-
+  
   .subheader {
     margin-left: 15px;
     font-weight: bold;

@@ -115,9 +115,9 @@
                   :options="radioOptions">
                 </b-form-radio-group>
               </b-col>
-              <b-col sm="12" lg="4">
+              <b-col sm="11" lg="4">
                 <b-row v-if="notifiable.radioValue === 'true' && notifiable.url === ''" class="pt-0 pb-0">
-                <b-col sclass="pl-0">
+                <b-col class="pl-0 pr-0">
                   <b-form-file v-model="notifiable.file" placeholder="Choose a file..." :disabled="notifiable.disabled"></b-form-file>
                 </b-col>
                 <b-col sm="1">
@@ -143,9 +143,9 @@
                   :options="radioOptions">
                 </b-form-radio-group>
               </b-col>
-              <b-col sm="12" lg="4">
+              <b-col sm="11" lg="4">
                 <b-row v-if="environmental.radioValue === 'true' && environmental.url === ''" class="pt-0 pb-0">
-                <b-col class="pl-0">
+                <b-col class="pl-0 pr-0">
                   <b-form-file v-model="environmental.file" placeholder="Choose a file..." :disabled="environmental.disabled"></b-form-file>
                 </b-col>
                 <b-col sm="1">
@@ -171,9 +171,9 @@
                   :options="radioOptions">
                 </b-form-radio-group>
               </b-col>
-              <b-col sm="12" lg="4">
+              <b-col sm="11" lg="4">
                 <b-row v-if="resource.radioValue === 'true' && resource.url === ''" class="pt-0 pb-0">
-                <b-col class="pl-0">
+                <b-col class="pl-0 pr-0">
                   <b-form-file v-model="resource.file" placeholder="Choose a file..." :disabled="resource.disabled"></b-form-file>
                 </b-col>
                 <b-col sm="1">
@@ -199,9 +199,9 @@
                   :options="radioOptions">
                 </b-form-radio-group>
               </b-col>
-              <b-col sm="12" lg="4">
+              <b-col sm="11" lg="4">
                 <b-row v-if="nzhpt.radioValue === 'true' && nzhpt.url === ''" class="pt-0 pb-0">
-                <b-col class="pl-0">
+                <b-col class="pl-0 pr-0">
                   <b-form-file v-model="nzhpt.file" placeholder="Choose a file..." :disabled="nzhpt.disabled"></b-form-file>
                 </b-col>
                 <b-col sm="1">
@@ -222,9 +222,9 @@
                   <a target="_blank" :href="item.url" class="ml-2">{{item.name}}</a>
                 </b-row>
               </b-col> 
-              <b-col sm="12" lg="5">
-              <b-row class="pt-0">
-                <b-col class="pl-0">
+              <b-col sm="11" lg="5">
+              <b-row>
+                <b-col class="pl-0 pr-0">
                   <b-form-file v-model="docs.files" placeholder="Choose files..." multiple></b-form-file>
                 </b-col>
                 <b-col sm="1" >
@@ -243,7 +243,7 @@
               <b-col sm="12" lg="4">
                 <label>First Aiders</label>
               </b-col>
-              <b-col v-for="name in firstAiders" :key="name" sm="12" class="pb-1">
+              <b-col v-for="name in firstAiders" :key="name" sm="12" md="10" class="pb-1 col xtraPad">
                 <b-form-input :value="name" readonly></b-form-input>
               </b-col>
             </b-row>
@@ -251,7 +251,7 @@
               <b-col sm="12" lg="4">
                 <label>First Aid Kit Location</label>
               </b-col>
-              <b-col>
+              <b-col md="10" class="col xtraPad">
                 <b-form-input v-model="firstAidKit"></b-form-input>
               </b-col>
             </b-row>
@@ -259,7 +259,7 @@
               <b-col sm="12" lg="4">
                 <label>Fire Extinguisher Location</label>
               </b-col>
-              <b-col>
+              <b-col md="10" class="col xtraPad">
                 <b-form-input v-model="fireExtinguisher"></b-form-input>
               </b-col>
             </b-row>
@@ -267,9 +267,9 @@
               <b-col sm="12" lg="4">
                 <label>Emergency Plan</label>
               </b-col>
-              <b-col>
+              <b-col class="col xtraPad">
                 <b-row v-if="emergencyPlanURL === ''" class="pt-0 pb-0">
-                  <b-col >
+                  <b-col class="pl-1 pr-0" md="10" >
                     <b-form-file v-model="emergencyPlanFile" placeholder="Choose a file..."></b-form-file>
                   </b-col>
                   <b-col sm="1">
@@ -284,7 +284,7 @@
               </b-col>
             </b-row>
             <b-row>
-              <b-col sm="12" lg="9">
+              <b-col sm="12" lg="9" class="col xtraPad" >
                 <b-form-textarea placeholder="Additional emergency info" rows="3" v-model="emergencyInfo"></b-form-textarea>
               </b-col>
             </b-row>
@@ -293,10 +293,10 @@
           <div>
             <hr><h5>Safety Planning and Communication</h5><hr>
             <b-row class="mb-2">
-              <b-col sm="12" lg="3">
+              <b-col sm="4" lg="3" >
                 <label>Safety Plan Review</label>
               </b-col>
-              <b-col>
+              <b-col class="col">
                 <b-form-textarea value="Workers must review safety plan before commencing work on job site" readonly rows="2"></b-form-textarea>
               </b-col>
             </b-row>
@@ -304,7 +304,7 @@
               <b-col sm="4" lg="3">
                 <label>Task Analyis Required</label>
               </b-col>
-              <b-col lg="7" xl="5">
+              <b-col lg="7" xl="5" class="col">
                 <b-form-select :options="taskSelect" v-model="task"></b-form-select>
               </b-col>
             </b-row>
@@ -312,7 +312,7 @@
               <b-col sm="4" lg="3">
                 <label>Site Inspection Frequency</label>
               </b-col>
-              <b-col lg="7" xl="5">
+              <b-col lg="7" xl="5" class="col">
                 <b-form-select :options="frequencyOptions" v-model="inspectionFrequency"></b-form-select>
               </b-col>
             </b-row>
@@ -320,7 +320,7 @@
               <b-col sm="4" lg="3">
                 <label>Toolbox Talk Frequency</label>
               </b-col>
-              <b-col lg="7" xl="5">
+              <b-col lg="7" xl="5" class="col">
                 <b-form-select :options="frequencyOptions" v-model="toolboxFrequency"></b-form-select>
               </b-col>
             </b-row>
@@ -641,6 +641,7 @@ export default {
     background-color: rgba(56, 56, 56, 0.88);
     font-size: 1.2em;
     color: white;
+    line-height: 1.5em;
   }
 
   .card-body {
@@ -651,22 +652,17 @@ export default {
   .scroll-container {
     height: 80vh;
     overflow-y: scroll;
-<<<<<<< HEAD
     margin-top: 10px;
-    padding-right: 10px;
-=======
->>>>>>> parent of 0aae623... New job styling complete
+    padding-right:20px;
   }
   
   hr {
-    background-color: #12807ad4;  
-    margin-right: 20px;
+    background-color: #12807ad4;
   }
 
   .row {
     padding: 10px 10px 10px 10px;
   }
-
 
   .col {
     padding: 0;
@@ -727,7 +723,8 @@ export default {
       padding-left: 10px;
       padding-right: 20px;
     }
-    [class*='col-'] {
+
+    .col-sm-1 {
       padding-left: 5px;
     }
     .col {
@@ -739,6 +736,9 @@ export default {
   @media screen and (max-width : 992px) {
     .map {
       display: none;
+    }
+    .xtraPad {
+      margin: 10px 0 0 10px;
     }
   }
 

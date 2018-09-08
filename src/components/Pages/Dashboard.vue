@@ -1,7 +1,7 @@
 <template>
   <animated-fade-in>
     <div>
-      <b-navbar sticky toggleable="md" type="dark" class="my-primary-bg">
+      <b-navbar toggleable="md" type="dark" class="my-primary-bg">
         <div class="toggle">
           <span style="font-size:25px;cursor:pointer;color:#FFC80B" @click="showNav = !showNav" class="menubtn" v-if="showNav === false">&#9776; Menu</span>
           <span style="font-size:25px;cursor:pointer;color:#FFC80B" @click="showNav = !showNav" class="menubtn" v-if="showNav === true">&times; Close</span>
@@ -63,13 +63,13 @@ import * as firebase from 'firebase'
 export default {
   data () {
     return {
-      showNav: true,
+      showNav: false,
       sideNavItems: [
         {name: 'New Job', link: '/dashboard/newJob'},
         {name: 'Jobs In Progress', link: '/dashboard/jobs'},
         {name: 'Hazard Register', link: '/dashboard/hazards'},
         {name: 'Hazardous Substances', link: '/dashboard/hazardousSubstances'},
-        /* {name: 'Task Analysis/SWMS', link: '/dashboard/taskAnalysis'}, */
+        {name: 'Task Analysis/SWMS', link: '/dashboard/taskAnalysis'},
         {name: 'Training Register', link: '/dashboard/TrainingRegister'},
         {name: 'New Incident', link: '/dashboard/newIncident'},
         {name: 'Incident Reports', link: '/dashboard/incidents'}
@@ -114,6 +114,9 @@ export default {
 </script>
 
 <style scoped>
+  .navbar {
+    z-index: 2;
+  }
   p {
     font-size: 1em;
     margin: 0;
@@ -130,6 +133,7 @@ export default {
   
   #mySidenav.showNav {
     width: 250px;
+    z-index: 1000;
   }
 
   #main.showNav {
