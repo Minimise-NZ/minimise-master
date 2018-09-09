@@ -115,12 +115,12 @@
                   :options="radioOptions">
                 </b-form-radio-group>
               </b-col>
-              <b-col sm="11" lg="4">
+              <b-col sm="11" lg="5">
                 <b-row v-if="notifiable.radioValue === 'true' && notifiable.url === ''" class="pt-0 pb-0">
                 <b-col class="pl-0 pr-0">
                   <b-form-file v-model="notifiable.file" placeholder="Choose a file..." :disabled="notifiable.disabled"></b-form-file>
                 </b-col>
-                <b-col sm="1">
+                <b-col cols="1">
                   <b-btn v-if="notifiable.file !== ''" @click="uploadFile('notifiable')" v-b-tooltip.hover title="Upload file">
                     <i class="fas fa-cloud-upload-alt"></i>
                   </b-btn>
@@ -143,12 +143,12 @@
                   :options="radioOptions">
                 </b-form-radio-group>
               </b-col>
-              <b-col sm="11" lg="4">
+              <b-col sm="11" lg="5">
                 <b-row v-if="environmental.radioValue === 'true' && environmental.url === ''" class="pt-0 pb-0">
                 <b-col class="pl-0 pr-0">
                   <b-form-file v-model="environmental.file" placeholder="Choose a file..." :disabled="environmental.disabled"></b-form-file>
                 </b-col>
-                <b-col sm="1">
+                <b-col cols="1">
                   <b-btn v-if="environmental.file !== ''" @click="uploadFile('environmental')" v-b-tooltip.hover title="Upload file">
                     <i class="fas fa-cloud-upload-alt"></i>
                   </b-btn>
@@ -171,12 +171,12 @@
                   :options="radioOptions">
                 </b-form-radio-group>
               </b-col>
-              <b-col sm="11" lg="4">
+              <b-col sm="11" lg="5">
                 <b-row v-if="resource.radioValue === 'true' && resource.url === ''" class="pt-0 pb-0">
                 <b-col class="pl-0 pr-0">
                   <b-form-file v-model="resource.file" placeholder="Choose a file..." :disabled="resource.disabled"></b-form-file>
                 </b-col>
-                <b-col sm="1">
+                <b-col cols="1">
                   <b-btn v-if="resource.file !== ''" @click="uploadFile('resource')" v-b-tooltip.hover title="Upload file">
                     <i class="fas fa-cloud-upload-alt"></i>
                   </b-btn>
@@ -199,12 +199,12 @@
                   :options="radioOptions">
                 </b-form-radio-group>
               </b-col>
-              <b-col sm="11" lg="4">
+              <b-col sm="11" lg="5">
                 <b-row v-if="nzhpt.radioValue === 'true' && nzhpt.url === ''" class="pt-0 pb-0">
                 <b-col class="pl-0 pr-0">
                   <b-form-file v-model="nzhpt.file" placeholder="Choose a file..." :disabled="nzhpt.disabled"></b-form-file>
                 </b-col>
-                <b-col sm="1">
+                <b-col cols="1">
                   <b-btn v-if="nzhpt.file !== ''" @click="uploadFile('nzhpt')" v-b-tooltip.hover title="Upload file">
                     <i class="fas fa-cloud-upload-alt"></i>
                   </b-btn>
@@ -216,18 +216,19 @@
               </b-col>
             </b-row>
             <b-row>
-              <b-col sm="12" lg="4">
+              <b-col sm="12" lg="5">
                 <label>Additional documents:</label>
                 <b-row v-for="(item, index) in docs.urls" :key="index">
                   <a target="_blank" :href="item.url" class="ml-2">{{item.name}}</a>
                 </b-row>
               </b-col> 
+              <b-col></b-col>
               <b-col sm="11" lg="5">
-              <b-row>
+              <b-row class="additional">
                 <b-col class="pl-0 pr-0">
                   <b-form-file v-model="docs.files" placeholder="Choose files..." multiple></b-form-file>
                 </b-col>
-                <b-col sm="1" >
+                <b-col cols="1" >
                   <b-btn v-if="docs.files.length > 0" @click="uploadFile('docs')" v-b-tooltip.hover title="Upload file">
                     <i class="fas fa-cloud-upload-alt"></i>
                   </b-btn>
@@ -240,39 +241,41 @@
           <div>
             <hr><h5>Emergency Information</h5><hr>
             <b-row>
-              <b-col sm="12" lg="4">
+              <b-col sm="12" lg="3">
                 <label>First Aiders</label>
               </b-col>
-              <b-col v-for="name in firstAiders" :key="name" sm="12" md="10" class="pb-1 col xtraPad">
-                <b-form-input :value="name" readonly></b-form-input>
+              <b-col sm="12" md="10" lg="6" class="pb-1 col xtraPad">
+                <b-row v-for="name in firstAiders" :key="name" class="firstaiders">
+                  <b-form-input :value="name" readonly></b-form-input>
+                </b-row>
               </b-col>
             </b-row>
             <b-row>
-              <b-col sm="12" lg="4">
+              <b-col sm="12" lg="3">
                 <label>First Aid Kit Location</label>
               </b-col>
-              <b-col md="10" class="col xtraPad">
+              <b-col md="10" lg="6" class="col xtraPad">
                 <b-form-input v-model="firstAidKit"></b-form-input>
               </b-col>
             </b-row>
             <b-row>
-              <b-col sm="12" lg="4">
+              <b-col sm="12" lg="3">
                 <label>Fire Extinguisher Location</label>
               </b-col>
-              <b-col md="10" class="col xtraPad">
+              <b-col md="10" lg="6" class="col xtraPad">
                 <b-form-input v-model="fireExtinguisher"></b-form-input>
               </b-col>
             </b-row>
             <b-row>
-              <b-col sm="12" lg="4">
+              <b-col sm="12" lg="3">
                 <label>Emergency Plan</label>
               </b-col>
-              <b-col class="col xtraPad">
+              <b-col class="col xtraPad" lg="7">
                 <b-row v-if="emergencyPlanURL === ''" class="pt-0 pb-0">
                   <b-col class="pl-1 pr-0" md="10" >
                     <b-form-file v-model="emergencyPlanFile" placeholder="Choose a file..."></b-form-file>
                   </b-col>
-                  <b-col sm="1">
+                  <b-col cols="1">
                     <b-btn v-if="emergencyPlanFile !== ''" @click="uploadFile('emergencyPlan')" v-b-tooltip.hover title="Upload file">
                       <i class="fas fa-cloud-upload-alt"></i>
                     </b-btn>
@@ -284,7 +287,7 @@
               </b-col>
             </b-row>
             <b-row>
-              <b-col sm="12" lg="9" class="col xtraPad" >
+              <b-col sm="12" md="10" class="col xtraPad" >
                 <b-form-textarea placeholder="Additional emergency info" rows="3" v-model="emergencyInfo"></b-form-textarea>
               </b-col>
             </b-row>
@@ -296,7 +299,7 @@
               <b-col sm="4" lg="3" >
                 <label>Safety Plan Review</label>
               </b-col>
-              <b-col class="col">
+              <b-col class="col" lg="6">
                 <b-form-textarea value="Workers must review safety plan before commencing work on job site" readonly rows="2"></b-form-textarea>
               </b-col>
             </b-row>
@@ -304,7 +307,7 @@
               <b-col sm="4" lg="3">
                 <label>Task Analyis Required</label>
               </b-col>
-              <b-col lg="7" xl="5" class="col">
+              <b-col lg="6" class="col">
                 <b-form-select :options="taskSelect" v-model="task"></b-form-select>
               </b-col>
             </b-row>
@@ -312,7 +315,7 @@
               <b-col sm="4" lg="3">
                 <label>Site Inspection Frequency</label>
               </b-col>
-              <b-col lg="7" xl="5" class="col">
+              <b-col lg="6" class="col">
                 <b-form-select :options="frequencyOptions" v-model="inspectionFrequency"></b-form-select>
               </b-col>
             </b-row>
@@ -320,7 +323,7 @@
               <b-col sm="4" lg="3">
                 <label>Toolbox Talk Frequency</label>
               </b-col>
-              <b-col lg="7" xl="5" class="col">
+              <b-col lg="6" class="col">
                 <b-form-select :options="frequencyOptions" v-model="toolboxFrequency"></b-form-select>
               </b-col>
             </b-row>
@@ -334,7 +337,7 @@
           <div>
             <hr><h5>Additional Information</h5><hr>
              <b-row>
-              <b-col sm="12" lg="9">
+              <b-col sm="12" lg="10" class="col xtraPad">
                 <b-form-textarea placeholder="Additional site information" rows="3" v-model="additionalInfo"></b-form-textarea>
               </b-col>
             </b-row>
@@ -715,6 +718,10 @@ export default {
     cursor: not-allowed;
   }
 
+  .col-1 {
+    padding-left: 5px;
+  }
+
   @media screen and (max-width: 768px) {
     label {
       padding-bottom: 10px;
@@ -722,10 +729,6 @@ export default {
     .scroll-container {
       padding-left: 10px;
       padding-right: 20px;
-    }
-
-    .col-sm-1 {
-      padding-left: 5px;
     }
     .col {
       padding-left: 5px;
@@ -741,6 +744,38 @@ export default {
       margin: 10px 0 0 10px;
     }
   }
+
+  @media screen and (max-width : 1200px) {
+    .additional {
+      padding-top: 0;
+    }
+
+    .xtraPad {
+      margin-left: 10px;
+    }
+
+    .firstaiders {
+      padding-left: 15px;
+      padding-bottom: 0;
+      padding-right: 15px;
+    }
+  }
+
+  @media screen and (min-width : 1200px) {
+
+    .firstaiders {
+      padding-left: 15px;
+      padding-bottom: 0;
+      padding-right: 15px;
+    }
+
+    .xtraPad {
+      margin-left: 10px;
+    }
+  }
+
+
+
 
 </style>
 
