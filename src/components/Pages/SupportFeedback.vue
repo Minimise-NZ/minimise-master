@@ -14,9 +14,8 @@
         <h5>We will respond to you as soon as we can</h5>
       </div>
     </b-modal>
-    <b-card>
-    <div class="card-header">Support/Feedback
-    </div>
+    <b-card header-tag="header">
+      <header slot="header">Support/Feedback</header>
     <b-card class="itemCard mt-2 mb-4">
       <header class="card-header item">Please enter feedback details below<br><span style="font-size: 0.8em">We will typically respond via email within 24 hours</span></header>
       <b-form @submit.prevent="onSubmit">
@@ -199,14 +198,16 @@ export default {
 </script>
 
 <style scoped>
-  .container-fluid {
+   .container-fluid {
     padding-top: 20px;
-    margin-bottom: 100px;
+    padding-right: 20px;
   }
 
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
-    margin: -20px -20px 20px -20px;
+    font-size: 1.2em;
+    color: white;
+    line-height: 2em;
   }
   
    .card-header.item{

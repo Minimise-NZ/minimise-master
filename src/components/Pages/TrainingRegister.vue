@@ -1,8 +1,7 @@
 <template>
   <b-container fluid class="outside-container">
-    <b-card>
-      <div class="card-header">Training Register
-      </div>
+    <b-card header-tag="header">
+      <header slot="header">Training Register</header>
       <div class="scroll-container">
         <div v-for="worker in workers" :key="worker.id">
           <workerview :id="worker.id" :workers="worker"></workerview>
@@ -33,14 +32,20 @@ export default {
 </script>
 
 <style scoped>
-
   .container-fluid {
     padding-top: 20px;
+    padding-right: 20px;
   }
-  
+
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
-    margin: -20px -20px 0px -20px;
+    font-size: 1.2em;
+    color: white;
+    line-height: 2em;
+  }
+
+  .btn {
+    float: right;
   }
 
 </style>

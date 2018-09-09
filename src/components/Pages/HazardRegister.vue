@@ -38,7 +38,24 @@
       </div>
     </b-modal>
 
-    <b-card>
+    <b-card header-tag="header">
+      <header slot="header" :class="{ inverted: inverted }">{{headerTitle}}
+         <b-btn
+          v-if="register"
+          variant="success"
+          @click="register = !register, inverted = !inverted"
+          v-b-tooltip.hover title="Add New Hazard">
+          <i class="fa fa-plus"></i>
+        </b-btn>
+        <b-btn
+          v-else
+          variant="primary"
+           @click="register = !register, inverted = !inverted"
+          v-b-tooltip.hover title="Back to Hazard Register">
+          <i class="fa fa-undo"></i>
+          </b-btn> 
+        </header>
+      <!--
       <b-row class="card-header" :class="{ inverted: inverted }" >
         <b-col>
           <header>{{headerTitle}}</header>
@@ -62,7 +79,7 @@
         </b-button> 
         </b-col>
       </b-row>
-
+      -->
       <div class="scroll-container">
         <b-row v-if="hazards.length === 0" >
           <b-col class="p-0">
@@ -221,7 +238,13 @@ export default {
 
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
-    margin: -20px -20px 0 -20px;
+    font-size: 1.2em;
+    color: white;
+    line-height: 2em;
+  }
+
+  .btn {
+    float: right;
   }
 
   .card-body {

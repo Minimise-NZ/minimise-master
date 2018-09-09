@@ -15,16 +15,16 @@
         <b-form-input type="text" v-model="title" required/>
       </div>
     </b-modal>
-    <b-card>
-     <div class="card-header">Task Analysis/SWMS
-       <b-button  
+    <b-card header-tag="header">
+      <header slot="header">Task Analysis/SWMS
+        <b-btn
           variant="primary"
           class="addBtn"
           @click="newPopUp = true" 
           v-b-tooltip.hover title="Add New Task Analysis">
           <i class="fa fa-plus"></i>
-        </b-button> 
-     </div>
+        </b-btn> 
+      </header>
      <div class="scroll-container">
         <b-row v-for="(task, index) in taskAnalysis" :key="index">
           <taskView :taskAnalysis="task" :index="index"></taskView>
@@ -68,18 +68,19 @@ export default {
 </script>
 
 <style scoped>
-  .container-fluid {
+   .container-fluid {
     padding-top: 20px;
-  }
-  
-  .row{
-    margin: 0;
-    padding: 0;
+    padding-right: 20px;
   }
 
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
-    margin: -20px -20px 0px -20px;
+    font-size: 1.2em;
+    color: white;
+    line-height: 2em;
   }
 
+  .btn {
+    float: right;
+  }
 </style>

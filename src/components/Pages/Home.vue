@@ -39,7 +39,7 @@ export default {
     background-color: rgba(56, 56, 56, 0.88);
     font-size: 1.2em;
     color: white;
-    line-height: 1.5em;
+    line-height: 2em;
   }
 
   .card-body {

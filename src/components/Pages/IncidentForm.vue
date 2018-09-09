@@ -29,9 +29,8 @@
           <h4 class="mt-2">This incident has been submitted</h4>
         </div>
     </b-modal>
-    <b-card>
-      <div class="card-header">New Incident
-      </div>
+    <b-card header-tag="header">
+      <header slot="header">New Incident</header>
       <div class="scroll-container">
         <b-form @submit.prevent="onSubmit">
           <b-row>
@@ -255,16 +254,17 @@ export default {
 </script>
 
 <style scoped>
-  .container-fluid {
+   .container-fluid {
     padding-top: 20px;
-    padding-right: 30px;
+    padding-right: 20px;
   }
 
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
-    margin: -20px -20px 0px -20px;
+    font-size: 1.2em;
+    color: white;
+    line-height: 2em;
   }
-  
   .col-sm-3 {
     text-align: right;
     padding-top: 5px;

@@ -93,17 +93,15 @@
         <h5>{{errorMessage}}</h5>
       </div>
     </b-modal>
-    <b-card>
-      <div class="card-header">
-      Hazardous Substances
-        <b-button  
-          class="addBtn"
+    <b-card header-tag="header">
+      <header slot="header">Hazardous Substances
+        <b-btn
           variant="success"
           @click="addNew" 
           v-b-tooltip.hover title="Add New Substance">
           <i class="fa fa-plus"></i>
-        </b-button> 
-      </div>
+        </b-btn> 
+      </header>
       <div class="scroll-container">
         <div v-for="(hazSub, index) in hazSubs" :key="index">
           <substanceview :substance="hazSub" :index="index"></substanceview>
@@ -209,11 +207,18 @@ export default {
 
   .container-fluid {
     padding-top: 20px;
+    padding-right: 20px;
   }
 
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
-    margin: -20px -20px 0px -20px;
+    font-size: 1.2em;
+    color: white;
+    line-height: 2em;
+  }
+
+  .btn {
+    float: right;
   }
 
   .inner-row {
@@ -223,5 +228,7 @@ export default {
   label {
     padding-top: 5px;
   }
+
+  
 
 </style>

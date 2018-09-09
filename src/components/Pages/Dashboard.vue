@@ -48,7 +48,7 @@
             </router-link>
           </b-list-group>
         </b-col>
-        <b-col id="main" sm="12" xl="10">
+        <b-col id="main" :class="{showNav: showNav}">
           <animated-fade-in>
             <router-view></router-view>
           </animated-fade-in>
@@ -114,30 +114,18 @@ export default {
 </script>
 
 <style scoped>
-  .navbar {
-    z-index: 2;
-  }
   p {
     font-size: 1em;
     margin: 0;
   }
 
   #mySidenav {
-    margin-top: 50px;
+    height: 100vh;
     width: 0;
   }
 
-  #main {
-    margin-left: 0;
-  }
-  
   #mySidenav.showNav {
     width: 250px;
-    z-index: 1000;
-  }
-
-  #main.showNav {
-    margin-left: 250px;
   }
 
   .list-group {
@@ -190,17 +178,9 @@ export default {
     font-size: 1.8em;
   }
 
-  #main {
-    position: fixed;
-    right: 0;
-  }
-
   .sidenav {
-    height: 100%;
     padding-left: 0;
     padding-right: 0;
-    position: fixed;
-    z-index: 1;
     top: 0;
     left: 0;
     background-color: #383838;
@@ -239,24 +219,15 @@ export default {
       height: -webkit-calc(100vh - 112px);
       height: calc(100vh - 112px);
     }
-    .sidenav {
-      padding-top: 112px;
-    }
   }
 
   @media (max-width: 768px) {
-    .list-group {
-      margin-top: 55px;
-    }
   }
   @media (min-width: 768px) {
     .master-row {
       height: -moz-calc(100vh - 83px);
       height: -webkit-calc(100vh - 83px);
       height: calc(100vh - 83px);
-    }
-    .sidenav{
-      padding-top: 80px;
     }
   }
 

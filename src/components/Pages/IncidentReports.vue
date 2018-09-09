@@ -1,7 +1,7 @@
 <template>
   <b-container fluid class="outside-container">
-    <b-card>
-      <div class="card-header">Incident Reports</div>
+    <b-card header-tag="header">
+      <header slot="header">Incident Reports</header>
       <div class="scroll-container">
         <b-row v-if="incidents.length === 0">
           <b-col>
@@ -76,15 +76,22 @@ export default {
 </script>
 
 <style scoped>
-  .container-fluid {
+   .container-fluid {
     padding-top: 20px;
+    padding-right: 20px;
   }
 
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
-    margin: -20px -20px 0px -20px;
+    font-size: 1.2em;
+    color: white;
+    line-height: 2em;
   }
-  
+
+  .btn {
+    float: right;
+  }
+
   .subheader {
     padding: 15px 0 10px 15px;
     border-bottom: 1px solid lightgrey;

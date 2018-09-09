@@ -299,6 +299,9 @@ export default {
     }
   },
   computed: {
+    user () {
+      return this.$store.getters.user
+    }
   },
   methods: {
     viewPlan (plan) {
@@ -415,15 +418,53 @@ export default {
 
 <style scoped>
 
-  .card {
-    border: 1px solid rgba(29, 92, 158, 0.89);
-    margin-bottom: 20px;
+  .container-fluid {
+    padding-top: 20px;
+  }
+ 
+  .row {
+    padding: 0px 10px 20px 15px;
+    margin-right: 0;
+  }
+
+
+  .card-header {
+    background-color: rgba(56, 56, 56, 0.88);
+    margin: -20px -20px 0px -20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .card-body {
+    padding-right: 0;
+    padding-bottom: 0;
+  }
+
+  header {
+    line-height: 2em;
+  }
+
+  .card-header.job {
+    background-color: #1e9577;
+    margin: 0;
+    color: white;
+    font-size: 1.2em;
+    padding-left: 15px;
+  }
+
+  .uploadBtn {
+    display: block;
+    float: right;
+  }
+
+  .subheader {
+    padding: 5px 0 10px 15px;
+    font-weight: bold;
+    color: #383838;
   }
   
-  .card-header {
-    background-color: rgba(29, 92, 158, 0.89);
-    font-size: 1em;
-    color: white;
+  .siteCard > .card-body {
+    padding: 0;
   }
 
   .vl {
@@ -445,25 +486,55 @@ export default {
     text-align: center;
   }
 
+  .outer-col {
+    padding-left:0;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 15px;
+    margin-top: 10px;
+  }
+  
+  label {
+    padding-top:5px;
+  }
+
+  .alert {
+    margin-bottom: 0;
+  }
+
+  a {
+    text-decoration-line: underline;
+  }
+
+  .btn {
+    margin-left: 10px;
+  }
+
   .uploadInput {
     padding-top: 0;
     position: absolute; 
     bottom: 0;
   }
 
-  .uploadBtn {
-    display: block;
-    float: right;
+  .subheader-col {
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   @media screen and (max-width: 992px) {
+    .col {
+      padding-left: 15px;
+    }
     .uploadInput {
       position: relative;
     }
     .vl {
       display: none;
     }
-
   }
+  
 
 </style>
