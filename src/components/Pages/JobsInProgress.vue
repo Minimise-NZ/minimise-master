@@ -16,7 +16,7 @@
             <header class="subheader" style="color: #383838">You currently have no jobs in progress</header>
           </b-col>
         </b-row>
-        <jobView v-for="(obj, index) in jobSites" :key="index" :job="obj.job"></jobView>
+        <jobView v-for="(obj, index) in jobSites" :key="index" :job="obj.job" :index="index"></jobView>
       </div>
     </b-card>
   </b-container>  
@@ -49,6 +49,18 @@ export default {
   .container-fluid {
     padding-top: 20px;
     padding-right: 20px;
+  }
+
+   .scroll-container {
+    height: 80vh;
+    overflow-y: scroll;
+    padding-right:20px;
+    margin-top: 10px;
+  }
+
+   .card-body {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 
   .card-header {

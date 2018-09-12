@@ -131,12 +131,25 @@
       </div>
     </b-modal>
 
-    <b-card header="Job Site Activity" header-tag="header">
-      <header slot="header">{{job.address}}</header>
-        <b-row>
+    <b-card header-tag="header">
+      <header slot="header">{{job.address}}
+        <b-button-toolbar slot="header">
+          <b-btn variant="success" v-b-tooltip.hover title="Sign In" @click="signIn"><i class="fas fa-pen-alt fa-sm"></i></b-btn>
+            <b-btn variant="primary" v-b-tooltip.hover title="New Toolbox Talk" @click="newToolbox(job.id)">
+              <i class="fas fa-toolbox"></i>
+            </b-btn>
+            <b-btn style="background-color: #673ab7; border: 1px solid #673ab7" v-b-tooltip.hover title="New Site Inspection" @click="newInspection(job.id)">
+              <i class="far fa-eye"></i>
+            </b-btn>
+            <b-btn variant="danger" @click="confirmAction = true, jobToClose = job.id" v-b-tooltip.hover title="Close Job">
+              <i class="fas fa-times-circle"></i>
+            </b-btn>
+        </b-button-toolbar>
+      </header>
+      <b-row>
         <!--SITE INFORMATION COLUMN-->
         <b-col>
-          <hr><h5>Site Information</h5><hr>
+        <h5>Site Information</h5><hr>
           <label>Supervisor</label>
           <b-form-input :value="job.supervisorName" readonly></b-form-input>
           <label>Supervisor Phone</label>
@@ -146,142 +159,163 @@
           <label>First Aiders</label>
           <b-form-input v-for="(name, index) in firstAiders" :key="index" :value="name" readonly class="mb-1"></b-form-input>
         </b-col>
+        
         <!--SITE DOCS COLUMN-->
-        <b-col >
-        <hr><h5>Safety Documents</h5><hr>
-        <!--
-           <b-row class="mb-0 pb-0">
-            <b-col md="12" lg="3">
-            <label>Site Safety Plan:</label>
-            </b-col>
-            <b-col sm="12" lg="9">
-            <router-link v-on:click.native="setSafetyPlan(job)" to="#" class="ml-2">SSSP - {{job.address}}</router-link >
-            </b-col>
+        <b-col>
+        <h5>Site Safety Documents</h5><hr class="mb-3">
+        <b-row>
+          <router-link v-on:click.native="setSafetyPlan(job)" to="#">SSSP - {{job.address}}</router-link >
         </b-row>
         <b-row>
-            <b-col md="12" lg="3">
-            <label>Toolbox Talk:</label>
-            </b-col>
-            <b-col sm="12" lg="9">
-            <a class="ml-2" href="javascript:void(0)" @click="showToolbox = true">toolbox</a>
-            </b-col>
+          <a href="javascript:void(0)" @click="showToolbox = true">Toolbox Talk</a>
         </b-row>
-        <b-row v-for="(item, index) in job.docs" :key="index">
-            <a target="_blank" :href="item.url">{{item.name}}</a>
+        <b-row>
+          <a href="javascript:void(0)" @click="showInspection = true">Site Inspection</a>
         </b-row>
-        <div class="uploadInput">
-            <b-row>
-            <b-col  sm="10" lg="11">
-                <b-form-file v-model="docsfile" placeholder="Add new document..."></b-form-file>
+        <b-row>
+          <a href="javascript:void(0)" @click="showInductions= true">Induction Register</a>
+        </b-row>
+        
+        <div>
+          <b-row v-if="job.emergencyPlanURL === ''">
+            <b-col cols="10">
+              <b-form-file v-model="emergencyfile" placeholder="Emergency Plan" accept="image/*, .pdf"></b-form-file>
             </b-col>
-            <b-col sm="1">
-                <b-btn variant="primary" v-if="docsfile !== ''" @click="uploadFile(job, 'docs')" v-b-tooltip.hover title="Upload file">
-                <i class="fas fa-cloud-upload-alt"></i>
-                </b-btn>
-            </b-col>
-            </b-row>
-            <b-row>
-            <b-btn variant="success" v-b-tooltip.hover title="Sign In" @click="signIn"><i class="fas fa-pen-alt fa-lg"></i></b-btn>
-            <b-btn variant="primary" v-b-tooltip.hover title="New Toolbox Talk" @click="newToolbox(job.id)"><i class="fas fa-toolbox fa-lg"></i></b-btn>
-            <b-btn style="background-color: #673ab7" v-b-tooltip.hover title="New Site Inspection" @click="newInspection(job.id)"><i class="far fa-eye fa-lg"></i></b-btn>
-            <b-btn variant="danger" @click="confirmAction = true, jobToClose = job.id" v-b-tooltip.hover title="Close Job">
-                <i class="fas fa-times-circle fa-lg"></i>
-            </b-btn>
-            </b-row>
-        </div>
-        -->
-        </b-col>
-        <b-col>
-          <hr><h5>Site Documents</h5><hr>
-          <!--
-          <b-row >
-          <b-col md="0" lg="3"></b-col>
-          <b-col sm="12" lg="9">
-          <b-row v-if="job.notifiableurl === ''">
-              <b-col  sm="10">
-              <b-form-file v-model="notifiablefile" placeholder="Worksafe Notification"></b-form-file>
-              </b-col>
-              <b-col sm="1">
-              <b-btn variant="primary" v-if="notifiablefile !== ''" @click="uploadFile(job, 'notifiable')" v-b-tooltip.hover title="Upload file">
-                  <i class="fa fa-cloud-upload-alt"></i>
+            <b-col cols="1">
+              <b-btn variant="primary" v-if="emergencyfile != ''" @click="uploadFile(job, 'emergency')" v-b-tooltip.hover title="Upload file">
+                <i class="fa fa-cloud-upload-alt"></i>
               </b-btn>
-              </b-col>
+            </b-col>
           </b-row>
           <b-row v-else>
-              <a target="_blank" :href="job.notifiableurl">Worksafe Notification</a>
+            <a target="_blank" :href="job.emergencyPlanURL">Emergency Plan</a>
           </b-row>
-          </b-col>
-        </b-row>
-        <b-row v-if="job.environmental === 'true'">
-            <b-col md="0" lg="3"></b-col>
-            <b-col sm="12" lg="9">
+        </div>
+        <div v-if="job.notifiable === 'true'">
+          <b-row v-if="job.notifiableurl === ''">
+            <b-col cols="10">
+              <b-form-file v-model="notifiablefile" placeholder="Worksafe Notification" accept="image/*, .pdf"></b-form-file>
+            </b-col>
+            <b-col cols="1">
+            <b-btn variant="primary" v-if="notifiablefile !== ''" @click="uploadFile(job, 'notifiable')" v-b-tooltip.hover title="Upload file">
+              <i class="fa fa-cloud-upload-alt"></i>
+            </b-btn>
+            </b-col>
+          </b-row>
+          <b-row v-else>
+            <a target="_blank" :href="job.notifiableurl">Worksafe Notification</a>
+          </b-row>
+        </div>
+
+          <div v-if="job.environmental === 'true'">
             <b-row v-if="job.environmentalurl === ''">
-                <b-col sm="10">
-                <b-form-file v-model="environmentalfile" placeholder="Environmental Plan"></b-form-file>
-                </b-col>
-                <b-col sm="1">
+              <b-col cols="10">
+                <b-form-file v-model="environmentalfile" placeholder="Environmental Plan" accept="image/*, .pdf"></b-form-file>
+              </b-col>
+              <b-col cols="1">
                 <b-btn variant="primary" v-if="environmentalfile !== ''" @click="uploadFile(job, 'environmental')" v-b-tooltip.hover title="Upload file">
                     <i class="fa fa-cloud-upload-alt"></i>
                 </b-btn>
-                </b-col>
+              </b-col>
             </b-row>
-            <b-row v-else >
-                <a target="_blank" :href="job.environmentalurl">Environmental Plan</a>
+            <b-row v-else>
+              <a target="_blank" :href="job.environmentalurl">Environmental Plan</a>
             </b-row>
-            </b-col>
-        </b-row>
-        <b-row v-if="job.resource === 'true'">
-            <b-col md="0" lg="3"></b-col>
-            <b-col sm="12" lg="9">
+          </div>
+          <div v-if="job.resource === 'true'">
             <b-row v-if="job.resourceurl === ''">
-                <b-col sm="10" >
-                <b-form-file v-model="resourcefile" placeholder="Resource Consent"></b-form-file>
-                </b-col>
-                <b-col sm="1">
-                <b-btn variant="primary" v-if="resourcefile !== ''" @click="uploadFile(job, 'resource')" v-b-tooltip.hover title="Upload file" >
-                    <i class="fa fa-cloud-upload-alt"></i>
+              <b-col cols="10">
+                <b-form-file v-model="resourcefile" placeholder="Resource Consent" accept="image/*, .pdf"></b-form-file>
+              </b-col>
+              <b-col cols="1">
+                <b-btn variant="primary" v-if="resourcefile !== ''" @click="uploadFile(job, 'resource')" v-b-tooltip.hover title="Upload file">
+                  <i class="fa fa-cloud-upload-alt"></i>
                 </b-btn>
-                </b-col>
+              </b-col>
             </b-row>
-            <b-row v-else >
-                <a target="_blank" :href="job.resourceurl">Resource Consent</a>
+            <b-row v-else>
+              <a target="_blank" :href="job.resourceurl">Resource Consent</a>
             </b-row>
-            </b-col>
-        </b-row>
-        <b-row v-if="job.nzhpt === 'true'">
-            <b-col md="0" lg="3"></b-col>
-            <b-col sm="12" lg="9">
+          </div>
+          <div v-if="job.nzhpt === 'true'">
             <b-row v-if="job.nzhpturl === ''">
-                <b-col sm="10" >
-                <b-form-file v-model="nzhptfile" placeholder="NZHPT Clearance"></b-form-file>
-                </b-col>
-                <b-col sm="1">
+              <b-col cols="10">
+                <b-form-file v-model="nzhptfile" placeholder="NZHPT Clearance" accept="image/*, .pdf"></b-form-file>
+              </b-col>
+              <b-col cols="1">
                 <b-btn variant="primary" v-if="nzhptfile !== ''" @click="uploadFile(job, 'nzhpt')" v-b-tooltip.hover title="Upload file">
                     <i class="fa fa-cloud-upload-alt"></i>
                 </b-btn>
-                </b-col>
+              </b-col>
             </b-row>
-            <b-row v-else >
-                <a target="_blank" :href="job.nzhpturl">NZHPT Clearance</a>
+            <b-row v-else>
+              <a target="_blank" :href="job.nzhpturl">NZHPT Clearance</a>
             </b-row>
+          </div>
+          <b-row v-for="(item, index) in job.docs" :key="index">
+            <a target="_blank" :href="item.url">{{item.name}}</a>
+          </b-row>
+          <b-row>
+            <b-col cols="10">
+                <b-form-file v-model="docsfile" placeholder="Add new document..." accept="image/*, .pdf"></b-form-file>
             </b-col>
-        </b-row>
-        -->
+            <b-col cols="1">
+              <b-btn variant="primary" v-if="docsfile !== ''" @click="uploadFile(job, 'docs')" v-b-tooltip.hover title="Upload file">
+                <i class="fas fa-cloud-upload-alt"></i>
+              </b-btn>
+            </b-col>
+          </b-row>
         </b-col>
-        </b-row>
+
+        <!--SIGNED IN  COLUMN-->
+        <b-col >
+          <h5>Signed In</h5><hr>
+          <div class="content">
+            <b-row class="mt-1">
+              <label>SSSP and Toolbox Talk:</label>
+            </b-row>
+            <b-row v-for="(obj, index) in signedIn" :key="index">
+              <b-form-input :value="(obj.name + ' : ' + obj.date)" readonly></b-form-input>
+            </b-row>
+          </div>
+          <div class="content" v-if="job.task !== null">
+            <b-row>
+              <label>Task Analysis: Signed On</label>
+            </b-row>
+            <b-row v-for="(name, index) in TAsignedOn" :key="index">
+              <b-form-input :value="name" readonly></b-form-input>
+            </b-row>
+          </div>
+        </b-col>
+      </b-row>
     </b-card>
   </div>
 </template>
 
 <script>
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
+import autosize from 'autosize'
 export default {
-  props: ['job'],
+  props: ['job', 'index'],
   components: {
     PulseLoader
   },
   data () {
     return {
+      TAsignedOn: [
+        'name 1', 'name 2'
+      ],
+      signedIn: [
+        {name: 'name 1', date: '12/05/2018'},
+        {name: 'name 1', date: '12/05/2018'},
+        {name: 'name 1', date: '12/05/2018'},
+        {name: 'name 1', date: '12/05/2018'},
+        {name: 'name 1', date: '12/05/2018'},
+        {name: 'name 1', date: '12/05/2018'},
+        {name: 'name 1', date: '12/05/2018'},
+        {name: 'name 1', date: '12/05/2018'},
+        {name: 'name 1', date: '12/05/2018'}
+      ],
       firstAiders: [
         'name 1', 'name 2'
       ],
@@ -306,6 +340,7 @@ export default {
       errorMessage: '',
       notifiablefile: '',
       environmentalfile: '',
+      emergencyfile: '',
       resourcefile: '',
       nzhptfile: '',
       docsfile: '',
@@ -381,6 +416,12 @@ export default {
           console.log('Updated job', job)
           this.$store.dispatch('updateJob', job)
           break
+        case 'emergency':
+          console.log('uploading emergency plan')
+          job.emergencyPlanURL = await this.$store.dispatch('uploadFile', {file: this.emergencyfile, type: 'mergency'})
+          console.log('Updated job', job)
+          this.$store.dispatch('updateJob', job)
+          break
         case 'docs':
           console.log('uploading doc')
           this.$store.dispatch('uploadFile', {file: this.docsfile, type: this.docsfile.name})
@@ -427,6 +468,9 @@ export default {
       this.toolbox.jobsCompleted = ''
       this.toolbox.attendees = []
     }
+  },
+  mounted () {
+    autosize(document.querySelectorAll('textarea'))
   }
 }
 </script>
@@ -436,25 +480,37 @@ export default {
   .container-fluid {
     padding-top: 20px;
   }
+
+  .card {
+    margin-bottom: 15px;
+  }
  
   .card-header {
-    background-color: #194e8a;
+    background-color: #003773d1;
     color: white;
-    line-height: 2em;
+    padding:0;
+    padding: 5px 15px 5px 20px;
+    line-height: 2.5em;
+    font-size: 1.1em;
   }
+
 
   hr {
     margin-top: 0;
     margin-bottom: 5px;
-    border: 0.5px solid #194e8a;
+    border: 0.5px solid #003773d1;
   }
 
   h5 {
     font-size: 1.1em;
-    color: #194e8a;
+    color: #003773d1;
     font-weight: bold;
-    margin-top: 8px;
-    text-align: center;
+    margin-left: 8px;
+
+  }
+
+  .card-body {
+    padding: 15px;
   }
 
   label {
@@ -462,38 +518,36 @@ export default {
     font-weight: bold;
     color: #194e8a;
   }
-  .uploadBtn {
-    display: block;
-    float: right;
-  }
 
-  
-
-  .alert {
-    margin-bottom: 0;
+  .content {
+    padding-left: 10px;
+    margin-bottom: 10px;
   }
 
   a {
     text-decoration-line: underline;
+    padding-top: 10px;
+    padding-left: 10px;
+    margin-left: 10px;
+    margin-bottom: 10px;
   }
 
-  .uploadInput {
-    padding-top: 0;
-    position: absolute; 
-    bottom: 0;
+  .col-1 {
+    margin-top: 10px;
+    padding-left: 0;
   }
 
-  @media screen and (max-width: 992px) {
-    .col {
-      padding-left: 15px;
-    }
-    .uploadInput {
-      position: relative;
-    }
-    .vl {
-      display: none;
-    }
+  .custom-file {
+    margin-top: 10px;
+    margin-bottom: 5px;
   }
-  
+
+  .btn-toolbar {
+    float: right;
+  }
+
+  .btn {
+    margin: 2px;
+  }
 
 </style>
