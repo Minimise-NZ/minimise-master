@@ -133,26 +133,84 @@
 
     <b-card header="Job Site Activity" header-tag="header">
       <header slot="header">{{job.address}}</header>
-        <b-row class="outer-row">
+        <b-row>
         <!--SITE INFORMATION COLUMN-->
-        <b-col sm="12" lg="8">
-        <b-row >
-            <b-col md="0" lg="3"></b-col>
-            <b-col sm="12" lg="9">
-            <b-row v-if="job.notifiableurl === ''">
-                <b-col  sm="10">
-                <b-form-file v-model="notifiablefile" placeholder="Worksafe Notification"></b-form-file>
-                </b-col>
-                <b-col sm="1">
-                <b-btn variant="primary" v-if="notifiablefile !== ''" @click="uploadFile(job, 'notifiable')" v-b-tooltip.hover title="Upload file">
-                    <i class="fa fa-cloud-upload-alt"></i>
-                </b-btn>
-                </b-col>
-            </b-row>
-            <b-row v-else>
-                <a target="_blank" :href="job.notifiableurl">Worksafe Notification</a>
-            </b-row>
+        <b-col>
+          <hr><h5>Site Information</h5><hr>
+          <label>Supervisor</label>
+          <b-form-input :value="job.supervisorName" readonly></b-form-input>
+          <label>Supervisor Phone</label>
+          <b-form-input :value="job.supervisorPhone" readonly></b-form-input>
+          <label>Medical Centre</label>
+          <b-form-textarea :value="job.medical" readonly rows="2"></b-form-textarea>
+          <label>First Aiders</label>
+          <b-form-input v-for="(name, index) in firstAiders" :key="index" :value="name" readonly class="mb-1"></b-form-input>
+        </b-col>
+        <!--SITE DOCS COLUMN-->
+        <b-col >
+        <hr><h5>Safety Documents</h5><hr>
+        <!--
+           <b-row class="mb-0 pb-0">
+            <b-col md="12" lg="3">
+            <label>Site Safety Plan:</label>
             </b-col>
+            <b-col sm="12" lg="9">
+            <router-link v-on:click.native="setSafetyPlan(job)" to="#" class="ml-2">SSSP - {{job.address}}</router-link >
+            </b-col>
+        </b-row>
+        <b-row>
+            <b-col md="12" lg="3">
+            <label>Toolbox Talk:</label>
+            </b-col>
+            <b-col sm="12" lg="9">
+            <a class="ml-2" href="javascript:void(0)" @click="showToolbox = true">toolbox</a>
+            </b-col>
+        </b-row>
+        <b-row v-for="(item, index) in job.docs" :key="index">
+            <a target="_blank" :href="item.url">{{item.name}}</a>
+        </b-row>
+        <div class="uploadInput">
+            <b-row>
+            <b-col  sm="10" lg="11">
+                <b-form-file v-model="docsfile" placeholder="Add new document..."></b-form-file>
+            </b-col>
+            <b-col sm="1">
+                <b-btn variant="primary" v-if="docsfile !== ''" @click="uploadFile(job, 'docs')" v-b-tooltip.hover title="Upload file">
+                <i class="fas fa-cloud-upload-alt"></i>
+                </b-btn>
+            </b-col>
+            </b-row>
+            <b-row>
+            <b-btn variant="success" v-b-tooltip.hover title="Sign In" @click="signIn"><i class="fas fa-pen-alt fa-lg"></i></b-btn>
+            <b-btn variant="primary" v-b-tooltip.hover title="New Toolbox Talk" @click="newToolbox(job.id)"><i class="fas fa-toolbox fa-lg"></i></b-btn>
+            <b-btn style="background-color: #673ab7" v-b-tooltip.hover title="New Site Inspection" @click="newInspection(job.id)"><i class="far fa-eye fa-lg"></i></b-btn>
+            <b-btn variant="danger" @click="confirmAction = true, jobToClose = job.id" v-b-tooltip.hover title="Close Job">
+                <i class="fas fa-times-circle fa-lg"></i>
+            </b-btn>
+            </b-row>
+        </div>
+        -->
+        </b-col>
+        <b-col>
+          <hr><h5>Site Documents</h5><hr>
+          <!--
+          <b-row >
+          <b-col md="0" lg="3"></b-col>
+          <b-col sm="12" lg="9">
+          <b-row v-if="job.notifiableurl === ''">
+              <b-col  sm="10">
+              <b-form-file v-model="notifiablefile" placeholder="Worksafe Notification"></b-form-file>
+              </b-col>
+              <b-col sm="1">
+              <b-btn variant="primary" v-if="notifiablefile !== ''" @click="uploadFile(job, 'notifiable')" v-b-tooltip.hover title="Upload file">
+                  <i class="fa fa-cloud-upload-alt"></i>
+              </b-btn>
+              </b-col>
+          </b-row>
+          <b-row v-else>
+              <a target="_blank" :href="job.notifiableurl">Worksafe Notification</a>
+          </b-row>
+          </b-col>
         </b-row>
         <b-row v-if="job.environmental === 'true'">
             <b-col md="0" lg="3"></b-col>
@@ -208,53 +266,7 @@
             </b-row>
             </b-col>
         </b-row>
-
-        <b-row class="mb-0 pb-0">
-            <b-col md="12" lg="3">
-            <label>Site Safety Plan:</label>
-            </b-col>
-            <b-col sm="12" lg="9">
-            <router-link v-on:click.native="setSafetyPlan(job)" to="#" class="ml-2">SSSP - {{job.address}}</router-link >
-            </b-col>
-        </b-row>
-        <!--
-        <b-row>
-            <b-col md="12" lg="3">
-            <label>Toolbox Talk:</label>
-            </b-col>
-            <b-col sm="12" lg="9">
-            <a class="ml-2" href="javascript:void(0)" @click="showToolbox = true">toolbox</a>
-            </b-col>
-        </b-row>
         -->
-        </b-col>
-        <div class="vl"></div>
-        <!--SITE DOCS COLUMN-->
-        <b-col >
-        <hr><h5>Site Documents</h5><hr>
-        <b-row v-for="(item, index) in job.docs" :key="index">
-            <a target="_blank" :href="item.url">{{item.name}}</a>
-        </b-row>
-        <div class="uploadInput">
-            <b-row>
-            <b-col  sm="10" lg="11">
-                <b-form-file v-model="docsfile" placeholder="Add new document..."></b-form-file>
-            </b-col>
-            <b-col sm="1">
-                <b-btn variant="primary" v-if="docsfile !== ''" @click="uploadFile(job, 'docs')" v-b-tooltip.hover title="Upload file">
-                <i class="fas fa-cloud-upload-alt"></i>
-                </b-btn>
-            </b-col>
-            </b-row>
-            <b-row>
-            <b-btn variant="success" v-b-tooltip.hover title="Sign In" @click="signIn"><i class="fas fa-pen-alt fa-lg"></i></b-btn>
-            <b-btn variant="primary" v-b-tooltip.hover title="New Toolbox Talk" @click="newToolbox(job.id)"><i class="fas fa-toolbox fa-lg"></i></b-btn>
-            <b-btn style="background-color: #673ab7" v-b-tooltip.hover title="New Site Inspection" @click="newInspection(job.id)"><i class="far fa-eye fa-lg"></i></b-btn>
-            <b-btn variant="danger" @click="confirmAction = true, jobToClose = job.id" v-b-tooltip.hover title="Close Job">
-                <i class="fas fa-times-circle fa-lg"></i>
-            </b-btn>
-            </b-row>
-        </div>
         </b-col>
         </b-row>
     </b-card>
@@ -270,6 +282,9 @@ export default {
   },
   data () {
     return {
+      firstAiders: [
+        'name 1', 'name 2'
+      ],
       loading: false,
       showToolbox: false,
       toolbox: {
@@ -422,83 +437,37 @@ export default {
     padding-top: 20px;
   }
  
-  .row {
-    padding: 0px 10px 20px 15px;
-    margin-right: 0;
-  }
-
-
   .card-header {
-    background-color: rgba(56, 56, 56, 0.88);
-    margin: -20px -20px 0px -20px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-
-  .card-body {
-    padding-right: 0;
-    padding-bottom: 0;
-  }
-
-  header {
-    line-height: 2em;
-  }
-
-  .card-header.job {
-    background-color: #1e9577;
-    margin: 0;
+    background-color: #194e8a;
     color: white;
-    font-size: 1.2em;
-    padding-left: 15px;
-  }
-
-  .uploadBtn {
-    display: block;
-    float: right;
-  }
-
-  .subheader {
-    padding: 5px 0 10px 15px;
-    font-weight: bold;
-    color: #383838;
-  }
-  
-  .siteCard > .card-body {
-    padding: 0;
-  }
-
-  .vl {
-    border-left: 2px solid #12807a;
-    margin: 20px 15px;
+    line-height: 2em;
   }
 
   hr {
     margin-top: 0;
-    margin-bottom: 0;
-    border: 0.5px solid #12807a;
+    margin-bottom: 5px;
+    border: 0.5px solid #194e8a;
   }
 
   h5 {
-    font-size: 1.2em;
-    color: #12807a;
+    font-size: 1.1em;
+    color: #194e8a;
     font-weight: bold;
     margin-top: 8px;
     text-align: center;
   }
 
-  .outer-col {
-    padding-left:0;
+  label {
+    padding: 10px 10px 0 10px;
+    font-weight: bold;
+    color: #194e8a;
+  }
+  .uploadBtn {
+    display: block;
+    float: right;
   }
 
-  ul {
-    list-style: none;
-    padding-left: 15px;
-    margin-top: 10px;
-  }
   
-  label {
-    padding-top:5px;
-  }
 
   .alert {
     margin-bottom: 0;
@@ -508,20 +477,10 @@ export default {
     text-decoration-line: underline;
   }
 
-  .btn {
-    margin-left: 10px;
-  }
-
   .uploadInput {
     padding-top: 0;
     position: absolute; 
     bottom: 0;
-  }
-
-  .subheader-col {
-    text-align: center;
-    padding-left: 0;
-    padding-right: 0;
   }
 
   @media screen and (max-width: 992px) {

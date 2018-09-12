@@ -16,7 +16,7 @@
             <header class="subheader" style="color: #383838">You currently have no jobs in progress</header>
           </b-col>
         </b-row>
-        <!--<jobView v-for="(obj, index) in jobSites" :key="index" :job="obj"></jobView>-->
+        <jobView v-for="(obj, index) in jobSites" :key="index" :job="obj.job"></jobView>
       </div>
     </b-card>
   </b-container>  
