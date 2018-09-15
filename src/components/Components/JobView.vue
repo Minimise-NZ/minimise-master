@@ -274,7 +274,7 @@
             <b-row class="mt-1">
               <label>SSSP and Toolbox Talk:</label>
             </b-row>
-            <b-row v-for="(obj, index) in signedIn" :key="index">
+            <b-row v-for="(obj, index) in signedIn" :key="index" class="mb-1 mr-1"> 
               <b-form-input :value="(obj.name + ' : ' + obj.date)" readonly></b-form-input>
             </b-row>
           </div>
@@ -282,7 +282,7 @@
             <b-row>
               <label>Task Analysis: Signed On</label>
             </b-row>
-            <b-row v-for="(name, index) in TAsignedOn" :key="index">
+            <b-row v-for="(name, index) in TAsignedOn" :key="index" class="mb-1 mr-1">
               <b-form-input :value="name" readonly></b-form-input>
             </b-row>
           </div>
