@@ -54,8 +54,7 @@ export default {
    .scroll-container {
     height: 80vh;
     overflow-y: scroll;
-    padding-right:20px;
-    margin-top: 10px;
+    margin-top: 15px;
   }
 
    .card-body {
