@@ -103,6 +103,11 @@
         </b-btn> 
       </header>
       <div class="scroll-container">
+        <b-row v-if="hazSubs.length === 0" >
+          <b-col class="p-0">
+            <header class="subheader">Click the add + button to enter a hazardous substance</header>
+          </b-col>
+        </b-row>
         <div v-for="(hazSub, index) in hazSubs" :key="index">
           <substanceview :substance="hazSub" :index="index"></substanceview>
         </div>
@@ -204,10 +209,19 @@ export default {
 </script>
 
 <style scoped>
-
   .container-fluid {
     padding-top: 20px;
-    padding-right: 20px;
+  }
+
+  .scroll-container {
+    height: 80vh;
+    overflow-y: scroll;
+    margin-top: 15px;
+    padding-right: 10px;
+  }
+
+  .card-body {
+    padding-top: 0;
   }
 
   .card-header {
@@ -229,6 +243,17 @@ export default {
     padding-top: 5px;
   }
 
+  .form-group {
+    margin-bottom: 0px;
+  }
+
+  
+  .subheader {
+    margin-left: 15px;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: rgba(63, 81, 181, 0.94);
+  }
   
 
 </style>

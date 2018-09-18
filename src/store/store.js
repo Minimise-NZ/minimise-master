@@ -872,7 +872,9 @@ export const store = new Vuex.Store({
         })
         .then(() => {
           dispatch('getMyHazards')
-          resolve()
+          .then(() => {
+            resolve()
+          })
         })
         .catch((error) => {
           reject(error)
@@ -887,7 +889,9 @@ export const store = new Vuex.Store({
         .collection('hazards').doc(payload.id).delete()
         .then(() => {
           dispatch('getMyHazards')
-          resolve()
+          .then(() => {
+            resolve()
+          })
         })
         .catch((error) => {
           reject(error)

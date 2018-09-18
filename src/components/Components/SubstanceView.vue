@@ -1,5 +1,5 @@
 <template>
-  <b-card class="hazSubCard mt-2 mb-4">
+  <b-card class="hazSubCard mb-2">
     <b-btn block v-b-toggle="'collapse' + index" class="text-left togglebtn card-header substance" v-b-tooltip.hover title="Click to show/hide substance details">
         {{substance.name}}
       <i class="fa fa-chevron-down" style="float:right"></i>

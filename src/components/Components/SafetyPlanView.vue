@@ -472,20 +472,13 @@ export default {
   }
 
   .togglebtn {
-    background-color: #104977e8;
+    background-color: rgba(16, 73, 119, 0.91);
     color: white;
     border-radius: 0;
   }
 
   label {
     padding-top: 5px;
-  }
-
-  h5 {
-    font-size: 1.2em;
-    color: #0d539a;
-    font-weight: bold;
-    margin-left: 10px;
   }
 
   .row {

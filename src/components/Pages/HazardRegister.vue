@@ -39,8 +39,8 @@
     </b-modal>
 
     <b-card header-tag="header">
-      <header slot="header" :class="{ inverted: inverted }">{{headerTitle}}
-         <b-btn
+      <header slot="header">{{headerTitle}}
+        <b-btn
           v-if="register"
           variant="success"
           @click="register = !register, inverted = !inverted"
@@ -50,52 +50,29 @@
         <b-btn
           v-else
           variant="primary"
-           @click="register = !register, inverted = !inverted"
-          v-b-tooltip.hover title="Back to Hazard Register">
-          <i class="fa fa-undo"></i>
-          </b-btn> 
-        </header>
-      <!--
-      <b-row class="card-header" :class="{ inverted: inverted }" >
-        <b-col>
-          <header>{{headerTitle}}</header>
-        </b-col>
-        <b-col>
-          <b-button
-          v-if="register"
-          class="addBtn"
-          variant="warning"
           @click="register = !register, inverted = !inverted"
-          v-b-tooltip.hover title="Add New Hazard">
-          <i class="fa fa-plus"></i>
-        </b-button> 
-        <b-button  
-          v-else
-          class="addBtn"
-          variant="warning"
-           @click="register = !register, inverted = !inverted"
           v-b-tooltip.hover title="Back to Hazard Register">
           <i class="fa fa-undo"></i>
-        </b-button> 
-        </b-col>
-      </b-row>
-      -->
+        </b-btn> 
+      </header>
       <div class="scroll-container">
         <b-row v-if="hazards.length === 0" >
           <b-col class="p-0">
-            <header class="subheader">Add hazards by clicking the add + button </header>
+            <header class="subheader">Click the add + button to create your hazard register </header>
           </b-col>
         </b-row>
+
         <b-card
           v-for="(hazard, index) in hazards"
           :key="index"
-          class="hazardCard mt-2 mb-4">
-          <header class="card-header hazard" :class="{ inverted: inverted }">{{hazard.name}}
+          :class="{inverted: inverted}"
+          class="hazardCard">
+          <header slot="header" >{{hazard.name}}
             <b-button
               v-if="register && !loading"
               class="addBtn remove"
               variant="danger"
-              @click="confirm(hazard)"
+              @click="confirm(hazard, index)"
               v-b-tooltip.hover title="Remove Hazard">
               <i class="fa fa-minus"></i>
             </b-button>
@@ -204,9 +181,10 @@ export default {
         this.loading = false
       })
     },
-    confirm (hazard) {
+    confirm (hazard, index) {
       // confirm that user wants the hazard removed (modal popup)
       this.confirmAction = true
+      console.log(hazard, index)
       this.hazard = hazard
     },
     removeHazard () {
@@ -236,6 +214,17 @@ export default {
     padding-top: 20px;
   }
 
+   .scroll-container {
+    height: 80vh;
+    overflow-y: scroll;
+    margin-top: 15px;
+    padding-right: 10px;
+  }
+
+  .card-body {
+    padding-top: 0;
+  }
+
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
     font-size: 1.2em;
@@ -246,14 +235,11 @@ export default {
   .btn {
     float: right;
   }
-
-  .card-body {
-    padding-bottom: 0;
-  }
   
   .subheader {
     margin-left: 15px;
     font-weight: bold;
+    font-size: 1.2em;
     color: #186ca7;
   }
   
@@ -269,17 +255,6 @@ export default {
     background-color: #22ab57;
   }
 
-  .card-header.hazard{
-    background-color: #186ca7;
-    color: white;
-    font-size: 1em;
-    padding-left: 15px;
-  }
-  
-  .card-header.hazard.inverted {
-    background-color: #07635a;
-  }
-
   .loader {
     float: right;
     width: 80px;
@@ -287,6 +262,22 @@ export default {
 
   img {
     max-height: 210px;
+  }
+
+  .hazardCard {
+    margin-bottom: 15px;
+  }
+
+  .hazardCard > .card-header {
+    background-color: rgba(12, 84, 96, 0.91);
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-right: 10px;
+    font-size: 1.1em;
+  }
+
+  .inverted > .card-header{
+    background-color: rgba(140, 54, 83, 0.85);
   }
 
   .hazard-row {
@@ -308,24 +299,20 @@ export default {
     line-height: 1.5em;
   }
 
-  .Very-Low {
-    background-color: #8bc34a9c;
-  }
-
   .Low {
-    background-color: #4caf50;
+    background-color: rgb(76, 175, 80);
   }
 
   .Moderate {
-    background-color: #ff5722bf;
+    background-color: rgba(255, 87, 34, 0.75);
   }
 
   .High {
-    background-color: #f44336;
+    background-color: rgb(244, 67, 54);
   }
 
   .Critical {
-    background-color:#e91e63bf;
+    background-color:rgba(233, 30, 99, 0.75);
   }
 
   @media screen and (max-width: 768px) {

@@ -486,7 +486,7 @@ export default {
   }
  
   .card-header {
-    background-color: #003773d1;
+    background-color: rgba(0, 55, 115, 0.82);
     color: white;
     padding:0;
     padding: 5px 15px 5px 20px;
@@ -498,12 +498,12 @@ export default {
   hr {
     margin-top: 0;
     margin-bottom: 5px;
-    border: 0.5px solid #003773d1;
+    border: 0.5px solid rgba(0, 55, 115, 0.82);
   }
 
   h5 {
     font-size: 1.1em;
-    color: #003773d1;
+    color: rgba(0, 55, 115, 0.82);
     font-weight: bold;
     margin-left: 8px;
 
