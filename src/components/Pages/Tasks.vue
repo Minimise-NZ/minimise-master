@@ -18,11 +18,11 @@
     <b-card header-tag="header">
       <header slot="header">Task Analysis/SWMS
         <b-btn
-          variant="primary"
+          variant="dark"
           class="addBtn"
           @click="newPopUp = true" 
           v-b-tooltip.hover title="Add New Task Analysis">
-          <i class="fa fa-plus"></i>
+          <i class="fa fa-plus" style="color: rgb(1, 206, 187)"></i>
         </b-btn> 
       </header>
      <div class="scroll-container">

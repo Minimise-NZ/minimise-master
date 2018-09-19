@@ -96,10 +96,10 @@
     <b-card header-tag="header">
       <header slot="header">Hazardous Substances
         <b-btn
-          variant="success"
+          variant="dark"
           @click="addNew" 
           v-b-tooltip.hover title="Add New Substance">
-          <i class="fa fa-plus"></i>
+          <i class="fa fa-plus" style="color: rgb(1, 206, 187)"></i>
         </b-btn> 
       </header>
       <div class="scroll-container">

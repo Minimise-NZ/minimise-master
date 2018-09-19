@@ -42,17 +42,17 @@
       <header slot="header">{{headerTitle}}
         <b-btn
           v-if="register"
-          variant="success"
+          variant="dark"
           @click="register = !register, inverted = !inverted"
           v-b-tooltip.hover title="Add New Hazard">
-          <i class="fa fa-plus"></i>
+          <i class="fa fa-plus" style="color: rgb(1, 206, 187)"></i>
         </b-btn>
         <b-btn
           v-else
-          variant="primary"
+          variant="dark"
           @click="register = !register, inverted = !inverted"
           v-b-tooltip.hover title="Back to Hazard Register">
-          <i class="fa fa-undo"></i>
+          <i class="fa fa-undo" style="color: rgba(255, 115, 71, 0.94)"></i>
         </b-btn> 
       </header>
       <div class="scroll-container">
@@ -61,7 +61,6 @@
             <header class="subheader">Click the add + button to create your hazard register </header>
           </b-col>
         </b-row>
-
         <b-card
           v-for="(hazard, index) in hazards"
           :key="index"
@@ -70,20 +69,21 @@
           <header slot="header" >{{hazard.name}}
             <b-button
               v-if="register && !loading"
-              class="addBtn remove"
-              variant="danger"
+              class="addBtn"
+              variant="dark"
               @click="confirm(hazard, index)"
               v-b-tooltip.hover title="Remove Hazard">
-              <i class="fa fa-minus"></i>
+              <i class="fas fa-trash-alt" style="color: #9e9e9e"></i>
             </b-button>
             <b-button
               v-if="!register  && !loading"
-              class="addBtn add"
+              class="addBtn"
+              variant="dark"
               @click="addHazard(hazard)"
               v-b-tooltip.hover title="Add to my Hazard Register">
-              <i class="fa fa-plus"></i>
+              <i class="fa fa-plus" style="color: rgb(1, 206, 187)"></i>
             </b-button>
-            <div class="loader mini" v-if="loading">
+            <div class="loader" v-if="loading">
               <pulse-loader :loading="loading"></pulse-loader>
             </div>
           </header>
@@ -223,6 +223,7 @@ export default {
 
   .card-body {
     padding-top: 0;
+    padding-bottom: 0;
   }
 
   .card-header {
@@ -242,18 +243,6 @@ export default {
     font-size: 1.2em;
     color: #186ca7;
   }
-  
-  .addBtn.remove{
-    padding-top: 5px;
-    padding-bottom: 5px;
-    background-color: rgb(226, 57, 82);
-  }
-
-  .addBtn.add{
-    padding-top: 5px;
-    padding-bottom: 5px;
-    background-color: #22ab57;
-  }
 
   .loader {
     float: right;
@@ -265,14 +254,15 @@ export default {
   }
 
   .hazardCard {
-    margin-bottom: 15px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
   }
 
   .hazardCard > .card-header {
-    background-color: rgba(12, 84, 96, 0.91);
+    background-color: rgba(2, 97, 88, 0.86);
     padding-top: 7px;
     padding-bottom: 7px;
-    padding-right: 10px;
+    padding-right: 20px;
     font-size: 1.1em;
   }
 

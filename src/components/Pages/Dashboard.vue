@@ -75,7 +75,7 @@ export default {
         {name: 'Incident Reports', link: '/dashboard/incidents'}
       ],
       adminNav: [
-        // {name: 'User Management', link: '/dashboard/userManagement'}
+        {name: 'User Management', link: '/dashboard/userManagement'}
         // {name: 'Account Administration', link: '/dashboard/admin'}
       ]
     }
@@ -109,6 +109,7 @@ export default {
     this.$store.dispatch('getAllJobs')
     this.$store.dispatch('getAllIncidents')
     this.$store.dispatch('getMyHazards')
+    this.$store.dispatch('getTrainingList')
   }
 }
 </script>

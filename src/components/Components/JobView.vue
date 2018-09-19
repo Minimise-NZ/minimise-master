@@ -134,15 +134,15 @@
     <b-card header-tag="header">
       <header slot="header">{{job.address}}
         <b-button-toolbar slot="header">
-          <b-btn variant="success" v-b-tooltip.hover title="Sign In" @click="signIn"><i class="fas fa-pen-alt fa-sm"></i></b-btn>
-            <b-btn variant="primary" v-b-tooltip.hover title="New Toolbox Talk" @click="newToolbox(job.id)">
-              <i class="fas fa-toolbox"></i>
+          <b-btn variant="dark" v-b-tooltip.hover title="Sign In" @click="signIn"><i class="fas fa-pen-alt fa-sm" style="color: rgb(1, 206, 187)" ></i></b-btn>
+            <b-btn variant="dark" v-b-tooltip.hover title="New Toolbox Talk" @click="newToolbox(job.id)">
+              <i class="fas fa-toolbox" style="color: #03a9f4"></i>
             </b-btn>
-            <b-btn style="background-color: #673ab7; border: 1px solid #673ab7" v-b-tooltip.hover title="New Site Inspection" @click="newInspection(job.id)">
-              <i class="far fa-eye"></i>
+            <b-btn variant="dark" v-b-tooltip.hover title="New Site Inspection" @click="newInspection(job.id)">
+              <i class="far fa-eye" style="color: #FFEB3B"></i>
             </b-btn>
-            <b-btn variant="danger" @click="confirmAction = true, jobToClose = job.id" v-b-tooltip.hover title="Close Job">
-              <i class="fas fa-times-circle"></i>
+            <b-btn variant="dark" @click="confirmAction = true, jobToClose = job.id" v-b-tooltip.hover title="Close Job">
+              <i class="fas fa-times-circle" style="color: rgba(255, 115, 71, 0.94)"></i>
             </b-btn>
         </b-button-toolbar>
       </header>

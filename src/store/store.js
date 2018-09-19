@@ -29,7 +29,8 @@ export const store = new Vuex.Store({
     hazardousSubstances: [],
     taskChanged: '',
     taskAnalysis: [],
-    trainingAlerts: []
+    trainingAlerts: [],
+    trainingList: []
   },
   mutations: {
     clearStore (state) {
@@ -76,6 +77,10 @@ export const store = new Vuex.Store({
     setTrainingAlerts (state, payload) {
       console.log('Training alerts set')
       state.trainingAlerts = payload
+    },
+    setTrainingList (state, payload) {
+      console.log('Training set')
+      state.trainingList = payload
     },
     setCompany (state, payload) {
       console.log('Company set')
@@ -407,6 +412,18 @@ export const store = new Vuex.Store({
         }
       }
       commit('setTrainingAlerts', trainingAlerts)
+    },
+    getTrainingList ({commit, state}) {
+      firestore.collection('training').doc('z660voHfSYY7pN7zS4vy')
+      .get()
+      .then((doc) => {
+        let data = doc.data().items.sort()
+        let list = [{value: null, text: 'Please select training'}]
+        data.forEach((item) => {
+          list.push({value: item, text: item.toString()})
+        })
+        commit('setTrainingList', list)
+      })
     },
   // company functions
     getCompanyIndex ({commit}) {
@@ -1104,6 +1121,7 @@ export const store = new Vuex.Store({
     companyKey: (state) => state.companyKey,
     companyIndex: (state) => state.companyIndex,
     company: (state) => state.company,
+    trainingList: (state) => state.trainingList,
     workers: (state) => state.workers,
     supervisors: (state) => state.supervisors,
     training: (state) => state.trainingAlerts,

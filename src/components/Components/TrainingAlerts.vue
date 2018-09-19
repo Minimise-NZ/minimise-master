@@ -95,7 +95,7 @@ export default {
     padding: 15px 0 15px 15px;
     border-bottom: 1px solid lightgrey;
     font-weight: bold;
-    color: #281a65d4;;
+    color: rgba(40, 26, 101, 0.8);
   }
   
   .col {

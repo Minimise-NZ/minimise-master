@@ -4,10 +4,10 @@
     <b-card header-tag="header">
       <header slot="header">Jobs In Progress
         <b-btn
-          variant="success"
+          variant="dark"
           @click="newJob" 
           v-b-tooltip.hover title="Create New Job Site">
-          <i class="fa fa-plus"></i>
+          <i class="fa fa-plus" style="color: rgb(1, 206, 187)"></i>
         </b-btn> 
       </header>
       <div class="scroll-container">
@@ -48,13 +48,14 @@ export default {
 <style scoped>
   .container-fluid {
     padding-top: 20px;
-    padding-right: 20px;
+
   }
 
    .scroll-container {
     height: 80vh;
     overflow-y: scroll;
     margin-top: 15px;
+    padding-right: 10px;
   }
 
    .card-body {
