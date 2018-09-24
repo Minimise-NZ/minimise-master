@@ -257,7 +257,6 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-
   // worker functions
     updateTraining ({dispatch}, payload) {
       // update worker training
@@ -274,6 +273,15 @@ export const store = new Vuex.Store({
         })
       })
       return promise
+    },
+    newTraining ({dispatch, state}, payload) {
+      console.log(payload)
+      // let training = payload.training
+      // update worker training
+      var userRef = firestore.collection('users').doc('payload.worker')
+      userRef.update({
+        training: firestore.FieldValue._arrayUnion('test')
+      })
     },
     removeWorker ({dispatch}, payload) {
       // update worker training
@@ -418,7 +426,10 @@ export const store = new Vuex.Store({
       .get()
       .then((doc) => {
         let data = doc.data().items.sort()
-        let list = [{value: null, text: 'Please select training'}]
+        let list = [
+          {value: null, text: 'Please select training'},
+          {value: 'custom', text: 'I dont see what I am looking for'}
+        ]
         data.forEach((item) => {
           list.push({value: item, text: item.toString()})
         })

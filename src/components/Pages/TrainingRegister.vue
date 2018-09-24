@@ -27,23 +27,54 @@
     <b-modal
       v-model="addNew" 
       v-if="addNew"
-      @ok="saveNew"
+      @ok="onSubmit"
       @cancel="cancel"
+      no-close-on-backdrop
+      no-close-on-esc
       header-bg-variant="primary"
       headerTextVariant= 'light'
+      hide-header-close
       title="New Training Record">
       <div>
-        <b-form-select :options="workerList" v-model="newTraining.worker" class="mb-2"></b-form-select>
-        <b-form-select :options="trainingList" v-model="newTraining.training" class="mb-2"></b-form-select>
-        <b-form-input v-model="newTraining.ID" placeholder="ID/License No." class="mb-2"></b-form-input>
-        <b-row>
-          <b-col cols="3">
-            <label class="mt-3 ml-2">Expiry Date: </label>
-          </b-col>
-          <b-col>
-            <b-form-input v-model="newTraining.expiry" type="date" no-spinners></b-form-input>
-          </b-col>
-        </b-row>
+        <b-form @submit.prevent="onSubmit">
+          <b-form-select 
+            :options="workerList" 
+            v-model="worker" 
+            class="mb-2" 
+            :state="workerState">
+          </b-form-select>
+          <b-form-select 
+            :options="trainingList" 
+            v-model="newTraining.description" 
+            class="mb-2" 
+            :state="descriptionState">
+          </b-form-select>
+          <b-form-input 
+            v-if="newTraining.description === 'custom'" 
+            v-model="newTraining.custom" 
+            placeholder="Please enter training description" 
+            class="mb-2"
+            :state="customState">
+          </b-form-input>
+          <b-form-input 
+            v-model="newTraining.ID" 
+            placeholder="ID/License No." 
+            class="mb-2">
+            </b-form-input>
+          <b-row>
+            <b-col cols="3">
+              <label class="mt-3 ml-2" required>Expiry Date: </label>
+            </b-col>
+            <b-col>
+              <b-form-input 
+                v-model="newTraining.expiry" 
+                type="date" 
+                :state="expiryState"
+                no-spinners>
+              </b-form-input>
+            </b-col>
+          </b-row>
+        </b-form>
       </div>
     </b-modal>
 
@@ -126,11 +157,16 @@ export default {
       errorMessage: '',
       addNew: false,
       newTraining: {
-        worker: null,
-        training: null,
+        description: null,
+        custom: '',
         ID: '',
         expiry: ''
-      }
+      },
+      worker: null,
+      workerState: true,
+      descriptionState: true,
+      customState: true,
+      expiryState: true
     }
   },
   computed: {
@@ -167,58 +203,64 @@ export default {
     cancel () {
       console.log('cancelling')
       this.newTraining = {
-        worker: null,
-        training: null,
+        description: null,
+        custom: '',
         ID: '',
         expiry: ''
       }
-    },
-    add () {
-      /*
-      let training = this.newtraining
-      this.worker.training.push({
-        description: training.description,
-        ID: training.ID,
-        expiry: training.expiry
-      })
-      this.clear()
-      */
+      this.worker = null
+      this.workerState = true
+      this.descriptionState = true
+      this.customState = true
+      this.expiryState = true
+      this.addNew = false
     },
     saveUpdates () {
       console.log('saving updates')
     },
+    onSubmit (e) {
+      e.preventDefault()
+      if (this.worker === null) {
+        this.workerState = false
+        return
+      } else if (this.newTraining.description === null) {
+        this.descriptionState = false
+        return
+      } else if (this.newTraining.description === 'custom' && this.newTraining.custom === '') {
+        this.customState = false
+        return
+      } else if (this.newTraining.expiry === '') {
+        this.expiryState = false
+        return
+      } else {
+        this.saveNew()
+      }
+    },
     saveNew () {
       this.loading = true
       console.log('saving new')
-      // save updates to user profile
       try {
-        /*
-        if (this.newtraining.description !== '' && this.newtraining.description !== null) {
-          console.log('adding training')
-          this.addTraining()
+        if (this.newTraining.custom !== '') {
+          this.newTraining.description = this.newTraining.custom
+          console.log('adding custom training')
+          this.$store.dispatch('submitFeedback', {
+            username: 'minimise internal',
+            userEmail: 'minimise.online@gmail.com',
+            subject: 'custom training',
+            platform: 'n/a',
+            os: 'n/a',
+            mobile: 'n/a',
+            details: this.newTraining.custom
+          })
         }
-        if (this.changed === true) {
-          // save changes
-          try {
-            this.$store.dispatch('updateTraining', this.worker)
-            this.original = this._.cloneDeep(this.worker)
-            this.success = true
-            this.readonly = true
-            this.loading = false
-          } catch (error) {
-            this.catcherror = true
-            this.errorMessage = error.message
-            this.readonly = true
-            this.loading = false
-          }
-        } else {
-          this.loading = false
+        console.log('updating training', this.newTraining)
+        this.$store.dispatch('newTraining', {training: this.newTraining, worker: this.worker})
+        .then(() => {
           this.cancel()
-        }
-        */
-      } catch (err) {
-        console.log('ERROR', err.message)
-        this.loading = false
+        })
+      } catch (error) {
+        console.log(error)
+        this.cancel()
       }
     }
   }
