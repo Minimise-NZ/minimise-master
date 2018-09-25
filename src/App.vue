@@ -13,8 +13,6 @@
 <style>
 #app {
   font-family: 'Raleway', Helvetica, Arial, sans-serif;
-  height: 100vh;
-  overflow-y: hidden;
 }
 
 body {

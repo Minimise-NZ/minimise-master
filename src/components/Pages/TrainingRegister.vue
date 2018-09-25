@@ -9,7 +9,7 @@
       headerTextVariant= 'light'
       title="Success">
       <div class="d-block text-center">
-        <h4 class="mt-2">{{worker.name}} has been updated</h4>
+        <h4 class="mt-2">Training register has been updated</h4>
       </div>
     </b-modal>
     <b-modal
@@ -51,7 +51,7 @@
           </b-form-select>
           <b-form-input 
             v-if="newTraining.description === 'custom'" 
-            v-model="newTraining.custom" 
+            v-model="custom" 
             placeholder="Please enter training description" 
             class="mb-2"
             :state="customState">
@@ -88,13 +88,6 @@
           <i class="far fa-edit" style="color: #ffc80b"></i>
         </b-btn>
         <b-btn
-          v-if="!readonly"
-          variant="dark"
-          @click="saveUpdates"
-          v-b-tooltip.hover title="Save">
-          <i class="fas fa-save" style="color: rgb(3, 169, 244)"></i>
-        </b-btn>
-         <b-btn
           v-if="readonly"
           variant="dark"
           @click="addNew = true"
@@ -102,54 +95,75 @@
           v-b-tooltip.hover title="Add new training record">
           <i class="fas fa-plus" style="color: rgb(1, 206, 187)"></i>
         </b-btn>
+        <b-btn
+          v-if="!readonly && !loading"
+          variant="dark"
+          @click="saveUpdates"
+          v-b-tooltip.hover title="Save Changes">
+          <i class="fas fa-save" style="color: rgb(135, 210, 50)"></i>
+        </b-btn>
+        <b-btn
+          v-if="!readonly && !loading"
+          variant="dark"
+          @click="discard"
+          class="mr-2"
+          v-b-tooltip.hover title="Cancel/Discard Changes">
+          <i class="fas fa-trash-alt" style="color: #FF9800"></i>
+        </b-btn>
+        <div class="loader" v-if="loading">
+          <pulse-loader :loading="loading"></pulse-loader>
+        </div>
       </header>
       <div class="scroll-container">
-          <div style="border: 1px solid #d6d6d6">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>ID/License No</th>
-                  <th>Expiry</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(worker, index) in workers" :key="index" style="border-bottom: 1px solid #e9ecef">
-                  <td style="font-weight: bold">{{worker.name}}</td>
-                  <td>
-                    <ul v-for="(training, index) in worker.training" :key="index">
-                      <li><b-form-input v-model="training.description" :readonly="readonly"></b-form-input></li>
-                    </ul>
-                  </td>
-                  <td>
-                    <ul v-for="(training, index) in worker.training" :key="index">
-                      <li><b-form-input v-model="training.ID" :readonly="readonly"></b-form-input></li>
-                    </ul>
-                  </td>
-                  <td>
-                    <ul v-for="(training, index) in worker.training" :key="index">
-                    <li>
-                      <b-form-input id="expiry" type="date" class="no-spinners" :value="training.expiry" v-model="training.expiry" :readonly="readonly"/>
-                    </li>
+        <div style="border: 1px solid #d6d6d6">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>ID/License No</th>
+                <th>Expiry</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(worker, index) in workers" :key="index" style="border-bottom: 1px solid #e9ecef">
+                <td style="font-weight: bold">{{worker.name}}</td>
+                <td>
+                  <ul v-for="(training, index) in worker.training" :key="index">
+                    <li><b-form-input v-model="training.description" :readonly="readonly"></b-form-input></li>
                   </ul>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                </td>
+                <td>
+                  <ul v-for="(training, index) in worker.training" :key="index">
+                    <li><b-form-input v-model="training.ID" :readonly="readonly"></b-form-input></li>
+                  </ul>
+                </td>
+                <td>
+                  <ul v-for="(training, index) in worker.training" :key="index">
+                  <li>
+                    <b-form-input id="expiry" type="date" class="no-spinners" :value="training.expiry" v-model="training.expiry" :readonly="readonly"/>
+                  </li>
+                </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+      </div>
     </b-card>
   </b-container>
 </template>
 
 <script>
 import moment from 'moment'
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 export default {
   components: {
+    PulseLoader
   },
   data () {
     return {
+      beforeEditingCache: {},
       readonly: true,
       loading: false,
       success: false,
@@ -158,11 +172,12 @@ export default {
       addNew: false,
       newTraining: {
         description: null,
-        custom: '',
         ID: '',
         expiry: ''
       },
       worker: null,
+      custom: '',
+      workers: [],
       workerState: true,
       descriptionState: true,
       customState: true,
@@ -170,9 +185,6 @@ export default {
     }
   },
   computed: {
-    workers () {
-      return this.$store.getters.workers
-    },
     workerList () {
       let names = [{
         value: null, text: 'Please select worker'
@@ -189,6 +201,9 @@ export default {
       return this.$store.getters.trainingList
     }
   },
+  beforeMount () {
+    this.workers = this.$store.getters.workers
+  },
   methods: {
     expiry (date) {
       if (date === '') {
@@ -198,25 +213,43 @@ export default {
       }
     },
     edit () {
+      this.beforeEditingCache = this._.cloneDeep(this.workers)
       this.readonly = false
     },
     cancel () {
       console.log('cancelling')
       this.newTraining = {
         description: null,
-        custom: '',
         ID: '',
         expiry: ''
       }
+      this.custom = ''
       this.worker = null
       this.workerState = true
       this.descriptionState = true
       this.customState = true
       this.expiryState = true
       this.addNew = false
+      this.loading = false
+    },
+    discard () {
+      this.workers = this._.cloneDeep(this.beforeEditingCache)
+      this.readonly = true
     },
     saveUpdates () {
+      this.loading = true
       console.log('saving updates')
+      this.$store.dispatch('updateTraining', this.workers)
+      .then(() => {
+        this.success = true
+        this.readonly = true
+        this.loading = false
+      })
+      .catch((err) => {
+        this.catcherror = true
+        this.errorMessage = err.errorMessage
+        this.loading = false
+      })
     },
     onSubmit (e) {
       e.preventDefault()
@@ -226,7 +259,7 @@ export default {
       } else if (this.newTraining.description === null) {
         this.descriptionState = false
         return
-      } else if (this.newTraining.description === 'custom' && this.newTraining.custom === '') {
+      } else if (this.newTraining.description === 'custom' && this.custom === '') {
         this.customState = false
         return
       } else if (this.newTraining.expiry === '') {
@@ -240,17 +273,17 @@ export default {
       this.loading = true
       console.log('saving new')
       try {
-        if (this.newTraining.custom !== '') {
-          this.newTraining.description = this.newTraining.custom
+        if (this.custom !== '') {
+          this.newTraining.description = this.custom
           console.log('adding custom training')
           this.$store.dispatch('submitFeedback', {
             username: 'minimise internal',
             userEmail: 'minimise.online@gmail.com',
-            subject: 'custom training',
+            subject: 'Custom training request',
             platform: 'n/a',
             os: 'n/a',
             mobile: 'n/a',
-            details: this.newTraining.custom
+            details: this.custom
           })
         }
         console.log('updating training', this.newTraining)
@@ -314,5 +347,11 @@ export default {
     padding-top: 6px;
     padding-bottom: 6px;
   }
+
+  .loader {
+    float: right;
+    width: 80px;
+  }
+
 
 </style>

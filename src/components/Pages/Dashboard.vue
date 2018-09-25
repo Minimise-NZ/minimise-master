@@ -1,6 +1,6 @@
 <template>
   <animated-fade-in>
-    <div>
+    <div style="height: 100vh; overflow-y: hidden">
       <b-navbar toggleable="md" type="dark" class="my-primary-bg">
         <div class="toggle">
           <span style="font-size:25px;cursor:pointer;color:#FFC80B" @click="showNav = !showNav" class="menubtn" v-if="showNav === false">&#9776; Menu</span>

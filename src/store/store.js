@@ -258,31 +258,6 @@ export const store = new Vuex.Store({
       return promise
     },
   // worker functions
-    updateTraining ({dispatch}, payload) {
-      // update worker training
-      let promise = new Promise((resolve, reject) => {
-        let workerId = payload.id
-        let training = payload.training
-        firestore.collection('users').doc(workerId).set({training: training}, {merge: true})
-        .then(() => {
-          resolve()
-        })
-        .catch((error) => {
-          console.log(error)
-          reject(error)
-        })
-      })
-      return promise
-    },
-    newTraining ({dispatch, state}, payload) {
-      console.log(payload)
-      // let training = payload.training
-      // update worker training
-      var userRef = firestore.collection('users').doc('payload.worker')
-      userRef.update({
-        training: firestore.FieldValue._arrayUnion('test')
-      })
-    },
     removeWorker ({dispatch}, payload) {
       // update worker training
       let promise = new Promise((resolve, reject) => {
@@ -394,48 +369,6 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    getTraining ({commit, state}) {
-      console.log('getting training')
-      let trainingAlerts = []
-      let workers = state.workers
-      let alertDate = moment().add(14, 'days')
-      console.log('alert date', alertDate)
-      for (let worker of workers) {
-        for (let training of worker.training) {
-          if (training.expiry !== '') {
-            if (moment().isAfter(training.expiry)) {
-              training.name = worker.name
-              training.status = 'Expired'
-              trainingAlerts.push(training)
-            } else if (moment(training.expiry).isBefore(alertDate)) {
-              training.name = worker.name
-              training.status = 'Due to expire'
-              trainingAlerts.push(training)
-            }
-          } else {
-            training.name = worker.name
-            training.status = 'Incomplete'
-            trainingAlerts.push(training)
-          }
-        }
-      }
-      commit('setTrainingAlerts', trainingAlerts)
-    },
-    getTrainingList ({commit, state}) {
-      firestore.collection('training').doc('z660voHfSYY7pN7zS4vy')
-      .get()
-      .then((doc) => {
-        let data = doc.data().items.sort()
-        let list = [
-          {value: null, text: 'Please select training'},
-          {value: 'custom', text: 'I dont see what I am looking for'}
-        ]
-        data.forEach((item) => {
-          list.push({value: item, text: item.toString()})
-        })
-        commit('setTrainingList', list)
-      })
-    },
   // company functions
     getCompanyIndex ({commit}) {
       // must already have key in state
@@ -486,7 +419,92 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-
+  // training functions
+    getTraining ({commit, state}) {
+      console.log('getting training')
+      let trainingAlerts = []
+      let workers = state.workers
+      let alertDate = moment().add(14, 'days')
+      console.log('alert date', alertDate)
+      for (let worker of workers) {
+        if (worker.addTraining === false) {
+          continue
+        }
+        for (let training of worker.training) {
+          if (training.expiry !== '') {
+            if (moment().isAfter(training.expiry)) {
+              training.name = worker.name
+              training.status = 'Expired'
+              trainingAlerts.push(training)
+            } else if (moment(training.expiry).isBefore(alertDate)) {
+              training.name = worker.name
+              training.status = 'Due to expire'
+              trainingAlerts.push(training)
+            }
+          } else {
+            training.name = worker.name
+            training.status = 'Incomplete'
+            trainingAlerts.push(training)
+          }
+        }
+      }
+      commit('setTrainingAlerts', trainingAlerts)
+    },
+    getTrainingList ({commit, state}) {
+      firestore.collection('training').doc('z660voHfSYY7pN7zS4vy')
+      .get()
+      .then((doc) => {
+        let data = doc.data().items.sort()
+        let list = [
+          {value: null, text: 'Please select training'},
+          {value: 'custom', text: 'I dont see what I am looking for'}
+        ]
+        data.forEach((item) => {
+          list.push({value: item, text: item.toString()})
+        })
+        commit('setTrainingList', list)
+      })
+    },
+    updateTraining ({dispatch}, payload) {
+      // update worker training
+      let promise = new Promise((resolve, reject) => {
+        let workers = payload
+        workers.forEach((item, index, object) => {
+          firestore.collection('users').doc(item.id).set({training: item.training}, {merge: true})
+          .then(() => {
+            dispatch('getWorkers')
+            .then(() => {
+              resolve()
+            })
+          })
+          .catch((error) => {
+            console.log(error)
+            reject(error)
+          })
+        })
+      })
+      return promise
+    },
+    newTraining ({dispatch, state}, payload) {
+      console.log(payload)
+      let promise = new Promise((resolve, reject) => {
+        var userRef = firestore.collection('users').doc(payload.worker)
+        userRef.update({
+          training: firebase.firestore.FieldValue.arrayUnion(payload.training)
+        })
+        .then(() => {
+          dispatch('getWorkers')
+          .then(() => {
+            resolve()
+          })
+          .catch((error) => {
+            console.log(error)
+            reject()
+          })
+        })
+      })
+      return promise
+    },
   // job site functions
     newJob ({state, commit, dispatch}, payload) {
       // create new job in firestore jobSites collection
