@@ -80,6 +80,7 @@
 
     <b-card header-tag="header">
       <header slot="header">Training Register
+        <input type="text" v-model="search" class="form-control searchbox" placeholder="Search"/>
         <b-btn
           v-if="readonly"
           variant="dark"
@@ -126,7 +127,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(worker, index) in workers" :key="index" style="border-bottom: 1px solid #e9ecef">
+              <tr v-for="(worker, index) in filtered" :key="index" style="border-bottom: 1px solid #e9ecef">
                 <td style="font-weight: bold">{{worker.name}}</td>
                 <td>
                   <ul v-for="(training, index) in worker.training" :key="index">
@@ -164,6 +165,7 @@ export default {
   data () {
     return {
       beforeEditingCache: {},
+      search: '',
       readonly: true,
       loading: false,
       success: false,
@@ -199,6 +201,11 @@ export default {
     },
     trainingList () {
       return this.$store.getters.trainingList
+    },
+    filtered () {
+      return this.workers.filter(worker => {
+        return worker.name.toLowerCase().includes(this.search.toLowerCase())
+      })
     }
   },
   beforeMount () {
@@ -319,6 +326,13 @@ export default {
     line-height: 2em;
   }
 
+  .searchbox {
+    display: inline-block;
+    width: 400px;
+    margin-left: 20px;
+    line-height: 1.1em;
+  }
+
   .btn {
     float: right;
   }
@@ -352,6 +366,4 @@ export default {
     float: right;
     width: 80px;
   }
-
-
 </style>

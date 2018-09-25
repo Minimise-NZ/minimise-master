@@ -10,7 +10,6 @@ import router from './router'
 import { store } from './store/store'
 import AnimatedVue from 'animated-vue'
 import 'animate.css/animate.css'
-import Vuebar from 'vuebar'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import _ from 'lodash'
@@ -18,7 +17,6 @@ import VueLodash from 'vue-lodash'
 import VeeValidate from 'vee-validate'
 import vSelect from 'vue-select'
 import VueScrollTo from 'vue-scrollto'
-import VueCarousel from 'vue-carousel'
 
 const config = {
   errorBagName: 'errors', // change if property conflicts.
@@ -41,10 +39,8 @@ const config = {
 }
 
 Vue.component('v-select', vSelect)
-Vue.use(VueCarousel)
 Vue.use(VueLodash, _)
 Vue.use(AOS)
-Vue.use(Vuebar)
 Vue.use(VueScrollTo, {
   container: 'body',
   duration: 500,

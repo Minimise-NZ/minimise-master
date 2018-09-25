@@ -73,7 +73,7 @@
               variant="dark"
               @click="confirm(hazard, index)"
               v-b-tooltip.hover title="Remove Hazard">
-              <i class="fas fa-trash-alt" style="color: #9e9e9e"></i>
+              <i class="fas fa-trash-alt" style="color: rgb(255, 152, 0)"></i>
             </b-button>
             <b-button
               v-if="!register  && !loading"
@@ -267,7 +267,7 @@ export default {
   }
 
   .inverted > .card-header{
-    background-color: rgba(140, 54, 83, 0.85);
+    background-color: rgba(15, 85, 140, 0.96);
   }
 
   .hazard-row {

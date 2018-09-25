@@ -39,6 +39,7 @@
     "vue-scrollto": "^2.11.0",
     "vue-select": "github:sagalbot/vue-select",
     "vue-spinner": "^1.0.3",
+    "vue-table-component": "^1.9.1",
     "vuebar": "0.0.17",
     "vuefire": "^1.4.3",
     "vuejs-datepicker": "^0.9.26",
