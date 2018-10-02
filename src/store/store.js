@@ -258,12 +258,12 @@ export const store = new Vuex.Store({
       return promise
     },
   // worker functions
-    removeWorker ({dispatch}, payload) {
+    updateWorker ({dispatch}, payload) {
       // update worker training
       let promise = new Promise((resolve, reject) => {
         let workerId = payload.id
         let worker = payload.worker
-        firestore.collection('users').doc(workerId).set(worker)
+        firestore.collection('users').doc(workerId).set(worker, {merge: true})
         .then(() => {
           dispatch('getWorkers')
           resolve()

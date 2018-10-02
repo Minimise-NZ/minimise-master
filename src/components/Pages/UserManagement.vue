@@ -86,7 +86,7 @@
     <b-modal
       v-model="confirmAction"
       v-if="confirmAction" 
-      @ok="remove" 
+      @ok="remove"
       centered
       header-bg-variant="danger"
       headerTextVariant= 'light'
@@ -98,68 +98,78 @@
       </div>
     </b-modal>
 
-    <b-card>
-      <div class="card-header">User Management
-         <b-button  
-          class="addBtn"
+    <b-card header-tag="header">
+      <header slot="header">User Management
+        <input type="text" v-model="search" class="form-control searchbox" placeholder="Search"/>
+        <b-btn 
+          variant="dark"
           @click="createNew = true"
           v-b-tooltip.hover title="Add New User">
-          <i class="fa fa-plus fa-lg"></i>
-        </b-button> 
-      </div>
-      <div class="scroll-container">
-        <b-card class="itemCard mt-2 mb-4" v-for="worker in workers" :key="worker.id">
-          <header class="card-header item">{{worker.name}}
-            <b-button
-              v-if="!loading"
-              class="addBtn remove"
-              @click="confirm(worker)"
-              v-b-tooltip.hover title="Delete User">
-              <i class="fa fa-times fa-lg"></i>
-            </b-button>
-            <div class="loader" v-if="loading" style="float: right">
-              <pulse-loader :loading="loading" ></pulse-loader>
-            </div>
-          </header>
-          <b-row class="outer-row">
-            <b-col sm="12" lg="6">
-              <b-row class="inner-row">
-                <b-col md="4" lg="2" xl="3">
-                  <label>Name:</label>
-                </b-col>
-                <b-col>
-                  <b-form-input type="text" :value="worker.name" readonly/>
-                </b-col>
-              </b-row>
-               <b-row class="inner-row">
-                <b-col md="4" lg="2" xl="3">
-                  <label>Role:</label>
-                </b-col>
-                <b-col>
-                  <b-form-input type="text" :value="worker.role" readonly/>
-                </b-col>
-              </b-row>
-            </b-col>
-            <b-col lg="6">
-              <b-row class="inner-row">
-                <b-col md="4" lg="2" xl="3">
-                  <label>Email:</label>
-                </b-col>
-                <b-col>
-                  <b-form-input type="text" :value="worker.email" readonly/>
-                </b-col>
-              </b-row>
-              <b-row class="inner-row">
-                <b-col md="4" lg="2" xl="3">
-                  <label>Phone:</label>
-                </b-col>
-                <b-col>
-                  <b-form-input type="text" :value="worker.phone" readonly/>
-                </b-col>
-              </b-row>
-            </b-col>
-          </b-row>
-        </b-card>
+          <i class="fas fa-plus" style="color: rgb(1, 206, 187)"></i>
+        </b-btn>
+      </header>
+       <div class="scroll-container">
+        <div style="border: 1px solid #d6d6d6">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(worker, index) in filtered" :key="index" style="border-bottom: 1px solid #e9ecef">
+                <td style="font-weight: bold; padding-top: 20px" :readonly="readonly(index)">{{worker.name}}</td>
+                <td>
+                  <b-form-select
+                    v-validate="'required'"
+                    v-model="worker.role"
+                    :options="userRoles"
+                    v-if="readonly(index) === false"
+                    :class="{'alert-border': error.role}">
+                  </b-form-select>
+                  <b-form-input v-if="readonly(index) === true" readonly v-model="worker.role"></b-form-input>
+                </td>
+                <td :readonly="readonly(index)">
+                  <b-form-input :readonly="readonly(index)" v-model="worker.email"></b-form-input>
+                </td>
+                <td :readonly="readonly(index)">
+                  <b-form-input :readonly="readonly(index)" v-model="worker.phone"></b-form-input>
+                </td>
+                <td :readonly="readonly(index)" class="pl-0">
+                  <b-btn 
+                    v-if="edit !== index && loading === false"
+                    variant="dark"
+                    @click="edit = index"
+                    v-b-tooltip.hover title="Edit User Details">
+                    <i class="far fa-edit" style="color: #ffc80b"></i>
+                  </b-btn>
+                  <b-btn
+                    v-if="edit === index && loading === false"
+                    variant="dark"
+                    @click="updateUser(index)"
+                    v-b-tooltip.hover title="Save Updates">
+                    <i class="fas fa-save" style="color: rgb(135, 210, 50)"></i>
+                  </b-btn>
+                  <b-btn
+                    v-if="edit === index && loading === false"
+                    variant="dark"
+                    @click="confirm(index)"
+                    class="mr-2"
+                    v-b-tooltip.hover title="Remove User">
+                    <i class="fas fa-times" style="color: rgb(224, 61, 61)"></i>
+                  </b-btn>
+                  <div class="loader" v-if="loading">
+                    <pulse-loader :loading="loading"></pulse-loader>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </b-card>
   </b-container>
@@ -174,6 +184,9 @@ export default {
   data () {
     return {
       loading: false,
+      search: '',
+      edit: '',
+      index: '',
       error: {
         name: false,
         email: false,
@@ -186,7 +199,6 @@ export default {
       errorModal: false,
       errorMessage: '',
       confirmAction: false,
-      removeWorker: {},
       userRoles: [
         { value: null, text: 'Please select an option' },
         { value: 'Administrator', text: 'Administrator' },
@@ -207,9 +219,21 @@ export default {
   computed: {
     workers () {
       return this.$store.getters.workers
+    },
+    filtered () {
+      return this.workers.filter(worker => {
+        return worker.name.toLowerCase().includes(this.search.toLowerCase())
+      })
     }
   },
   methods: {
+    readonly (index) {
+      if (this.edit === index) {
+        return false
+      } else {
+        return true
+      }
+    },
     handleOk (evt) {
       // check that form is valid and then call submit function
       evt.preventDefault()
@@ -284,26 +308,43 @@ export default {
         this.errorModal = true
       }
     },
-    confirm (worker) {
-      this.removeWorker = worker
+    confirm (index) {
+      this.index = index
       this.confirmAction = true
     },
-    remove () {
-      // remove company details from this worker
+    updateUser () {
       this.loading = true
-      let worker = this.removeWorker
-      worker.companyKey = ''
-      worker.companyName = ''
-      this.$store.dispatch('removeWorker', {id: worker.id, worker: worker})
+      let worker = this.workers[this.index]
+      console.log('updating user', worker)
+      this.$store.dispatch('updateWorker', {id: worker.id, worker: worker})
       .then(() => {
-        this.successMessage = worker.name + ' has been removed from your Minimise community'
+        this.successMessage = worker.name + ' has been updated'
         this.success = true
-        this.removeWorker = {}
         this.loading = false
       })
       .catch((error) => {
         this.errorMessage = error.message
         this.errorModal = true
+        this.loading = false
+      })
+    },
+    remove () {
+      // remove company details from this worker
+      this.loading = true
+      let worker = this.workers[this.index]
+      worker.companyKey = ''
+      worker.companyName = ''
+      this.$store.dispatch('updateWorker', {id: worker.id, worker: worker})
+      .then(() => {
+        this.successMessage = worker.name + ' has been removed from your Minimise community'
+        this.success = true
+        this.edit = ''
+        this.loading = false
+      })
+      .catch((error) => {
+        this.errorMessage = error.message
+        this.errorModal = true
+        this.edit = ''
         this.loading = false
       })
     }
@@ -317,41 +358,68 @@ export default {
     padding-right: 30px;
   }
 
-  .card-header {
-    margin: -20px -20px 0px -20px;
-  }
-  
-  .card-header.item{
-    background-color: #12807a;
-    margin: 0;
+  .searchbox {
+    display: inline-block;
+    width: 400px;
+    margin-left: 20px;
+    line-height: 1.1em;
+    background-color: grey;
     color: white;
-    font-size: 1.2em;
-    padding-left: 15px;
-  }
-  
-  .itemCard > .card-body {
-    padding: 0;
-    margin-bottom: 15px;
+    cursor: default;
   }
 
-  .outer-row {
-    padding-left: 15px;
-    padding-right: 15px;
+   .scroll-container {
+    height: 80vh;
+    overflow-y: scroll;
+    padding-right: 10px;
+  }
+
+  .card-header {
+    background-color: rgba(56, 56, 56, 0.88);
+    font-size: 1.2em;
+    color: white;
+    line-height: 2em;
+  }
+
+  .btn {
+    float: right;
+  }
+
+  .searchbox::placeholder {
+    color: white;
+    opacity: 1; /* Firefox */
+  }
+
+  .searchbox:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: white;
+  }
+
+  .searchbox::-ms-input-placeholder { /* Microsoft Edge */
+    color: white;
+  }
+
+  thead {
+    background-color: rgba(9, 69, 90, 0.85);
+    color: white;
+  }
+
+  th {
+    border: none;
+    font-weight: normal;
   }
 
   .inner-row {
-    margin-top: 15px;
-    margin-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
   }
 
   label {
-    padding-top:6px;
-  }
-
-  .addBtn.remove{
-    padding-top: 5px;
-    padding-bottom: 5px;
-    background-color: rgb(226, 57, 82);
+    margin-top: 7px;
   }
   
+  .loader {
+    float: right;
+    width: 80px;
+  }
+
 </style>

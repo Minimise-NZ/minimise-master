@@ -81,7 +81,7 @@
     <b-card header-tag="header">
       <header slot="header">Training Register
         <input type="text" v-model="search" class="form-control searchbox" placeholder="Search"/>
-        <b-btn
+        <b-btn 
           v-if="readonly"
           variant="dark"
           @click="edit"
@@ -331,6 +331,9 @@ export default {
     width: 400px;
     margin-left: 20px;
     line-height: 1.1em;
+    background-color: grey;
+    color: white;
+    cursor: default;
   }
 
   .btn {
@@ -365,5 +368,18 @@ export default {
   .loader {
     float: right;
     width: 80px;
+  }
+
+  .searchbox::placeholder {
+    color: white;
+    opacity: 1; /* Firefox */
+  }
+
+  .searchbox:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: white;
+  }
+
+  .searchbox::-ms-input-placeholder { /* Microsoft Edge */
+    color: white;
   }
 </style>

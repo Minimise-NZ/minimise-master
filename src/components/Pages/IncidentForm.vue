@@ -48,16 +48,10 @@
             <b-col sm="3" lg="2"><label>Location:</label></b-col>
             <b-col sm="9" lg="10"><b-form-input ref="error" v-model="incident.address" required></b-form-input></b-col>
           </b-row>
-          <hr>
           <b-row >
             <b-col sm="3" lg="2"><label>Incident Type:</label></b-col>
             <b-col sm="9" lg="10">
-              <v-select
-                placeholder="Please select incident type"
-                v-model="incident.type"
-                :options="incidentTypes"
-                required>
-              </v-select>
+              <b-form-select v-model="incident.type" :options="incidentTypes" class="mb-3" required/>
               <div class="alert alert-danger" v-show="this.error !== ''">{{this.error}}</div>
             </b-col>
           </b-row>
@@ -94,7 +88,6 @@
               </b-form-textarea>
             </b-col>
           </b-row>
-          <hr>
           <b-row>
             <b-col sm="3" lg="2"><label>Cause / Contributing Factors:</label></b-col>
             <b-col sm="9" lg="10">
@@ -184,7 +177,7 @@ export default {
         address: '',
         date: '',
         reportedBy: '',
-        type: '',
+        type: null,
         description: '',
         injury: '',
         injuryDescription: '',
@@ -256,7 +249,12 @@ export default {
 <style scoped>
    .container-fluid {
     padding-top: 20px;
-    padding-right: 20px;
+  }
+
+  .scroll-container {
+    height: 80vh;
+    overflow-y: scroll;
+    padding-right: 15px;
   }
 
   .card-header {
@@ -265,6 +263,11 @@ export default {
     color: white;
     line-height: 2em;
   }
+  
+  .card-body {
+    padding-bottom: 0;
+  }
+  
   .col-sm-3 {
     text-align: right;
     padding-top: 5px;
@@ -283,6 +286,10 @@ export default {
   
   ul {
     padding-left: 10px;
+  }
+
+  li {
+    padding-bottom: 3px;
   }
 
   .btn-group {
