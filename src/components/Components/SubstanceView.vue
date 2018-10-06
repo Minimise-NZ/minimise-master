@@ -2,7 +2,7 @@
   <b-card class="hazSubCard mb-2">
     <b-btn block v-b-toggle="'collapse' + index" class="text-left togglebtn card-header substance" v-b-tooltip.hover title="Click to show/hide substance details">
         {{substance.name}}
-      <i class="fa fa-chevron-down" style="float:right"></i>
+      <i class="fa fa-chevron-down" style="float:right; padding-top: 7px"></i>
     </b-btn>
     <b-collapse :id="'collapse' + this.index" accordion="my-accordion" visible>
     <b-form @submit.prevent="onSubmit">
@@ -186,8 +186,9 @@ export default {
     background-color: #6b668e;
     margin: 0;
     color: white;
-    font-size: 1em;
-    padding-left: 15px;
+    font-size: 1.1em;
+    padding: 7px 20px;
+    line-height: 2em;
   }
 
   .addBtn {

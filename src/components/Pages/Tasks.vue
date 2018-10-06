@@ -10,12 +10,12 @@
       headerTextVariant= 'light'
       title="Create new task analysis">
       <div class="d-block text-center mt-4">
-        <h4>Please enter a title for your <br> new task analysis</h4>
+        <h4>Please enter a title for your <br> new Task Analysis</h4>
         <br>
         <b-form-input type="text" v-model="title" required/>
       </div>
     </b-modal>
-    <b-card header-tag="header">
+    <b-card header-tag="header" >
       <header slot="header">Task Analysis/SWMS
         <b-btn
           variant="dark"
@@ -25,10 +25,13 @@
           <i class="fa fa-plus" style="color: rgb(1, 206, 187)"></i>
         </b-btn> 
       </header>
-     <div class="scroll-container">
-        <b-row v-for="(task, index) in taskAnalysis" :key="index">
-          <taskView :taskAnalysis="task" :index="index"></taskView>
-        </b-row>      
+      <div class="scroll-container">
+        <b-row v-if="taskAnalysis.length === 0" >
+          <b-col class="p-0">
+            <header class="subheader">Click the add + button to start your first Task Analysis</header>
+          </b-col>
+        </b-row>
+        <taskView v-for="(task, index) in taskAnalysis" :key="index" :taskAnalysis="task" :index="index"></taskView>    
       </div>
     </b-card>
   </b-container>
@@ -73,6 +76,14 @@ export default {
     padding-right: 20px;
   }
 
+   .scroll-container {
+    height: 80vh;
+    overflow-y: scroll;
+    margin-top: 15px;
+    padding-right: 15px;
+    padding-bottom: 20px;
+  }
+
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
     font-size: 1.2em;
@@ -80,7 +91,19 @@ export default {
     line-height: 2em;
   }
 
+  .card-body {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
   .btn {
     float: right;
+  }
+
+  .subheader {
+    margin-left: 15px;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #186ca7;
   }
 </style>

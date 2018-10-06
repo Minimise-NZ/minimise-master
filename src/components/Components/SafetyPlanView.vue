@@ -28,136 +28,136 @@
             Site Safety Information
             <i class="fa fa-chevron-down" style="float:right"></i>
           </b-btn>
-            <b-card class="section" v-if="showOverview === true">
-              <b-row>
-                <b-col sm="12" lg="6" style="padding-top: 10px; padding-right: 20px">
-                  <b-row>
-                    <b-col md="12" lg="3">
-                      <label>Supervisor:</label>
-                    </b-col>
-                    <b-col>
-                      <b-input-group>
-                        <b-form-input type="text" v-model="jobSite.supervisorName" readonly/>
-                      </b-input-group>
-                    </b-col>
-                  </b-row>
-                  <b-row>
-                    <b-col md="12" lg="3">
-                      <label>Supervisor Phone:</label>
-                    </b-col>
-                    <b-col>
-                      <b-form-input type="text" :value="jobSite.supervisorPhone" readonly/>
-                    </b-col>
-                  </b-row>
-                  <b-row>
-                    <b-col md="12" lg="3">
-                      <label>Medical Centre:</label>
-                    </b-col>
-                    <b-col>
-                      <b-form-textarea :value="jobSite.medical" readonly/>
-                    </b-col>
-                  </b-row>
-                  <b-row >
-                    <b-col md="12" lg="3">
-                      <label>First Aiders:</label>
-                    </b-col>
-                    <b-col>
-                      <b-form-input v-for="(name, index) in jobSite.firstAiders" :key="index" type="text" :value="name" readonly class="mb-1"/>
-                    </b-col>
-                  </b-row>
-                  <b-row >
-                    <b-col md="12" lg="3">
-                      <label>Induction:</label>
-                    </b-col>
-                    <b-col>
-                      <b-form-textarea value="All workers are inducted and review safety plan prior to commencing work" readonly/>
-                    </b-col>
-                  </b-row>
-                  <b-row >
-                    <b-col md="12" lg="3">
-                      <label>Task Analysis:</label>
-                    </b-col>
-                    <b-col>
-                      <b-form-input type="text" value="To be completed as required" readonly/>
-                    </b-col>
-                  </b-row>
-                  <b-row >
-                    <b-col md="12" lg="3">
-                      <label>Additional Information:</label>
-                    </b-col>
-                    <b-col>
-                      <b-form-textarea v-if="jobSite.additionalInfo !== ''" :value="jobSite.additionalInfo" readonly rows='2'/>
-                      <b-form-textarea v-else value='No additional emergency information' readonly rows='2'/>
-                    </b-col>
-                  </b-row>
-                </b-col>
-                <b-col sm="12" lg="6" style="padding-top: 10px; padding-right: 20px" class="pl-0">
-                  <b-row>
-                    <b-col md="12" lg="4">
-                      <label>Incident Reporting:</label>
-                    </b-col>
-                    <b-col>
-                      <b-form-textarea type="text" value='We have an incident/event reporting and investigation system in place' readonly/>
-                    </b-col>
-                  </b-row>
-                  <b-row>
-                    <b-col md="12" lg="4">
-                      <label>Site Inspection Frequency:</label>
-                    </b-col>
-                    <b-col>
-                      <b-form-input type="text" :value="frequency(jobSite.inspectionFrequency)" readonly/>
-                    </b-col>
-                  </b-row>
-                  <b-row >
-                    <b-col md="12" lg="4">
-                      <label>Toolbox Talk Frequency:</label>
-                    </b-col>
-                    <b-col>
-                      <b-form-input type="text" :value="frequency(jobSite.toolboxFrequency)" readonly/>
-                    </b-col>
-                  </b-row>
-                  <b-row >
-                    <b-col md="12" lg="4">
-                      <label>Emergency Plan:</label>
-                    </b-col>
-                    <b-col >
-                      <b-form-input v-if="jobSite.emergencyPlanURL !== ''" type="text" value='Emergency Plan is attached' readonly/>
-                      <b-form-input v-else type="text" value='Emergency Plan not required' readonly/>
-                    </b-col>
-                  </b-row>
-                  <b-row >
-                    <b-col md="12" lg="4">
-                      <label>Notifiable Works:</label>
-                    </b-col>
-                    <b-col >
-                      <b-form-input v-if="jobSite.notifiableurl !== ''" type="text" value='Worksafe Notification is attached' readonly/>
-                      <b-form-input v-else type="text" value='Worksafe Notification not required' readonly/>
-                    </b-col>
-                  </b-row>
-                  <b-row >
-                    <b-col md="12" lg="4">Environmental Plan:</b-col>
-                    <b-col>
-                      <b-form-input v-if="jobSite.environmentalurl !== ''" type="text" value='Environmental Plan is attached' readonly/>
-                      <b-form-input v-else type="text" value='Environmental Plan not required' readonly/>
-                    </b-col>
-                  </b-row>
-                  <b-row>
-                    <b-col md="12" lg="4">Resource Consent:</b-col>
-                    <b-col>
-                      <b-form-input v-if="jobSite.resourceurl !== ''" type="text" value='Resource Consent is attached' readonly/>
-                      <b-form-input v-else type="text" value='Resource Consent not required' readonly/>
-                    </b-col>
-                  </b-row>
-                  <b-row>
-                    <b-col md="12" lg="4">NZHPT clearance:</b-col>
-                    <b-col>
-                      <b-form-input v-if="jobSite.nzhpturl !== ''" type="text" value='NZHPT clearance is attached' readonly/>
-                      <b-form-input v-else type="text" value='NZHPT clearance not required' readonly/>
-                    </b-col>
-                  </b-row>
-                </b-col>
-              </b-row>
-            </b-card>
+          <b-card class="section" v-if="showOverview === true">
+            <b-row>
+              <b-col sm="12" lg="6" style="padding-top: 10px; padding-right: 20px">
+                <b-row>
+                  <b-col md="12" lg="3">
+                    <label>Supervisor:</label>
+                  </b-col>
+                  <b-col>
+                    <b-input-group>
+                      <b-form-input type="text" v-model="jobSite.supervisorName" readonly/>
+                    </b-input-group>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col md="12" lg="3">
+                    <label>Supervisor Phone:</label>
+                  </b-col>
+                  <b-col>
+                    <b-form-input type="text" :value="jobSite.supervisorPhone" readonly/>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col md="12" lg="3">
+                    <label>Medical Centre:</label>
+                  </b-col>
+                  <b-col>
+                    <b-form-textarea :value="jobSite.medical" readonly/>
+                  </b-col>
+                </b-row>
+                <b-row >
+                  <b-col md="12" lg="3">
+                    <label>First Aiders:</label>
+                  </b-col>
+                  <b-col>
+                    <b-form-input v-for="(name, index) in jobSite.firstAiders" :key="index" type="text" :value="name" readonly class="mb-1"/>
+                  </b-col>
+                </b-row>
+                <b-row >
+                  <b-col md="12" lg="3">
+                    <label>Induction:</label>
+                  </b-col>
+                  <b-col>
+                    <b-form-textarea value="All workers are inducted and review safety plan prior to commencing work" readonly/>
+                  </b-col>
+                </b-row>
+                <b-row >
+                  <b-col md="12" lg="3">
+                    <label>Task Analysis:</label>
+                  </b-col>
+                  <b-col>
+                    <b-form-input type="text" value="To be completed as required" readonly/>
+                  </b-col>
+                </b-row>
+                <b-row >
+                  <b-col md="12" lg="3">
+                    <label>Additional Information:</label>
+                  </b-col>
+                  <b-col>
+                    <b-form-textarea v-if="jobSite.additionalInfo !== ''" :value="jobSite.additionalInfo" readonly rows='2'/>
+                    <b-form-textarea v-else value='No additional emergency information' readonly rows='2'/>
+                  </b-col>
+                </b-row>
+              </b-col>
+              <b-col sm="12" lg="6" style="padding-top: 10px; padding-right: 20px" class="pl-0">
+                <b-row>
+                  <b-col md="12" lg="4">
+                    <label>Incident Reporting:</label>
+                  </b-col>
+                  <b-col>
+                    <b-form-textarea type="text" value='We have an incident/event reporting and investigation system in place' readonly/>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col md="12" lg="4">
+                    <label>Site Inspection Frequency:</label>
+                  </b-col>
+                  <b-col>
+                    <b-form-input type="text" :value="frequency(jobSite.inspectionFrequency)" readonly/>
+                  </b-col>
+                </b-row>
+                <b-row >
+                  <b-col md="12" lg="4">
+                    <label>Toolbox Talk Frequency:</label>
+                  </b-col>
+                  <b-col>
+                    <b-form-input type="text" :value="frequency(jobSite.toolboxFrequency)" readonly/>
+                  </b-col>
+                </b-row>
+                <b-row >
+                  <b-col md="12" lg="4">
+                    <label>Emergency Plan:</label>
+                  </b-col>
+                  <b-col >
+                    <b-form-input v-if="jobSite.emergencyPlanURL !== ''" type="text" value='Emergency Plan is attached' readonly/>
+                    <b-form-input v-else type="text" value='Emergency Plan not required' readonly/>
+                  </b-col>
+                </b-row>
+                <b-row >
+                  <b-col md="12" lg="4">
+                    <label>Notifiable Works:</label>
+                  </b-col>
+                  <b-col >
+                    <b-form-input v-if="jobSite.notifiableurl !== ''" type="text" value='Worksafe Notification is attached' readonly/>
+                    <b-form-input v-else type="text" value='Worksafe Notification not required' readonly/>
+                  </b-col>
+                </b-row>
+                <b-row >
+                  <b-col md="12" lg="4">Environmental Plan:</b-col>
+                  <b-col>
+                    <b-form-input v-if="jobSite.environmentalurl !== ''" type="text" value='Environmental Plan is attached' readonly/>
+                    <b-form-input v-else type="text" value='Environmental Plan not required' readonly/>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col md="12" lg="4">Resource Consent:</b-col>
+                  <b-col>
+                    <b-form-input v-if="jobSite.resourceurl !== ''" type="text" value='Resource Consent is attached' readonly/>
+                    <b-form-input v-else type="text" value='Resource Consent not required' readonly/>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col md="12" lg="4">NZHPT clearance:</b-col>
+                  <b-col>
+                    <b-form-input v-if="jobSite.nzhpturl !== ''" type="text" value='NZHPT clearance is attached' readonly/>
+                    <b-form-input v-else type="text" value='NZHPT clearance not required' readonly/>
+                  </b-col>
+                </b-row>
+              </b-col>
+            </b-row>
+          </b-card>
         </div>
         <!--HAZARD SECTION-->
         <div>
@@ -165,38 +165,38 @@
             Hazard Register
             <i class="fa fa-chevron-down" style="float:right"></i>
           </b-btn>
-            <b-card class="table-responsive section" v-if="showHazards === true">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Risks</th>
-                    <th scope="col">IRA</th>
-                    <th scope="col">Controls</th>
-                    <th scope="col">Control Level</th>
-                    <th scope="col">RRA</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(hazard, index) in hazards" :key="index" style="border-bottom: 1px solid #e9ecef">
-                    <td style="font-weight: bold">{{hazard.name}}</td>
-                    <td>
-                      <ul v-for="(risk, index) in hazard.risks" :key="index">
-                        <li>{{risk}}</li>
-                      </ul>
-                    </td>
-                    <td>{{hazard.IRA}}</td>
-                    <td>
-                        <ul v-for="(control, index) in hazard.controls" :key="index">
-                        <li>{{control}}</li>
-                      </ul>
-                    </td>
-                    <td>{{hazard.controlLevel}}</td>
-                    <td>{{hazard.RRA}}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </b-card>
+          <b-card class="table-responsive section" v-if="showHazards === true">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Risks</th>
+                  <th scope="col">IRA</th>
+                  <th scope="col">Controls</th>
+                  <th scope="col">Control Level</th>
+                  <th scope="col">RRA</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(hazard, index) in hazards" :key="index" style="border-bottom: 1px solid #e9ecef">
+                  <td style="font-weight: bold">{{hazard.name}}</td>
+                  <td>
+                    <ul v-for="(risk, index) in hazard.risks" :key="index">
+                      <li>{{risk}}</li>
+                    </ul>
+                  </td>
+                  <td>{{hazard.IRA}}</td>
+                  <td>
+                      <ul v-for="(control, index) in hazard.controls" :key="index">
+                      <li>{{control}}</li>
+                    </ul>
+                  </td>
+                  <td>{{hazard.controlLevel}}</td>
+                  <td>{{hazard.RRA}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </b-card>
         </div>
         <!--HAZARDOUS SUBSTANCES SECTION-->
         <div v-if="hazSubs.length > 0">

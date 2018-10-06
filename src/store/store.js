@@ -25,6 +25,7 @@ export const store = new Vuex.Store({
     myIncidents: [],
     allHazards: [],
     myHazards: [],
+    hazardList: [],
     notMyHazards: [],
     hazardousSubstances: [],
     taskChanged: '',
@@ -47,6 +48,7 @@ export const store = new Vuex.Store({
       state.jobRequests = []
       state.myIncidents = []
       state.allHazards = []
+      state.hazardList = []
       state.myHazards = []
       state.taskChanged = ''
       state.taskAnalysis = []
@@ -122,6 +124,10 @@ export const store = new Vuex.Store({
     setNotMyHazards (state, payload) {
       console.log('Not my hazards set', payload)
       state.notMyHazards = payload
+    },
+    setHazardList (state, payload) {
+      console.log('Hazard List set', payload)
+      state.hazardList = payload
     },
     setHazardousSubstances (state, payload) {
       console.log('Hazardous Substances set')
@@ -853,6 +859,16 @@ export const store = new Vuex.Store({
       })
       return promise
     },
+    getHazardList ({commit, state}) {
+      let hazardList = [{value: null, text: 'Please select hazard'}]
+      let list = state.myHazards
+      list.forEach((item, index, object) => {
+        hazardList.push({
+          value: item.id, text: item.name
+        })
+      })
+      commit('setHazardList', hazardList)
+    },
     getMyHazards ({commit, dispatch, state}) {
       let promise = new Promise((resolve, reject) => {
         firestore.collection('companies').doc(state.companyKey)
@@ -871,6 +887,7 @@ export const store = new Vuex.Store({
             resolve
           } else {
             commit('setMyHazards', hazards)
+            dispatch('getHazardList')
             dispatch('getNotMyHazards')
             resolve
           }
@@ -918,9 +935,7 @@ export const store = new Vuex.Store({
         })
         .then(() => {
           dispatch('getMyHazards')
-          .then(() => {
-            resolve()
-          })
+          resolve()
         })
         .catch((error) => {
           reject(error)
@@ -1037,18 +1052,11 @@ export const store = new Vuex.Store({
         .collection('taskAnalysis').doc()
         newTask.set({
           title: title,
-          worksafe: false,
-          signage: false,
-          ppeRequired: false,
+          id: newTask.id,
           ppe: '',
-          plantRequired: false,
           plant: '',
-          steps: [{
-            description: '',
-            hazards: '',
-            controls: ''
-          }],
-          id: newTask.id
+          signage: '',
+          steps: [{description: '', hazards: []}]
         })
         .then(() => {
           dispatch('getTaskAnalysis')
@@ -1091,18 +1099,16 @@ export const store = new Vuex.Store({
         let task = payload.task
         firestore.collection('companies').doc(state.companyKey)
         .collection('taskAnalysis').doc(taskKey).set({
-          title: task.title,
-          worksafe: task.worksafe,
-          signage: task.signage,
-          ppeRequired: task.ppeRequired,
-          ppe: task.ppe,
-          plantRequired: task.plantRequired,
+          id: task.id,
           plant: task.plant,
+          ppe: task.ppe,
+          signage: task.signage,
           steps: task.steps,
-          id: taskKey
+          title: task.title
         })
         .then(() => {
           console.log('TA saved')
+          dispatch('getTaskAnalysis')
           resolve()
         })
         .catch((error) => {
@@ -1158,6 +1164,7 @@ export const store = new Vuex.Store({
     safetyPlan: (state) => state.safetyPlan,
     allHazards: (state) => state.allHazards,
     myHazards: (state) => state.myHazards,
+    hazardList: (state) => state.hazardList,
     taskChanged: (state) => state.taskChanged,
     notMyHazards: (state) => state.notMyHazards,
     hazardousSubstances: (state) => state.hazardousSubstances,
@@ -1170,6 +1177,13 @@ export const store = new Vuex.Store({
       return (id) => {
         return state.myIncidents.find((incident) => {
           return incident.id === id
+        })
+      }
+    },
+    hazard (state) {
+      return (id) => {
+        return state.myHazards.find((hazard) => {
+          return hazard.id === id
         })
       }
     },

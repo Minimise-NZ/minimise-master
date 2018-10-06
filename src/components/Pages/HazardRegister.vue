@@ -71,6 +71,7 @@
               v-if="register && !loading"
               class="addBtn"
               variant="dark"
+              size="sm"
               @click="confirm(hazard, index)"
               v-b-tooltip.hover title="Remove Hazard">
               <i class="fas fa-trash-alt" style="color: rgb(255, 152, 0)"></i>
@@ -79,6 +80,7 @@
               v-if="!register  && !loading"
               class="addBtn"
               variant="dark"
+              size="sm"
               @click="addHazard(hazard)"
               v-b-tooltip.hover title="Add to my Hazard Register">
               <i class="fa fa-plus" style="color: rgb(1, 206, 187)"></i>
