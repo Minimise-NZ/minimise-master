@@ -647,12 +647,12 @@ export const store = new Vuex.Store({
     storeSafetyPlan ({commit}, payload) {
       commit('setSafetyPlan', payload)
     },
-    newToolbox ({commit}, payload) {
+    newToolbox ({state, commit}, payload) {
       console.log(payload)
       let promise = new Promise((resolve, reject) => {
-        toolboxRef.add({
-          supervisorName: payload.supervisorName,
-          timestamp: payload.timestamp,
+        toolboxRef.doc(Date.now().toString()).set({
+          supervisorName: state.user.name,
+          date: today,
           jobKey: payload.jobKey,
           topics: payload.topics,
           issues: payload.issues,

@@ -17,7 +17,7 @@
             <label>Supervisor:</label>
           </b-col>
           <b-col>
-            <b-form-input v-if="toolbox.id === null" :value="user.name" readonly></b-form-input>
+            <b-form-input v-if="toolboxId === null" :value="user.name" readonly></b-form-input>
             <b-form-input v-else value="toolbox supervisor name" readonly></b-form-input>
           </b-col>
         </b-row>
@@ -26,7 +26,7 @@
             <label>Date/Time:</label>
           </b-col>
           <b-col>
-            <b-form-input v-if="toolbox.id === null" :value="new Date().toLocaleString()" readonly></b-form-input>
+            <b-form-input v-if="toolboxId === null" :value="new Date().toLocaleString()" readonly></b-form-input>
             <b-form-input v-else value="toolbox date" readonly></b-form-input>
           </b-col>
         </b-row>
@@ -35,7 +35,7 @@
             <label>Topics discussed:</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" v-if="toolbox.id === null" v-model="toolbox.topics"></b-form-textarea>
+            <b-form-textarea rows="4" v-if="toolboxId === null" v-model="toolbox.topics"></b-form-textarea>
             <b-form-textarea rows="4" v-else value="toolbox.topics" readonly></b-form-textarea>
           </b-col>
         </b-row>
@@ -44,7 +44,7 @@
             <label>Employee issues raised:</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" v-if="toolbox.id === null" v-model="toolbox.issues"></b-form-textarea>
+            <b-form-textarea rows="4" v-if="toolboxId === null" v-model="toolbox.issues"></b-form-textarea>
             <b-form-textarea rows="4" v-else value="toolbox.issues" readonly></b-form-textarea>
           </b-col>
         </b-row>
@@ -53,7 +53,7 @@
             <label>Safe observations reviewed/discussed:</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" v-if="toolbox.id === null" v-model="toolbox.observations"></b-form-textarea>
+            <b-form-textarea rows="4" v-if="toolboxId === null" v-model="toolbox.observations"></b-form-textarea>
             <b-form-textarea rows="4" v-else value="toolbox.observations" readonly></b-form-textarea>
           </b-col>
         </b-row>
@@ -62,11 +62,11 @@
             <label>Jobs completed/reviewed</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" v-if="toolbox.id === null" v-model="toolbox.jobsCompleted"></b-form-textarea>
+            <b-form-textarea rows="4" v-if="toolboxId === null" v-model="toolbox.jobsCompleted"></b-form-textarea>
             <b-form-textarea rows="4" v-else value="toolbox.jobsCompleted" readonly></b-form-textarea>
           </b-col>
         </b-row>
-        <b-row v-if="toolbox.id !== null">
+        <b-row v-if="toolboxId !== null">
           <b-col cols="3">
             <label>Attendees Signed</label>
           </b-col>
@@ -334,8 +334,8 @@ export default {
       ],
       loading: false,
       showToolbox: false,
+      toolboxId: null,
       toolbox: {
-        id: null,
         jobKey: '',
         topics: '',
         issues: '',
@@ -458,11 +458,9 @@ export default {
       this.showToolbox = true
     },
     saveToolbox () {
-      this.toolbox.id = Date.now() + this.toolbox.jobKey
       this.$store.dispatch('newToolbox', this.toolbox)
       .then(() => {
         this.toolbox = {
-          id: null,
           jobKey: '',
           topics: '',
           issues: '',
