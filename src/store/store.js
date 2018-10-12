@@ -8,6 +8,13 @@ var storageRef = firebase.storage().ref()
 
 const today = moment().format('DD-MM-YYYY')
 // const now = moment().format('DD-MM-YYYY hh:mm')
+const usersRef = firestore.collection('users')
+const companiesRef = firestore.collection('companies')
+const trainingRef = firestore.collection('training')
+const jobSitesRef = firestore.collection('jobSites')
+const toolboxRef = firestore.collection('toolbox')
+const incidentsRef = firestore.collection('incidents')
+const hazardsRef = firestore.collection('hazards')
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
@@ -21,6 +28,7 @@ export const store = new Vuex.Store({
     companyKey: '',
     companyIndex: [],
     jobsInProgress: [],
+    currentJob: {},
     safetyPlan: {},
     myIncidents: [],
     allHazards: [],
@@ -46,6 +54,7 @@ export const store = new Vuex.Store({
       state.jobsInProgress = []
       state.safetyPlan = {}
       state.jobRequests = []
+      state.currentJob = {}
       state.myIncidents = []
       state.allHazards = []
       state.hazardList = []
@@ -98,6 +107,10 @@ export const store = new Vuex.Store({
     setJobs (state, payload) {
       state.jobsInProgress = payload
       console.log('Jobs in progress set')
+    },
+    setCurrentJob (state, payload) {
+      console.log('setting current job', payload)
+      state.currentJob = payload
     },
     setSafetyPlan (state, payload) {
       console.log('setting safety plan', payload)
@@ -190,7 +203,7 @@ export const store = new Vuex.Store({
       let user = payload
       commit('setUser', user)
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('users').add(user)
+        usersRef.add(user)
         .then((doc) => {
           commit('setUserKey', doc.id)
           resolve()
@@ -205,7 +218,7 @@ export const store = new Vuex.Store({
     getPendingUser ({commit, dispatch}, payload) {
       // get user doc with email = this.email
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('users').where('email', '==', payload)
+        usersRef.where('email', '==', payload)
         .get()
         .then((snapshot) => {
           if (snapshot.empty) {
@@ -228,13 +241,24 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    getUser ({commit, state}) {
+    getUser ({commit, dispatch, state}) {
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('users').where('uid', '==', state.uid)
+        usersRef.where('uid', '==', state.uid)
         .get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             let user = doc.data()
+            if (user.hasOwnProperty('currentJob')) {
+              let now = Date.now().toString().slice(0, 10)
+              console.log(user.currentJob.expiry.seconds)
+              if (now > user.currentJob.expiry) {
+                console.log('current job expired', now, user.currentJob.expiry.seconds)
+                user.currentJob = {}
+                dispatch('updateCurrentUser', user)
+              } else {
+                console.log('not expired', now, user.currentJob.expiry.seconds)
+              }
+            }
             commit('setUser', user)
             commit('setUserKey', doc.id)
             commit('setCompanyKey', user.companyKey)
@@ -250,10 +274,10 @@ export const store = new Vuex.Store({
     },
     updateCurrentUser ({commit, state}, payload) {
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('users').doc(state.userKey)
+        usersRef.doc(state.userKey)
         .get()
         .then((doc) => {
-          firestore.collection('users').doc(doc.id).set(payload, {merge: true})
+          usersRef.doc(doc.id).set(payload, {merge: true})
           resolve()
         })
         .catch((error) => {
@@ -269,7 +293,7 @@ export const store = new Vuex.Store({
       let promise = new Promise((resolve, reject) => {
         let workerId = payload.id
         let worker = payload.worker
-        firestore.collection('users').doc(workerId).set(worker, {merge: true})
+        usersRef.doc(workerId).set(worker, {merge: true})
         .then(() => {
           dispatch('getWorkers')
           resolve()
@@ -283,7 +307,7 @@ export const store = new Vuex.Store({
     },
     inviteUser ({dispatch, state}, payload) {
       // check that user does not already exist
-      firestore.collection('users').where('email', '==', payload.worker.email)
+      usersRef.where('email', '==', payload.worker.email)
       .get()
       .then((snapshot) => {
         if (snapshot.empty) {
@@ -333,7 +357,7 @@ export const store = new Vuex.Store({
       let promise = new Promise((resolve, reject) => {
         let workers = []
         let supervisors = []
-        firestore.collection('users').where('companyKey', '==', state.companyKey).orderBy('name')
+        usersRef.where('companyKey', '==', state.companyKey).orderBy('name')
         .get()
         .then((snapshot) => {
           console.log('worker snapshot', snapshot)
@@ -394,7 +418,7 @@ export const store = new Vuex.Store({
       let promise = new Promise((resolve, reject) => {
         const companyName = payload.name
         commit('setCompany', payload)
-        firestore.collection('companies').add(payload)
+        companiesRef.add(payload)
         .then((doc) => {
           commit('setCompanyKey', doc.id)
           firestore.collection('companyIndex').doc(doc.id).set({
@@ -411,7 +435,7 @@ export const store = new Vuex.Store({
     },
     getCompany ({commit, state}) {
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('companies').doc(state.companyKey)
+        companiesRef.doc(state.companyKey)
         .get()
         .then((doc) => {
           let company = doc.data()
@@ -457,7 +481,7 @@ export const store = new Vuex.Store({
       commit('setTrainingAlerts', trainingAlerts)
     },
     getTrainingList ({commit, state}) {
-      firestore.collection('training').doc('z660voHfSYY7pN7zS4vy')
+      trainingRef.doc('z660voHfSYY7pN7zS4vy')
       .get()
       .then((doc) => {
         let data = doc.data().items.sort()
@@ -476,7 +500,7 @@ export const store = new Vuex.Store({
       let promise = new Promise((resolve, reject) => {
         let workers = payload
         workers.forEach((item, index, object) => {
-          firestore.collection('users').doc(item.id).set({training: item.training}, {merge: true})
+          usersRef.doc(item.id).set({training: item.training}, {merge: true})
           .then(() => {
             dispatch('getWorkers')
             .then(() => {
@@ -494,7 +518,7 @@ export const store = new Vuex.Store({
     newTraining ({dispatch, state}, payload) {
       console.log(payload)
       let promise = new Promise((resolve, reject) => {
-        var userRef = firestore.collection('users').doc(payload.worker)
+        var userRef = usersRef.doc(payload.worker)
         userRef.update({
           training: firebase.firestore.FieldValue.arrayUnion(payload.training)
         })
@@ -516,7 +540,7 @@ export const store = new Vuex.Store({
       // create new job in firestore jobSites collection
       let promise = new Promise((resolve, reject) => {
         console.log('Creating new job', payload)
-        firestore.collection('jobSites').add({
+        jobSitesRef.add({
           address: payload.address,
           medical: payload.medical,
           companyKey: payload.companyKey,
@@ -542,6 +566,8 @@ export const store = new Vuex.Store({
           toolboxFrequency: payload.toolboxFrequency,
           inspectionFrequency: payload.inspectionFrequency,
           additionalInfo: payload.additionalInfo,
+          signInRegister: [],
+          inductionRegsister: [],
           open: true,
           date: Date.now()
         })
@@ -577,7 +603,7 @@ export const store = new Vuex.Store({
     },
     updateJob ({dispatch}, payload) {
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('jobSites').doc(payload.id).set({
+        jobSitesRef.doc(payload.id).set({
           address: payload.address,
           medical: payload.medical,
           companyKey: payload.companyKey,
@@ -604,7 +630,9 @@ export const store = new Vuex.Store({
           inspectionFrequency: payload.inspectionFrequency,
           additionalInfo: payload.additionalInfo,
           open: payload.open,
-          date: payload.date
+          date: payload.date,
+          signInRegister: payload.signInRegister,
+          inductionRegister: payload.inductionRegister
         })
         .then(() => {
           resolve()
@@ -622,7 +650,7 @@ export const store = new Vuex.Store({
     newToolbox ({commit}, payload) {
       console.log(payload)
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('toolbox').add({
+        toolboxRef.add({
           supervisorName: payload.supervisorName,
           timestamp: payload.timestamp,
           jobKey: payload.jobKey,
@@ -646,7 +674,7 @@ export const store = new Vuex.Store({
       // from firestore sorted by timestamp desc limit 1
       let promise = new Promise((resolve, reject) => {
         console.log(payload)
-        firestore.collection('toolbox').where('jobKey', '==', payload).orderBy('timestamp', 'desc').limit(1)
+        toolboxRef.where('jobKey', '==', payload).orderBy('timestamp', 'desc').limit(1)
         .get()
         .then((snapshot) => {
           if (snapshot.empty) {
@@ -669,7 +697,7 @@ export const store = new Vuex.Store({
       let promise = new Promise((resolve, reject) => {
         let jobId = payload
         let closedDate = today
-        firestore.collection('jobSites').doc(jobId)
+        jobSitesRef.doc(jobId)
         .update({'open': false, 'closedDate': closedDate})
         .then(() => {
           resolve()
@@ -681,19 +709,23 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    getAllJobs ({commit, state}) {
+    getAllJobs ({commit, dispatch, state}) {
       // get all jobs in progress that are assigned to this company
       let promise = new Promise((resolve, reject) => {
         console.log('getting jobs')
-        firestore.collection('jobSites').where('companyKey', '==', state.companyKey).where('open', '==', true)
+        jobSitesRef.where('companyKey', '==', state.companyKey).where('open', '==', true)
         .get()
         .then((snapshot) => {
           var jobSites = []
           snapshot.forEach((doc) => {
             let job = doc.data()
             job.id = doc.id
-            jobSites.push({
-              job
+            dispatch('getSignInRegister', job.id)
+            .then((register) => {
+              job.signInRegister = register
+              jobSites.push({
+                job
+              })
             })
           })
           commit('setJobs', jobSites)
@@ -706,11 +738,110 @@ export const store = new Vuex.Store({
         return promise
       })
     },
+    getSignInRegister ({state}, payload) {
+      let promise = new Promise((resolve, reject) => {
+        jobSitesRef.doc(payload).collection('signInRegister')
+        .where('date', '==', today).where('signedOut', '==', null)
+        .get()
+        .then((snapshot) => {
+          var signedIn = []
+          if (snapshot.empty) {
+            resolve(signedIn)
+          } else {
+            snapshot.forEach((doc) => {
+              let worker = doc.data()
+              signedIn.push({
+                name: worker.name,
+                time: worker.signedIn
+              })
+              resolve(signedIn)
+            })
+          }
+        })
+        .catch((error) => {
+          console.log('Error getting sign in register: ', error)
+          reject(error)
+        })
+      })
+      return promise
+    },
+  // sign in and induction registers
+    jobSignOn ({state, dispatch}, payload) {
+      // sign user into job site
+      let jobKey = payload
+      if (Vue._.isEmpty(state.currentJob) === false) {
+        dispatch('signOutCurrentJob', state.currentJob.id)
+      }
+      let promise = new Promise((resolve, reject) => {
+        let docKey = today + state.userKey
+        console.log(docKey)
+        var signInRegisterRef = jobSitesRef.doc(jobKey).collection('signInRegister').doc(docKey)
+        signInRegisterRef.set({
+          id: state.userKey,
+          name: state.user.name,
+          date: today,
+          signedIn: Date.now(),
+          signedOut: null,
+          companyName: state.user.companyName,
+          companyKey: state.user.companyKey
+        })
+        .then(() => {
+          dispatch('setCurrentJob', jobKey)
+          dispatch('getAllJobs')
+        })
+        .then(() => {
+          resolve()
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+      })
+      return promise
+    },
+    setCurrentJob ({state, commit}, payload) {
+      let promise = new Promise((resolve, reject) => {
+        let currentJob = {}
+        currentJob.id = payload
+        var now = new Date()
+        // set expiry for now + 12hours
+        currentJob.expiry = new Date(now.getTime() + (12 * 1000 * 60 * 60))
+        usersRef.doc(state.userKey).set({currentJob}, {merge: true})
+        .then(() => {
+          commit('setCurrentJob', currentJob)
+          resolve()
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+      })
+      return promise
+    },
+    signOutCurrentJob ({state, dispatch, commit}, payload) {
+      // update Sign in register
+      console.log('signing out')
+      let promise = new Promise((resolve, reject) => {
+        let docKey = today + state.userKey
+        var signInRegisterRef = jobSitesRef.doc(payload).collection('signInRegister').doc(docKey)
+        signInRegisterRef.set({signedOut: Date.now()}, {merge: true})
+        .then(() => {
+          commit('setCurrentJob', {})
+          dispatch('getAllJobs')
+          resolve()
+        })
+        .catch((error) => {
+          console.log(error)
+          reject()
+        })
+      })
+      return promise
+    },
   // incident functions
     newIncident ({commit, dispatch, state}, payload) {
       // create new incident in firestore
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('incidents').add(payload)
+        incidentsRef.add(payload)
         .then(() => {
           // if admin getAllIncidents, else getMyIncidents
           if (state.user.admin === true) {
@@ -728,7 +859,7 @@ export const store = new Vuex.Store({
       return promise
     },
     updateIncident ({state, dispatch}, payload) {
-      firestore.collection('incidents').doc(payload.id).set({
+      incidentsRef.doc(payload.id).set({
         address: payload.address,
         date: payload.date,
         reportedBy: payload.reportedBy,
@@ -754,7 +885,7 @@ export const store = new Vuex.Store({
     getAllIncidents ({commit, state}) {
       let promise = new Promise((resolve, reject) => {
         let incidents = []
-        firestore.collection('incidents').where('company', '==', state.companyKey)
+        incidentsRef.where('company', '==', state.companyKey)
         .get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
@@ -792,7 +923,7 @@ export const store = new Vuex.Store({
     getMyIncidents ({commit, state}) {
       let promise = new Promise((resolve, reject) => {
         let incidents = []
-        firestore.collection('incidents').where('supervisor.key', '==', state.userKey)
+        incidentsRef.where('supervisor.key', '==', state.userKey)
         .get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
@@ -831,8 +962,7 @@ export const store = new Vuex.Store({
     getAllHazards ({commit, state}, payload) {
       const allHazards = []
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('hazards')
-        .get()
+        hazardsRef.get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             let data = doc.data()
@@ -871,8 +1001,7 @@ export const store = new Vuex.Store({
     },
     getMyHazards ({commit, dispatch, state}) {
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('companies').doc(state.companyKey)
-        .collection('hazards')
+        companiesRef.doc(state.companyKey).collection('hazards')
         .get()
         .then((snapshot) => {
           let hazards = []
@@ -920,7 +1049,7 @@ export const store = new Vuex.Store({
     addHazard ({dispatch, state}, payload) {
       console.log('payload', payload)
       let promise = new Promise((resolve, reject) => {
-        let newHazard = firestore.collection('companies').doc(state.companyKey)
+        let newHazard = companiesRef.doc(state.companyKey)
         .collection('hazards').doc(payload.id)
         newHazard.set({
           id: payload.id,
@@ -946,7 +1075,7 @@ export const store = new Vuex.Store({
     removeHazard ({dispatch, state}, payload) {
       console.log('payload', payload)
       let promise = new Promise((resolve, reject) => {
-        firestore.collection('companies').doc(state.companyKey)
+        companiesRef.doc(state.companyKey)
         .collection('hazards').doc(payload.id).delete()
         .then(() => {
           dispatch('getMyHazards')
@@ -963,8 +1092,7 @@ export const store = new Vuex.Store({
   // hazardous Substance functions
     getHazSubs ({commit, state}) {
       // get taskAnalysis from company
-      firestore.collection('companies').doc(state.companyKey)
-      .collection('hazardousSubstances')
+      companiesRef.doc(state.companyKey).collection('hazardousSubstances')
       .get()
       .then((snapshot) => {
         let hazSubs = []
@@ -979,8 +1107,7 @@ export const store = new Vuex.Store({
     },
     newHazardousSubstance ({commit, dispatch, state}, payload) {
       let promise = new Promise((resolve, reject) => {
-        let newSubstance = firestore.collection('companies').doc(state.companyKey)
-        .collection('hazardousSubstances').doc()
+        let newSubstance = companiesRef.doc(state.companyKey).collection('hazardousSubstances').doc()
         newSubstance.set({
           id: newSubstance.id,
           name: payload.name,
@@ -1005,8 +1132,7 @@ export const store = new Vuex.Store({
     updateSubstance ({dispatch, state}, payload) {
       let promise = new Promise((resolve, reject) => {
         let key = payload.id
-        firestore.collection('companies').doc(state.companyKey)
-        .collection('hazardousSubstances').doc(key).set({
+        companiesRef.doc(state.companyKey).collection('hazardousSubstances').doc(key).set({
           id: key,
           name: payload.name,
           hazTypes: payload.hazTypes,
@@ -1030,8 +1156,7 @@ export const store = new Vuex.Store({
   // task analysis functions
     getTaskAnalysis ({commit, state}) {
       // get taskAnalysis from company
-      firestore.collection('companies').doc(state.companyKey)
-      .collection('taskAnalysis')
+      companiesRef.doc(state.companyKey).collection('taskAnalysis')
       .get()
       .then((snapshot) => {
         let tasks = []
@@ -1048,8 +1173,7 @@ export const store = new Vuex.Store({
       // create new Task Analysis in firestore
       let promise = new Promise((resolve, reject) => {
         let title = payload
-        let newTask = firestore.collection('companies').doc(state.companyKey)
-        .collection('taskAnalysis').doc()
+        let newTask = companiesRef.doc(state.companyKey).collection('taskAnalysis').doc()
         newTask.set({
           title: title,
           id: newTask.id,
@@ -1073,7 +1197,7 @@ export const store = new Vuex.Store({
       // create base Task Analysis in firestore
       let titles = ['Working at Heights > 5m', 'Work in confined spaces', 'Work in an excavation > 1.5m']
       for (let title of titles) {
-        let newTask = firestore.collection('companies').doc(state.companyKey)
+        let newTask = companiesRef.doc(state.companyKey)
         .collection('taskAnalysis').doc()
         newTask.set({
           title: title,
@@ -1097,8 +1221,8 @@ export const store = new Vuex.Store({
       let promise = new Promise((resolve, reject) => {
         let taskKey = payload.task.id
         let task = payload.task
-        firestore.collection('companies').doc(state.companyKey)
-        .collection('taskAnalysis').doc(taskKey).set({
+        companiesRef.doc(state.companyKey).collection('taskAnalysis').doc(taskKey)
+        .set({
           id: task.id,
           plant: task.plant,
           ppe: task.ppe,
@@ -1161,6 +1285,7 @@ export const store = new Vuex.Store({
     supervisors: (state) => state.supervisors,
     training: (state) => state.trainingAlerts,
     jobsInProgress: (state) => state.jobsInProgress,
+    currentJob: (state) => state.currentJob,
     safetyPlan: (state) => state.safetyPlan,
     allHazards: (state) => state.allHazards,
     myHazards: (state) => state.myHazards,

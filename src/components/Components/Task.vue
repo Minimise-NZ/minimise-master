@@ -325,6 +325,10 @@ export default {
     padding-bottom:5px;
   }
 
+  td {
+    padding-bottom: 5px;
+  }
+
   .btn-row {
     margin-top: 10px;
   }

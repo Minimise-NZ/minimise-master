@@ -2,6 +2,7 @@
   <div>
     <!--MODALS-->
     <b-modal
+      id="toolboxModal"
       size="lg"
       style="z-index: 1"
       v-model="showToolbox"
@@ -11,52 +12,66 @@
       headerTextVariant= 'light'
       title="Toolbox Talk">
       <b-form @submit.prevent="handleOk">
-        <b-row>
+        <b-row class="mb-2">
           <b-col cols="3">
             <label>Supervisor:</label>
           </b-col>
           <b-col>
-            <b-form-input :value="user.name" readonly></b-form-input>
+            <b-form-input v-if="toolbox.id === null" :value="user.name" readonly></b-form-input>
+            <b-form-input v-else value="toolbox supervisor name" readonly></b-form-input>
           </b-col>
         </b-row>
-        <b-row>
+        <b-row class="mb-2">
           <b-col cols="3">
             <label>Date/Time:</label>
           </b-col>
           <b-col>
-            <b-form-input :value="new Date().toLocaleString()" readonly></b-form-input>
+            <b-form-input v-if="toolbox.id === null" :value="new Date().toLocaleString()" readonly></b-form-input>
+            <b-form-input v-else value="toolbox date" readonly></b-form-input>
           </b-col>
         </b-row>
-        <b-row>
+        <b-row class="mb-2">
           <b-col cols="3">
             <label>Topics discussed:</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" v-model="toolbox.topics"></b-form-textarea>
+            <b-form-textarea rows="4" v-if="toolbox.id === null" v-model="toolbox.topics"></b-form-textarea>
+            <b-form-textarea rows="4" v-else value="toolbox.topics" readonly></b-form-textarea>
           </b-col>
         </b-row>
-         <b-row>
+         <b-row class="mb-2">
           <b-col cols="3">
             <label>Employee issues raised:</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" v-model="toolbox.issues"></b-form-textarea>
+            <b-form-textarea rows="4" v-if="toolbox.id === null" v-model="toolbox.issues"></b-form-textarea>
+            <b-form-textarea rows="4" v-else value="toolbox.issues" readonly></b-form-textarea>
           </b-col>
         </b-row>
-        <b-row>
+        <b-row class="mb-2">
           <b-col cols="3">
             <label>Safe observations reviewed/discussed:</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" v-model="toolbox.observations"></b-form-textarea>
+            <b-form-textarea rows="4" v-if="toolbox.id === null" v-model="toolbox.observations"></b-form-textarea>
+            <b-form-textarea rows="4" v-else value="toolbox.observations" readonly></b-form-textarea>
           </b-col>
         </b-row>
-        <b-row>
+        <b-row class="mb-2">
           <b-col cols="3">
             <label>Jobs completed/reviewed</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" v-model="toolbox.jobsCompleted"></b-form-textarea>
+            <b-form-textarea rows="4" v-if="toolbox.id === null" v-model="toolbox.jobsCompleted"></b-form-textarea>
+            <b-form-textarea rows="4" v-else value="toolbox.jobsCompleted" readonly></b-form-textarea>
+          </b-col>
+        </b-row>
+        <b-row v-if="toolbox.id !== null">
+          <b-col cols="3">
+            <label>Attendees Signed</label>
+          </b-col>
+          <b-col>
+            <b-form-textarea rows="4" value="toolbox.attendees" readonly></b-form-textarea>
           </b-col>
         </b-row>
       </b-form>
@@ -134,22 +149,30 @@
     <b-card header-tag="header">
       <header slot="header">{{job.address}}
         <b-button-toolbar slot="header">
-          <b-btn variant="dark" v-b-tooltip.hover title="Sign In" @click="signIn" size="sm"><i class="fas fa-pen-alt fa-sm" style="color: rgb(1, 206, 187)" ></i></b-btn>
+          <div v-if="currentJob.id === this.job.id">
+            <b-btn variant="dark" v-b-tooltip.hover title="Sign Out" @click="signOut" size="sm"><i class="fas fa-sign-out-alt fa-sm" style="color: rgba(249, 82, 188, 0.86)" ></i></b-btn>
             <b-btn variant="dark" v-b-tooltip.hover title="New Toolbox Talk" @click="newToolbox(job.id)" size="sm">
               <i class="fas fa-toolbox" style="color: #03a9f4"></i>
             </b-btn>
             <b-btn variant="dark" v-b-tooltip.hover title="New Site Inspection" @click="newInspection(job.id)" size="sm">
               <i class="far fa-eye" style="color: #FFEB3B"></i>
             </b-btn>
+          </div>
+          <div v-if="currentJob.id !== this.job.id">
+            <b-btn variant="dark" v-b-tooltip.hover title="Sign In" @click="signIn" size="sm"><i class="fas fa-pen-alt fa-sm" style="color: rgb(1, 206, 187)" ></i></b-btn>
+          </div>
+          <div>
             <b-btn variant="dark" @click="confirmAction = true, jobToClose = job.id" v-b-tooltip.hover title="Close Job" size="sm">
-              <i class="fas fa-times-circle" style="color: rgba(255, 115, 71, 0.94)"></i>
-            </b-btn>
+            <i class="fas fa-times-circle" style="color: rgba(255, 115, 71, 0.94)"></i>
+          </b-btn>
+          </div>
         </b-button-toolbar>
       </header>
+
       <b-row>
         <!--SITE INFORMATION COLUMN-->
         <b-col>
-        <h5>Site Information</h5><hr>
+          <h5>Site Information</h5><hr>
           <label>Supervisor</label>
           <b-form-input :value="job.supervisorName" readonly></b-form-input>
           <label>Supervisor Phone</label>
@@ -162,51 +185,49 @@
         
         <!--SITE DOCS COLUMN-->
         <b-col>
-        <h5>Site Safety Documents</h5><hr class="mb-3">
-        <b-row>
-          <router-link v-on:click.native="setSafetyPlan(job)" to="#">SSSP - {{job.address}}</router-link >
-        </b-row>
-        <b-row>
-          <a href="javascript:void(0)" @click="showToolbox = true">Toolbox Talk</a>
-        </b-row>
-        <b-row>
-          <a href="javascript:void(0)" @click="showInspection = true">Site Inspection</a>
-        </b-row>
-        <b-row>
-          <a href="javascript:void(0)" @click="showInductions= true">Induction Register</a>
-        </b-row>
-        
-        <div>
-          <b-row v-if="job.emergencyPlanURL === ''">
-            <b-col cols="10">
-              <b-form-file v-model="emergencyfile" placeholder="Emergency Plan" accept="image/*, .pdf"></b-form-file>
-            </b-col>
-            <b-col cols="1">
-              <b-btn variant="primary" v-if="emergencyfile != ''" @click="uploadFile(job, 'emergency')" v-b-tooltip.hover title="Upload file">
+          <h5>Site Safety Documents</h5><hr class="mb-3">
+          <b-row>
+            <router-link v-on:click.native="setSafetyPlan(job)" to="#">SSSP - {{job.address}}</router-link >
+          </b-row>
+          <b-row>
+            <a href="javascript:void(0)" @click="showToolbox = true">Toolbox Talk</a>
+          </b-row>
+          <b-row>
+            <a href="javascript:void(0)" @click="showInspection = true">Site Inspection</a>
+          </b-row>
+          <b-row>
+            <a href="javascript:void(0)" @click="showInductions= true">Induction Register</a>
+          </b-row>
+          <div>
+            <b-row v-if="job.emergencyPlanURL === ''">
+              <b-col cols="10">
+                <b-form-file v-model="emergencyfile" placeholder="Emergency Plan" accept="image/*, .pdf"></b-form-file>
+              </b-col>
+              <b-col cols="1">
+                <b-btn variant="primary" v-if="emergencyfile != ''" @click="uploadFile(job, 'emergency')" v-b-tooltip.hover title="Upload file">
+                  <i class="fa fa-cloud-upload-alt"></i>
+                </b-btn>
+              </b-col>
+            </b-row>
+            <b-row v-else>
+              <a target="_blank" :href="job.emergencyPlanURL">Emergency Plan</a>
+            </b-row>
+          </div>
+          <div v-if="job.notifiable === 'true'">
+            <b-row v-if="job.notifiableurl === ''">
+              <b-col cols="10">
+                <b-form-file v-model="notifiablefile" placeholder="Worksafe Notification" accept="image/*, .pdf"></b-form-file>
+              </b-col>
+              <b-col cols="1">
+              <b-btn variant="primary" v-if="notifiablefile !== ''" @click="uploadFile(job, 'notifiable')" v-b-tooltip.hover title="Upload file">
                 <i class="fa fa-cloud-upload-alt"></i>
               </b-btn>
-            </b-col>
-          </b-row>
-          <b-row v-else>
-            <a target="_blank" :href="job.emergencyPlanURL">Emergency Plan</a>
-          </b-row>
-        </div>
-        <div v-if="job.notifiable === 'true'">
-          <b-row v-if="job.notifiableurl === ''">
-            <b-col cols="10">
-              <b-form-file v-model="notifiablefile" placeholder="Worksafe Notification" accept="image/*, .pdf"></b-form-file>
-            </b-col>
-            <b-col cols="1">
-            <b-btn variant="primary" v-if="notifiablefile !== ''" @click="uploadFile(job, 'notifiable')" v-b-tooltip.hover title="Upload file">
-              <i class="fa fa-cloud-upload-alt"></i>
-            </b-btn>
-            </b-col>
-          </b-row>
-          <b-row v-else>
-            <a target="_blank" :href="job.notifiableurl">Worksafe Notification</a>
-          </b-row>
-        </div>
-
+              </b-col>
+            </b-row>
+            <b-row v-else>
+              <a target="_blank" :href="job.notifiableurl">Worksafe Notification</a>
+            </b-row>
+          </div>
           <div v-if="job.environmental === 'true'">
             <b-row v-if="job.environmentalurl === ''">
               <b-col cols="10">
@@ -274,9 +295,11 @@
             <b-row class="mt-1">
               <label>SSSP and Toolbox Talk:</label>
             </b-row>
-            <b-row v-for="(obj, index) in signedIn" :key="index" class="mb-1 mr-1"> 
-              <b-form-input :value="(obj.name + ' : ' + obj.date)" readonly></b-form-input>
-            </b-row>
+            <div v-if="job.signInRegister !== null">
+              <b-row v-for="(worker, index) in job.signInRegister" :key="index" class="mb-1 mr-1"> 
+                <b-form-input :value="(formatDate(worker.signedIn) + ' : ' + worker.name)" readonly></b-form-input>
+              </b-row>
+            </div>
           </div>
           <div class="content" v-if="job.task !== null">
             <b-row>
@@ -295,6 +318,7 @@
 <script>
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import autosize from 'autosize'
+import moment from 'moment'
 export default {
   props: ['job', 'index'],
   components: {
@@ -305,23 +329,13 @@ export default {
       TAsignedOn: [
         'name 1', 'name 2'
       ],
-      signedIn: [
-        {name: 'name 1', date: '12/05/2018'},
-        {name: 'name 1', date: '12/05/2018'},
-        {name: 'name 1', date: '12/05/2018'},
-        {name: 'name 1', date: '12/05/2018'},
-        {name: 'name 1', date: '12/05/2018'},
-        {name: 'name 1', date: '12/05/2018'},
-        {name: 'name 1', date: '12/05/2018'},
-        {name: 'name 1', date: '12/05/2018'},
-        {name: 'name 1', date: '12/05/2018'}
-      ],
       firstAiders: [
         'name 1', 'name 2'
       ],
       loading: false,
       showToolbox: false,
       toolbox: {
+        id: null,
         jobKey: '',
         topics: '',
         issues: '',
@@ -351,9 +365,15 @@ export default {
   computed: {
     user () {
       return this.$store.getters.user
+    },
+    currentJob () {
+      return this.$store.getters.currentJob
     }
   },
   methods: {
+    formatDate (date) {
+      return moment(date).format('hh:mm')
+    },
     viewPlan (plan) {
       console.log(plan)
       this.$router.push('/dashboard/jobs/safetyplan/' + plan.id)
@@ -366,10 +386,7 @@ export default {
       this.loading = false
     },
     toolBoxLink (jobKey) {
-      this.$store.dispatch('getToolbox', jobKey)
-      .then((toolbox) => {
-        return toolbox.jobKey
-      })
+      // show toolbox
     },
     editJob (id) {
       this.readonly = false
@@ -387,7 +404,10 @@ export default {
       })
     },
     signIn () {
-      this.showMessage = true
+      this.$store.dispatch('jobSignOn', this.job.id)
+    },
+    signOut () {
+      this.$store.dispatch('signOutCurrentJob', this.job.id)
     },
     async uploadFile (job, type) {
       console.log(job, type)
@@ -438,16 +458,17 @@ export default {
       this.showToolbox = true
     },
     saveToolbox () {
-      this.$store.dispatch('newToolbox', {
-        supervisorName: this.user.name,
-        timestamp: Date.now(),
-        jobKey: this.toolbox.jobKey,
-        topics: this.toolbox.topics,
-        issues: this.toolbox.issues,
-        observations: this.toolbox.observations,
-        jobsCompleted: this.toolbox.jobsCompleted
-      })
+      this.toolbox.id = Date.now() + this.toolbox.jobKey
+      this.$store.dispatch('newToolbox', this.toolbox)
       .then(() => {
+        this.toolbox = {
+          id: null,
+          jobKey: '',
+          topics: '',
+          issues: '',
+          observations: '',
+          jobsCompleted: ''
+        }
         this.showToolbox = false
         this.toolboxSuccess = true
       })

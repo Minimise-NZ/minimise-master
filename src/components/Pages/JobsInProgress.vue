@@ -41,6 +41,9 @@ export default {
     newJob () {
       this.$router.push('/dashboard/newJob')
     }
+  },
+  mounted () {
+    this.$store.dispatch('getUser')
   }
 }
 </script>
