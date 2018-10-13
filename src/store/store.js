@@ -1312,13 +1312,6 @@ export const store = new Vuex.Store({
         })
       }
     },
-    job (state) {
-      return (id) => {
-        return state.jobRequests.find((job) => {
-          return job.id === id
-        })
-      }
-    },
     jobSite (state) {
       console.log('finding job')
       return (id) => {

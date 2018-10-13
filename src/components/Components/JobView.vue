@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!--MODALS-->
+    <!--TOOLBOX-->
     <b-modal
       id="toolboxModal"
       size="lg"
@@ -8,17 +8,17 @@
       v-model="showToolbox"
       v-if="showToolbox" 
       :no-close-on-backdrop="true"
-      header-bg-variant="info"
+      header-bg-variant="primary"
       headerTextVariant= 'light'
       title="Toolbox Talk">
-      <b-form @submit.prevent="handleOk">
+      <b-form>
         <b-row class="mb-2">
           <b-col cols="3">
             <label>Supervisor:</label>
           </b-col>
           <b-col>
             <b-form-input v-if="toolbox === null" :value="user.name" readonly></b-form-input>
-            <b-form-input v-else value="toolbox supervisor name" readonly></b-form-input>
+            <b-form-input v-else :value="toolbox.supervisorName" readonly></b-form-input>
           </b-col>
         </b-row>
         <b-row class="mb-2">
@@ -27,7 +27,7 @@
           </b-col>
           <b-col>
             <b-form-input v-if="toolbox === null" :value="new Date().toLocaleString()" readonly></b-form-input>
-            <b-form-input v-else value="toolbox date" readonly></b-form-input>
+            <b-form-input v-else :value="toolbox.date" readonly></b-form-input>
           </b-col>
         </b-row>
         <b-row class="mb-2">
@@ -36,7 +36,7 @@
           </b-col>
           <b-col>
             <b-form-textarea rows="4" v-if="toolbox === null" v-model="newToolbox.topics"></b-form-textarea>
-            <b-form-textarea rows="4" v-else value="newToolbox.topics" readonly></b-form-textarea>
+            <b-form-textarea rows="4" v-else :value="toolbox.topics" readonly></b-form-textarea>
           </b-col>
         </b-row>
          <b-row class="mb-2">
@@ -45,7 +45,7 @@
           </b-col>
           <b-col>
             <b-form-textarea rows="4" v-if="toolbox === null" v-model="newToolbox.issues"></b-form-textarea>
-            <b-form-textarea rows="4" v-else value="newToolbox.issues" readonly></b-form-textarea>
+            <b-form-textarea rows="4" v-else :value="toolbox.issues" readonly></b-form-textarea>
           </b-col>
         </b-row>
         <b-row class="mb-2">
@@ -54,7 +54,7 @@
           </b-col>
           <b-col>
             <b-form-textarea rows="4" v-if="toolbox === null" v-model="newToolbox.observations"></b-form-textarea>
-            <b-form-textarea rows="4" v-else value="newToolbox.observations" readonly></b-form-textarea>
+            <b-form-textarea rows="4" v-else :value="toolbox.observations" readonly></b-form-textarea>
           </b-col>
         </b-row>
         <b-row class="mb-2">
@@ -63,7 +63,7 @@
           </b-col>
           <b-col>
             <b-form-textarea rows="4" v-if="toolbox === null" v-model="newToolbox.jobsCompleted"></b-form-textarea>
-            <b-form-textarea rows="4" v-else value="newToolbox.jobsCompleted" readonly></b-form-textarea>
+            <b-form-textarea rows="4" v-else :value="toolbox.jobsCompleted" readonly></b-form-textarea>
           </b-col>
         </b-row>
         <b-row v-if="toolbox !== null">
@@ -71,7 +71,7 @@
             <label>Attendees Signed</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" value="newToolbox.attendees" readonly></b-form-textarea>
+            <b-form-textarea rows="4" :value="toolbox.attendees.toString()" readonly></b-form-textarea>
           </b-col>
         </b-row>
       </b-form>
@@ -81,6 +81,7 @@
         <pulse-loader :loading="loading"></pulse-loader>
       </div>
     </b-modal>
+    <!--CONFIRM CLOSE-->
     <b-modal 
       v-model="confirmAction" 
       v-if="confirmAction" 
@@ -97,6 +98,7 @@
         <h5 style="color:grey">This action cannot be undone</h5>
       </div>
     </b-modal>
+    <!--CLOSE SUCCESS MESSAGE-->
     <b-modal 
       v-model="success" 
       v-if="success"
@@ -111,6 +113,7 @@
         <h5>This job has been closed</h5>
       </div>
     </b-modal>
+    <!--TOOLBOX SAVE SUCESS-->
     <b-modal 
       v-model="toolboxSuccess" 
       v-if="toolboxSuccess"
@@ -123,6 +126,7 @@
         <h4>This toolbox talk has been saved</h4>
       </div>
     </b-modal>
+    <!--ERROR-->
     <b-modal
       v-model="error" 
       v-if="error" 
@@ -134,6 +138,7 @@
         <h4>{{errorMessage}}</h4>
       </div>
     </b-modal>
+    <!--COMING SOON-->
     <b-modal 
       v-model="showMessage" 
       v-if="showMessage" 
@@ -145,6 +150,67 @@
         <h4>Coming Soon!</h4>
       </div>
     </b-modal>
+    <!--INSPECTION-->
+    <b-modal
+      id="inspectionModal"
+      size="lg"
+      style="z-index: 1"
+      v-model="showInspection"
+      v-if="showInspection" 
+      :no-close-on-backdrop="true"
+      header-bg-variant="primary"
+      headerTextVariant= 'light'
+      title="Site Inspection">
+      <b-form>
+        <div class="inspectionSection">
+          <div class="inspectionSectionHeader">
+            Section header
+          </div>
+          <b-row class="mb-2">
+            <b-col cols="6">
+              <label class="inspectionlabel">Hazard Board and signage up to date</label>
+              <b-form-radio-group v-model="inspectionSelected" :options="inspectionOptions" buttons button-variant="outline-primary" size="sm" class="ml-2"></b-form-radio-group>
+              <b-btn size="sm" variant="outline-primary" class="ml-3"><i class="fas fa-comments" v-b-tooltip.hover title="Add comment"></i></b-btn>
+            </b-col>
+            <b-col cols="6">
+              <label class="inspectionlabel">Hazard Board and signage up to date</label>
+              <b-form-radio-group v-model="inspectionSelected" :options="inspectionOptions" buttons button-variant="outline-primary" size="sm" class="ml-2"></b-form-radio-group>
+              <b-btn size="sm" variant="outline-primary" class="ml-3"><i class="fas fa-comments"  v-b-tooltip.hover title="Add comment"></i></b-btn>
+            </b-col>
+            <b-col cols="6">
+              <label class="inspectionlabel">Hazard Board and signage up to date</label>
+              <b-form-radio-group v-model="inspectionSelected" :options="inspectionOptions" buttons button-variant="outline-primary" size="sm" class="ml-2"></b-form-radio-group>
+              <b-btn size="sm" variant="outline-primary" class="ml-3"><i class="fas fa-comments"  v-b-tooltip.hover title="Add comment"></i></b-btn>
+            </b-col>
+            <b-col cols="6">
+              <label class="inspectionlabel">Hazard Board and signage up to date</label>
+              <b-form-radio-group v-model="inspectionSelected" :options="inspectionOptions" buttons button-variant="outline-primary" size="sm" class="ml-2"></b-form-radio-group>
+              <b-btn size="sm" variant="outline-primary" class="ml-3"><i class="fas fa-comments"  v-b-tooltip.hover title="Add comment"></i></b-btn>
+            </b-col>
+            <b-col cols="6">
+              <label class="inspectionlabel">Hazard Board and signage up to date</label>
+              <b-form-radio-group v-model="inspectionSelected" :options="inspectionOptions" buttons button-variant="outline-primary" size="sm" class="ml-2"></b-form-radio-group>
+              <b-btn size="sm" variant="outline-primary" class="ml-3"><i class="fas fa-comments" s v-b-tooltip.hover title="Add comment"></i></b-btn>
+            </b-col>
+            <b-col cols="6">
+              <label class="inspectionlabel">Hazard Board and signage up to date</label>
+              <b-form-radio-group v-model="inspectionSelected" :options="inspectionOptions" buttons button-variant="outline-primary" size="sm" class="ml-2"></b-form-radio-group>
+              <b-btn size="sm" variant="outline-primary" class="ml-3"><i class="fas fa-comments"  v-b-tooltip.hover title="Add comment"></i></b-btn>
+            </b-col>
+            <b-col cols="6">
+              <label class="inspectionlabel">Hazard Board and signage up to date</label>
+              <b-form-radio-group v-model="inspectionSelected" :options="inspectionOptions" buttons button-variant="outline-primary" size="sm" class="ml-2"></b-form-radio-group>
+              <b-btn size="sm" variant="outline-primary" class="ml-3"><i class="fas fa-comments" v-b-tooltip.hover title="Add comment"></i></b-btn>
+            </b-col>
+            <b-col cols="6">
+              <label class="inspectionlabel">Hazard Board and signage up to date</label>
+              <b-form-radio-group v-model="inspectionSelected" :options="inspectionOptions" buttons button-variant="outline-primary" size="sm" class="ml-2"></b-form-radio-group>
+              <b-btn size="sm" variant="outline-primary" class="ml-3"><i class="fas fa-comments" v-b-tooltip.hover title="Add comment"></i></b-btn>
+            </b-col>
+          </b-row>
+        </div>
+      </b-form>
+    </b-modal>
 
     <b-card header-tag="header">
       <header slot="header">{{job.address}}
@@ -154,7 +220,7 @@
             <b-btn v-if="toolbox === null" variant="dark" v-b-tooltip.hover title="New Toolbox Talk" @click="showToolbox = true" size="sm">
               <i class="fas fa-toolbox" style="color: #03a9f4"></i>
             </b-btn>
-            <b-btn variant="dark" v-b-tooltip.hover title="New Site Inspection" @click="newInspection(job.id)" size="sm">
+            <b-btn variant="dark" v-b-tooltip.hover title="New Site Inspection" @click="showInspection = true" size="sm">
               <i class="far fa-eye" style="color: #FFEB3B"></i>
             </b-btn>
           </div>
@@ -326,6 +392,12 @@ export default {
   },
   data () {
     return {
+      inspectionSelected: '',
+      inspectionOptions: [
+        {text: 'Yes', value: 'true'},
+        {text: 'No', value: 'false'},
+        {text: 'n/a', value: 'n/a'}
+      ],
       TAsignedOn: [
         'name 1', 'name 2'
       ],
@@ -344,9 +416,7 @@ export default {
       toolbox: {},
       signInRegister: [],
       toolboxSuccess: false,
-      inspection: {
-        jobKey: ''
-      },
+      inspection: {},
       showInspection: false,
       confirmAction: false,
       confirmed: false,
@@ -479,13 +549,6 @@ export default {
         this.getToolbox()
       })
     },
-    newInspection (jobKey) {
-      this.showMessage = true
-      /*
-      this.inspection.jobKey = jobKey
-      this.showInspection = true
-      */
-    },
     handleCancel () {
       this.showToolbox = false
       this.newToolbox.jobKey = ''
@@ -522,7 +585,6 @@ export default {
     line-height: 2.5em;
     font-size: 1.1em;
   }
-
 
   hr {
     margin-top: 0;
@@ -577,6 +639,18 @@ export default {
 
   .btn {
     margin: 2px;
+  }
+
+  .inspectionSectionHeader {
+    background-color: #3c7298;
+    padding: 10px;
+    color: white;
+  }
+
+  .inspectionlabel {
+    font-size: 1em;
+    margin-top: 7px;
+    color: #3c7298;
   }
 
 </style>

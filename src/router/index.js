@@ -130,7 +130,6 @@ export default new Router({
         },
         {
           path: 'jobs/safetyplan',
-          name: 'safetyplan',
           component: SafetyPlan
         },
         {
