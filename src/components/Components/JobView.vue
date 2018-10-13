@@ -151,7 +151,7 @@
         <b-button-toolbar slot="header">
           <div v-if="currentJob.id === this.job.id">
             <b-btn variant="dark" v-b-tooltip.hover title="Sign Out" @click="signOut" size="sm"><i class="fas fa-sign-out-alt fa-sm" style="color: rgba(249, 82, 188, 0.86)" ></i></b-btn>
-            <b-btn variant="dark" v-b-tooltip.hover title="New Toolbox Talk" @click="createToolbox(job.id)" size="sm">
+            <b-btn v-if="toolbox === null" variant="dark" v-b-tooltip.hover title="New Toolbox Talk" @click="showToolbox = true" size="sm">
               <i class="fas fa-toolbox" style="color: #03a9f4"></i>
             </b-btn>
             <b-btn variant="dark" v-b-tooltip.hover title="New Site Inspection" @click="newInspection(job.id)" size="sm">
@@ -190,7 +190,7 @@
             <router-link v-on:click.native="setSafetyPlan(job)" to="#">SSSP - {{job.address}}</router-link >
           </b-row>
           <b-row v-if="toolbox !== null">
-            <a href="javascript:void(0)" @click="viewToolbox = true">Toolbox Talk</a>
+            <a href="javascript:void(0)" @click="showToolbox = true">Toolbox Talk</a>
           </b-row>
           <b-row>
             <a href="javascript:void(0)" @click="showInspection = true">Site Inspection</a>
@@ -386,9 +386,6 @@ export default {
       this.$router.push('/dashboard/jobs/safetyplan')
       this.loading = false
     },
-    viewToolbox (jobKey) {
-      // show toolbox
-    },
     editJob (id) {
       this.readonly = false
     },
@@ -454,9 +451,6 @@ export default {
           })
           break
       }
-    },
-    createToolbox () {
-      this.showToolbox = true
     },
     getToolbox () {
       this.$store.dispatch('getToolbox', this.job.id)
