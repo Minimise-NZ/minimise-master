@@ -650,7 +650,7 @@ export const store = new Vuex.Store({
     newToolbox ({state, commit}, payload) {
       console.log(payload)
       let promise = new Promise((resolve, reject) => {
-        toolboxRef.doc(Date.now().toString()).set({
+        toolboxRef.doc(today + payload.jobKey).set({
           supervisorName: state.user.name,
           date: today,
           jobKey: payload.jobKey,
@@ -671,18 +671,16 @@ export const store = new Vuex.Store({
       return promise
     },
     getToolbox ({commit}, payload) {
-      // from firestore sorted by timestamp desc limit 1
       let promise = new Promise((resolve, reject) => {
-        console.log(payload)
-        toolboxRef.where('jobKey', '==', payload).orderBy('timestamp', 'desc').limit(1)
+        console.log('getting toolbox')
+        toolboxRef.doc(today + payload)
         .get()
-        .then((snapshot) => {
-          if (snapshot.empty) {
-            resolve(null)
+        .then((doc) => {
+          if (doc.exists) {
+            console.log('toolbox found', doc.data())
+            resolve(doc.data())
           } else {
-            snapshot.forEach((doc) => {
-              resolve(doc)
-            })
+            resolve(null)
           }
         })
         .catch((error) => {
@@ -720,12 +718,8 @@ export const store = new Vuex.Store({
           snapshot.forEach((doc) => {
             let job = doc.data()
             job.id = doc.id
-            dispatch('getSignInRegister', job.id)
-            .then((register) => {
-              job.signInRegister = register
-              jobSites.push({
-                job
-              })
+            jobSites.push({
+              job
             })
           })
           commit('setJobs', jobSites)
@@ -787,7 +781,6 @@ export const store = new Vuex.Store({
         })
         .then(() => {
           dispatch('setCurrentJob', jobKey)
-          dispatch('getAllJobs')
         })
         .then(() => {
           resolve()

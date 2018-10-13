@@ -17,7 +17,7 @@
             <label>Supervisor:</label>
           </b-col>
           <b-col>
-            <b-form-input v-if="toolboxId === null" :value="user.name" readonly></b-form-input>
+            <b-form-input v-if="toolbox === null" :value="user.name" readonly></b-form-input>
             <b-form-input v-else value="toolbox supervisor name" readonly></b-form-input>
           </b-col>
         </b-row>
@@ -26,7 +26,7 @@
             <label>Date/Time:</label>
           </b-col>
           <b-col>
-            <b-form-input v-if="toolboxId === null" :value="new Date().toLocaleString()" readonly></b-form-input>
+            <b-form-input v-if="toolbox === null" :value="new Date().toLocaleString()" readonly></b-form-input>
             <b-form-input v-else value="toolbox date" readonly></b-form-input>
           </b-col>
         </b-row>
@@ -35,8 +35,8 @@
             <label>Topics discussed:</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" v-if="toolboxId === null" v-model="toolbox.topics"></b-form-textarea>
-            <b-form-textarea rows="4" v-else value="toolbox.topics" readonly></b-form-textarea>
+            <b-form-textarea rows="4" v-if="toolbox === null" v-model="newToolbox.topics"></b-form-textarea>
+            <b-form-textarea rows="4" v-else value="newToolbox.topics" readonly></b-form-textarea>
           </b-col>
         </b-row>
          <b-row class="mb-2">
@@ -44,8 +44,8 @@
             <label>Employee issues raised:</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" v-if="toolboxId === null" v-model="toolbox.issues"></b-form-textarea>
-            <b-form-textarea rows="4" v-else value="toolbox.issues" readonly></b-form-textarea>
+            <b-form-textarea rows="4" v-if="toolbox === null" v-model="newToolbox.issues"></b-form-textarea>
+            <b-form-textarea rows="4" v-else value="newToolbox.issues" readonly></b-form-textarea>
           </b-col>
         </b-row>
         <b-row class="mb-2">
@@ -53,8 +53,8 @@
             <label>Safe observations reviewed/discussed:</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" v-if="toolboxId === null" v-model="toolbox.observations"></b-form-textarea>
-            <b-form-textarea rows="4" v-else value="toolbox.observations" readonly></b-form-textarea>
+            <b-form-textarea rows="4" v-if="toolbox === null" v-model="newToolbox.observations"></b-form-textarea>
+            <b-form-textarea rows="4" v-else value="newToolbox.observations" readonly></b-form-textarea>
           </b-col>
         </b-row>
         <b-row class="mb-2">
@@ -62,16 +62,16 @@
             <label>Jobs completed/reviewed</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" v-if="toolboxId === null" v-model="toolbox.jobsCompleted"></b-form-textarea>
-            <b-form-textarea rows="4" v-else value="toolbox.jobsCompleted" readonly></b-form-textarea>
+            <b-form-textarea rows="4" v-if="toolbox === null" v-model="newToolbox.jobsCompleted"></b-form-textarea>
+            <b-form-textarea rows="4" v-else value="newToolbox.jobsCompleted" readonly></b-form-textarea>
           </b-col>
         </b-row>
-        <b-row v-if="toolboxId !== null">
+        <b-row v-if="toolbox !== null">
           <b-col cols="3">
             <label>Attendees Signed</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" value="toolbox.attendees" readonly></b-form-textarea>
+            <b-form-textarea rows="4" value="newToolbox.attendees" readonly></b-form-textarea>
           </b-col>
         </b-row>
       </b-form>
@@ -151,7 +151,7 @@
         <b-button-toolbar slot="header">
           <div v-if="currentJob.id === this.job.id">
             <b-btn variant="dark" v-b-tooltip.hover title="Sign Out" @click="signOut" size="sm"><i class="fas fa-sign-out-alt fa-sm" style="color: rgba(249, 82, 188, 0.86)" ></i></b-btn>
-            <b-btn variant="dark" v-b-tooltip.hover title="New Toolbox Talk" @click="newToolbox(job.id)" size="sm">
+            <b-btn variant="dark" v-b-tooltip.hover title="New Toolbox Talk" @click="createToolbox(job.id)" size="sm">
               <i class="fas fa-toolbox" style="color: #03a9f4"></i>
             </b-btn>
             <b-btn variant="dark" v-b-tooltip.hover title="New Site Inspection" @click="newInspection(job.id)" size="sm">
@@ -189,8 +189,8 @@
           <b-row>
             <router-link v-on:click.native="setSafetyPlan(job)" to="#">SSSP - {{job.address}}</router-link >
           </b-row>
-          <b-row>
-            <a href="javascript:void(0)" @click="showToolbox = true">Toolbox Talk</a>
+          <b-row v-if="toolbox !== null">
+            <a href="javascript:void(0)" @click="viewToolbox = true">Toolbox Talk</a>
           </b-row>
           <b-row>
             <a href="javascript:void(0)" @click="showInspection = true">Site Inspection</a>
@@ -295,8 +295,8 @@
             <b-row class="mt-1">
               <label>SSSP and Toolbox Talk:</label>
             </b-row>
-            <div v-if="job.signInRegister !== null">
-              <b-row v-for="(worker, index) in job.signInRegister" :key="index" class="mb-1 mr-1"> 
+            <div v-if="signInRegister !== null">
+              <b-row v-for="(worker, index) in signInRegister" :key="index" class="mb-1 mr-1"> 
                 <b-form-input :value="(formatDate(worker.signedIn) + ' : ' + worker.name)" readonly></b-form-input>
               </b-row>
             </div>
@@ -334,14 +334,15 @@ export default {
       ],
       loading: false,
       showToolbox: false,
-      toolboxId: null,
-      toolbox: {
-        jobKey: '',
+      newToolbox: {
+        jobKey: this.job.id,
         topics: '',
         issues: '',
         observations: '',
         jobsCompleted: ''
       },
+      toolbox: {},
+      signInRegister: [],
       toolboxSuccess: false,
       inspection: {
         jobKey: ''
@@ -385,7 +386,7 @@ export default {
       this.$router.push('/dashboard/jobs/safetyplan')
       this.loading = false
     },
-    toolBoxLink (jobKey) {
+    viewToolbox (jobKey) {
       // show toolbox
     },
     editJob (id) {
@@ -405,6 +406,7 @@ export default {
     },
     signIn () {
       this.$store.dispatch('jobSignOn', this.job.id)
+      this.getSignInRegister()
     },
     signOut () {
       this.$store.dispatch('signOutCurrentJob', this.job.id)
@@ -453,22 +455,34 @@ export default {
           break
       }
     },
-    newToolbox (jobkey) {
-      this.toolbox.jobKey = jobkey
+    createToolbox () {
       this.showToolbox = true
     },
+    getToolbox () {
+      this.$store.dispatch('getToolbox', this.job.id)
+      .then((toolbox) => {
+        this.toolbox = toolbox
+      })
+    },
+    getSignInRegister () {
+      this.$store.dispatch('getSignInRegister', this.job.id)
+      .then((register) => {
+        this.signInRegister = register
+      })
+    },
     saveToolbox () {
-      this.$store.dispatch('newToolbox', this.toolbox)
+      this.$store.dispatch('newToolbox', this.newToolbox)
       .then(() => {
-        this.toolbox = {
+        this.newToolbox = {
           jobKey: '',
           topics: '',
           issues: '',
           observations: '',
           jobsCompleted: ''
         }
-        this.showToolbox = false
         this.toolboxSuccess = true
+        this.handleCancel()
+        this.getToolbox()
       })
     },
     newInspection (jobKey) {
@@ -480,16 +494,18 @@ export default {
     },
     handleCancel () {
       this.showToolbox = false
-      this.toolbox.jobKey = ''
-      this.toolbox.topics = ''
-      this.toolbox.issues = ''
-      this.toolbox.observations = ''
-      this.toolbox.jobsCompleted = ''
-      this.toolbox.attendees = []
+      this.newToolbox.jobKey = ''
+      this.newToolbox.topics = ''
+      this.newToolbox.issues = ''
+      this.newToolbox.observations = ''
+      this.newToolbox.jobsCompleted = ''
+      this.newToolbox.attendees = []
     }
   },
   mounted () {
     autosize(document.querySelectorAll('textarea'))
+    this.getToolbox()
+    this.getSignInRegister()
   }
 }
 </script>
