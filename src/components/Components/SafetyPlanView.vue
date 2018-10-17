@@ -1,5 +1,6 @@
 <template>
   <b-container fluid>
+    <!--COMING SOON-->
     <b-modal 
       v-model="showMessage" 
       v-if="showMessage" 
@@ -11,6 +12,7 @@
         <h4>Coming Soon!</h4>
       </div>
     </b-modal>
+
     <b-card header-tag="header">
       <header slot="header">{{headerText}}
         <b-btn 
@@ -179,20 +181,20 @@
               </thead>
               <tbody>
                 <tr v-for="(hazard, index) in hazards" :key="index" style="border-bottom: 1px solid #e9ecef">
-                  <td style="font-weight: bold">{{hazard.name}}</td>
-                  <td>
+                  <td style="font-weight: bold" class="hazardName">{{hazard.name}}</td>
+                  <td class="hazardRisks">
                     <ul v-for="(risk, index) in hazard.risks" :key="index">
                       <li>{{risk}}</li>
                     </ul>
                   </td>
-                  <td>{{hazard.IRA}}</td>
-                  <td>
+                  <td :class="hazard.IRA" class="heat-div">{{hazard.IRA}}</td>
+                  <td class="hazardControls">
                       <ul v-for="(control, index) in hazard.controls" :key="index">
                       <li>{{control}}</li>
                     </ul>
                   </td>
-                  <td>{{hazard.controlLevel}}</td>
-                  <td>{{hazard.RRA}}</td>
+                  <td class="hazardControlLevel">{{hazard.controlLevel}}</td>
+                  <td :class="hazard.RRA" class="heat-div">{{hazard.RRA}}</td>
                 </tr>
               </tbody>
             </table>
@@ -237,12 +239,84 @@
         </div>
         <!--TASK ANALYSIS SECTION-->
         <div v-if="tasks.length > 0" v-for="(task, index) in tasks" :key="index">
-          <b-btn block v-b-toggle="'collapseTask' + index" class="text-left togglebtn " v-b-tooltip.hover title="Click to show/hide details">
+          <b-btn block v-b-toggle="'collapseTask' + index" class="text-left togglebtn" v-b-tooltip.hover title="Click to show/hide details">
             Task Analysis - {{task.title}}
             <i class="fa fa-chevron-down" style="float:right"></i>
           </b-btn>
           <b-collapse :id="'collapseTask' + index">
-            <b-card class="section">Some stuff here</b-card>
+            <b-card class="section">
+              <div class="task-header">
+                <b-row>
+                  <b-col sm="6" md="3" lg="2">
+                    <label>PPE Required</label>
+                  </b-col>
+                  <b-col>
+                    <b-form-textarea :value="task.ppe" readonly></b-form-textarea>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col sm="6" md="3" lg="2">
+                    <label>Plant Required</label>
+                  </b-col>
+                  <b-col>
+                    <b-form-textarea :value="task.plant" readonly></b-form-textarea>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col sm="6" md="3" lg="2">
+                    <label>Signage Required</label>
+                  </b-col>
+                  <b-col>
+                    <b-form-textarea :value="task.signage" readonly></b-form-textarea>
+                  </b-col>
+                </b-row>
+              </div>
+              
+              <div class="task-section">
+                <div class="steps" v-for="(step, index) in task.steps" :key="index">
+                  <div class="step-header">
+                    <b-row>
+                      <b-col sm="2">
+                        <h5>Step {{index + 1}}: </h5>
+                      </b-col>
+                      <b-col style="padding-left: 20px; padding-right: 20px">
+                        <b-form-input :value="step.description" style="font-weight:bold" readonly></b-form-input>
+                      </b-col>
+                    </b-row>
+                  </div>
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Hazard</th>
+                        <th>Risks</th>
+                        <th>IRA</th>
+                        <th>Controls</th>
+                        <th>Control Level</th>
+                        <th>RRA</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(hazard, index) in step.hazards" :key="index" style="border-bottom: 1px solid #e9ecef">
+                        <td style="font-weight: bold" class="hazardName">{{hazard.name}}</td>
+                        <td class="hazardRisks">
+                          <ul v-for="(risk, index) in hazard.risks" :key="index">
+                            <li>{{risk}}</li>
+                          </ul>
+                        </td>
+                        <td :class="hazard.IRA" class="heat-div">{{hazard.IRA}}</td>
+                        <td class="hazardControls">
+                            <ul v-for="(control, index) in hazard.controls" :key="index">
+                            <li>{{control}}</li>
+                          </ul>
+                        </td>
+                        <td class="hazardControlLevel">{{hazard.controlLevel}}</td>
+                        <td :class="hazard.RRA" class="heat-div">{{hazard.RRA}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </b-card>
           </b-collapse>
         </div>
         <!--TRAINING REGISTER SECTION-->
@@ -284,7 +358,7 @@
             </table>
           </b-card>
         </div>
-        <!--INDUCTION SECTION-->
+        <!--INDUCTION SECTION
         <div>
           <b-btn block @click="toggleShowInduction" class="text-left togglebtn " v-b-tooltip.hover title="Click to show/hide details">
             Induction Register
@@ -300,17 +374,16 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!--
                   <tr v-for="(inducted, index) in inductions" :key="index" style="border-bottom: 1px solid #e9ecef">
                     <td style="font-weight: bold">{{inducted.name}}</td>
                     <td>{{inducted.company}}</td>
                     <td>{{inducted.date}}</td>
                   </tr>
-                  -->
                 </tbody>
               </table>
             </b-card>
         </div>
+        -->
         <!--SIGN IN SECTION-->
         <div>
           <b-btn block @click="toggleShowSignIn" class="text-left togglebtn " v-b-tooltip.hover title="Click to show/hide details">
@@ -328,14 +401,12 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!--
                   <tr v-for="(signedIn, index) in signInRegister" :key="index" style="border-bottom: 1px solid #e9ecef">
                     <td style="font-weight: bold">{{signedIn.name}}</td>
                     <td>{{signedIn.company}}</td>
-                    <td>{{signedIn.signedInTimestamp}}</td>
-                    <td>{{signedOut.signedOutTimestamp}}</td>
+                    <td>{{formatDate(signedIn.signedIn)}}</td>
+                    <td v-if="signedIn.signedOut !== null">{{formatDate(signedIn.signedOut)}}</td>
                   </tr>
-                  -->
                 </tbody>
               </table>
             </b-card>
@@ -353,22 +424,16 @@ import autosize from 'autosize'
 export default {
   data () {
     return {
-      showOverview: true,
+      showOverview: false,
       showHazards: false,
       showSubstances: false,
       showTraining: false,
       showInduction: false,
       showSignIn: false,
-      jobId: '',
-      showMessage: false
+      showMessage: false,
+      signInRegister: null
     }
   },
-  /*
-  beforeMount () {
-    let jobSite = this.$store.getters.safetyPlan
-    this.jobSite = jobSite.job
-  },
-  */
   computed: {
     jobSite () {
       return this.$store.getters.safetyPlan
@@ -391,6 +456,9 @@ export default {
     }
   },
   methods: {
+    formatDate (date) {
+      return moment(date).format('hh:mm D/MM/YY')
+    },
     toggleShowOverview () {
       this.showOverview = !this.showOverview
       this.autosize()
@@ -438,6 +506,11 @@ export default {
   },
   mounted () {
     autosize(document.querySelectorAll('textarea'))
+    this.$store.dispatch('getSignInRegister', this.jobSite.id)
+    .then((register) => {
+      console.log('register', register)
+      this.signInRegister = register
+    })
   }
 }
 </script>
@@ -446,6 +519,7 @@ export default {
   .container-fluid {
     padding-top: 20px;
     padding-right: 20px;
+    overflow-y: hidden;
   }
 
    .scroll-container {
@@ -497,10 +571,69 @@ export default {
   thead {
     background-color: #c1c1c1;
   }
+
   ul {
     list-style: none;
     padding-left:0;
     margin-bottom: 10px;
+  }
+
+  .task-header {
+    padding: 10px;
+  }
+
+  .step-header {
+    background-color: #6f6f6f;
+    margin-top: 10px;
+    color: white;
+    padding-top: 4px;
+    padding-right: 5px;
+    padding-bottom: 1px;
+  }
+
+  h5 {
+    padding-top: 10px;
+    padding-left: 10px;
+    font-size: 1.1em;
+  }
+
+  .hazardName {
+    width: 15%;
+  }
+
+  .hazardRisks {
+     width: 20%;
+  }
+
+  .hazardControls {
+    width: 40%;
+  }
+
+  .hazardControlLevel {
+    width: 15%;
+  }
+
+  .heat-div {
+    font-weight: bold;
+    line-height: 1.5em;
+    text-align: center;
+    min-width: 90px;
+    max-width: 90px;
+  }
+  .Low {
+    background-color: rgb(76, 175, 80);
+  }
+
+  .Moderate {
+    background-color: rgba(255, 87, 34, 0.75);
+  }
+
+  .High {
+    background-color: rgb(244, 67, 54);
+  }
+
+  .Critical {
+    background-color:rgba(233, 30, 99, 0.75);
   }
 
 </style>

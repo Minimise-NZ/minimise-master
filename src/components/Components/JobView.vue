@@ -138,19 +138,7 @@
         <h4>{{errorMessage}}</h4>
       </div>
     </b-modal>
-    <!--COMING SOON-->
-    <b-modal 
-      v-model="showMessage" 
-      v-if="showMessage" 
-      ok-only
-      header-bg-variant="primary"
-      headerTextVariant= 'light'
-      title="Work in progress">
-      <div class="d-block text-center">
-        <h4>Coming Soon!</h4>
-      </div>
-    </b-modal>
-    <!--INSPECTION-->
+    <!--INSPECTION
     <b-modal
       id="inspectionModal"
       size="lg"
@@ -211,6 +199,7 @@
         </div>
       </b-form>
     </b-modal>
+    -->
 
     <b-card header-tag="header">
       <header slot="header">{{job.address}}
@@ -220,9 +209,11 @@
             <b-btn v-if="toolbox === null" variant="dark" v-b-tooltip.hover title="New Toolbox Talk" @click="showToolbox = true" size="sm">
               <i class="fas fa-toolbox" style="color: #03a9f4"></i>
             </b-btn>
+            <!--
             <b-btn variant="dark" v-b-tooltip.hover title="New Site Inspection" @click="showInspection = true" size="sm">
               <i class="far fa-eye" style="color: #FFEB3B"></i>
             </b-btn>
+            -->
           </div>
           <div v-if="currentJob.id !== this.job.id">
             <b-btn variant="dark" v-b-tooltip.hover title="Sign In" @click="signIn" size="sm"><i class="fas fa-pen-alt fa-sm" style="color: rgb(1, 206, 187)" ></i></b-btn>
@@ -258,11 +249,13 @@
           <b-row v-if="toolbox !== null">
             <a href="javascript:void(0)" @click="showToolbox = true">Toolbox Talk</a>
           </b-row>
+          <!--
           <b-row>
             <a href="javascript:void(0)" @click="showInspection = true">Site Inspection</a>
           </b-row>
+          -->
           <b-row>
-            <a href="javascript:void(0)" @click="showInductions= true">Induction Register</a>
+            <a href="javascript:void(0)" @click="showInductions= true" v-if="job.inductionRegister.length > 0">Induction Register</a>
           </b-row>
           <div>
             <b-row v-if="job.emergencyPlanURL === ''">
@@ -392,12 +385,6 @@ export default {
   },
   data () {
     return {
-      inspectionSelected: '',
-      inspectionOptions: [
-        {text: 'Yes', value: 'true'},
-        {text: 'No', value: 'false'},
-        {text: 'n/a', value: 'n/a'}
-      ],
       TAsignedOn: [
         'name 1', 'name 2'
       ],
@@ -416,8 +403,6 @@ export default {
       toolbox: {},
       signInRegister: [],
       toolboxSuccess: false,
-      inspection: {},
-      showInspection: false,
       confirmAction: false,
       confirmed: false,
       success: false,
@@ -529,7 +514,7 @@ export default {
       })
     },
     getSignInRegister () {
-      this.$store.dispatch('getSignInRegister', this.job.id)
+      this.$store.dispatch('getSignedIn', this.job.id)
       .then((register) => {
         this.signInRegister = register
       })

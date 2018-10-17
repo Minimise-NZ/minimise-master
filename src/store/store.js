@@ -315,7 +315,6 @@ export const store = new Vuex.Store({
           let user = payload.worker
           user.companyKey = state.companyKey
           user.companyName = state.company.name
-          console.log('inviting user', user)
           if (user.role !== 'Worker') {
             window.emailjs.send('my_service', 'invitation', {
               name: user.name,
@@ -360,7 +359,6 @@ export const store = new Vuex.Store({
         usersRef.where('companyKey', '==', state.companyKey).orderBy('name')
         .get()
         .then((snapshot) => {
-          console.log('worker snapshot', snapshot)
           snapshot.forEach((doc) => {
             let worker = doc.data()
             if (worker.addTraining !== false) {
@@ -516,7 +514,6 @@ export const store = new Vuex.Store({
       return promise
     },
     newTraining ({dispatch, state}, payload) {
-      console.log(payload)
       let promise = new Promise((resolve, reject) => {
         var userRef = usersRef.doc(payload.worker)
         userRef.update({
@@ -566,8 +563,6 @@ export const store = new Vuex.Store({
           toolboxFrequency: payload.toolboxFrequency,
           inspectionFrequency: payload.inspectionFrequency,
           additionalInfo: payload.additionalInfo,
-          signInRegister: [],
-          inductionRegsister: [],
           open: true,
           date: Date.now()
         })
@@ -732,33 +727,6 @@ export const store = new Vuex.Store({
         return promise
       })
     },
-    getSignInRegister ({state}, payload) {
-      let promise = new Promise((resolve, reject) => {
-        jobSitesRef.doc(payload).collection('signInRegister')
-        .where('date', '==', today).where('signedOut', '==', null)
-        .get()
-        .then((snapshot) => {
-          var signedIn = []
-          if (snapshot.empty) {
-            resolve(signedIn)
-          } else {
-            snapshot.forEach((doc) => {
-              let worker = doc.data()
-              signedIn.push({
-                name: worker.name,
-                time: worker.signedIn
-              })
-              resolve(signedIn)
-            })
-          }
-        })
-        .catch((error) => {
-          console.log('Error getting sign in register: ', error)
-          reject(error)
-        })
-      })
-      return promise
-    },
   // sign in and induction registers
     jobSignOn ({state, dispatch}, payload) {
       // sign user into job site
@@ -826,6 +794,63 @@ export const store = new Vuex.Store({
         .catch((error) => {
           console.log(error)
           reject()
+        })
+      })
+      return promise
+    },
+    getSignedIn ({state}, payload) {
+      let promise = new Promise((resolve, reject) => {
+        jobSitesRef.doc(payload).collection('signInRegister')
+        .where('date', '==', today).where('signedOut', '==', null)
+        .get()
+        .then((snapshot) => {
+          var signedIn = []
+          if (snapshot.empty) {
+            resolve(signedIn)
+          } else {
+            snapshot.forEach((doc) => {
+              let worker = doc.data()
+              signedIn.push({
+                name: worker.name,
+                time: worker.signedIn
+              })
+            })
+            console.log(signedIn)
+            resolve(signedIn)
+          }
+        })
+        .catch((error) => {
+          console.log('Error getting sign in register: ', error)
+          reject(error)
+        })
+      })
+      return promise
+    },
+    getSignInRegister ({state}, payload) {
+      let promise = new Promise((resolve, reject) => {
+        jobSitesRef.doc(payload).collection('signInRegister')
+        .get()
+        .then((snapshot) => {
+          var register = []
+          if (snapshot.empty) {
+            resolve(null)
+          } else {
+            snapshot.forEach((doc) => {
+              console.log(doc.data())
+              let worker = doc.data()
+              register.push({
+                name: worker.name,
+                company: worker.companyName,
+                signedIn: worker.signedIn,
+                signedOut: worker.signedOut
+              })
+            })
+            resolve(register)
+          }
+        })
+        .catch((error) => {
+          console.log('Error getting sign in register: ', error)
+          reject(error)
         })
       })
       return promise
@@ -1002,7 +1027,6 @@ export const store = new Vuex.Store({
             hazards.push(doc.data())
           })
           if (hazards <= 0 || hazards === undefined || hazards === null) {
-            console.log('this company has no hazards')
             hazards = []
             commit('setMyHazards', hazards)
             commit('setNotMyHazards', state.allHazards)
@@ -1033,14 +1057,11 @@ export const store = new Vuex.Store({
             }
           }
         }
-      } else {
-        console.log('myHazards length is 0')
       }
       commit('setNotMyHazards', allHazards)
       return
     },
     addHazard ({dispatch, state}, payload) {
-      console.log('payload', payload)
       let promise = new Promise((resolve, reject) => {
         let newHazard = companiesRef.doc(state.companyKey)
         .collection('hazards').doc(payload.id)
@@ -1066,7 +1087,6 @@ export const store = new Vuex.Store({
       return promise
     },
     removeHazard ({dispatch, state}, payload) {
-      console.log('payload', payload)
       let promise = new Promise((resolve, reject) => {
         companiesRef.doc(state.companyKey)
         .collection('hazards').doc(payload.id).delete()
@@ -1224,7 +1244,6 @@ export const store = new Vuex.Store({
           title: task.title
         })
         .then(() => {
-          console.log('TA saved')
           dispatch('getTaskAnalysis')
           resolve()
         })
@@ -1313,10 +1332,8 @@ export const store = new Vuex.Store({
       }
     },
     jobSite (state) {
-      console.log('finding job')
       return (id) => {
         return state.jobsInProgress.find((job) => {
-          console.log('job found', job)
           return job.id === id
         })
       }
