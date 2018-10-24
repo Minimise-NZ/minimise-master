@@ -18,14 +18,14 @@
         <b-btn 
           class="addBtn"
           style="background-color: white"
-          @click="createPdf" 
+          @click="exportPdf" 
           v-b-tooltip.hover title="Export to PDF">
           <i class="fa fa-file-pdf fa-lg" style="color: black"></i>
         </b-btn>
       </header>
       <div class="scroll-container">
         <!--OVERVIEW SECTION-->
-        <div>
+        <div id="overview">
           <b-btn block @click="toggleShowOverview" class="text-left togglebtn " v-b-tooltip.hover title="Click to show/hide details">
             Site Safety Information
             <i class="fa fa-chevron-down" style="float:right"></i>
@@ -419,7 +419,9 @@
 <script>
 import moment from 'moment'
 import autosize from 'autosize'
-// import * as Pdf from 'jspdf'
+var pdfMake = require('pdfmake/build/pdfmake.js')
+var pdfFonts = require('pdfmake/build/vfs_fonts.js')
+pdfMake.vfs = pdfFonts.pdfMake.vfs
 
 export default {
   data () {
@@ -431,7 +433,19 @@ export default {
       showInduction: false,
       showSignIn: false,
       showMessage: false,
-      signInRegister: null
+      signInRegister: null,
+      columns: [
+        {title: 'ID', dataKey: 'id'},
+        {title: 'name', dataKey: 'name'},
+        {title: 'address', dataKey: 'address'},
+        {title: 'phone', dataKey: 'phone'}
+      ],
+      rows: [
+        {'id': 1, 'name': 'Dolores', 'address': 'NZ', 'phone': '021457879'},
+        {'id': 2, 'name': 'Sam', 'address': 'NZ', 'phone': '021485545'},
+        {'id': 3, 'name': 'Teddy', 'address': 'NZ', 'phone': '0214575689'},
+        {'id': 4, 'name': 'Hannah', 'address': 'NZ', 'phone': '021444846'}
+      ]
     }
   },
   computed: {
@@ -453,9 +467,128 @@ export default {
     },
     tasks () {
       return this.$store.getters.taskAnalysis
+    },
+    header () {
+      return 'Site Specific Safety Plan: ' + this.jobSite.address
     }
   },
   methods: {
+    getData (prop) {
+      console.log(this.jobSite[prop])
+      return this.jobSite[prop]
+    },
+    exportPdf () {
+      var dd = {
+        header: {text: this.getData('companyName') + ' - Site Specific Safety Plan: ' + this.getData('address'), style: 'header'},
+        footer: function (currentPage, pageCount) {
+          return {
+            text: currentPage.toString() + ' of ' + pageCount, alignment: 'center'
+          }
+        },
+        content: [
+          {text: 'Site Safety Information', style: 'subheader'},
+          this.pdfOverview(),
+          {text: 'Hazard Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
+          this.pdfHazardRegister()
+          /*
+          {text: 'Task Analysis', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
+          this.pdfTaskAnalysis(),
+          {text: 'Hazardous Substances', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
+          this.pdfHazardousSubstanceRegister(),
+          {text: 'Training Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
+          this.pdfTrainingRegister(),
+          {text: 'Induction Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'portrait'},
+          this.pdfInductionRegister(),
+          {text: 'Sign In Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'portrait'},
+          this.pdfSignInRegister()
+          */
+        ],
+        styles: {
+          header: {
+            fontSize: 12,
+            bold: true,
+            width: '*',
+            color: '#a2a2a2',
+            margin: [38, 15]
+          },
+          subheader: {
+            fontSize: 14,
+            bold: true,
+            color: '#03477d',
+            margin: [0, 10, 0, 15]
+          },
+          tableHeader: {
+            bold: true,
+            fontSize: 13,
+            fillColor: '#e0e0e0'
+          }
+        }
+      }
+      pdfMake.createPdf(dd).open()
+    },
+    pdfOverview () {
+      var dd = {
+        content: [
+          {
+            table: {
+              heights: 20,
+              body: [
+                ['Address:', this.getData('address')],
+                ['Company Name:', this.getData('companyName')],
+                ['Supervisor Name:', this.getData('supervisorName')],
+                ['Supervisor Phone:', this.getData('supervisorPhone')],
+                ['Medical Centre:', this.getData('medical')],
+                ['First Aiders:', this.getData('firstAiders')],
+                ['Induction:', 'All workers are inducted and review safety plan prior to commencing work'],
+                ['Task Analysis:', 'To be completed as required'],
+                ['Incident Reporting: ', 'We have an incident/event reporting process in place'],
+                ['Site Inspections: ', 'Site inspections are conducted....frequency'],
+                ['Toolbox Talks: ', 'Toolbox Talks are conducted....frequency'],
+                ['Notifiable Works: ', 'check notifiable'],
+                ['Environmental Plan: ', 'check environmental'],
+                ['Resource Consent: ', 'check resource consent'],
+                ['NZHPT Clearance: ', 'check NZHPT']
+              ]
+            },
+            layout: {
+              fillColor: function (i, node) {
+                return (i % 2 === 0) ? '#e0e0e0' : null
+              }
+            }
+          }
+        ]
+      }
+      // return dd
+      return dd.content
+    },
+    pdfHazardRegister () {
+      var bodyContent = [[
+        {text: 'Hazard Name', style: 'tableHeader'},
+        {text: 'Risks', style: 'tableHeader'},
+        {text: 'IRA', style: 'tableHeader'},
+        {text: 'Controls', style: 'tableHeader'},
+        {text: 'Control Level', style: 'tableHeader'},
+        {text: 'RRA', style: 'tableHeader'}
+      ]]
+      let hazards = this.hazards
+      for (let hazard of hazards) {
+        bodyContent.push([hazard.name, hazard.risks, hazard.IRA, hazard.controls, hazard.controlLevel, hazard.RRA])
+      }
+      console.log('body', bodyContent)
+      var dd = {
+        content: [
+          {
+            table: {
+              headerRows: 1,
+              heights: 25,
+              body: bodyContent
+            }
+          }
+        ]
+      }
+      // return dd
+      return dd.content
+    },
     formatDate (date) {
       return moment(date).format('hh:mm D/MM/YY')
     },
@@ -499,9 +632,6 @@ export default {
       } else {
         return moment(date).format('DD-MM-YYYY')
       }
-    },
-    createPdf () {
-      this.showMessage = true
     }
   },
   mounted () {

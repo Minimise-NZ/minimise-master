@@ -20,10 +20,13 @@
     "firebase": "^5.5.1",
     "html2canvas": "^1.0.0-alpha.12",
     "jspdf": "^1.4.1",
+    "jspdf-autotable": "^2.3.5",
     "lodash": "^4.17.10",
     "luxon": "^0.2.11",
     "moment": "^2.20.1",
-    "npm": "^6.3.0",
+    "npm": "^6.4.1",
+    "pdfmake": "^0.1.38",
+    "puppeteer": "^1.9.0",
     "toastr": "^2.1.4",
     "vee-validate": "^2.0.3",
     "vue": "^2.4.2",
@@ -45,7 +48,8 @@
     "vuejs-datepicker": "^0.9.26",
     "vuelidate": "^0.6.1",
     "vuex": "^2.4.0",
-    "vuex-persistedstate": "^2.4.2"
+    "vuex-persistedstate": "^2.4.2",
+    "ws": "^6.1.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
