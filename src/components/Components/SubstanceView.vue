@@ -146,6 +146,15 @@ export default {
         })
       }
     },
+    uploadFile () {
+      this.loading = true
+      this.$store.dispatch('uploadFile', {file: this.sdsFile, type: this.substance.name})
+      .then((url) => {
+        this.substance.sds = url
+        this.sdsFile = ''
+        this.loading = false
+      })
+    },
     cancel () {
       Object.assign(this.substance, this._beforeEditingCache)
       this._beforeEditingCache = null

@@ -228,7 +228,7 @@
                     </ul>
                   </td>
                   <td>{{sub.potentialHarm}}</td>
-                  <td>{{sub.storageRequirements}}</td>
+                  <td>{{sub.storage}}</td>
                   <td>{{sub.PPE}}</td>
                   <td>{{sub.actions}}</td>
                   <td>Yes</td>
@@ -489,12 +489,12 @@ export default {
           {text: 'Site Safety Information', style: 'subheader'},
           this.pdfOverview(),
           {text: 'Hazard Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
-          this.pdfHazardRegister()
+          this.pdfHazardRegister(),
+          {text: 'Hazardous Substances', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
+          this.pdfHazardousSubstanceRegister()
           /*
           {text: 'Task Analysis', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
           this.pdfTaskAnalysis(),
-          {text: 'Hazardous Substances', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
-          this.pdfHazardousSubstanceRegister(),
           {text: 'Training Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
           this.pdfTrainingRegister(),
           {text: 'Induction Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'portrait'},
@@ -581,6 +581,35 @@ export default {
             table: {
               headerRows: 1,
               heights: 25,
+              body: bodyContent
+            }
+          }
+        ]
+      }
+      // return dd
+      return dd.content
+    },
+    pdfHazardousSubstanceRegister () {
+      var bodyContent = [[
+        {text: 'Name', style: 'tableHeader'},
+        {text: 'Hazard Types', style: 'tableHeader'},
+        {text: 'Potential Harm', style: 'tableHeader'},
+        {text: 'Storage', style: 'tableHeader'},
+        {text: 'PPE', style: 'tableHeader'},
+        {text: 'Actions', style: 'tableHeader'}
+      ]]
+      let hazSubs = this.hazSubs
+      for (let substance of hazSubs) {
+        bodyContent.push([substance.name, substance.hazTypes, substance.potentialHarm, substance.storage, substance.PPE, substance.actions])
+      }
+      console.log('body', bodyContent)
+      var dd = {
+        content: [
+          {
+            table: {
+              headerRows: 1,
+              heights: 25,
+              alignment: 'justify',
               body: bodyContent
             }
           }
