@@ -26,7 +26,7 @@
       <div class="scroll-container">
         <!--OVERVIEW SECTION-->
         <div id="overview">
-          <b-btn block @click="toggleShowOverview" class="text-left togglebtn " v-b-tooltip.hover title="Click to show/hide details">
+          <b-btn block @click="toggleShowOverview" class="text-left togglebtn " >
             Site Safety Information
             <i class="fa fa-chevron-down" style="float:right"></i>
           </b-btn>
@@ -163,7 +163,7 @@
         </div>
         <!--HAZARD SECTION-->
         <div>
-          <b-btn block @click="toggleShowHazards" class="text-left togglebtn " v-b-tooltip.hover title="Click to show/hide details">
+          <b-btn block @click="toggleShowHazards" class="text-left togglebtn " >
             Hazard Register
             <i class="fa fa-chevron-down" style="float:right"></i>
           </b-btn>
@@ -202,7 +202,7 @@
         </div>
         <!--HAZARDOUS SUBSTANCES SECTION-->
         <div v-if="hazSubs.length > 0">
-          <b-btn block @click="toggleShowSubstances" class="text-left togglebtn " v-b-tooltip.hover title="Click to show/hide details">
+          <b-btn block @click="toggleShowSubstances" class="text-left togglebtn " >
             Hazardous Substance Register
             <i class="fa fa-chevron-down" style="float:right"></i>
           </b-btn>
@@ -239,7 +239,7 @@
         </div>
         <!--TASK ANALYSIS SECTION-->
         <div v-if="tasks.length > 0" v-for="(task, index) in tasks" :key="index">
-          <b-btn block v-b-toggle="'collapseTask' + index" class="text-left togglebtn" v-b-tooltip.hover title="Click to show/hide details">
+          <b-btn block v-b-toggle="'collapseTask' + index" class="text-left togglebtn" >
             Task Analysis - {{task.title}}
             <i class="fa fa-chevron-down" style="float:right"></i>
           </b-btn>
@@ -321,7 +321,7 @@
         </div>
         <!--TRAINING REGISTER SECTION-->
         <div>
-          <b-btn block @click="toggleShowTraining" class="text-left togglebtn " v-b-tooltip.hover title="Click to show/hide details">
+          <b-btn block @click="toggleShowTraining" class="text-left togglebtn " >
             Training Register
             <i class="fa fa-chevron-down" style="float:right"></i>
           </b-btn>
@@ -360,7 +360,7 @@
         </div>
         <!--INDUCTION SECTION
         <div>
-          <b-btn block @click="toggleShowInduction" class="text-left togglebtn " v-b-tooltip.hover title="Click to show/hide details">
+          <b-btn block @click="toggleShowInduction" class="text-left togglebtn " >
             Induction Register
             <i class="fa fa-chevron-down" style="float:right"></i>
           </b-btn>
@@ -386,7 +386,7 @@
         -->
         <!--SIGN IN SECTION-->
         <div>
-          <b-btn block @click="toggleShowSignIn" class="text-left togglebtn " v-b-tooltip.hover title="Click to show/hide details">
+          <b-btn block @click="toggleShowSignIn" class="text-left togglebtn " >
             Sign In Register
             <i class="fa fa-chevron-down" style="float:right"></i>
           </b-btn>
@@ -470,9 +470,7 @@ export default {
     },
     header () {
       return 'Site Specific Safety Plan: ' + this.jobSite.address
-    }
-  },
-  methods: {
+    },
     getTraining () {
       let list = []
       for (let i of this.workers) {
@@ -483,14 +481,16 @@ export default {
         i.training.forEach((item, index, object) => {
           worker.descriptions.push(item.description)
           worker.ids.push(item.ID)
-          worker.expirys.push(item.expiry)
+          worker.expirys.push(this.expiry(item.expiry))
         })
         worker.push(i.name, worker.descriptions, worker.ids, worker.expirys)
         list.push(worker)
       }
       console.log('training list', list)
       return list
-    },
+    }
+  },
+  methods: {
     getData (prop) {
       return this.jobSite[prop]
     },
@@ -503,23 +503,22 @@ export default {
           }
         },
         content: [
-          /*
           {text: 'Site Safety Information', style: 'subheader'},
           this.pdfOverview(),
           {text: 'Hazard Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
           this.pdfHazardRegister(),
-          {text: 'Hazardous Substances', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
+          {text: 'Hazardous Substance Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
           this.pdfHazardousSubstanceRegister(),
           {text: 'Training Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
-          this.pdfTrainingRegister()
+          this.pdfTrainingRegister(),
+          {text: 'Sign In Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'portrait'},
+          this.pdfSignInRegister()
           /*
           {text: 'Task Analysis', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
           this.pdfTaskAnalysis(),
           {text: 'Induction Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'portrait'},
           this.pdfInductionRegister(),
           */
-          {text: 'Sign In Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'portrait'},
-          this.pdfSignInRegister()
         ],
         styles: {
           header: {
@@ -556,7 +555,7 @@ export default {
                 ['Supervisor Name:', this.getData('supervisorName')],
                 ['Supervisor Phone:', this.getData('supervisorPhone')],
                 ['Medical Centre:', this.getData('medical')],
-                ['First Aiders:', this.getData('firstAiders')],
+                ['First Aiders:', this._.cloneDeep(this.getData('firstAiders'))],
                 ['Induction:', 'All workers are inducted and review safety plan prior to commencing work'],
                 ['Task Analysis:', 'To be completed as required'],
                 ['Incident Reporting: ', 'We have an incident/event reporting process in place'],
@@ -580,6 +579,17 @@ export default {
       return dd.content
     },
     pdfHazardRegister () {
+      var heatDiv = function (risk) {
+        if (risk === 'Low' || risk === 'Very Low') {
+          return '#4caf50'
+        } else if (risk === 'Moderate') {
+          return '#ff7a50'
+        } else if (risk === 'High') {
+          return '#f44336'
+        } else {
+          return '#ff4383'
+        }
+      }
       var bodyContent = [[
         {text: 'Hazard Name', style: 'tableHeader'},
         {text: 'Risks', style: 'tableHeader'},
@@ -588,9 +598,9 @@ export default {
         {text: 'Control Level', style: 'tableHeader'},
         {text: 'RRA', style: 'tableHeader'}
       ]]
-      let hazards = this.hazards
+      let hazards = this._.cloneDeep(this.hazards)
       for (let hazard of hazards) {
-        bodyContent.push([hazard.name, hazard.risks, hazard.IRA, hazard.controls, hazard.controlLevel, hazard.RRA])
+        bodyContent.push([hazard.name, hazard.risks, {text: hazard.IRA, fillColor: heatDiv(hazard.IRA)}, hazard.controls, hazard.controlLevel, {text: hazard.RRA, fillColor: heatDiv(hazard.RRA)}])
       }
       var dd = {
         content: [
@@ -613,11 +623,12 @@ export default {
         {text: 'Potential Harm', style: 'tableHeader'},
         {text: 'Storage', style: 'tableHeader'},
         {text: 'PPE', style: 'tableHeader'},
-        {text: 'Actions', style: 'tableHeader'}
+        {text: 'Actions', style: 'tableHeader'},
+        {text: 'SDS', style: 'tableHeader'}
       ]]
-      let hazSubs = this.hazSubs
+      let hazSubs = this._.cloneDeep(this.hazSubs)
       for (let substance of hazSubs) {
-        bodyContent.push([substance.name, substance.hazTypes, substance.potentialHarm, substance.storage, substance.PPE, substance.actions])
+        bodyContent.push([substance.name, substance.hazTypes, substance.potentialHarm, substance.storage, substance.PPE, substance.actions, 'Yes'])
       }
       var dd = {
         content: [
@@ -639,11 +650,11 @@ export default {
         [
           {text: 'Name', style: 'tableHeader'},
           {text: 'Description', style: 'tableHeader'},
-          {text: 'ID/License', style: 'tableHeader'},
+          {text: 'ID/License #', style: 'tableHeader'},
           {text: 'Expiry', style: 'tableHeader'}
         ]
       ]
-      let training = this.getTraining()
+      let training = this.getTraining
       for (let item of training) {
         console.log(item)
         bodyContent.push(item)
