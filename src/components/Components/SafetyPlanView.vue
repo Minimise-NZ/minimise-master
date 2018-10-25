@@ -433,7 +433,7 @@ export default {
       showInduction: false,
       showSignIn: false,
       showMessage: false,
-      signInRegister: null,
+      signInRegister: [],
       columns: [
         {title: 'ID', dataKey: 'id'},
         {title: 'name', dataKey: 'name'},
@@ -510,7 +510,6 @@ export default {
           this.pdfHazardRegister(),
           {text: 'Hazardous Substances', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
           this.pdfHazardousSubstanceRegister(),
-          */
           {text: 'Training Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
           this.pdfTrainingRegister()
           /*
@@ -518,9 +517,9 @@ export default {
           this.pdfTaskAnalysis(),
           {text: 'Induction Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'portrait'},
           this.pdfInductionRegister(),
+          */
           {text: 'Sign In Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'portrait'},
           this.pdfSignInRegister()
-          */
         ],
         styles: {
           header: {
@@ -657,6 +656,36 @@ export default {
               headerRows: 1,
               heights: 25,
               alignment: 'justify',
+              body: bodyContent
+            }
+          }
+        ]
+      }
+      // return dd
+      return dd.content
+    },
+    pdfSignInRegister () {
+      var bodyContent = [
+        [
+          {text: 'Name', style: 'tableHeader'},
+          {text: 'Company', style: 'tableHeader'},
+          {text: 'Signed In', style: 'tableHeader'},
+          {text: 'Signed Out', style: 'tableHeader'}
+        ]
+      ]
+      for (let item of this.signInRegister) {
+        console.log(item)
+        let signedIn = this.formatDate(item.signedIn)
+        let signedOut = this.formatDate(item.signedOut)
+        bodyContent.push([item.name, item.company, signedIn, signedOut])
+      }
+      var dd = {
+        content: [
+          {
+            table: {
+              widths: [150, 150, '*', '*'],
+              headerRows: 1,
+              heights: 25,
               body: bodyContent
             }
           }
