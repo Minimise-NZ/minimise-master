@@ -473,8 +473,25 @@ export default {
     }
   },
   methods: {
+    getTraining () {
+      let list = []
+      for (let i of this.workers) {
+        let worker = []
+        worker.descriptions = []
+        worker.ids = []
+        worker.expirys = []
+        i.training.forEach((item, index, object) => {
+          worker.descriptions.push(item.description)
+          worker.ids.push(item.ID)
+          worker.expirys.push(item.expiry)
+        })
+        worker.push(i.name, worker.descriptions, worker.ids, worker.expirys)
+        list.push(worker)
+      }
+      console.log('training list', list)
+      return list
+    },
     getData (prop) {
-      console.log(this.jobSite[prop])
       return this.jobSite[prop]
     },
     exportPdf () {
@@ -486,17 +503,19 @@ export default {
           }
         },
         content: [
+          /*
           {text: 'Site Safety Information', style: 'subheader'},
           this.pdfOverview(),
           {text: 'Hazard Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
           this.pdfHazardRegister(),
           {text: 'Hazardous Substances', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
-          this.pdfHazardousSubstanceRegister()
+          this.pdfHazardousSubstanceRegister(),
+          */
+          {text: 'Training Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
+          this.pdfTrainingRegister()
           /*
           {text: 'Task Analysis', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
           this.pdfTaskAnalysis(),
-          {text: 'Training Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
-          this.pdfTrainingRegister(),
           {text: 'Induction Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'portrait'},
           this.pdfInductionRegister(),
           {text: 'Sign In Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'portrait'},
@@ -574,7 +593,6 @@ export default {
       for (let hazard of hazards) {
         bodyContent.push([hazard.name, hazard.risks, hazard.IRA, hazard.controls, hazard.controlLevel, hazard.RRA])
       }
-      console.log('body', bodyContent)
       var dd = {
         content: [
           {
@@ -602,11 +620,40 @@ export default {
       for (let substance of hazSubs) {
         bodyContent.push([substance.name, substance.hazTypes, substance.potentialHarm, substance.storage, substance.PPE, substance.actions])
       }
-      console.log('body', bodyContent)
       var dd = {
         content: [
           {
             table: {
+              headerRows: 1,
+              heights: 25,
+              alignment: 'justify',
+              body: bodyContent
+            }
+          }
+        ]
+      }
+      // return dd
+      return dd.content
+    },
+    pdfTrainingRegister () {
+      var bodyContent = [
+        [
+          {text: 'Name', style: 'tableHeader'},
+          {text: 'Description', style: 'tableHeader'},
+          {text: 'ID/License', style: 'tableHeader'},
+          {text: 'Expiry', style: 'tableHeader'}
+        ]
+      ]
+      let training = this.getTraining()
+      for (let item of training) {
+        console.log(item)
+        bodyContent.push(item)
+      }
+      var dd = {
+        content: [
+          {
+            table: {
+              widths: [200, 200, 200, '*'],
               headerRows: 1,
               heights: 25,
               alignment: 'justify',
@@ -667,7 +714,6 @@ export default {
     autosize(document.querySelectorAll('textarea'))
     this.$store.dispatch('getSignInRegister', this.jobSite.id)
     .then((register) => {
-      console.log('register', register)
       this.signInRegister = register
     })
   }
