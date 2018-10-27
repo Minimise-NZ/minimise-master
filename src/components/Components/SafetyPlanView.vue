@@ -486,7 +486,6 @@ export default {
         worker.push(i.name, worker.descriptions, worker.ids, worker.expirys)
         list.push(worker)
       }
-      console.log('training list', list)
       return list
     }
   },
@@ -509,15 +508,14 @@ export default {
           this.pdfHazardRegister(),
           {text: 'Hazardous Substance Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
           this.pdfHazardousSubstanceRegister(),
+          this.pdfTaskAnalysis(),
           {text: 'Training Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
           this.pdfTrainingRegister(),
           {text: 'Sign In Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'portrait'},
           this.pdfSignInRegister()
           /*
-          {text: 'Task Analysis', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
-          this.pdfTaskAnalysis(),
           {text: 'Induction Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'portrait'},
-          this.pdfInductionRegister(),
+          this.pdfInductionRegister()
           */
         ],
         styles: {
@@ -536,8 +534,20 @@ export default {
           },
           tableHeader: {
             bold: true,
-            fontSize: 13,
+            fontSize: 12,
             fillColor: '#e0e0e0'
+          },
+          tableSubHeader: {
+            bold: true,
+            fontSize: 11,
+            fillColor: '#e0e0e0'
+          },
+          stepsStyle: {
+            fillColor: '#315e82',
+            color: 'white',
+            bold: true,
+            fontSize: 12,
+            margin: [0, 5]
           }
         }
       }
@@ -645,6 +655,63 @@ export default {
       // return dd
       return dd.content
     },
+    pdfTaskAnalysis () {
+      var heatDiv = function (risk) {
+        if (risk === 'Low' || risk === 'Very Low') {
+          return '#4caf50'
+        } else if (risk === 'Moderate') {
+          return '#ff7a50'
+        } else if (risk === 'High') {
+          return '#f44336'
+        } else {
+          return '#ff4383'
+        }
+      }
+      let tasks = this._.cloneDeep(this.tasks)
+      var dd = {
+        content: [
+        ]
+      }
+      tasks.forEach((task) => {
+        let taskContent = [
+          {text: 'Task Analysis: ' + task.title, style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
+          {table: {
+            heights: 25,
+            body: [
+              [{text: 'PPE Required:', colSpan: 2}, {}, {text: task.ppe, colSpan: 4}, {}, {}, {}],
+              [{text: 'Plant Required:', colSpan: 2}, {}, {text: task.plant, colSpan: 4}, {}, {}, {}],
+              [{text: 'Signage Required:', colSpan: 2}, {}, {text: task.signage, colSpan: 4}, {}, {}, {}]
+            ]
+          },
+            layout: 'noBorders'}
+        ]
+        task.steps.forEach((step, index) => {
+          let columns = [
+            [{text: 'Step ' + (index + 1) + ': ' + step.description, style: 'stepsStyle', colSpan: 6}, {}, {}, {}, {}, {}],
+            [
+              {text: 'Hazard Name', style: 'tableSubHeader'},
+              {text: 'Risks', style: 'tableSubHeader'},
+              {text: 'IRA', style: 'tableSubHeader'},
+              {text: 'Controls', style: 'tableSubHeader'},
+              {text: 'Control Level', style: 'tableSubHeader'},
+              {text: 'RRA', style: 'tableSubHeader'}
+            ]
+          ]
+          step.hazards.forEach((hazard) => {
+            columns.push([{text: hazard.name}, {text: hazard.risks.join(', ')}, {text: hazard.IRA, fillColor: heatDiv(hazard.IRA)}, {text: hazard.controls.join(', ')}, {text: hazard.controlLevel}, {text: hazard.RRA, fillColor: heatDiv(hazard.RRA)}])
+          })
+          let stepsContent = [
+            {table: {
+              widths: [80, 200, '*', 200, '*', '*'],
+              body: columns
+            }}
+          ]
+          taskContent.push(stepsContent)
+        })
+        dd.content.push(taskContent)
+      })
+      return dd.content
+    },
     pdfTrainingRegister () {
       var bodyContent = [
         [
@@ -656,7 +723,6 @@ export default {
       ]
       let training = this.getTraining
       for (let item of training) {
-        console.log(item)
         bodyContent.push(item)
       }
       var dd = {
@@ -684,12 +750,11 @@ export default {
           {text: 'Signed Out', style: 'tableHeader'}
         ]
       ]
-      for (let item of this.signInRegister) {
-        console.log(item)
+      this.signInRegister.forEach((item) => {
         let signedIn = this.formatDate(item.signedIn)
         let signedOut = this.formatDate(item.signedOut)
         bodyContent.push([item.name, item.company, signedIn, signedOut])
-      }
+      })
       var dd = {
         content: [
           {
@@ -703,7 +768,11 @@ export default {
         ]
       }
       // return dd
+      console.log(dd.content)
       return dd.content
+    },
+    getSteps (index) {
+      console.log(this.tasks[index])
     },
     formatDate (date) {
       return moment(date).format('hh:mm D/MM/YY')
