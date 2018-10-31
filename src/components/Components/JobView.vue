@@ -17,7 +17,7 @@
             <label>Supervisor:</label>
           </b-col>
           <b-col>
-            <b-form-input v-if="toolbox === null" :value="user.name" readonly></b-form-input>
+            <b-form-input v-if="this._.isEmpty(toolbox)" :value="user.name" readonly></b-form-input>
             <b-form-input v-else :value="toolbox.supervisorName" readonly></b-form-input>
           </b-col>
         </b-row>
@@ -26,7 +26,7 @@
             <label>Date/Time:</label>
           </b-col>
           <b-col>
-            <b-form-input v-if="toolbox === null" :value="new Date().toLocaleString()" readonly></b-form-input>
+            <b-form-input v-if="this._.isEmpty(toolbox)" :value="new Date().toLocaleString()" readonly></b-form-input>
             <b-form-input v-else :value="toolbox.date" readonly></b-form-input>
           </b-col>
         </b-row>
@@ -35,7 +35,7 @@
             <label>Topics discussed:</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" v-if="toolbox === null" v-model="newToolbox.topics"></b-form-textarea>
+            <b-form-textarea rows="4" v-if="this._.isEmpty(toolbox)" v-model="newToolbox.topics"></b-form-textarea>
             <b-form-textarea rows="4" v-else :value="toolbox.topics" readonly></b-form-textarea>
           </b-col>
         </b-row>
@@ -44,7 +44,7 @@
             <label>Employee issues raised:</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" v-if="toolbox === null" v-model="newToolbox.issues"></b-form-textarea>
+            <b-form-textarea rows="4" v-if="this._.isEmpty(toolbox)" v-model="newToolbox.issues"></b-form-textarea>
             <b-form-textarea rows="4" v-else :value="toolbox.issues" readonly></b-form-textarea>
           </b-col>
         </b-row>
@@ -53,7 +53,7 @@
             <label>Safe observations reviewed/discussed:</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" v-if="toolbox === null" v-model="newToolbox.observations"></b-form-textarea>
+            <b-form-textarea rows="4" v-if="this._.isEmpty(toolbox)" v-model="newToolbox.observations"></b-form-textarea>
             <b-form-textarea rows="4" v-else :value="toolbox.observations" readonly></b-form-textarea>
           </b-col>
         </b-row>
@@ -62,7 +62,7 @@
             <label>Jobs completed/reviewed</label>
           </b-col>
           <b-col>
-            <b-form-textarea rows="4" v-if="toolbox === null" v-model="newToolbox.jobsCompleted"></b-form-textarea>
+            <b-form-textarea rows="4" v-if="this._.isEmpty(toolbox)" v-model="newToolbox.jobsCompleted"></b-form-textarea>
             <b-form-textarea rows="4" v-else :value="toolbox.jobsCompleted" readonly></b-form-textarea>
           </b-col>
         </b-row>
@@ -71,8 +71,13 @@
             <label>Attendees Signed</label>
           </b-col>
           <b-col>
+            <b-form-textarea rows="4" readonly></b-form-textarea>
+          </b-col>
+          <!--
+          <b-col>
             <b-form-textarea rows="4" :value="toolbox.attendees.toString()" readonly></b-form-textarea>
           </b-col>
+          -->
         </b-row>
       </b-form>
       <div slot="modal-footer">
@@ -206,7 +211,7 @@
         <b-button-toolbar slot="header">
           <div v-if="currentJob.id === this.job.id">
             <b-btn variant="dark" v-b-tooltip.hover title="Sign Out" @click="signOut" size="sm"><i class="fas fa-sign-out-alt fa-sm" style="color: rgba(249, 82, 188, 0.86)" ></i></b-btn>
-            <b-btn v-if="toolbox === null" variant="dark" v-b-tooltip.hover title="New Toolbox Talk" @click="showToolbox = true" size="sm">
+            <b-btn v-if="this._.isEmpty(toolbox)" variant="dark" v-b-tooltip.hover title="New Toolbox Talk" @click="showToolbox = true" size="sm">
               <i class="fas fa-toolbox" style="color: #03a9f4"></i>
             </b-btn>
             <!--
@@ -246,17 +251,17 @@
           <b-row>
             <router-link v-on:click.native="setSafetyPlan(job)" to="#">SSSP - {{job.address}}</router-link >
           </b-row>
-          <b-row v-if="toolbox !== null">
+          <b-row v-if="this._.isEmpty(toolbox) === false">
             <a href="javascript:void(0)" @click="showToolbox = true">Toolbox Talk</a>
           </b-row>
           <!--
           <b-row>
             <a href="javascript:void(0)" @click="showInspection = true">Site Inspection</a>
           </b-row>
-          -->
           <b-row>
             <a href="javascript:void(0)" @click="showInductions= true" v-if="job.inductionRegister.length > 0">Induction Register</a>
           </b-row>
+          -->
           <div>
             <b-row v-if="job.emergencyPlanURL === ''">
               <b-col cols="10">
@@ -510,13 +515,17 @@ export default {
     getToolbox () {
       this.$store.dispatch('getToolbox', this.job.id)
       .then((toolbox) => {
-        this.toolbox = toolbox
+        if (toolbox !== null) {
+          this.toolbox = toolbox
+        }
       })
     },
     getSignInRegister () {
       this.$store.dispatch('getSignedIn', this.job.id)
       .then((register) => {
-        this.signInRegister = register
+        if (register !== null) {
+          this.signInRegister = register
+        }
       })
     },
     saveToolbox () {

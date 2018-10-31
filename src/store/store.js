@@ -743,7 +743,7 @@ export const store = new Vuex.Store({
           name: state.user.name,
           date: today,
           signedIn: Date.now(),
-          signedOut: null,
+          signedOut: '',
           companyName: state.user.companyName,
           companyKey: state.user.companyKey
         })

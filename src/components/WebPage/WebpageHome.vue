@@ -1,5 +1,5 @@
 <template>
-  <div id="home">
+  <div id="home" style="height: 100%">
     <!--navbar-->
     <b-navbar toggleable="lg" type="dark" class="my-primary-bg main-nav" style="z-index: 9999">
       <b-nav-toggle target="nav_collapse" class="ml-4"></b-nav-toggle>

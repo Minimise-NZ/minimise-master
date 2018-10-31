@@ -223,7 +223,7 @@
                 <tr v-for="(sub, index) in hazSubs" :key="index" style="border-bottom: 1px solid #e9ecef">
                   <td style="font-weight: bold">{{sub.name}}</td>
                   <td>
-                    <ul v-for="(type, index) in sub.hazTypes" :key="index">
+                    <ul v-for="(type, index) in sub.hazTypes" :key="index" style="min-width: 100px">
                       <li>{{type}}</li>
                     </ul>
                   </td>
@@ -339,17 +339,17 @@
                 <tr v-for="(worker, index) in workers" :key="index" style="border-bottom: 1px solid #e9ecef">
                   <td style="font-weight: bold">{{worker.name}}</td>
                   <td>
-                    <ul v-for="(training, index) in worker.training" :key="index">
+                    <ul v-for="(training, index) in worker.training" :key="index" style="list-style-type: square">
                       <li>{{training.description}}</li>
                     </ul>
                   </td>
                   <td>
-                    <ul v-for="(training, index) in worker.training" :key="index">
+                    <ul v-for="(training, index) in worker.training" :key="index" style="list-style-type: square">
                       <li>{{training.ID}}</li>
                     </ul>
                   </td>
                   <td>
-                    <ul v-for="(training, index) in worker.training" :key="index">
+                    <ul v-for="(training, index) in worker.training" :key="index" style="list-style-type: square">
                     <li>{{expiry(training.expiry)}}</li>
                   </ul>
                   </td>
@@ -401,11 +401,17 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(signedIn, index) in signInRegister" :key="index" style="border-bottom: 1px solid #e9ecef">
+                  <tr v-if="signInRegister.length > 0" v-for="(signedIn, index) in signInRegister" :key="index" style="border-bottom: 1px solid #e9ecef">
                     <td style="font-weight: bold">{{signedIn.name}}</td>
                     <td>{{signedIn.company}}</td>
                     <td>{{formatDate(signedIn.signedIn)}}</td>
                     <td v-if="signedIn.signedOut !== null">{{formatDate(signedIn.signedOut)}}</td>
+                  </tr>
+                  <tr v-if="signInRegister.length < 10" v-for="n in 10 - signInRegister.length" :key="n">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                   </tr>
                 </tbody>
               </table>
@@ -479,14 +485,42 @@ export default {
         worker.ids = []
         worker.expirys = []
         i.training.forEach((item, index, object) => {
-          worker.descriptions.push(item.description)
-          worker.ids.push(item.ID)
-          worker.expirys.push(this.expiry(item.expiry))
+          worker.descriptions.push(item.description + '\n')
+          worker.ids.push(item.ID + '\n')
+          worker.expirys.push(this.expiry(item.expiry) + '\n')
         })
         worker.push(i.name, worker.descriptions, worker.ids, worker.expirys)
         list.push(worker)
       }
       return list
+    },
+    notifiable () {
+      if (this.jobSite.notifiable === 'true') {
+        return 'WorkSafe NZ has been advised of our Notifiable Works'
+      } else {
+        return 'We do not have notifiable works'
+      }
+    },
+    environmental () {
+      if (this.jobSite.environmental === 'true') {
+        return 'We have an environmental plan in place'
+      } else {
+        return 'Environmental plan is not required'
+      }
+    },
+    resource () {
+      if (this.jobSite.resource === 'true') {
+        return 'We have obtained the apropriate resource consent/s'
+      } else {
+        return 'Resource consent is not required'
+      }
+    },
+    nzhpt () {
+      if (this.jobSite.nzhpt === 'true') {
+        return 'We have obtained NZHPT clearance'
+      } else {
+        return 'NZHPT clearance is not required'
+      }
     }
   },
   methods: {
@@ -548,6 +582,11 @@ export default {
             bold: true,
             fontSize: 12,
             margin: [0, 5]
+          },
+          sectionStyle: {
+            fillColor: '#e0e0e0',
+            bold: true,
+            fontSize: 12
           }
         }
       }
@@ -560,32 +599,36 @@ export default {
             table: {
               heights: 20,
               body: [
-                ['Address:', this.getData('address')],
+                [{text: 'Workplace Management', style: 'sectionStyle', colSpan: 2}, {}],
                 ['Company Name:', this.getData('companyName')],
                 ['Supervisor Name:', this.getData('supervisorName')],
                 ['Supervisor Phone:', this.getData('supervisorPhone')],
+                [{text: 'Emergency Information', style: 'sectionStyle', colSpan: 2}, {}],
                 ['Medical Centre:', this.getData('medical')],
                 ['First Aiders:', this._.cloneDeep(this.getData('firstAiders'))],
-                ['Induction:', 'All workers are inducted and review safety plan prior to commencing work'],
+                [{text: 'Notifiable Works', style: 'sectionStyle', colSpan: 2}, {}],
+                ['Notifiable Works: ', this.notifiable],
+                [{text: 'Hazard Management', style: 'sectionStyle', colSpan: 2}, {}],
                 ['Task Analysis:', 'To be completed as required'],
+                [{text: 'Training and Induction', style: 'sectionStyle', colSpan: 2}, {}],
+                ['Induction:', 'All workers are inducted and review safety plan prior to commencing work'],
+                [{text: 'Communication and Reporting', style: 'sectionStyle', colSpan: 2}, {}],
+                ['Toolbox Talks: ', 'Toolbox Talks are conducted ' + this.frequency(this.getData('toolboxFrequency'))],
                 ['Incident Reporting: ', 'We have an incident/event reporting process in place'],
-                ['Site Inspections: ', 'Site inspections are conducted....frequency'],
-                ['Toolbox Talks: ', 'Toolbox Talks are conducted....frequency'],
-                ['Notifiable Works: ', 'check notifiable'],
-                ['Environmental Plan: ', 'check environmental'],
-                ['Resource Consent: ', 'check resource consent'],
-                ['NZHPT Clearance: ', 'check NZHPT']
+                [{text: 'Safety Inspections', style: 'sectionStyle', colSpan: 2}, {}],
+                ['Site Inspections: ', 'Site inspections are conducted ' + this.frequency(this.getData('inspectionFrequency'))],
+                [{text: 'Consents', style: 'sectionStyle', colSpan: 2}, {}],
+                ['Resource Consent: ', this.resource],
+                ['NZHPT Clearance: ', this.nzhpt],
+                [{text: 'Environmental', style: 'sectionStyle', colSpan: 2}, {}],
+                ['Environmental Plan: ', this.environmental],
+                [{text: 'Additional Information', style: 'sectionStyle', colSpan: 2}, {}],
+                ['Additional Information: ', this.jobSite.additionalInfo]
               ]
-            },
-            layout: {
-              fillColor: function (i, node) {
-                return (i % 2 === 0) ? '#e0e0e0' : null
-              }
             }
           }
         ]
       }
-      // return dd
       return dd.content
     },
     pdfHazardRegister () {
@@ -623,7 +666,6 @@ export default {
           }
         ]
       }
-      // return dd
       return dd.content
     },
     pdfHazardousSubstanceRegister () {
@@ -652,7 +694,6 @@ export default {
           }
         ]
       }
-      // return dd
       return dd.content
     },
     pdfTaskAnalysis () {
@@ -738,7 +779,6 @@ export default {
           }
         ]
       }
-      // return dd
       return dd.content
     },
     pdfSignInRegister () {
@@ -750,11 +790,18 @@ export default {
           {text: 'Signed Out', style: 'tableHeader'}
         ]
       ]
-      this.signInRegister.forEach((item) => {
-        let signedIn = this.formatDate(item.signedIn)
-        let signedOut = this.formatDate(item.signedOut)
-        bodyContent.push([item.name, item.company, signedIn, signedOut])
-      })
+      let register = this._.cloneDeep(this.signInRegister)
+      if (register.length < 10) {
+        register.forEach((item) => {
+          let signedIn = this.formatDate(item.signedIn)
+          let signedOut = this.formatDate(item.signedOut)
+          bodyContent.push([item.name, item.company, signedIn, signedOut])
+        })
+        let n = 10 - register.length
+        for (let i = 0; i < n; i++) {
+          bodyContent.push(['', '', '', ''])
+        }
+      }
       var dd = {
         content: [
           {
@@ -767,12 +814,7 @@ export default {
           }
         ]
       }
-      // return dd
-      console.log(dd.content)
       return dd.content
-    },
-    getSteps (index) {
-      console.log(this.tasks[index])
     },
     formatDate (date) {
       return moment(date).format('hh:mm D/MM/YY')
@@ -823,7 +865,9 @@ export default {
     autosize(document.querySelectorAll('textarea'))
     this.$store.dispatch('getSignInRegister', this.jobSite.id)
     .then((register) => {
-      this.signInRegister = register
+      if (register !== null) {
+        this.signInRegister = register
+      }
     })
   }
 }
