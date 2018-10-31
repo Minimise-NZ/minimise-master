@@ -29,17 +29,17 @@
           <h4 class="mt-2">This incident has been updated</h4>
         </div>
     </b-modal>
-    <b-card>
-      <div class=" incident card-header">{{headerText}}
-        <b-button  
-          class="addBtn"
+    <b-card header-tag="header">
+       <header slot="header">{{headerText}}
+        <b-btn
+          variant="dark"
           @click="edit"
           :disabled="disabled"
           v-if="incident.open === 'true'"
           v-b-tooltip.hover title="Edit/Update this Incident">
-          <i class="fa fa-edit fa-lg"></i>
-        </b-button> 
-      </div>
+          <i class="far fa-edit" style="color: #ffc80b"></i>
+        </b-btn> 
+      </header>
       <div class="scroll-container">
         <b-form @submit.prevent="onSubmit">
           <b-row>
@@ -61,12 +61,12 @@
             <b-col sm="3" lg="2"><label>Incident Type:</label></b-col>
             <b-col sm="9" lg="10">
               <b-form-input v-model="incident.type" :readonly="readonly" v-if="readonly"></b-form-input>
-              <v-select
+              <b-form-select
                 v-if="!readonly"
                 placeholder="Please select incident type"
                 v-model="incident.type"
                 :options="incidentTypes">
-              </v-select>
+              </b-form-select>
             </b-col>
           </b-row>
           <b-row>
@@ -125,7 +125,7 @@
               </b-form-textarea>
             </b-col>
           </b-row>
-          <b-row class="pt-1" v-if="!readonly">
+          <b-row class="pt-3" v-if="!readonly">
             <b-col sm="3" lg="2"></b-col>
             <b-col sm="9" lg="10">
               <b-form-checkbox v-model="incident.open" value=false unchecked-value=true>
@@ -152,6 +152,8 @@
 
 <script>
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
+import moment from 'moment'
+
 export default {
   props: ['id'],
   components: {
@@ -182,7 +184,8 @@ export default {
       return this.$store.getters.incident(this.id)
     },
     headerText () {
-      let text = this.incident.address + ' : ' + this.incident.date
+      let date = moment(this.incident.date).format('DD/MM/YY')
+      let text = this.incident.address + ' : ' + date
       return text
     },
     status () {
@@ -233,32 +236,42 @@ export default {
 </script>
 
 <style scoped>
-  form {
+
+ .container-fluid {
+    padding-top: 20px;
+    padding-right: 20px;
+  }
+
+   .scroll-container {
+    height: 80vh;
+    overflow-y: scroll;
+    margin-top: 15px;
     padding-right: 15px;
+    padding-bottom: 20px;
   }
 
-  .card-header.incident {
-    margin: -20px -20px 20px -20px;
+  .card-header {
+    background-color: rgba(56, 56, 56, 0.88);
+    font-size: 1.2em;
+    color: white;
+    line-height: 2em;
   }
 
-  .col-sm-3 {
-    text-align: right;
-    padding-top: 5px;
-  }
-  
-  .row {
-    margin-bottom: 15px;
-  }
-  
-  .editBtn {
-    float: right;
-    background-color: #ffc80b;
-    color: black;
-    cursor: pointer;
+  .card-body {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 
   button:disabled {
     cursor: default;
+  }
+
+  .btn {
+    float: right;
+  }
+
+  .row {
+    padding: 5px;
   }
 
   .btn-group {
@@ -270,7 +283,6 @@ export default {
     cursor: pointer;
     margin: 20px;
     width: 50%;
-  } 
-
+  }
 
 </style>

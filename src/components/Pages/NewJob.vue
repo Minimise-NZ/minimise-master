@@ -413,7 +413,6 @@ export default {
         files: [],
         urls: []
       },
-      firstAiders: ['Name one', 'Name 2'],
       firstAidKit: 'On Site and in vehicles',
       fireExtinguisher: 'On Site and in vehicles',
       emergencyPlanURL: '',
@@ -450,6 +449,9 @@ export default {
         })
       })
       return supervisorList
+    },
+    firstAiders () {
+      return this.$store.getters.firstAiders
     },
     supervisorKey () {
       return this.supervisors[this.supervisorIndex].key
@@ -606,7 +608,6 @@ export default {
           nzhpt: this.nzhpt.radioValue,
           nzhpturl: this.nzhpt.url,
           docs: this.docs.urls,
-          firstAiders: this.firstAiders,
           firstAidKit: this.firstAidKit,
           fireExtinguisher: this.fireExtinguisher,
           emergencyPlanURL: this.emergencyPlanURL,

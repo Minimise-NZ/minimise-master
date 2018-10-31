@@ -14,7 +14,7 @@ const trainingRef = firestore.collection('training')
 const jobSitesRef = firestore.collection('jobSites')
 const toolboxRef = firestore.collection('toolbox')
 const incidentsRef = firestore.collection('incidents')
-const hazardsRef = firestore.collection('hazards')
+const hazardsRef = firestore.collection('hazards').orderBy('name')
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
@@ -39,7 +39,8 @@ export const store = new Vuex.Store({
     taskChanged: '',
     taskAnalysis: [],
     trainingAlerts: [],
-    trainingList: []
+    trainingList: [],
+    firstAiders: []
   },
   mutations: {
     clearStore (state) {
@@ -64,6 +65,7 @@ export const store = new Vuex.Store({
       state.notMyHazards = []
       state.hazardousSubstances = []
       state.trainingAlerts = []
+      state.firstAiders = []
     },
     setUserKey (state, payload) {
       console.log('Userkey set')
@@ -149,6 +151,10 @@ export const store = new Vuex.Store({
     setIncidents (state, payload) {
       console.log('Incidents set')
       state.myIncidents = payload
+    },
+    setFirstAiders (state, payload) {
+      console.log('First Aiders set')
+      state.firstAiders = payload
     }
   },
   actions: {
@@ -451,7 +457,8 @@ export const store = new Vuex.Store({
     getTraining ({commit, state}) {
       console.log('getting training')
       let trainingAlerts = []
-      let workers = state.workers
+      let firstAiders = []
+      let workers = Vue._.cloneDeep(state.workers)
       let alertDate = moment().add(14, 'days')
       console.log('alert date', alertDate)
       for (let worker of workers) {
@@ -459,6 +466,9 @@ export const store = new Vuex.Store({
           continue
         }
         for (let training of worker.training) {
+          if (training.description === 'First Aid Certificate') {
+            firstAiders.push(worker.name + ' - Ph: ' + worker.phone)
+          }
           if (training.expiry !== '') {
             if (moment().isAfter(training.expiry)) {
               training.name = worker.name
@@ -477,6 +487,7 @@ export const store = new Vuex.Store({
         }
       }
       commit('setTrainingAlerts', trainingAlerts)
+      commit('setFirstAiders', firstAiders)
     },
     getTrainingList ({commit, state}) {
       trainingRef.doc('z660voHfSYY7pN7zS4vy')
@@ -554,7 +565,6 @@ export const store = new Vuex.Store({
           nzhpt: payload.nzhpt,
           nzhpturl: payload.nzhpturl,
           docs: payload.docs,
-          firstAiders: payload.firstAiders,
           firstAidKit: payload.firstAidKit,
           fireExtinguisher: payload.fireExtinguisher,
           emergencyPlanURL: payload.emergencyPlanURL,
@@ -728,11 +738,11 @@ export const store = new Vuex.Store({
       })
     },
   // sign in and induction registers
-    jobSignOn ({state, dispatch}, payload) {
+    jobSignOn ({state, dispatch, commit}, payload) {
       // sign user into job site
       let jobKey = payload
       if (Vue._.isEmpty(state.currentJob) === false) {
-        dispatch('signOutCurrentJob', state.currentJob.id)
+        dispatch('signOutCurrentJob')
       }
       let promise = new Promise((resolve, reject) => {
         let docKey = today + state.userKey
@@ -748,7 +758,8 @@ export const store = new Vuex.Store({
           companyKey: state.user.companyKey
         })
         .then(() => {
-          dispatch('setCurrentJob', jobKey)
+          commit('setCurrentJob', {jobId: jobKey, registerId: docKey})
+          dispatch('setCurrentJob', {jobId: jobKey, registerId: docKey})
         })
         .then(() => {
           resolve()
@@ -762,14 +773,8 @@ export const store = new Vuex.Store({
     },
     setCurrentJob ({state, commit}, payload) {
       let promise = new Promise((resolve, reject) => {
-        let currentJob = {}
-        currentJob.id = payload
-        var now = new Date()
-        // set expiry for now + 12hours
-        currentJob.expiry = new Date(now.getTime() + (12 * 1000 * 60 * 60))
-        usersRef.doc(state.userKey).set({currentJob}, {merge: true})
+        usersRef.doc(state.userKey).set({currentJob: payload}, {merge: true})
         .then(() => {
-          commit('setCurrentJob', currentJob)
           resolve()
         })
         .catch((error) => {
@@ -783,12 +788,12 @@ export const store = new Vuex.Store({
       // update Sign in register
       console.log('signing out')
       let promise = new Promise((resolve, reject) => {
-        let docKey = today + state.userKey
+        let docKey = state.currentJob.registerId
         var signInRegisterRef = jobSitesRef.doc(payload).collection('signInRegister').doc(docKey)
         signInRegisterRef.set({signedOut: Date.now()}, {merge: true})
         .then(() => {
           commit('setCurrentJob', {})
-          dispatch('getAllJobs')
+          dispatch('setCurrentJob', {})
           resolve()
         })
         .catch((error) => {
@@ -1019,7 +1024,7 @@ export const store = new Vuex.Store({
     },
     getMyHazards ({commit, dispatch, state}) {
       let promise = new Promise((resolve, reject) => {
-        companiesRef.doc(state.companyKey).collection('hazards')
+        companiesRef.doc(state.companyKey).collection('hazards').orderBy('name')
         .get()
         .then((snapshot) => {
           let hazards = []
@@ -1293,6 +1298,7 @@ export const store = new Vuex.Store({
     companyIndex: (state) => state.companyIndex,
     company: (state) => state.company,
     trainingList: (state) => state.trainingList,
+    firstAiders: (state) => state.firstAiders,
     workers: (state) => state.workers,
     supervisors: (state) => state.supervisors,
     training: (state) => state.trainingAlerts,

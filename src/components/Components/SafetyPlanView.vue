@@ -64,7 +64,7 @@
                     <label>First Aiders:</label>
                   </b-col>
                   <b-col>
-                    <b-form-input v-for="(name, index) in jobSite.firstAiders" :key="index" type="text" :value="name" readonly class="mb-1"/>
+                    <b-form-input v-for="(name, index) in firstAiders" :key="index" type="text" :value="name" readonly class="mb-1"/>
                   </b-col>
                 </b-row>
                 <b-row >
@@ -227,10 +227,10 @@
                       <li>{{type}}</li>
                     </ul>
                   </td>
-                  <td>{{sub.potentialHarm}}</td>
-                  <td>{{sub.storage}}</td>
-                  <td>{{sub.PPE}}</td>
-                  <td>{{sub.actions}}</td>
+                  <td style="line-height: 1.2rem">{{sub.potentialHarm}}</td>
+                  <td style="line-height: 1.2rem">{{sub.storage}}</td>
+                  <td style="line-height: 1.2rem">{{sub.PPE}}</td>
+                  <td style="line-height: 1.2rem"> {{sub.actions}}</td>
                   <td>Yes</td>
                 </tr>
               </tbody>
@@ -405,7 +405,8 @@
                     <td style="font-weight: bold">{{signedIn.name}}</td>
                     <td>{{signedIn.company}}</td>
                     <td>{{formatDate(signedIn.signedIn)}}</td>
-                    <td v-if="signedIn.signedOut !== null">{{formatDate(signedIn.signedOut)}}</td>
+                    <td v-if="signedIn.signedOut !== ''">{{formatDate(signedIn.signedOut)}}</td>
+                    <td v-else></td>
                   </tr>
                   <tr v-if="signInRegister.length < 10" v-for="n in 10 - signInRegister.length" :key="n">
                     <td></td>
@@ -476,6 +477,9 @@ export default {
     },
     header () {
       return 'Site Specific Safety Plan: ' + this.jobSite.address
+    },
+    firstAiders () {
+      return this.$store.getters.firstAiders
     },
     getTraining () {
       let list = []
@@ -605,7 +609,7 @@ export default {
                 ['Supervisor Phone:', this.getData('supervisorPhone')],
                 [{text: 'Emergency Information', style: 'sectionStyle', colSpan: 2}, {}],
                 ['Medical Centre:', this.getData('medical')],
-                ['First Aiders:', this._.cloneDeep(this.getData('firstAiders'))],
+                ['First Aiders:', this.firstAiders],
                 [{text: 'Notifiable Works', style: 'sectionStyle', colSpan: 2}, {}],
                 ['Notifiable Works: ', this.notifiable],
                 [{text: 'Hazard Management', style: 'sectionStyle', colSpan: 2}, {}],
@@ -791,12 +795,16 @@ export default {
         ]
       ]
       let register = this._.cloneDeep(this.signInRegister)
-      if (register.length < 10) {
-        register.forEach((item) => {
-          let signedIn = this.formatDate(item.signedIn)
+      register.forEach((item) => {
+        let signedIn = this.formatDate(item.signedIn)
+        if (item.signedOut !== '') {
           let signedOut = this.formatDate(item.signedOut)
           bodyContent.push([item.name, item.company, signedIn, signedOut])
-        })
+        } else {
+          bodyContent.push([item.name, item.company, signedIn, ''])
+        }
+      })
+      if (register.length < 10) {
         let n = 10 - register.length
         for (let i = 0; i < n; i++) {
           bodyContent.push(['', '', '', ''])
@@ -817,7 +825,7 @@ export default {
       return dd.content
     },
     formatDate (date) {
-      return moment(date).format('hh:mm D/MM/YY')
+      return moment(date).format('DD MMM - hh:mma')
     },
     toggleShowOverview () {
       this.showOverview = !this.showOverview

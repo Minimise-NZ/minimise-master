@@ -81,6 +81,13 @@ export default {
     padding-right: 20px;
   }
 
+  .scroll-container {
+    height: 80vh;
+    overflow-y: scroll;
+    padding-right: 15px;
+    padding-bottom: 20px;
+  }
+
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
     font-size: 1.2em;

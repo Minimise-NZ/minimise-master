@@ -68,7 +68,7 @@
         </b-row>
         <b-row v-if="toolbox !== null">
           <b-col cols="3">
-            <label>Attendees Signed</label>
+            <label>Attendees Signed On</label>
           </b-col>
           <b-col>
             <b-form-textarea rows="4" readonly></b-form-textarea>
@@ -209,7 +209,7 @@
     <b-card header-tag="header">
       <header slot="header">{{job.address}}
         <b-button-toolbar slot="header">
-          <div v-if="currentJob.id === this.job.id">
+          <div v-if="currentJob.jobId === this.job.id">
             <b-btn variant="dark" v-b-tooltip.hover title="Sign Out" @click="signOut" size="sm"><i class="fas fa-sign-out-alt fa-sm" style="color: rgba(249, 82, 188, 0.86)" ></i></b-btn>
             <b-btn v-if="this._.isEmpty(toolbox)" variant="dark" v-b-tooltip.hover title="New Toolbox Talk" @click="showToolbox = true" size="sm">
               <i class="fas fa-toolbox" style="color: #03a9f4"></i>
@@ -220,7 +220,7 @@
             </b-btn>
             -->
           </div>
-          <div v-if="currentJob.id !== this.job.id">
+          <div v-if="currentJob.jobId !== this.job.id">
             <b-btn variant="dark" v-b-tooltip.hover title="Sign In" @click="signIn" size="sm"><i class="fas fa-pen-alt fa-sm" style="color: rgb(1, 206, 187)" ></i></b-btn>
           </div>
           <div>
@@ -391,10 +391,6 @@ export default {
   data () {
     return {
       TAsignedOn: [
-        'name 1', 'name 2'
-      ],
-      firstAiders: [
-        'name 1', 'name 2'
       ],
       loading: false,
       showToolbox: false,
@@ -429,6 +425,9 @@ export default {
     },
     currentJob () {
       return this.$store.getters.currentJob
+    },
+    firstAiders () {
+      return this.$store.getters.firstAiders
     }
   },
   methods: {
@@ -463,7 +462,6 @@ export default {
     },
     signIn () {
       this.$store.dispatch('jobSignOn', this.job.id)
-      this.getSignInRegister()
     },
     signOut () {
       this.$store.dispatch('signOutCurrentJob', this.job.id)

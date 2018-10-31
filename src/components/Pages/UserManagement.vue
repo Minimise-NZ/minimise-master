@@ -150,7 +150,7 @@
                   <b-btn
                     v-if="edit === index && loading === false"
                     variant="dark"
-                    @click="updateUser(index)"
+                    @click="updateUser()"
                     v-b-tooltip.hover title="Save Updates">
                     <i class="fas fa-save" style="color: rgb(135, 210, 50)"></i>
                   </b-btn>
@@ -314,18 +314,20 @@ export default {
     },
     updateUser () {
       this.loading = true
-      let worker = this.workers[this.index]
+      let worker = this.workers[this.edit]
       console.log('updating user', worker)
       this.$store.dispatch('updateWorker', {id: worker.id, worker: worker})
       .then(() => {
         this.successMessage = worker.name + ' has been updated'
         this.success = true
         this.loading = false
+        this.edit = ''
       })
       .catch((error) => {
         this.errorMessage = error.message
         this.errorModal = true
         this.loading = false
+        this.edit = ''
       })
     },
     remove () {
