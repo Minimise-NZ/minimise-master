@@ -276,6 +276,14 @@ export default {
 </script>
 
 <style scoped>
+body {
+  font-size: 0.9em;
+  line-height: 1.0;
+}
+
+.form-control {
+  font-size: 1em;
+}
 
   .sticky {
     position: -webkit-sticky;
