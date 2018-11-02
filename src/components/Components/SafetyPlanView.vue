@@ -401,11 +401,11 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-if="signInRegister.length > 0" v-for="(signedIn, index) in signInRegister" :key="index" style="border-bottom: 1px solid #e9ecef">
-                    <td style="font-weight: bold">{{signedIn.name}}</td>
-                    <td>{{signedIn.company}}</td>
-                    <td>{{formatDate(signedIn.signedIn)}}</td>
-                    <td v-if="signedIn.signedOut !== ''">{{formatDate(signedIn.signedOut)}}</td>
+                  <tr v-if="signInRegister.length > 0" v-for="(worker, index) in signInRegister" :key="index" style="border-bottom: 1px solid #e9ecef">
+                    <td style="font-weight: bold">{{worker.name}}</td>
+                    <td>{{worker.company}}</td>
+                    <td>{{formatDate(worker.signedIn)}}</td>
+                    <td v-if="worker.signedOut !== ''">{{formatDate(worker.signedOut)}}</td>
                     <td v-else></td>
                   </tr>
                   <tr v-if="signInRegister.length < 10" v-for="n in 10 - signInRegister.length" :key="n">
@@ -804,8 +804,8 @@ export default {
           bodyContent.push([item.name, item.company, signedIn, ''])
         }
       })
-      if (register.length < 10) {
-        let n = 10 - register.length
+      if (register.length < 20) {
+        let n = 20 - register.length
         for (let i = 0; i < n; i++) {
           bodyContent.push(['', '', '', ''])
         }
@@ -825,7 +825,7 @@ export default {
       return dd.content
     },
     formatDate (date) {
-      return moment(date).format('DD MMM - hh:mma')
+      return moment(date).format('D MMM hh:mma')
     },
     toggleShowOverview () {
       this.showOverview = !this.showOverview

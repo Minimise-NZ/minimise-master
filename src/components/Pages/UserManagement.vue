@@ -139,7 +139,7 @@
                 <td :readonly="readonly(index)">
                   <b-form-input :readonly="readonly(index)" v-model="worker.phone"></b-form-input>
                 </td>
-                <td :readonly="readonly(index)" class="pl-0">
+                <td :readonly="readonly(index)" class="pl-0" style="min-width: 100px">
                   <b-btn 
                     v-if="edit !== index && loading === false"
                     variant="dark"

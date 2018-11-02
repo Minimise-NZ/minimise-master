@@ -209,7 +209,7 @@
     <b-card header-tag="header">
       <header slot="header">{{job.address}}
         <b-button-toolbar slot="header">
-          <div v-if="currentJob.jobId === this.job.id">
+          <div v-if="currentJob === this.job.id">
             <b-btn variant="dark" v-b-tooltip.hover title="Sign Out" @click="signOut" size="sm"><i class="fas fa-sign-out-alt fa-sm" style="color: rgba(249, 82, 188, 0.86)" ></i></b-btn>
             <b-btn v-if="this._.isEmpty(toolbox)" variant="dark" v-b-tooltip.hover title="New Toolbox Talk" @click="showToolbox = true" size="sm">
               <i class="fas fa-toolbox" style="color: #03a9f4"></i>
@@ -220,7 +220,7 @@
             </b-btn>
             -->
           </div>
-          <div v-if="currentJob.jobId !== this.job.id">
+          <div v-if="currentJob !== this.job.id">
             <b-btn variant="dark" v-b-tooltip.hover title="Sign In" @click="signIn" size="sm"><i class="fas fa-pen-alt fa-sm" style="color: rgb(1, 206, 187)" ></i></b-btn>
           </div>
           <div>
@@ -359,9 +359,9 @@
             <b-row class="mt-1">
               <label>SSSP and Toolbox Talk:</label>
             </b-row>
-            <div v-if="signInRegister !== null">
-              <b-row v-for="(worker, index) in signInRegister" :key="index" class="mb-1 mr-1"> 
-                <b-form-input :value="(formatDate(worker.signedIn) + ' : ' + worker.name)" readonly></b-form-input>
+            <div v-if="signedIn !== null">
+              <b-row v-for="(worker, index) in signedIn" :key="index" class="mb-1 mr-1"> 
+                <b-form-input :value="(formatDate(worker.time) + ' : ' + worker.name)" readonly></b-form-input>
               </b-row>
             </div>
           </div>
@@ -383,6 +383,7 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import autosize from 'autosize'
 import moment from 'moment'
+const today = moment().format('DD-MM-YYYY')
 export default {
   props: ['job', 'index'],
   components: {
@@ -390,6 +391,7 @@ export default {
   },
   data () {
     return {
+      currentJob: '',
       TAsignedOn: [
       ],
       loading: false,
@@ -402,7 +404,7 @@ export default {
         jobsCompleted: ''
       },
       toolbox: {},
-      signInRegister: [],
+      signedIn: [],
       toolboxSuccess: false,
       confirmAction: false,
       confirmed: false,
@@ -423,27 +425,38 @@ export default {
     user () {
       return this.$store.getters.user
     },
-    currentJob () {
-      return this.$store.getters.currentJob
-    },
     firstAiders () {
       return this.$store.getters.firstAiders
     }
   },
   methods: {
+    getCurrentJob () {
+      let user = this.user
+      if (user.hasOwnProperty('currentJob')) {
+        if (this._.isEmpty(user.currentJob) === false) {
+          if (today !== user.currentJob.register.date) {
+            this.$store.dispatch('signOutCurrentJob')
+            .then(() => {
+              this.currentJob = ''
+            })
+          } else {
+            this.currentJob = user.currentJob.register.jobId
+          }
+        } else {
+          this.currentJob = ''
+        }
+      }
+    },
     formatDate (date) {
       return moment(date).format('hh:mm')
     },
-    viewPlan (plan) {
-      console.log(plan)
-      this.$router.push('/dashboard/jobs/safetyplan/' + plan.id)
-    },
     async setSafetyPlan (job) {
       this.loading = true
-      let res = await this.$store.dispatch('storeSafetyPlan', job)
-      console.log(res)
-      this.$router.push('/dashboard/jobs/safetyplan')
-      this.loading = false
+      this.$store.dispatch('storeSafetyPlan', job)
+      .then(() => {
+        this.$router.push('/dashboard/jobs/safetyplan')
+        this.loading = false
+      })
     },
     editJob (id) {
       this.readonly = false
@@ -462,9 +475,17 @@ export default {
     },
     signIn () {
       this.$store.dispatch('jobSignOn', this.job.id)
+      .then(() => {
+        this.getCurrentJob()
+        this.getSignedIn()
+      })
     },
     signOut () {
-      this.$store.dispatch('signOutCurrentJob', this.job.id)
+      this.$store.dispatch('signOutCurrentJob')
+      .then(() => {
+        this.getCurrentJob()
+        this.getSignedIn()
+      })
     },
     async uploadFile (job, type) {
       console.log(job, type)
@@ -518,11 +539,11 @@ export default {
         }
       })
     },
-    getSignInRegister () {
+    getSignedIn () {
       this.$store.dispatch('getSignedIn', this.job.id)
       .then((register) => {
         if (register !== null) {
-          this.signInRegister = register
+          this.signedIn = register
         }
       })
     },
@@ -554,7 +575,8 @@ export default {
   mounted () {
     autosize(document.querySelectorAll('textarea'))
     this.getToolbox()
-    this.getSignInRegister()
+    this.getSignedIn()
+    this.getCurrentJob()
   }
 }
 </script>

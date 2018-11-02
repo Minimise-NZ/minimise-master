@@ -81,11 +81,16 @@ export default {
     padding-right: 20px;
   }
 
+  .card-body {
+    padding-top: 0;
+  }
+
   .scroll-container {
     height: 80vh;
     overflow-y: scroll;
     padding-right: 15px;
     padding-bottom: 20px;
+    margin-top: 10px;
   }
 
   .card-header {
@@ -103,7 +108,7 @@ export default {
     padding: 15px 0 10px 15px;
     border-bottom: 1px solid lightgrey;
     font-weight: bold;
-    color: #12807a;
+    color: #383838;
   }
   
   .col {

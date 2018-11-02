@@ -25,7 +25,7 @@
     <b-row 
       class="content"
       v-for="incident in incidents"
-      v-if="incident.open"
+      v-if="incident.open === 'true'"
       :key="incident.id">
       <b-col cols="3">
         <p style="text-decoration: underline; color: #178ac3; cursor: pointer" @click="viewIncident(incident.id)">{{incident.address}}</p>

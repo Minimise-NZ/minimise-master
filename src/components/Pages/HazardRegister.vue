@@ -92,6 +92,7 @@
           <b-row class="hazard-row">
             <b-col md="3" class="img-col"> 
               <b-img
+                blank-src
                 thumbnail
                 :src='hazard.imageURL'
                 fluid>

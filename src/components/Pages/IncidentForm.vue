@@ -217,7 +217,7 @@ export default {
         this.loading = false
         return this.error
       } else {
-        if (this.incident.open === false) {
+        if (this.incident.open === 'false') {
           this.confirmAction = true
         } else {
           this.onConfirm()

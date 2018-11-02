@@ -4,7 +4,6 @@ import * as firebase from 'firebase'
 import {firestore} from '../firebase'
 import createPersistedState from 'vuex-persistedstate'
 import moment from 'moment'
-var storageRef = firebase.storage().ref()
 
 const today = moment().format('DD-MM-YYYY')
 // const now = moment().format('DD-MM-YYYY hh:mm')
@@ -15,6 +14,7 @@ const jobSitesRef = firestore.collection('jobSites')
 const toolboxRef = firestore.collection('toolbox')
 const incidentsRef = firestore.collection('incidents')
 const hazardsRef = firestore.collection('hazards').orderBy('name')
+var storageRef = firebase.storage().ref()
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
@@ -113,6 +113,7 @@ export const store = new Vuex.Store({
     setCurrentJob (state, payload) {
       console.log('setting current job', payload)
       state.currentJob = payload
+      state.user.currentJob = payload
     },
     setSafetyPlan (state, payload) {
       console.log('setting safety plan', payload)
@@ -248,26 +249,17 @@ export const store = new Vuex.Store({
       return promise
     },
     getUser ({commit, dispatch, state}) {
+      console.log('GET USER')
       let promise = new Promise((resolve, reject) => {
         usersRef.where('uid', '==', state.uid)
         .get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             let user = doc.data()
-            if (user.hasOwnProperty('currentJob')) {
-              let now = Date.now().toString().slice(0, 10)
-              console.log(user.currentJob.expiry.seconds)
-              if (now > user.currentJob.expiry) {
-                console.log('current job expired', now, user.currentJob.expiry.seconds)
-                user.currentJob = {}
-                dispatch('updateCurrentUser', user)
-              } else {
-                console.log('not expired', now, user.currentJob.expiry.seconds)
-              }
-            }
             commit('setUser', user)
             commit('setUserKey', doc.id)
             commit('setCompanyKey', user.companyKey)
+            commit('setCurrentJob', user.currentJob)
             resolve(user)
           })
         })
@@ -336,10 +328,9 @@ export const store = new Vuex.Store({
               }
             )
           }
-          /*
           let promise = new Promise((resolve, reject) => {
             firestore.collection('users').add(user)
-            .then((doc) => {
+            .then(() => {
               dispatch('getWorkers')
               resolve()
             })
@@ -349,7 +340,6 @@ export const store = new Vuex.Store({
             })
           })
           return promise
-          */
         } else {
           // user already exists
           console.log('User already exists')
@@ -593,16 +583,51 @@ export const store = new Vuex.Store({
         let type = payload.type
         let file = payload.file
         let filename = type + moment().unix()
-        const task = storageRef.child('/docs/' + filename).put(file)
-        task.then((snapshot) => {
-          let URL = snapshot.downloadURL
-          console.log(URL)
-          resolve(URL)
-        })
-        .catch((error) => {
-          console.log(error)
-          reject()
-        })
+        var uploadTask = storageRef.child('/docs/' + filename).put(file)
+
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+          function (snapshot) {
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            console.log('Upload is ' + progress + '% done')
+            switch (snapshot.state) {
+              case firebase.storage.TaskState.PAUSED: // or 'paused'
+                console.log('Upload is paused')
+                break
+              case firebase.storage.TaskState.RUNNING: // or 'running'
+                console.log('Upload is running')
+                break
+            }
+          },
+          function (error) {
+          // A full list of error codes is available at
+          // https://firebase.google.com/docs/storage/web/handle-errors
+            switch (error.code) {
+              case 'storage/unauthorized':
+                // User doesn't have permission to access the object
+                reject()
+                break
+
+              case 'storage/canceled':
+                // User canceled the upload
+                reject()
+                break
+
+              case 'storage/unknown':
+                // Unknown error occurred, inspect error.serverResponse
+                reject()
+                break
+            }
+          },
+          function () {
+            // Upload completed successfully, now we can get the download URL
+            uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+              console.log('File available at', downloadURL)
+              resolve(downloadURL)
+            })
+          }
+        )
       })
       return promise
     },
@@ -742,13 +767,15 @@ export const store = new Vuex.Store({
       // sign user into job site
       let jobKey = payload
       if (Vue._.isEmpty(state.currentJob) === false) {
+        console.log('current job is empty')
         dispatch('signOutCurrentJob')
       }
       let promise = new Promise((resolve, reject) => {
+        console.log('creating signInRegister')
         let docKey = today + state.userKey
-        console.log(docKey)
         var signInRegisterRef = jobSitesRef.doc(jobKey).collection('signInRegister').doc(docKey)
         signInRegisterRef.set({
+          jobId: jobKey,
           id: state.userKey,
           name: state.user.name,
           date: today,
@@ -758,8 +785,16 @@ export const store = new Vuex.Store({
           companyKey: state.user.companyKey
         })
         .then(() => {
-          commit('setCurrentJob', {jobId: jobKey, registerId: docKey})
-          dispatch('setCurrentJob', {jobId: jobKey, registerId: docKey})
+          // set current job in user and in store
+          let promise = new Promise((resolve, reject) => {
+            jobSitesRef.doc(jobKey).collection('signInRegister').doc(docKey).get()
+            .then((doc) => {
+              dispatch('setCurrentJob', {registerKey: doc.id, register: doc.data()})
+              commit('setCurrentJob', {registerKey: doc.id, register: doc.data()})
+              resolve()
+            })
+          })
+          return promise
         })
         .then(() => {
           resolve()
@@ -773,6 +808,7 @@ export const store = new Vuex.Store({
     },
     setCurrentJob ({state, commit}, payload) {
       let promise = new Promise((resolve, reject) => {
+        console.log('setting current job', payload)
         usersRef.doc(state.userKey).set({currentJob: payload}, {merge: true})
         .then(() => {
           resolve()
@@ -784,12 +820,13 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    signOutCurrentJob ({state, dispatch, commit}, payload) {
+    signOutCurrentJob ({state, dispatch, commit}) {
       // update Sign in register
       console.log('signing out')
       let promise = new Promise((resolve, reject) => {
-        let docKey = state.currentJob.registerId
-        var signInRegisterRef = jobSitesRef.doc(payload).collection('signInRegister').doc(docKey)
+        let jobKey = state.currentJob.register.jobId
+        let docKey = state.currentJob.registerKey
+        var signInRegisterRef = jobSitesRef.doc(jobKey).collection('signInRegister').doc(docKey)
         signInRegisterRef.set({signedOut: Date.now()}, {merge: true})
         .then(() => {
           commit('setCurrentJob', {})
@@ -806,7 +843,7 @@ export const store = new Vuex.Store({
     getSignedIn ({state}, payload) {
       let promise = new Promise((resolve, reject) => {
         jobSitesRef.doc(payload).collection('signInRegister')
-        .where('date', '==', today).where('signedOut', '==', null)
+        .where('date', '==', today).where('signedOut', '==', '')
         .get()
         .then((snapshot) => {
           var signedIn = []
@@ -841,7 +878,7 @@ export const store = new Vuex.Store({
             resolve(null)
           } else {
             snapshot.forEach((doc) => {
-              console.log(doc.data())
+              console.log('sign in register', doc.data())
               let worker = doc.data()
               register.push({
                 name: worker.name,
