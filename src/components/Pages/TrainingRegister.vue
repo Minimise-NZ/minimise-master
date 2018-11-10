@@ -296,6 +296,7 @@ export default {
         console.log('updating training', this.newTraining)
         this.$store.dispatch('newTraining', {training: this.newTraining, worker: this.worker})
         .then(() => {
+          this.workers = this.$store.getters.workers
           this.cancel()
         })
       } catch (error) {

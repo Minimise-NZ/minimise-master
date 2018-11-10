@@ -36,7 +36,7 @@
             <p>{{incident.supervisorName}}</p>
           </b-col>
           <b-col lg="2">
-            <p>{{incident.date}}</p>
+            <p>{{formattedDate(incident.date)}}</p>
           </b-col>
           <b-col lg="2">
             <p>{{status(incident.open)}}</p>
@@ -48,6 +48,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   data () {
     return {
@@ -61,6 +63,9 @@ export default {
     }
   },
   methods: {
+    formattedDate (date) {
+      return moment(date).format('DD-MM-YYYY')
+    },
     viewIncident (id) {
       this.$router.push('/dashboard/incidents/incident/' + id)
     },
@@ -76,14 +81,11 @@ export default {
 </script>
 
 <style scoped>
-  body {
+  p {
   font-size: 0.9em;
   line-height: 1.0;
 }
 
-.form-control {
-  font-size: 1em;
-}
    .container-fluid {
     padding-top: 20px;
     padding-right: 20px;
@@ -127,10 +129,6 @@ export default {
   .content {
     margin-left: 0;
     margin-top: 20px;
-  }
-
-  p {
-    font-size: 1em;
   }
 
 </style>

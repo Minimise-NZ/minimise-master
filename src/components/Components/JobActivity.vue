@@ -62,14 +62,6 @@ export default {
 </script>
 
 <style scoped>
-body {
-  font-size: 0.9em;
-  line-height: 1.0;
-}
-
-.form-control {
-  font-size: 1em;
-}
   .card {
     border: 1px solid rgba(29, 92, 158, 0.89);
     margin-bottom: 20px;
@@ -78,6 +70,7 @@ body {
   .card-header {
     background-color: rgba(29, 92, 158, 0.89);
     font-size: 1em;
+    line-height: 1.1em;
     color: white;
   }
   
@@ -86,10 +79,11 @@ body {
   }
   
   .subheader {
-    padding: 15px 0 15px 15px;
+    padding: 15px 0 10px 15px;
     border-bottom: 1px solid lightgrey;
     font-weight: bold;
     color: rgba(29, 92, 158, 0.89);
+    font-size: 0.9em;
   }
   
   .col, .col-3, .col-2 {

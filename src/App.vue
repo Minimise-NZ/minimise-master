@@ -16,15 +16,6 @@
   height: 100vh;
 }
 
-body {
-  font-size: 0.9em;
-  line-height: 1.0;
-}
-
-.form-control {
-  font-size: 1em;
-}
-
 .btn {
   cursor: pointer;
 }
@@ -32,37 +23,6 @@ body {
 body.modal-open {
   padding-right: 0;
 }
-
-/*
-.scroll-container {
-  height: 80vh;
-  overflow: scroll;
-  padding-bottom: 10px;
-  padding-right: 10px;
-  margin-top: 10px;
-  overflow-x: hidden;
-}
-
-.card-header {
-  font-size: 1.2em;
-}
-
-.card-body {
-  padding-bottom: 0;
-}
-
-.addBtn {
-  float: right;
-  background-color: #067cfb;
-  color: white;
-  border: none;
-}
-
-.addBtn:hover {
-  background-color:#ffc80b;
-  color: black;
-}
-*/
 
 .my-primary-bg {
   background-color: #383838;

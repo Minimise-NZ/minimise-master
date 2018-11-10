@@ -45,9 +45,9 @@ export default {
   
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
-    font-size: 1.2em;
+    font-size: 1.1em;
     color: white;
-    line-height: 2em;
+    line-height: 1.4em;
   }
 
   .card-body {

@@ -40,13 +40,15 @@
         <p>{{incident.reportedBy}}</p>
       </b-col>
       <b-col cols="2">
-        <p>{{incident.date}}</p>
+        <p>{{formattedDate(incident.date)}}</p>
       </b-col>
     </b-row>
   </b-card>
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   data () {
     return {
@@ -58,6 +60,9 @@ export default {
     }
   },
   methods: {
+    formattedDate (date) {
+      return moment(date).format('DD-MM-YYYY')
+    },
     viewIncident (id) {
       this.$router.push('/dashboard/incidents/incident/' + id)
     }
@@ -66,14 +71,9 @@ export default {
 </script>
 
 <style scoped>
-  body {
-  font-size: 0.9em;
-  line-height: 1.0;
-}
-
-.form-control {
-  font-size: 1em;
-}
+  p {
+    font-size: 0.9em;
+  }
   .card {
     border: 1px solid #12807a;
     margin-bottom: 20px;
@@ -82,6 +82,7 @@ export default {
   .card-header {
     background-color: #12807a;
     font-size: 1em;
+    line-height: 1.1em;
     color: white;
   }
   
@@ -90,10 +91,11 @@ export default {
   }
   
   .subheader {
-    padding: 15px 0 15px 15px;
+    padding: 15px 0 10px 15px;
     border-bottom: 1px solid lightgrey;
     font-weight: bold;
     color: #12807a;
+    font-size: 0.9em;
   }
   
   .col, .col-3, .col-2 {

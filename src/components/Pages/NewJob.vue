@@ -110,7 +110,7 @@
               <b-col>
                 <b-form-radio-group
                   :disabled="notifiable.disabled"
-                  class="mt-1"
+                  class="mt-1 radio"
                   v-model="notifiable.radioValue"
                   :options="radioOptions">
                 </b-form-radio-group>
@@ -122,7 +122,8 @@
                 </b-col>
                 <b-col cols="1">
                   <b-btn v-if="notifiable.file !== ''" @click="uploadFile('notifiable')" v-b-tooltip.hover title="Upload file">
-                    <i class="fas fa-cloud-upload-alt"></i>
+                    <i class="fas fa-cloud-upload-alt" v-if="loading === false"></i>
+                    <i class="fas fa-sync fa-spin" v-if="loading===true"></i>
                   </b-btn>
                 </b-col>
               </b-row>
@@ -138,7 +139,7 @@
               <b-col>
                 <b-form-radio-group
                   :disabled="environmental.disabled"
-                  class="mt-1"
+                  class="mt-1 radio"
                   v-model="environmental.radioValue"
                   :options="radioOptions">
                 </b-form-radio-group>
@@ -150,7 +151,8 @@
                 </b-col>
                 <b-col cols="1">
                   <b-btn v-if="environmental.file !== ''" @click="uploadFile('environmental')" v-b-tooltip.hover title="Upload file">
-                    <i class="fas fa-cloud-upload-alt"></i>
+                    <i class="fas fa-cloud-upload-alt" v-if="loading===false"></i>
+                    <i class="fas fa-sync fa-spin" v-if="loading===true"></i>
                   </b-btn>
                 </b-col>
               </b-row>
@@ -166,7 +168,7 @@
               <b-col>
                 <b-form-radio-group
                   :disabled="resource.disabled"
-                  class="mt-1"
+                  class="mt-1 radio"
                   v-model="resource.radioValue"
                   :options="radioOptions">
                 </b-form-radio-group>
@@ -178,7 +180,8 @@
                 </b-col>
                 <b-col cols="1">
                   <b-btn v-if="resource.file !== ''" @click="uploadFile('resource')" v-b-tooltip.hover title="Upload file">
-                    <i class="fas fa-cloud-upload-alt"></i>
+                    <i class="fas fa-cloud-upload-alt" v-if="loading===false"></i>
+                    <i class="fas fa-sync fa-spin" v-if="loading===true"></i>
                   </b-btn>
                 </b-col>
                 </b-row>
@@ -194,7 +197,7 @@
               <b-col>
                 <b-form-radio-group
                   :disabled="nzhpt.disabled"
-                  class="mt-1"
+                  class="mt-1 radio"
                   v-model="nzhpt.radioValue"
                   :options="radioOptions">
                 </b-form-radio-group>
@@ -206,7 +209,8 @@
                 </b-col>
                 <b-col cols="1">
                   <b-btn v-if="nzhpt.file !== ''" @click="uploadFile('nzhpt')" v-b-tooltip.hover title="Upload file">
-                    <i class="fas fa-cloud-upload-alt"></i>
+                    <i class="fas fa-cloud-upload-alt" v-if="loading===false"></i>
+                    <i class="fas fa-sync fa-spin" v-if="loading===true"></i>
                   </b-btn>
                 </b-col>
                 </b-row>
@@ -216,10 +220,10 @@
               </b-col>
             </b-row>
             <b-row>
-              <b-col sm="12" lg="5">
+              <b-col sm="8" lg="5">
                 <label>Additional documents:</label>
                 <b-row v-for="(item, index) in docs.urls" :key="index">
-                  <a target="_blank" :href="item.url" class="ml-2">{{item.name}}</a>
+                  <a target="_blank" :href="item.url" class="ml-1">{{item.name}}</a>
                 </b-row>
               </b-col> 
               <b-col></b-col>
@@ -230,7 +234,8 @@
                 </b-col>
                 <b-col cols="1" >
                   <b-btn v-if="docs.files.length > 0" @click="uploadFile('docs')" v-b-tooltip.hover title="Upload file">
-                    <i class="fas fa-cloud-upload-alt"></i>
+                    <i class="fas fa-cloud-upload-alt" v-if="loading===false"></i>
+                    <i class="fas fa-sync fa-spin" v-if="loading===true"></i>
                   </b-btn>
                 </b-col>
               </b-row>
@@ -274,20 +279,21 @@
                 <b-row v-if="emergencyPlanURL === ''" class="pt-0 pb-0">
                   <b-col class="pl-1 pr-0" md="10" >
                     <b-form-file v-model="emergencyPlanFile" placeholder="Choose a file..."></b-form-file>
-                  </b-col>
+                  </b-col>  
                   <b-col cols="1">
                     <b-btn v-if="emergencyPlanFile !== ''" @click="uploadFile('emergencyPlan')" v-b-tooltip.hover title="Upload file">
-                      <i class="fas fa-cloud-upload-alt"></i>
+                      <i class="fas fa-cloud-upload-alt" v-if="loading===false"></i>
+                      <i class="fas fa-sync fa-spin" v-if="loading===true"></i>
                     </b-btn>
                   </b-col>
                 </b-row>
                 <b-row v-if="emergencyPlanURL !== ''" class="pt-0">
-                  <a target="_blank" :href="emergencyPlanURL">Emergency Plan</a>
+                  <a target="_blank" :href="emergencyPlanURL" class="ml-2">Emergency Plan</a>
                 </b-row>
               </b-col>
             </b-row>
             <b-row>
-              <b-col sm="12" md="10" class="col xtraPad" >
+              <b-col sm="12" md="9" class="col xtraPad" >
                 <b-form-textarea placeholder="Additional emergency info" rows="3" v-model="emergencyInfo"></b-form-textarea>
               </b-col>
             </b-row>
@@ -337,7 +343,7 @@
           <div>
             <hr><h5>Additional Information</h5><hr>
              <b-row>
-              <b-col sm="12" lg="10" class="col xtraPad">
+              <b-col sm="12" lg="9" class="col xtraPad">
                 <b-form-textarea placeholder="Additional site information" rows="3" v-model="additionalInfo"></b-form-textarea>
               </b-col>
             </b-row>
@@ -636,14 +642,21 @@ export default {
 </script>
 
 <style scoped>
-body {
-  font-size: 0.9em;
-  line-height: 1.0;
-}
+  .radio {
+    font-size: 0.9em;
+  }
+  label {
+    font-size: 0.9em;
+    margin-top: 5px;
+    margin-bottom: 0;
+  }
+  .form-control {
+    font-size: 0.9em;
+  }
+  .custom-file {
+     font-size: 0.9em;
+   }
 
-.form-control {
-  font-size: 1em;
-}
   .container-fluid {
     padding-top: 20px;
     padding-right: 20px;
@@ -651,9 +664,9 @@ body {
   
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
-    font-size: 1.2em;
+    font-size: 1em;
+    line-height: 1.1em;
     color: white;
-    line-height: 2em;
   }
 
   .card-body {
@@ -711,13 +724,8 @@ body {
     border: 1px solid salmon;
   }
 
-  label {
-    margin-top: 5px;
-    margin-bottom: 0;
-  }
-
   h5 {
-    font-size: 1.2em;
+    font-size: 1em;
     color: #12807a;
     font-weight: bold;
     margin-left: 10px;
