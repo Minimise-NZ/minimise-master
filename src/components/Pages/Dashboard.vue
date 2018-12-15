@@ -99,6 +99,7 @@ export default {
     }
   },
   beforeCreate () {
+    this.$store.dispatch('getUser')
     this.$store.dispatch('getCompany')
     this.$store.dispatch('getAllHazards')
     this.$store.dispatch('getTaskAnalysis')

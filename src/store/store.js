@@ -248,7 +248,7 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    getUser ({commit, dispatch, state}) {
+    getUser ({commit, state}) {
       console.log('GET USER')
       let promise = new Promise((resolve, reject) => {
         usersRef.where('uid', '==', state.uid)
@@ -260,6 +260,13 @@ export const store = new Vuex.Store({
             commit('setUserKey', doc.id)
             commit('setCompanyKey', user.companyKey)
             commit('setCurrentJob', user.currentJob)
+            if (user.hasOwnProperty('currentJob')) {
+              if (Vue._.isEmpty(user.currentJob) === false) {
+                if (today !== user.currentJob.register.date) {
+                  this.$store.dispatch('signOutCurrentJob')
+                }
+              }
+            }
             resolve(user)
           })
         })
@@ -556,15 +563,19 @@ export const store = new Vuex.Store({
           nzhpturl: payload.nzhpturl,
           docs: payload.docs,
           firstAidKit: payload.firstAidKit,
+          firstAiders: payload.firstAiders,
           fireExtinguisher: payload.fireExtinguisher,
           emergencyPlanURL: payload.emergencyPlanURL,
           emergencyInfo: payload.emergencyInfo,
-          task: payload.task,
+          tasks: payload.tasks,
+          taskSignedOn: [],
           toolboxFrequency: payload.toolboxFrequency,
           inspectionFrequency: payload.inspectionFrequency,
           additionalInfo: payload.additionalInfo,
           open: true,
-          date: Date.now()
+          date: Date.now(),
+          inducted: [],
+          inductionRegister: []
         })
         .then(() => {
           dispatch('getAllJobs')
@@ -655,13 +666,14 @@ export const store = new Vuex.Store({
           fireExtinguisher: payload.fireExtinguisher,
           emergencyPlanURL: payload.emergencyPlanURL,
           emergencyInfo: payload.emergencyInfo,
-          task: payload.task,
+          tasks: payload.tasks,
+          taskSignedOn: payload.signedOn,
           toolboxFrequency: payload.toolboxFrequency,
           inspectionFrequency: payload.inspectionFrequency,
           additionalInfo: payload.additionalInfo,
           open: payload.open,
           date: payload.date,
-          signInRegister: payload.signInRegister,
+          inducted: payload.inducted,
           inductionRegister: payload.inductionRegister
         })
         .then(() => {
@@ -766,10 +778,6 @@ export const store = new Vuex.Store({
     jobSignOn ({state, dispatch, commit}, payload) {
       // sign user into job site
       let jobKey = payload
-      if (Vue._.isEmpty(state.currentJob) === false) {
-        console.log('current job is empty')
-        dispatch('signOutCurrentJob')
-      }
       let promise = new Promise((resolve, reject) => {
         console.log('creating signInRegister')
         let docKey = today + state.userKey
@@ -806,11 +814,12 @@ export const store = new Vuex.Store({
       })
       return promise
     },
-    setCurrentJob ({state, commit}, payload) {
+    setCurrentJob ({state, dispatch}, payload) {
       let promise = new Promise((resolve, reject) => {
         console.log('setting current job', payload)
         usersRef.doc(state.userKey).set({currentJob: payload}, {merge: true})
         .then(() => {
+          dispatch('getUser')
           resolve()
         })
         .catch((error) => {
@@ -1385,3 +1394,4 @@ export const store = new Vuex.Store({
   },
   plugins: [createPersistedState()]
 })
+

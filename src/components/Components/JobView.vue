@@ -91,7 +91,6 @@
       v-model="confirmAction" 
       v-if="confirmAction" 
       @ok="closeJob()"
-      @cancel="this.jobToClose = ''"
       centered 
       header-bg-variant="danger"
       headerTextVariant= 'light'
@@ -108,13 +107,13 @@
       v-model="success" 
       v-if="success"
       ok-only
-      @ok="jobToClose = ''"
+      @ok="getJobs()"
       centered 
       header-bg-variant="success"
       headerTextVariant= 'light'
       title="Success">
       <div class="d-block text-center">
-        <h4 class="mt-2">{{jobToClose.address}}</h4>
+        <h4 class="mt-2">{{job.address}}</h4>
         <h5>This job has been closed</h5>
       </div>
     </b-modal>
@@ -143,97 +142,57 @@
         <h4>{{errorMessage}}</h4>
       </div>
     </b-modal>
-    <!--INSPECTION
-    <b-modal
-      id="inspectionModal"
-      size="lg"
-      style="z-index: 1"
-      v-model="showInspection"
-      v-if="showInspection" 
-      :no-close-on-backdrop="true"
-      header-bg-variant="primary"
+    <!--SIGNED IN/OUT-->
+     <b-modal 
+      v-model="signedInOut" 
+      v-if="signedInOut"
+      ok-only
+      centered 
+      header-bg-variant="success"
       headerTextVariant= 'light'
-      title="Site Inspection">
-      <b-form>
-        <div class="inspectionSection">
-          <div class="inspectionSectionHeader">
-            Section header
-          </div>
-          <b-row class="mb-2">
-            <b-col cols="6">
-              <label class="inspectionlabel">Hazard Board and signage up to date</label>
-              <b-form-radio-group v-model="inspectionSelected" :options="inspectionOptions" buttons button-variant="outline-primary" size="sm" class="ml-2"></b-form-radio-group>
-              <b-btn size="sm" variant="outline-primary" class="ml-3"><i class="fas fa-comments" v-b-tooltip.hover title="Add comment"></i></b-btn>
-            </b-col>
-            <b-col cols="6">
-              <label class="inspectionlabel">Hazard Board and signage up to date</label>
-              <b-form-radio-group v-model="inspectionSelected" :options="inspectionOptions" buttons button-variant="outline-primary" size="sm" class="ml-2"></b-form-radio-group>
-              <b-btn size="sm" variant="outline-primary" class="ml-3"><i class="fas fa-comments"  v-b-tooltip.hover title="Add comment"></i></b-btn>
-            </b-col>
-            <b-col cols="6">
-              <label class="inspectionlabel">Hazard Board and signage up to date</label>
-              <b-form-radio-group v-model="inspectionSelected" :options="inspectionOptions" buttons button-variant="outline-primary" size="sm" class="ml-2"></b-form-radio-group>
-              <b-btn size="sm" variant="outline-primary" class="ml-3"><i class="fas fa-comments"  v-b-tooltip.hover title="Add comment"></i></b-btn>
-            </b-col>
-            <b-col cols="6">
-              <label class="inspectionlabel">Hazard Board and signage up to date</label>
-              <b-form-radio-group v-model="inspectionSelected" :options="inspectionOptions" buttons button-variant="outline-primary" size="sm" class="ml-2"></b-form-radio-group>
-              <b-btn size="sm" variant="outline-primary" class="ml-3"><i class="fas fa-comments"  v-b-tooltip.hover title="Add comment"></i></b-btn>
-            </b-col>
-            <b-col cols="6">
-              <label class="inspectionlabel">Hazard Board and signage up to date</label>
-              <b-form-radio-group v-model="inspectionSelected" :options="inspectionOptions" buttons button-variant="outline-primary" size="sm" class="ml-2"></b-form-radio-group>
-              <b-btn size="sm" variant="outline-primary" class="ml-3"><i class="fas fa-comments" s v-b-tooltip.hover title="Add comment"></i></b-btn>
-            </b-col>
-            <b-col cols="6">
-              <label class="inspectionlabel">Hazard Board and signage up to date</label>
-              <b-form-radio-group v-model="inspectionSelected" :options="inspectionOptions" buttons button-variant="outline-primary" size="sm" class="ml-2"></b-form-radio-group>
-              <b-btn size="sm" variant="outline-primary" class="ml-3"><i class="fas fa-comments"  v-b-tooltip.hover title="Add comment"></i></b-btn>
-            </b-col>
-            <b-col cols="6">
-              <label class="inspectionlabel">Hazard Board and signage up to date</label>
-              <b-form-radio-group v-model="inspectionSelected" :options="inspectionOptions" buttons button-variant="outline-primary" size="sm" class="ml-2"></b-form-radio-group>
-              <b-btn size="sm" variant="outline-primary" class="ml-3"><i class="fas fa-comments" v-b-tooltip.hover title="Add comment"></i></b-btn>
-            </b-col>
-            <b-col cols="6">
-              <label class="inspectionlabel">Hazard Board and signage up to date</label>
-              <b-form-radio-group v-model="inspectionSelected" :options="inspectionOptions" buttons button-variant="outline-primary" size="sm" class="ml-2"></b-form-radio-group>
-              <b-btn size="sm" variant="outline-primary" class="ml-3"><i class="fas fa-comments" v-b-tooltip.hover title="Add comment"></i></b-btn>
-            </b-col>
-          </b-row>
-        </div>
-      </b-form>
+      title="Success">
+      <div class="d-block text-center">
+        <h4>{{signedInOutMessage}}</h4>
+        <h4>{{job.address}}</h4>
+      </div>
     </b-modal>
-    -->
+
 
     <b-card header-tag="header">
       <header slot="header">{{job.address}}
-        <b-button-toolbar slot="header">
-          <div v-if="currentJob === this.job.id">
+        <b-button-toolbar slot="header" v-if="!loading">
+          <div v-if="this._.isEmpty(currentJob) === false && currentJob.register.jobId === this.job.id">
             <b-btn variant="dark" v-b-tooltip.hover title="Sign Out" @click="signOut" size="sm"><i class="fas fa-sign-out-alt fa-sm" style="color: rgba(249, 82, 188, 0.86)" ></i></b-btn>
-            <b-btn v-if="this._.isEmpty(toolbox)" variant="dark" v-b-tooltip.hover title="New Toolbox Talk" @click="showToolbox = true" size="sm">
-              <i class="fas fa-toolbox" style="color: #03a9f4"></i>
-            </b-btn>
             <!--
             <b-btn variant="dark" v-b-tooltip.hover title="New Site Inspection" @click="showInspection = true" size="sm">
               <i class="far fa-eye" style="color: #FFEB3B"></i>
             </b-btn>
             -->
           </div>
-          <div v-if="currentJob !== this.job.id">
+          <div v-if="this._.isEmpty(currentJob)">
             <b-btn variant="dark" v-b-tooltip.hover title="Sign In" @click="signIn" size="sm"><i class="fas fa-pen-alt fa-sm" style="color: rgb(1, 206, 187)" ></i></b-btn>
           </div>
           <div>
+            <b-btn v-if="this._.isEmpty(toolbox)" variant="dark" v-b-tooltip.hover title="New Toolbox Talk" @click="showToolbox = true" size="sm">
+              <i class="fas fa-toolbox" style="color: #03a9f4"></i>
+            </b-btn>
+          </div>
+          <div>
             <b-btn variant="dark" @click="confirmAction = true, jobToClose = job.id" v-b-tooltip.hover title="Close Job" size="sm">
-            <i class="fas fa-times-circle" style="color: rgba(255, 115, 71, 0.94)"></i>
-          </b-btn>
+              <i class="fas fa-times-circle" style="color: rgba(255, 115, 71, 0.94)"></i>
+            </b-btn>
+          </div>
+        </b-button-toolbar>
+        <b-button-toolbar v-if="loading">
+          <div class="loader">
+            <pulse-loader :loading="loading" ></pulse-loader>
           </div>
         </b-button-toolbar>
       </header>
 
       <b-row>
         <!--SITE INFORMATION COLUMN-->
-        <b-col>
+        <b-col sm="12" lg="4">
           <h5>Site Information</h5><hr>
           <label>Supervisor</label>
           <b-form-input :value="job.supervisorName" readonly></b-form-input>
@@ -246,7 +205,7 @@
         </b-col>
         
         <!--SITE DOCS COLUMN-->
-        <b-col>
+        <b-col sm="12" lg="4">
           <h5>Site Safety Documents</h5><hr class="mb-3">
           <b-row>
             <router-link v-on:click.native="setSafetyPlan(job)" to="#">SSSP - {{job.address}}</router-link >
@@ -353,7 +312,7 @@
         </b-col>
 
         <!--SIGNED IN  COLUMN-->
-        <b-col >
+        <b-col sm="12" lg="4">
           <h5>Signed In</h5><hr>
           <div class="content">
             <b-row class="mt-1">
@@ -383,7 +342,7 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import autosize from 'autosize'
 import moment from 'moment'
-const today = moment().format('DD-MM-YYYY')
+// const today = moment().format('DD-MM-YYYY')
 export default {
   props: ['job', 'index'],
   components: {
@@ -391,7 +350,6 @@ export default {
   },
   data () {
     return {
-      currentJob: '',
       TAsignedOn: [
       ],
       loading: false,
@@ -417,11 +375,14 @@ export default {
       resourcefile: '',
       nzhptfile: '',
       docsfile: '',
-      jobToClose: '',
-      showMessage: false
+      signedInOut: false,
+      signedInOutMessage: ''
     }
   },
   computed: {
+    currentJob () {
+      return this.$store.getters.currentJob
+    },
     user () {
       return this.$store.getters.user
     },
@@ -430,23 +391,6 @@ export default {
     }
   },
   methods: {
-    getCurrentJob () {
-      let user = this.user
-      if (user.hasOwnProperty('currentJob')) {
-        if (this._.isEmpty(user.currentJob) === false) {
-          if (today !== user.currentJob.register.date) {
-            this.$store.dispatch('signOutCurrentJob')
-            .then(() => {
-              this.currentJob = ''
-            })
-          } else {
-            this.currentJob = user.currentJob.register.jobId
-          }
-        } else {
-          this.currentJob = ''
-        }
-      }
-    },
     formatDate (date) {
       return moment(date).format('hh:mm')
     },
@@ -462,29 +406,37 @@ export default {
       this.readonly = false
     },
     closeJob () {
-      console.log('closing job', this.jobToClose)
-      this.$store.dispatch('closeJob', this.jobToClose)
+      this.loading = true
+      console.log('closing job', this.job.id)
+      this.$store.dispatch('closeJob', this.job.id)
       .then(() => {
         this.success = true
-        this.$store.dispatch('getAllJobs')
+        this.loading = false
       })
       .catch((error) => {
         this.errorMessage = error.message
         this.errorModal = true
+        this.loading = false
       })
     },
     signIn () {
+      this.loading = true
       this.$store.dispatch('jobSignOn', this.job.id)
       .then(() => {
-        this.getCurrentJob()
         this.getSignedIn()
+        this.signedInOut = true
+        this.signedInOutMessage = 'You are signed in:'
+        this.loading = false
       })
     },
     signOut () {
+      this.loading = true
       this.$store.dispatch('signOutCurrentJob')
       .then(() => {
-        this.getCurrentJob()
         this.getSignedIn()
+        this.signedInOut = true
+        this.signedInOutMessage = 'You are signed out:'
+        this.loading = false
       })
     },
     async uploadFile (job, type) {
@@ -531,6 +483,9 @@ export default {
           break
       }
     },
+    getJobs () {
+      this.$store.dispatch('getAllJobs')
+    },
     getToolbox () {
       this.$store.dispatch('getToolbox', this.job.id)
       .then((toolbox) => {
@@ -548,6 +503,7 @@ export default {
       })
     },
     saveToolbox () {
+      this.loading = true
       this.$store.dispatch('newToolbox', this.newToolbox)
       .then(() => {
         this.newToolbox = {
@@ -560,6 +516,7 @@ export default {
         this.toolboxSuccess = true
         this.handleCancel()
         this.getToolbox()
+        this.loading = false
       })
     },
     handleCancel () {
@@ -576,20 +533,11 @@ export default {
     autosize(document.querySelectorAll('textarea'))
     this.getToolbox()
     this.getSignedIn()
-    this.getCurrentJob()
   }
 }
 </script>
 
 <style scoped>
-body {
-  font-size: 0.9em;
-  line-height: 1.0;
-}
-
-.form-control {
-  font-size: 1em;
-}
 
   .container-fluid {
     padding-top: 20px;
@@ -602,24 +550,23 @@ body {
   .card-header {
     background-color: rgba(0, 55, 115, 0.82);
     color: white;
-    padding:0;
-    padding: 5px 15px 5px 20px;
-    line-height: 2.5em;
-    font-size: 1.1em;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    line-height: 2em;
+    font-size: 1em;
   }
 
   hr {
     margin-top: 0;
     margin-bottom: 5px;
-    border: 0.5px solid rgba(0, 55, 115, 0.82);
+    border: 0.5px solid #383838;
   }
 
   h5 {
-    font-size: 1.1em;
-    color: rgba(0, 55, 115, 0.82);
+    font-size: 1em;
+    color: #383838;
     font-weight: bold;
     margin-left: 8px;
-
   }
 
   .card-body {
@@ -630,6 +577,11 @@ body {
     padding: 10px 10px 0 10px;
     font-weight: bold;
     color: #194e8a;
+    font-size: 0.9em;
+  }
+
+  .form-control {
+    font-size: 0.9em;
   }
 
   .content {
@@ -639,20 +591,22 @@ body {
 
   a {
     text-decoration-line: underline;
-    padding-top: 10px;
     padding-left: 10px;
     margin-left: 10px;
     margin-bottom: 10px;
+    font-size: 0.9em;
   }
 
   .col-1 {
     margin-top: 10px;
     padding-left: 0;
+    font-size: 0.9em;
   }
 
   .custom-file {
     margin-top: 10px;
     margin-bottom: 5px;
+    font-size: 0.9em !important;
   }
 
   .btn-toolbar {
@@ -663,16 +617,19 @@ body {
     margin: 2px;
   }
 
-  .inspectionSectionHeader {
-    background-color: #3c7298;
-    padding: 10px;
-    color: white;
+  @media screen and (max-width: 768px) {
   }
 
-  .inspectionlabel {
-    font-size: 1em;
-    margin-top: 7px;
-    color: #3c7298;
+  @media screen and (max-width : 992px) {
+    .col-sm-12 {
+      margin-bottom: 20px;
+    }
+  }
+
+  @media screen and (max-width : 1200px) {
+  }
+
+  @media screen and (min-width : 1200px) {
   }
 
 </style>

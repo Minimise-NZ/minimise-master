@@ -312,9 +312,10 @@
             <b-row>
               <b-col sm="4" lg="3">
                 <label>Task Analyis Required</label>
+                <p style="font-size: 12px; font-style: italic">Hold ctrl to select multiple options</p>
               </b-col>
               <b-col lg="6" class="col">
-                <b-form-select :options="taskSelect" v-model="task"></b-form-select>
+                <b-form-select multiple :options="taskSelect" v-model="tasks" :select-size="2"></b-form-select>
               </b-col>
             </b-row>
             <b-row>
@@ -424,7 +425,7 @@ export default {
       emergencyPlanURL: '',
       emergencyPlanFile: '',
       emergencyInfo: '',
-      task: null,
+      tasks: [],
       toolboxFrequency: 60 * 60 * 24,
       inspectionFrequency: 60 * 60 * 24 * 7,
       additionalInfo: '',
@@ -618,7 +619,8 @@ export default {
           fireExtinguisher: this.fireExtinguisher,
           emergencyPlanURL: this.emergencyPlanURL,
           emergencyInfo: this.emergencyInfo,
-          task: this.task,
+          tasks: this.tasks,
+          firstAiders: this.firstAiders,
           toolboxFrequency: this.toolboxFrequency,
           inspectionFrequency: this.inspectionFrequency,
           additionalInfo: this.additionalInfo
@@ -664,8 +666,8 @@ export default {
   
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
-    font-size: 1em;
-    line-height: 1.1em;
+    font-size: 1.1em;
+    line-height: 1.4em;
     color: white;
   }
 

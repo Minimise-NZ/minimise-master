@@ -5,7 +5,8 @@
       <header slot="header">Jobs In Progress
         <b-btn
           variant="dark"
-          @click="newJob" 
+          @click="newJob"
+          size="sm"
           v-b-tooltip.hover title="Create New Job Site">
           <i class="fa fa-plus" style="color: rgb(1, 206, 187)"></i>
         </b-btn> 
@@ -50,50 +51,33 @@ export default {
 
 <style scoped>
 
-body {
-  font-size: 0.9em;
-  line-height: 1.0;
+.container-fluid {
+  padding-top: 20px;
 }
 
-.form-control {
-  font-size: 1em;
+.scroll-container {
+  height: 80vh;
+  overflow-y: scroll;
+  margin-top: 10px;
+  padding-right: 20px;
 }
 
-body {
-  font-size: 0.9em;
-  line-height: 1.0;
+.card-body {
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
-.form-control {
-  font-size: 1em;
+.card-header {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  background-color: rgba(56, 56, 56, 0.88);
+  font-size: 1.1em;
+  color: white;
+  line-height:1.8em;
 }
 
-  .container-fluid {
-    padding-top: 20px;
-
-  }
-
-   .scroll-container {
-    height: 80vh;
-    overflow-y: scroll;
-    margin-top: 15px;
-    padding-right: 10px;
-  }
-
-   .card-body {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .card-header {
-    background-color: rgba(56, 56, 56, 0.88);
-    font-size: 1.2em;
-    color: white;
-    line-height: 2em;
-  }
-
-  .btn {
-    float: right;
-  }
+.btn {
+  float: right;
+}
   
 </style>
