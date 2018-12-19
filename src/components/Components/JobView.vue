@@ -201,7 +201,7 @@
           <label>Medical Centre</label>
           <b-form-textarea :value="job.medical" readonly rows="2"></b-form-textarea>
           <label>First Aiders</label>
-          <b-form-input v-for="(name, index) in firstAiders" :key="index" :value="name" readonly class="mb-1"></b-form-input>
+          <b-form-input v-for="(name, index) in job.firstAiders" :key="index" :value="name" readonly class="mb-1"></b-form-input>
         </b-col>
         
         <!--SITE DOCS COLUMN-->
@@ -385,9 +385,6 @@ export default {
     },
     user () {
       return this.$store.getters.user
-    },
-    firstAiders () {
-      return this.$store.getters.firstAiders
     }
   },
   methods: {

@@ -18,7 +18,8 @@
         <b-btn 
           class="addBtn"
           style="background-color: white"
-          @click="exportPdf" 
+          @click="exportPdf"
+          size="sm" 
           v-b-tooltip.hover title="Export to PDF">
           <i class="fa fa-file-pdf fa-lg" style="color: black"></i>
         </b-btn>
@@ -64,7 +65,7 @@
                     <label>First Aiders:</label>
                   </b-col>
                   <b-col>
-                    <b-form-input v-for="(name, index) in firstAiders" :key="index" type="text" :value="name" readonly class="mb-1"/>
+                    <b-form-input v-for="(name, index) in jobSite.firstAiders" :key="index" type="text" :value="name" readonly class="mb-1"/>
                   </b-col>
                 </b-row>
                 <b-row >
@@ -93,7 +94,7 @@
                   </b-col>
                 </b-row>
               </b-col>
-              <b-col sm="12" lg="6" style="padding-top: 10px; padding-right: 20px" class="pl-0">
+              <b-col sm="12" lg="6" style="padding-top: 10px; padding-right: 20px">
                 <b-row>
                   <b-col md="12" lg="4">
                     <label>Incident Reporting:</label>
@@ -171,12 +172,12 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th scope="col">Name</th>
-                  <th scope="col">Risks</th>
-                  <th scope="col">IRA</th>
-                  <th scope="col">Controls</th>
-                  <th scope="col">Control Level</th>
-                  <th scope="col">RRA</th>
+                  <th scope="col" class="tableHead">Name</th>
+                  <th scope="col" class="tableHead">Risks</th>
+                  <th scope="col" class="tableHead">IRA</th>
+                  <th scope="col" class="tableHead">Controls</th>
+                  <th scope="col" class="tableHead">Control Level</th>
+                  <th scope="col" class="tableHead">RRA</th>
                 </tr>
               </thead>
               <tbody>
@@ -210,13 +211,13 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th scope="col">Name</th>
-                  <th scope="col">Hazard Types</th>
-                  <th scope="col">Potential Harm</th>
-                  <th scope="col">Storage</th>
-                  <th scope="col">PPE</th>
-                  <th scope="col">Actions</th>
-                  <th scope="col">SDS</th>
+                  <th scope="col" class="tableHead">Name</th>
+                  <th scope="col" class="tableHead">Hazard Types</th>
+                  <th scope="col" class="tableHead">Potential Harm</th>
+                  <th scope="col" class="tableHead">Storage</th>
+                  <th scope="col" class="tableHead">PPE</th>
+                  <th scope="col" class="tableHead">Actions</th>
+                  <th scope="col" class="tableHead">SDS</th>
                 </tr>
               </thead>
               <tbody>
@@ -287,12 +288,12 @@
                   <table class="table table-striped">
                     <thead>
                       <tr>
-                        <th>Hazard</th>
-                        <th>Risks</th>
-                        <th>IRA</th>
-                        <th>Controls</th>
-                        <th>Control Level</th>
-                        <th>RRA</th>
+                        <th class="tableHead">Hazard</th>
+                        <th class="tableHead">Risks</th>
+                        <th class="tableHead">IRA</th>
+                        <th class="tableHead">Controls</th>
+                        <th class="tableHead">Control Level</th>
+                        <th class="tableHead">RRA</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -329,10 +330,10 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th scope="col">Name</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">ID/License No</th>
-                  <th scope="col">Expiry</th>
+                  <th scope="col" class="tableHead">Name</th>
+                  <th scope="col" class="tableHead">Description</th>
+                  <th scope="col" class="tableHead">ID/License No</th>
+                  <th scope="col" class="tableHead">Expiry</th>
                 </tr>
               </thead>
               <tbody>
@@ -358,7 +359,7 @@
             </table>
           </b-card>
         </div>
-        <!--INDUCTION SECTION
+        <!--INDUCTION SECTION-->
         <div>
           <b-btn block @click="toggleShowInduction" class="text-left togglebtn " >
             Induction Register
@@ -368,22 +369,26 @@
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Company</th>
-                    <th scope="col">Date</th>
+                    <th scope="col" class="tableHead">Name</th>
+                    <th scope="col" class="tableHead">Company</th>
+                    <th scope="col" class="tableHead">Date</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(inducted, index) in inductions" :key="index" style="border-bottom: 1px solid #e9ecef">
+                  <tr v-if="jobSite.inductionRegister.length > 0"  v-for="(inducted, index) in jobSite.inductionRegister" :key="index" style="border-bottom: 1px solid #e9ecef">
                     <td style="font-weight: bold">{{inducted.name}}</td>
                     <td>{{inducted.company}}</td>
-                    <td>{{inducted.date}}</td>
+                    <td>{{formatDate(inducted.date)}}</td>
+                  </tr>
+                  <tr v-if="jobSite.inductionRegister.length  < 10" v-for="n in 10 - jobSite.inductionRegister.length" :key="n">
+                    <td></td>
+                    <td></td>
+                    <td></td>
                   </tr>
                 </tbody>
               </table>
             </b-card>
         </div>
-        -->
         <!--SIGN IN SECTION-->
         <div>
           <b-btn block @click="toggleShowSignIn" class="text-left togglebtn " >
@@ -394,10 +399,10 @@
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Company</th>
-                    <th scope="col">Signed in Date/Time</th>
-                    <th scope="col">Signed Out Date/Time</th>
+                    <th scope="col" class="tableHead">Name</th>
+                    <th scope="col" class="tableHead">Company</th>
+                    <th scope="col" class="tableHead">Signed in Date/Time</th>
+                    <th scope="col" class="tableHead">Signed Out Date/Time</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -478,9 +483,6 @@ export default {
     header () {
       return 'Site Specific Safety Plan: ' + this.jobSite.address
     },
-    firstAiders () {
-      return this.$store.getters.firstAiders
-    },
     getTraining () {
       let list = []
       for (let i of this.workers) {
@@ -549,12 +551,10 @@ export default {
           this.pdfTaskAnalysis(),
           {text: 'Training Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'landscape'},
           this.pdfTrainingRegister(),
+          {text: 'Induction Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'portrait'},
+          this.pdfInductionRegister(),
           {text: 'Sign In Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'portrait'},
           this.pdfSignInRegister()
-          /*
-          {text: 'Induction Register', style: 'subheader', pageBreak: 'before', pageOrientation: 'portrait'},
-          this.pdfInductionRegister()
-          */
         ],
         styles: {
           header: {
@@ -609,7 +609,7 @@ export default {
                 ['Supervisor Phone:', this.getData('supervisorPhone')],
                 [{text: 'Emergency Information', style: 'sectionStyle', colSpan: 2}, {}],
                 ['Medical Centre:', this.getData('medical')],
-                ['First Aiders:', this.firstAiders],
+                ['First Aiders:', this.jobSite.firstAiders],
                 [{text: 'Notifiable Works', style: 'sectionStyle', colSpan: 2}, {}],
                 ['Notifiable Works: ', this.notifiable],
                 [{text: 'Hazard Management', style: 'sectionStyle', colSpan: 2}, {}],
@@ -785,6 +785,39 @@ export default {
       }
       return dd.content
     },
+    pdfInductionRegister () {
+      var bodyContent = [
+        [
+          {text: 'Name', style: 'tableHeader'},
+          {text: 'Company', style: 'tableHeader'},
+          {text: 'Inducted', style: 'tableHeader'}
+        ]
+      ]
+      let register = this.jobSite.inductionRegister
+      register.forEach((item) => {
+        let inducted = this.formatDate(item.date)
+        bodyContent.push([item.name, item.company, inducted])
+      })
+      if (register.length < 20) {
+        let n = 20 - register.length
+        for (let i = 0; i < n; i++) {
+          bodyContent.push(['', '', ''])
+        }
+      }
+      var dd = {
+        content: [
+          {
+            table: {
+              widths: [150, 150, '*'],
+              headerRows: 1,
+              heights: 25,
+              body: bodyContent
+            }
+          }
+        ]
+      }
+      return dd.content
+    },
     pdfSignInRegister () {
       var bodyContent = [
         [
@@ -882,14 +915,7 @@ export default {
 </script>
 
 <style scoped>
-  body {
-  font-size: 0.9em;
-  line-height: 1.0;
-}
 
-.form-control {
-  font-size: 1em;
-}
   .container-fluid {
     padding-top: 20px;
     padding-right: 20px;
@@ -905,14 +931,20 @@ export default {
 
   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
-    font-size: 1.2em;
+    font-size: 1.1em;
     color: white;
-    line-height: 2em;
+    line-height: 1.8em;
+    padding-top: 7px;
+    padding-bottom: 7px;
   }
 
   .card-body {
     padding-top: 0;
     padding-bottom: 0;
+  }
+
+  .form-control {
+    font-size: 0.9em;
   }
 
   .btn {
@@ -926,6 +958,7 @@ export default {
   }
 
   label {
+    font-size: 0.9em;
     padding-top: 5px;
   }
 
@@ -940,16 +973,22 @@ export default {
 
   .table {
     margin-bottom: 0;
+    font-size:0.9em;
   }
 
   thead {
     background-color: #c1c1c1;
   }
 
+  .tableHead {
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
   ul {
     list-style: none;
     padding-left:0;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 
   .task-header {
