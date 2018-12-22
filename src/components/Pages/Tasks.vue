@@ -1,6 +1,6 @@
 <template>
   <b-container fluid>
-     <b-modal 
+    <b-modal 
       v-model="newPopUp" 
       v-if="newPopUp"
       @cancel="title = ''"
@@ -19,6 +19,7 @@
       <header slot="header">Task Analysis/SWMS
         <b-btn
           variant="dark"
+          size="sm"
           class="addBtn"
           @click="newPopUp = true" 
           v-b-tooltip.hover title="Add New Task Analysis">
@@ -71,20 +72,12 @@ export default {
 </script>
 
 <style scoped>
-body {
-  font-size: 0.9em;
-  line-height: 1.0;
-}
 
-.form-control {
-  font-size: 1em;
-}
-   .container-fluid {
+  .container-fluid {
     padding-top: 20px;
-    padding-right: 20px;
   }
 
-   .scroll-container {
+  .scroll-container {
     height: 80vh;
     overflow-y: scroll;
     margin-top: 15px;
@@ -93,10 +86,12 @@ body {
   }
 
   .card-header {
+    padding-top: 7px;
+    padding-bottom: 7px;
     background-color: rgba(56, 56, 56, 0.88);
-    font-size: 1.2em;
+    font-size: 1.1em;
     color: white;
-    line-height: 2em;
+    line-height:1.8em;
   }
 
   .card-body {

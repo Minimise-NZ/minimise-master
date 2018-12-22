@@ -47,132 +47,134 @@
     </b-modal>
 
     <div>
-      <b-btn block @click="toggleShowTask" class="text-left togglebtn " v-b-tooltip.hover title="Click to show/hide details">
+      <b-btn block v-b-toggle="'collapse' + index" class="text-left togglebtn " v-b-tooltip.hover title="Click to show/hide details">
         {{task.title}}
         <i class="fa fa-chevron-down" style="float:right"></i>
       </b-btn>
-      <b-card class="task" v-if="showTask === true">
-        <div class="section">
-          <b-row>
-            <b-col sm="6" md="3" lg="2">
-              <label>PPE Required</label>
-            </b-col>
-            <b-col>
-              <b-form-textarea :readonly="readonly" v-model="task.ppe"></b-form-textarea>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col sm="6" md="3" lg="2">
-              <label>Plant Required</label>
-            </b-col>
-            <b-col>
-              <b-form-textarea :readonly="readonly" v-model="task.plant"></b-form-textarea>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col sm="6" md="3" lg="2">
-              <label>Signage Required</label>
-            </b-col>
-            <b-col>
-              <b-form-textarea :readonly="readonly" v-model="task.signage"></b-form-textarea>
-            </b-col>
-          </b-row>
-        </div>
-        <b-row class="btn-row sticky">
-          <b-col sm="0" lg="2">
-          </b-col>
-          <b-col>
-            <b-btn
-            v-if="readonly === true"
-            :disabled ="loading"
-            @click="readonly = false"
-            style="background-color:rgba(247, 88, 27, 0.92); border: 1px solid rgba(247, 88, 27, 0.92)"
-            size="sm"
-            class="step-btn">
-            Edit/Update
-          </b-btn>
-          <b-btn
-            v-if="readonly === false"
-            :disabled ="loading"
-            @click="cancel()"
-            style="background-color:rgba(247, 88, 27, 0.92); border: 1px solid rgba(247, 88, 27, 0.92)"
-            size="sm"
-            class="step-btn">
-            Discard Changes
-          </b-btn>
-          <b-btn
-            v-if="readonly === false"
-            :disabled ="loading"
-            @click="save()"
-            size="sm"
-            style="background-color:rgb(22, 185, 117); border: 1px solid rgb(22, 185, 117)"
-            class="step-btn">Save Changes
-          </b-btn>
-          <b-btn
-            v-if="readonly === false"
-            :disabled ="loading"
-            @click="addStep()"
-            size="sm"
-            style="background-color:rgb(22, 95, 185); border: 1px solid rgb(22, 95, 185)"
-            class="step-btn">
-            Add New Step
-          </b-btn>
-          </b-col>
-        </b-row>
-        <div class="steps" v-for="(step, index) in task.steps" :key="index">
-          <div class="step-header">
+      <b-collapse :id="'collapse' + this.index" accordion="my-accordion" visible>
+        <b-card class="task" v-if="showTask === true">
+          <div class="section">
             <b-row>
-              <b-col sm="2">
-                <h5>Step {{index + 1}}: </h5>
+              <b-col sm="6" md="3" lg="2">
+                <label>PPE Required</label>
               </b-col>
               <b-col>
-                <b-form-input v-model="step.description" style="font-weight:bold" placeholder="Please enter description of step" :readonly="readonly"></b-form-input>
+                <b-form-textarea :readonly="readonly" v-model="task.ppe"></b-form-textarea>
               </b-col>
-              <b-col sm="1">
-                <b-btn
-                  class="mini-btn"
-                  variant="dark"
-                  size="sm"
-                  v-if="loading === false && readonly === false"
-                  @click="addHazard(index)" 
-                  v-b-tooltip.hover title="Add Hazard">
-                  <i class="fa fa-plus" style="color: rgb(1, 206, 187)"></i>
-                </b-btn> 
+            </b-row>
+            <b-row>
+              <b-col sm="6" md="3" lg="2">
+                <label>Plant Required</label>
+              </b-col>
+              <b-col>
+                <b-form-textarea :readonly="readonly" v-model="task.plant"></b-form-textarea>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col sm="6" md="3" lg="2">
+                <label>Signage Required</label>
+              </b-col>
+              <b-col>
+                <b-form-textarea :readonly="readonly" v-model="task.signage"></b-form-textarea>
               </b-col>
             </b-row>
           </div>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th><label>Hazard</label></th>
-                <th><label>Risks</label></th>
-                <th><label>IRA</label></th>
-                <th><label>Controls</label></th>
-                <th><label>Control Level</label></th>
-                <th><label>RRA</label></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(hazard, index) in step.hazards" :key="index" style="border-bottom: 1px solid #e9ecef">
-                <td style="font-weight: bold">{{hazard.name}}</td>
-                <td>
-                  <ul v-for="(risk, index) in hazard.risks" :key="index">
-                    <li>{{risk}}</li>
-                  </ul>
-                </td>
-                <td>{{hazard.IRA}}</td>
-                <td>
-                    <ul v-for="(control, index) in hazard.controls" :key="index">
-                    <li>{{control}}</li>
-                  </ul>
-                </td>
-                <td>{{hazard.controlLevel}}</td>
-                <td>{{hazard.RRA}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </b-card>
+          <b-row class="btn-row sticky">
+            <b-col sm="0" lg="2">
+            </b-col>
+            <b-col>
+              <b-btn
+              v-if="readonly === true"
+              :disabled ="loading"
+              @click="readonly = false"
+              style="background-color:rgba(247, 88, 27, 0.92); border: 1px solid rgba(247, 88, 27, 0.92)"
+              size="sm"
+              class="step-btn">
+              Edit/Update
+            </b-btn>
+            <b-btn
+              v-if="readonly === false"
+              :disabled ="loading"
+              @click="cancel()"
+              style="background-color:rgba(247, 88, 27, 0.92); border: 1px solid rgba(247, 88, 27, 0.92)"
+              size="sm"
+              class="step-btn">
+              Discard Changes
+            </b-btn>
+            <b-btn
+              v-if="readonly === false"
+              :disabled ="loading"
+              @click="save()"
+              size="sm"
+              style="background-color:rgb(22, 185, 117); border: 1px solid rgb(22, 185, 117)"
+              class="step-btn">Save Changes
+            </b-btn>
+            <b-btn
+              v-if="readonly === false"
+              :disabled ="loading"
+              @click="addStep()"
+              size="sm"
+              style="background-color:rgb(22, 95, 185); border: 1px solid rgb(22, 95, 185)"
+              class="step-btn">
+              Add New Step
+            </b-btn>
+            </b-col>
+          </b-row>
+          <div class="steps" v-for="(step, index) in task.steps" :key="index" :id="'step' + index">
+            <div class="step-header">
+              <b-row>
+                <b-col sm="2">
+                  <h5>Step {{index + 1}}: </h5>
+                </b-col>
+                <b-col>
+                  <b-form-input v-model="step.description" style="font-weight:bold" placeholder="Please enter description of step" :readonly="readonly"></b-form-input>
+                </b-col>
+                <b-col sm="1">
+                  <b-btn
+                    class="mini-btn"
+                    variant="dark"
+                    size="sm"
+                    v-if="loading === false && readonly === false"
+                    @click="addHazard(index)" 
+                    v-b-tooltip.hover title="Add Hazard">
+                    <i class="fa fa-plus" style="color: rgb(1, 206, 187)"></i>
+                  </b-btn> 
+                </b-col>
+              </b-row>
+            </div>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th><label>Hazard</label></th>
+                  <th><label>Risks</label></th>
+                  <th><label>IRA</label></th>
+                  <th><label>Controls</label></th>
+                  <th><label>Control Level</label></th>
+                  <th><label>RRA</label></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(hazard, index) in step.hazards" :key="index" style="border-bottom: 1px solid #e9ecef">
+                  <td style="font-weight: bold">{{hazard.name}}</td>
+                  <td>
+                    <ul v-for="(risk, index) in hazard.risks" :key="index">
+                      <li>{{risk}}</li>
+                    </ul>
+                  </td>
+                  <td>{{hazard.IRA}}</td>
+                  <td>
+                      <ul v-for="(control, index) in hazard.controls" :key="index">
+                      <li>{{control}}</li>
+                    </ul>
+                  </td>
+                  <td>{{hazard.controlLevel}}</td>
+                  <td>{{hazard.RRA}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </b-card>
+      </b-collapse>
     </div>
   </div>
 </template>
@@ -268,6 +270,10 @@ export default {
         description: '', hazards: []
       })
       setTimeout(() => {
+        console.log('steps length is ' + this.task.steps.length)
+        let element = 'step' + (this.task.steps.length - 1)
+        console.log('element is' + element)
+        document.getElementById(element).scrollIntoView()
         autosize(document.querySelectorAll('textarea'))
       }, 1000)
     }
@@ -276,15 +282,6 @@ export default {
 </script>
 
 <style scoped>
-body {
-  font-size: 0.9em;
-  line-height: 1.0;
-}
-
-.form-control {
-  font-size: 1em;
-}
-
   .sticky {
     position: -webkit-sticky;
     position: sticky;
@@ -298,16 +295,17 @@ body {
     border-radius: 0;
   }
 
-  .card {
-    margin-bottom: 20px;
-  }
-
   .row {
     margin-bottom:5px;
   }
 
   label {
     padding-top: 5px;
+    font-size: 0.9em;
+  }
+
+  .form-control {
+    font-size: 0.9em;
   }
 
   .step-header {
@@ -327,6 +325,10 @@ body {
 
   thead {
     background-color: rgba(28, 117, 108, 0.22);
+  }
+
+  tbody {
+    font-size: 0.9em;
   }
 
   th {
