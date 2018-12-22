@@ -20,7 +20,7 @@
         <jobView v-for="(obj, index) in jobSites" :key="index" :job="obj.job" :index="index"></jobView>
       </div>
     </b-card>
-  </b-container>  
+  </b-container>
 </template>
 
 <script>

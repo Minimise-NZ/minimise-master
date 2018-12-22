@@ -42,6 +42,7 @@
       <header slot="header">{{headerTitle}}
         <b-btn
           v-if="register"
+          size="sm"
           variant="dark"
           @click="register = !register, inverted = !inverted"
           v-b-tooltip.hover title="Add New Hazard">
@@ -49,18 +50,14 @@
         </b-btn>
         <b-btn
           v-else
+          size="sm"
           variant="dark"
           @click="register = !register, inverted = !inverted"
           v-b-tooltip.hover title="Back to Hazard Register">
           <i class="fa fa-undo" style="color: rgba(255, 115, 71, 0.94)"></i>
         </b-btn> 
-      </header>
+      </header> 
       <div class="scroll-container">
-        <b-row v-if="hazards.length === 0" >
-          <b-col class="p-0">
-            <header class="subheader">Click the add + button to create your hazard register </header>
-          </b-col>
-        </b-row>
         <b-card
           v-for="(hazard, index) in hazards"
           :key="index"
@@ -194,8 +191,8 @@ export default {
       this.loading = true
       this.$store.dispatch('removeHazard', this.hazard)
       .then(() => {
-        this.success = true
         this.loading = false
+        this.success = true
       })
       .catch((error) => {
         this.errorMessage = error.message
@@ -212,14 +209,6 @@ export default {
 </script>
 
 <style scoped>
-  body {
-  font-size: 0.9em;
-  line-height: 1.0;
-}
-
-.form-control {
-  font-size: 1em;
-}
 
   .container-fluid {
     padding-top: 20px;
@@ -228,7 +217,7 @@ export default {
    .scroll-container {
     height: 80vh;
     overflow-y: scroll;
-    margin-top: 15px;
+    margin-top: 10px;
     padding-right: 10px;
   }
 
@@ -238,23 +227,18 @@ export default {
   }
 
   .card-header {
+    padding-top: 7px;
+    padding-bottom: 7px;
     background-color: rgba(56, 56, 56, 0.88);
-    font-size: 1.2em;
+    font-size: 1.1em;
     color: white;
-    line-height: 2em;
+    line-height:1.8em;
   }
 
   .btn {
     float: right;
   }
   
-  .subheader {
-    margin-left: 15px;
-    font-weight: bold;
-    font-size: 1.2em;
-    color: #186ca7;
-  }
-
   .loader {
     float: right;
     width: 80px;
@@ -274,11 +258,15 @@ export default {
     padding-top: 7px;
     padding-bottom: 7px;
     padding-right: 20px;
-    font-size: 1.1em;
+    font-size: 1em;
   }
 
   .inverted > .card-header{
     background-color: rgba(15, 85, 140, 0.96);
+  }
+
+  h5 {
+    font-size: 1.1em;
   }
 
   .hazard-row {
@@ -286,6 +274,7 @@ export default {
   }
 
   ul {
+    font-size: 0.9em;
     padding-left: 15px;
     margin-bottom: 5px;
   }
@@ -296,8 +285,8 @@ export default {
     padding: 8px;
     border-radius: 5px;
     color: white;
-    font-weight: bold;
-    line-height: 1.5em;
+    font-size: 0.9em;
+    line-height: 1em;
   }
 
   .Low {

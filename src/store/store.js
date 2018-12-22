@@ -1143,9 +1143,7 @@ export const store = new Vuex.Store({
         .collection('hazards').doc(payload.id).delete()
         .then(() => {
           dispatch('getMyHazards')
-          .then(() => {
-            resolve()
-          })
+          resolve()
         })
         .catch((error) => {
           reject(error)
