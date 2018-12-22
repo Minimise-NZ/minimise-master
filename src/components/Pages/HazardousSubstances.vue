@@ -8,7 +8,7 @@
       header-bg-variant="info"
       headerTextVariant= 'light'
       title="Add New Substance">
-      <b-form @submit.prevent="handleOk">
+      <b-form @submit.prevent="handleOk" style="font-size: 0.9em">
         <b-row class="inner-row">
           <b-col cols="4">
             <label>Product/Substance Name:</label>
@@ -96,6 +96,7 @@
     <b-card header-tag="header">
       <header slot="header">Hazardous Substances
         <b-btn
+          size="sm"
           variant="dark"
           @click="addNew" 
           v-b-tooltip.hover title="Add New Substance">
@@ -209,14 +210,6 @@ export default {
 </script>
 
 <style scoped>
-body {
-  font-size: 0.9em;
-  line-height: 1.0;
-}
-
-.form-control {
-  font-size: 1em;
-}
   .container-fluid {
     padding-top: 20px;
   }
@@ -224,19 +217,22 @@ body {
   .scroll-container {
     height: 80vh;
     overflow-y: scroll;
-    margin-top: 15px;
-    padding-right: 10px;
+    margin-top: 10px;
+    padding-right: 20px;
   }
 
   .card-body {
     padding-top: 0;
+    padding-bottom: 0px;
   }
 
   .card-header {
+    padding-top: 7px;
+    padding-bottom: 7px;
     background-color: rgba(56, 56, 56, 0.88);
-    font-size: 1.2em;
+    font-size: 1.1em;
     color: white;
-    line-height: 2em;
+    line-height:1.8em;
   }
 
   .btn {
@@ -254,14 +250,5 @@ body {
   .form-group {
     margin-bottom: 0px;
   }
-
-  
-  .subheader {
-    margin-left: 15px;
-    font-weight: bold;
-    font-size: 1.2em;
-    color: rgba(63, 81, 181, 0.94);
-  }
-  
 
 </style>

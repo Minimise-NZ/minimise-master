@@ -21,7 +21,7 @@
               <label>Hazard Types:</label>
             </b-col>
             <b-col>
-              <b-form-group>
+              <b-form-group style="font-size: 0.9em">
                 <b-form-checkbox-group v-model="substance.hazTypes" :options="hazOptions" v-if="!readonly" style="padding: 5px"></b-form-checkbox-group>
                   <b-form-checkbox-group v-model="substance.hazTypes" :options="hazOptions" v-if="readonly" onclick="return false"></b-form-checkbox-group>
               </b-form-group>
@@ -51,7 +51,7 @@
               <label>Safety Data Sheet:</label>
             </b-col>
             <b-col v-if="substance.sds === ''">
-              <b-form-file v-model="sdsFile" placeholder="Safety Data Sheet"></b-form-file>
+              <b-form-file v-model="sdsFile" :disabled="readonly" placeholder="Safety Data Sheet"></b-form-file>
             </b-col>
             <b-col sm="1" class="pl-0" v-if="sdsFile !== ''">
               <b-btn variant="primary" @click="uploadFile()" v-b-tooltip.hover title="Upload file">
@@ -86,7 +86,7 @@
                 <pulse-loader :loading="itemLoading"></pulse-loader>
               </div>
             </div>
-            <b-button class="button" style="background-color: #ff6a00" v-else @click="edit">Edit/Update</b-button>
+            <b-button class="button" style="background-color: #ff6a00; border: 1px solid #ff6a00" v-else @click="edit">Edit/Update</b-button>
           </div>
         </b-col>
       </b-row>
@@ -166,15 +166,7 @@ export default {
 </script>
 
 <style scoped>
-body {
-  font-size: 0.9em;
-  line-height: 1.0;
-}
-
-.form-control {
-  font-size: 1em;
-}
-  .row{
+  .row {
     margin: 0;
     padding: 0;
   }
@@ -196,6 +188,7 @@ body {
   }
 
   label {
+    font-size: 0.9em;
     font-weight: bold;
   }
 
@@ -203,8 +196,8 @@ body {
     background-color: #6b668e;
     margin: 0;
     color: white;
-    font-size: 1.1em;
-    padding: 7px 20px;
+    font-size: 1em;
+    padding: 3px 20px;
     line-height: 2em;
   }
 
@@ -236,16 +229,19 @@ body {
     margin-bottom:0;
   }
 
-  .button {
-    margin-top: 30px;
-    cursor: pointer;
-    width: 125px;
+  .form-control {
+    font-size: 0.9em;
   }
 
-  @media screen and (max-width: 992px) {
-    .inner-row {
-      margin-top: 15px;
-    }
+  .custom-file {
+    font-size: 0.9em;
+  }
+
+  .button {
+    margin-top: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    width: 125px;
   }
 
   @media screen and (min-width: 992px) {
