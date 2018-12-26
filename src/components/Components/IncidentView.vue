@@ -34,6 +34,7 @@
         <b-btn
           variant="dark"
           @click="edit"
+          size="sm"
           :disabled="disabled"
           v-if="incident.open === 'true'"
           v-b-tooltip.hover title="Edit/Update this Incident">
@@ -236,39 +237,40 @@ export default {
 </script>
 
 <style scoped>
-  body {
-  font-size: 0.9em;
-  line-height: 1.0;
-}
-
-.form-control {
-  font-size: 1em;
-}
-
- .container-fluid {
+  .container-fluid {
     padding-top: 20px;
-    padding-right: 20px;
   }
 
    .scroll-container {
     height: 80vh;
     overflow-y: scroll;
-    margin-top: 15px;
+    margin-top: 10px;
     padding-right: 15px;
-    padding-bottom: 20px;
+    margin-bottom: 10px;
   }
 
   .card-header {
+    padding-top: 7px;
+    padding-bottom: 7px;
     background-color: rgba(56, 56, 56, 0.88);
-    font-size: 1.2em;
+    font-size: 1.1em;
     color: white;
-    line-height: 2em;
+    line-height:1.8em;
   }
 
   .card-body {
     padding-top: 0;
     padding-bottom: 0;
   }
+
+  form {
+    font-size: 0.9em;
+  }
+
+  .form-control {
+    font-size: 1em;
+  }
+  
 
   button:disabled {
     cursor: default;

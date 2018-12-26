@@ -247,14 +247,7 @@ export default {
 </script>
 
 <style scoped>
-  body {
-  font-size: 0.9em;
-  line-height: 1.0;
-}
 
-.form-control {
-  font-size: 1em;
-}
    .container-fluid {
     padding-top: 20px;
   }
@@ -265,15 +258,23 @@ export default {
     padding-right: 15px;
   }
 
-  .card-header {
+   .card-header {
     background-color: rgba(56, 56, 56, 0.88);
-    font-size: 1.2em;
+    font-size: 1.1em;
+    line-height: 1.4em;
     color: white;
-    line-height: 2em;
   }
   
   .card-body {
     padding-bottom: 0;
+  }
+
+  form {
+    font-size: 0.9em;
+  }
+
+  .form-control {
+    font-size: 1em;
   }
   
   .col-sm-3 {

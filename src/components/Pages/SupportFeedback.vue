@@ -198,24 +198,21 @@ export default {
 </script>
 
 <style scoped>
-body {
-  font-size: 0.9em;
-  line-height: 1.0;
-}
-
-.form-control {
-  font-size: 1em;
-}
-   .container-fluid {
+  .container-fluid {
     padding-top: 20px;
-    padding-right: 20px;
   }
 
   .card-header {
+    padding-top: 7px;
+    padding-bottom: 7px;
     background-color: rgba(56, 56, 56, 0.88);
-    font-size: 1.2em;
+    font-size: 1.1em;
     color: white;
-    line-height: 2em;
+    line-height:1.8em;
+  }
+
+  .card-body{ 
+    padding-top: 10px;
   }
   
    .card-header.item{
@@ -256,7 +253,16 @@ body {
 
   .buttons {
     cursor: pointer;
-    margin: 20px;
+    margin: 10px;
+    margin-top: 0;
     width: 50%;
+  }
+
+  label {
+    font-size: 0.9em;
+  }
+
+  .form-control {
+    font-size: 0.9em
   }
 </style>

@@ -117,7 +117,7 @@ export default new Router({
           props: true
         },
         {
-          path: 'newIncident',
+          path: 'incidents/newIncident',
           component: NewIncident
         },
         {

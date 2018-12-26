@@ -71,8 +71,7 @@ export default {
         {name: 'Hazardous Substances', link: '/dashboard/hazardousSubstances'},
         {name: 'Task Analysis/SWMS', link: '/dashboard/taskAnalysis'},
         {name: 'Training Register', link: '/dashboard/TrainingRegister'},
-        {name: 'New Incident', link: '/dashboard/newIncident'},
-        {name: 'Incident Reports', link: '/dashboard/incidents'}
+        {name: 'Incident Management', link: '/dashboard/incidents'}
       ],
       adminNav: [
         {name: 'User Management', link: '/dashboard/userManagement'}

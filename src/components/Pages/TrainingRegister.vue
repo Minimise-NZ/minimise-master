@@ -62,8 +62,8 @@
             class="mb-2">
             </b-form-input>
           <b-row>
-            <b-col cols="3">
-              <label class="mt-3 ml-2" required>Expiry Date: </label>
+            <b-col cols="4">
+              <label class="mt-2 ml-2" required>Expiry Date: </label>
             </b-col>
             <b-col>
               <b-form-input 
@@ -81,7 +81,8 @@
     <b-card header-tag="header">
       <header slot="header">Training Register
         <input type="text" v-model="search" class="form-control searchbox" placeholder="Search"/>
-        <b-btn 
+        <b-btn
+          size="sm"
           v-if="readonly"
           variant="dark"
           @click="edit"
@@ -90,6 +91,7 @@
         </b-btn>
         <b-btn
           v-if="readonly"
+          size="sm"
           variant="dark"
           @click="addNew = true"
           class="mr-2"
@@ -97,6 +99,7 @@
           <i class="fas fa-plus" style="color: rgb(1, 206, 187)"></i>
         </b-btn>
         <b-btn
+          size="sm"
           v-if="!readonly && !loading"
           variant="dark"
           @click="saveUpdates"
@@ -104,6 +107,7 @@
           <i class="fas fa-save" style="color: rgb(135, 210, 50)"></i>
         </b-btn>
         <b-btn
+          size="sm"
           v-if="!readonly && !loading"
           variant="dark"
           @click="discard"
@@ -309,14 +313,7 @@ export default {
 </script>
 
 <style scoped>
-body {
-  font-size: 0.9em;
-  line-height: 1.0;
-}
 
-.form-control {
-  font-size: 1em;
-}
   .container-fluid {
     padding-top: 20px;
     padding-right: 20px;
@@ -328,15 +325,22 @@ body {
     padding-right: 10px;
   }
 
+  .card-body {
+    padding-top: 10px;
+  }
   .card-header {
+    padding-top: 7px;
+    padding-bottom: 7px;
     background-color: rgba(56, 56, 56, 0.88);
-    font-size: 1.2em;
+    font-size: 1.1em;
     color: white;
-    line-height: 2em;
+    line-height:1.8em;
   }
 
   .searchbox {
     display: inline-block;
+    padding-top: 4px;
+    padding-bottom: 4px;
     width: 400px;
     margin-left: 20px;
     line-height: 1.1em;
@@ -360,13 +364,25 @@ body {
 
   th {
     border: none;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-right: 20px;
+    font-size: 1em;
     font-weight: normal;
+  }
+
+  td {
+    font-size: 0.9em;
   }
 
   ul {
     list-style: none;
     padding-left:0;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+  }
+
+  .form-control {
+    font-size: 1em;
   }
 
   #expiry {
@@ -380,6 +396,7 @@ body {
   }
 
   .searchbox::placeholder {
+    font-size: 0.9em;
     color: white;
     opacity: 1; /* Firefox */
   }
@@ -391,4 +408,10 @@ body {
   .searchbox::-ms-input-placeholder { /* Microsoft Edge */
     color: white;
   }
+
+   @media screen and (max-width: 992px) {
+     .form-control {
+       font-size: 0.9em;
+     }
+   }
 </style>

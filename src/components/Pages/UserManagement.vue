@@ -101,7 +101,8 @@
     <b-card header-tag="header">
       <header slot="header">User Management
         <input type="text" v-model="search" class="form-control searchbox" placeholder="Search"/>
-        <b-btn 
+        <b-btn
+          size="sm"
           variant="dark"
           @click="createNew = true"
           v-b-tooltip.hover title="Add New User">
@@ -140,7 +141,8 @@
                   <b-form-input :readonly="readonly(index)" v-model="worker.phone"></b-form-input>
                 </td>
                 <td :readonly="readonly(index)" class="pl-0" style="min-width: 100px">
-                  <b-btn 
+                  <b-btn
+                    size="sm"
                     v-if="edit !== index && loading === false"
                     variant="dark"
                     @click="edit = index"
@@ -148,6 +150,7 @@
                     <i class="far fa-edit" style="color: #ffc80b"></i>
                   </b-btn>
                   <b-btn
+                    size="sm"
                     v-if="edit === index && loading === false"
                     variant="dark"
                     @click="updateUser()"
@@ -155,6 +158,7 @@
                     <i class="fas fa-save" style="color: rgb(135, 210, 50)"></i>
                   </b-btn>
                   <b-btn
+                    size="sm"
                     v-if="edit === index && loading === false"
                     variant="dark"
                     @click="confirm(index)"
@@ -355,21 +359,37 @@ export default {
 </script>
 
 <style scoped>
-body {
-  font-size: 0.9em;
-  line-height: 1.0;
-}
 
-.form-control {
-  font-size: 1em;
-}
   .container-fluid {
     padding-top: 20px;
-    padding-right: 30px;
+  }
+
+  .card-body {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .scroll-container {
+    height: 80vh;
+    overflow-y: scroll;
+    padding-right: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .card-header {
+    padding-top: 7px;
+    padding-bottom: 7px;
+    background-color: rgba(56, 56, 56, 0.88);
+    font-size: 1.1em;
+    color: white;
+    line-height:1.8em;
   }
 
   .searchbox {
     display: inline-block;
+    padding-top: 4px;
+    padding-bottom: 4px;
     width: 400px;
     margin-left: 20px;
     line-height: 1.1em;
@@ -378,24 +398,8 @@ body {
     cursor: default;
   }
 
-   .scroll-container {
-    height: 80vh;
-    overflow-y: scroll;
-    padding-right: 10px;
-  }
-
-  .card-header {
-    background-color: rgba(56, 56, 56, 0.88);
-    font-size: 1.2em;
-    color: white;
-    line-height: 2em;
-  }
-
-  .btn {
-    float: right;
-  }
-
   .searchbox::placeholder {
+    font-size: 0.9em;
     color: white;
     opacity: 1; /* Firefox */
   }
@@ -408,19 +412,39 @@ body {
     color: white;
   }
 
+  .btn {
+    float: right;
+  }
+
+  .table {
+    margin-bottom: 0;
+  }
+
   thead {
-    background-color: rgba(9, 69, 90, 0.85);
+    background-color: rgb(38, 123, 111);
     color: white;
   }
 
   th {
     border: none;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-right: 20px;
+    font-size: 1em;
     font-weight: normal;
+  }
+
+  td {
+    font-size: 0.9em;
   }
 
   .inner-row {
     padding-top: 5px;
     padding-bottom: 5px;
+  }
+
+  .form-control {
+    font-size: 1em;
   }
 
   label {
@@ -431,5 +455,11 @@ body {
     float: right;
     width: 80px;
   }
+
+   @media screen and (max-width: 992px) {
+     .form-control {
+       font-size: 0.9em;
+     }
+   }
 
 </style>
